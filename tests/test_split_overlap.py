@@ -48,14 +48,26 @@ def test_split_train_test(sample_data_no_duplicates):
     assert len(matches_train) == expected_train_size
 
     # Verify no overlap
-    test_indices_left = set(matches_test['left'].tolist())
-    test_indices_right = set(matches_test['right'].tolist())
+    ## test
+    left_test_dict = dict(zip(left_test.index, left_test['index_original']))
+    test_indices_left = set([left_test_dict[i] for i in list(set(matches_test['left'].tolist()))])
 
-    validation_indices_left = set(matches_validation['left'].tolist())
-    validation_indices_right = set(matches_validation['right'].tolist())
+    right_test_dict = dict(zip(right_test.index, right_test['index_original']))
+    test_indices_right = set([right_test_dict[i] for i in list(set(matches_test['right'].tolist()))])
+    
+    # train
+    left_train_dict = dict(zip(left_train.index, left_train['index_original']))
+    train_indices_left = set([left_train_dict[i] for i in list(set(matches_train['left'].tolist()))])
 
-    train_indices_left = set(matches_train['left'].tolist())
-    train_indices_right = set(matches_train['right'].tolist())
+    right_train_dict = dict(zip(right_train.index, right_train['index_original']))
+    train_indices_right = set([right_train_dict[i] for i in list(set(matches_train['right'].tolist()))])
+
+    # validation
+    left_validation_dict = dict(zip(left_validation.index, left_validation['index_original']))
+    validation_indices_left = set([left_validation_dict[i] for i in list(set(matches_validation['left'].tolist()))])
+
+    right_validation_dict = dict(zip(right_validation.index, right_validation['index_original']))
+    validation_indices_right = set([right_validation_dict[i] for i in list(set(matches_validation['right'].tolist()))])
     
     assert test_indices_left.isdisjoint(validation_indices_left), "Test and validation sets overlap in the left dataset."
     assert train_indices_left.isdisjoint(validation_indices_left), "Test and training sets overlap in the left dataset."

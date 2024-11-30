@@ -60,23 +60,71 @@ def split_test_train(left: pd.DataFrame, right: pd.DataFrame, matches: pd.DataFr
 
     def subsets(matches_count: int, matches_exclude_index: list):
         """Generates random subsets for matches DataFrame and corresponding rows in `left` and `right`."""
-        m = matches[~matches.index.isin(matches_exclude_index)].sample(n=matches_count)
-        l = left[left.index.isin(m['left'])]
-        r = right[right.index.isin(m['right'])]
+        m = matches[~matches.index.isin(matches_exclude_index)].sample(n=matches_count).copy()
+        l = left[left.index.isin(m['left'])].copy()
+        r = right[right.index.isin(m['right'])].copy()
         return m, l, r
 
-    matches_test, left_test, right_test = subsets(matches_test_count, matches_exclude_index=[])
+    matches_test, left_test, right_test = subsets(
+        matches_test_count, 
+        matches_exclude_index=[]
+    )
     matches_exclude_index = matches_test.index.tolist()
 
-    matches_validation, left_validation, right_validation = subsets(matches_validation_count, matches_exclude_index=matches_exclude_index)
+    matches_validation, left_validation, right_validation = subsets(
+        matches_validation_count, 
+        matches_exclude_index=matches_exclude_index
+    )
     matches_exclude_index += matches_validation.index.tolist()
 
-    matches_train, left_train, right_train = subsets(matches_train_count, matches_exclude_index=matches_exclude_index)
+    matches_train, left_train, right_train = subsets(
+        matches_train_count, 
+        matches_exclude_index=matches_exclude_index
+    )
 
-    # adjust the indices of the matches dataframes (required by pyneer)
-    matches_train = matches_train.sort_values(by='left', ascending=True).reset_index(drop=True)
-    matches_test = matches_test.sort_values(by='left', ascending=True).reset_index(drop=True)
-    matches_validation = matches_validation.sort_values(by='left', ascending=True).reset_index(drop=True)
+    def process_dataset(df):
+        """
+        Processes a single dataset by adding an 'index_original' column,
+        resetting the index, and creating a mapping dictionary.
+        """
+        df['index_original'] = df.index.copy()
+        df = df.reset_index(drop=True)
+        mapping_dict = dict(zip(df['index_original'], df.index))
+        return df, mapping_dict
+
+    # Process datasets individually
+    left_train, left_train_dict = process_dataset(left_train)
+    right_train, right_train_dict = process_dataset(right_train)
+
+    left_test, left_test_dict = process_dataset(left_test)
+    right_test, right_test_dict = process_dataset(right_test)
+
+    left_validation, left_validate_dict = process_dataset(left_validation)
+    right_validation, right_validation_dict = process_dataset(right_validation)
+
+    # Update matches dataframes
+    def update_matches(matches_df, left_dict, right_dict):
+        matches_df['left'] = matches_df['left'].map(left_dict)
+        matches_df['right'] = matches_df['right'].map(right_dict)
+        return matches_df.sort_values(by='left', ascending=True).reset_index(drop=True)
+
+    matches_train = update_matches(
+        matches_train, 
+        left_train_dict, 
+        right_train_dict
+    )
+
+    matches_test = update_matches(
+        matches_test, 
+        left_test_dict, 
+        right_test_dict
+    )
+
+    matches_validation = update_matches(
+        matches_validation, 
+        left_validate_dict, 
+        right_validation_dict
+    )
 
 
     return left_train, right_train, matches_train, left_validation, right_validation, matches_validation, left_test, right_test, matches_test
