@@ -1,0 +1,76 @@
+# Byte-compiled / cached Python files
+__pycache__/
+*.py[cod]
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+*.egg
+*.whl
+
+# Virtual environments
+.venv/
+env/
+venv/
+
+# Sphinx documentation
+docs/build/
+
+# Testing
+*.pytest_cache/
+.pytest_cache/
+.tox/
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# Operating system files
+.DS_Store                 # macOS Finder files
+.AppleDouble              # macOS metadata
+.Spotlight-V100           # macOS Spotlight
+.Trashes                  # macOS Trash folder
+._*                       # macOS resource forks
+.fseventsd                # macOS file system events
+.VolumeIcon.icns          # macOS volume icon
+
+Thumbs.db                 # Windows thumbnail cache
+ehthumbs.db               # Windows enhanced thumbnail cache
+Desktop.ini               # Windows desktop config file
+$RECYCLE.BIN/             # Windows recycle bin folder
+System Volume Information # Windows volume info
+
+.icon                     # Linux desktop file icon
+.cache/                   # Linux user cache files
+.config/                  # Linux user config files
+.local/                   # Linux local state files
+
+# Logs and temp files
+*.log
+*.tmp
+*.temp
+
+# Config files
+*.env
+*.ini
+*.cfg
+
+# Editor and IDE specific files
+.vscode/
+.idea/
+*.swp
+*~
+*.sublime-project
+*.sublime-workspace
+
+# Miscellaneous
+*.bak
+*.orig
+*.rej
+
+# Exclude specific build artifacts
+dist/
+*.tar.gz
+*.zip
+

@@ -1,0 +1,59 @@
+[build-system]
+requires = [
+    "setuptools>=61.0",
+    "sphinx>=4.3.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "neer-match-utilities"
+dynamic = ["version"]
+authors = [
+    { name="Pantelis Karapanagiotis", email="pikappa.devel@gmail.com" },
+    { name="Marius Liebald", email="maliedvp@gmail.com" }]
+description = "Extended funcationality for NEural-symbolic Entity Reasoning and Matching"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Topic :: Database",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence"]
+dependencies = [
+    "ltn>=0.0.1",
+    "matplotlib>=3.5.0",
+    "numpy>=1.26.4",
+    "pandas>=2.2.3",
+    "rapidfuzz>=3.10.1",
+    "tensorflow>=2.18.0",
+    "neer-match>=0.7.32",
+    "dill>=0.3.9"
+]
+
+[project.urls]
+"Homepage" = "https://py-neer-utils.marius-liebald.de/"
+"Documentation" = "https://py-neer-utils.marius-liebald.de/"
+"Source Code" = "https://github.com/maliedvp/py-neer-utils"
+"Bug Tracker" = "https://github.com/maliedvp/py-neer-utils/issues"
+
+[project.optional-dependencies]
+tests = ['pytest']
+
+[tool.setuptools.dynamic]
+version = {attr = "neer_match_utilities.__version__"}
+
+[tool.setuptools.package-data]
+"neer_match_utilities.examples.data" = ["*.csv"]
+
+[build_sphinx]
+builders = ["html", "man"]
+all_files = 1
+build_dir = "build"
+source_dir = "docs/source"
+
+[lint]
+lint_enable = "spelling"
