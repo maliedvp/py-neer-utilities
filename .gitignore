@@ -54,7 +54,6 @@ System Volume Information # Windows volume info
 # Config files
 *.env
 *.ini
-*.cfg
 
 # Editor and IDE specific files
 .vscode/
