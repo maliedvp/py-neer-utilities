@@ -101,32 +101,11 @@ class Training(SuperClass):
         # Concatenate and calculate metrics
         df = pd.concat([df_test, df_train], axis=0, ignore_index=True)
 
-        df['accuracy'] = (df['TP'] + df['TN']) / \
-                         (df['TP'] + df['TN'] + df['FP'] + df['FN'])
-
-        df['precision'] = np.where(
-            df['TP'] + df['FP'] != 0,
-            df['TP'] / (df['TP'] + df['FP']),
-            0
-        )
-
-        df['recall'] = np.where(
-            df['TP'] + df['FN'] != 0,
-            df['TP'] / (df['TP'] + df['FN']),
-            0
-        )
-
-        df['F-score'] = np.where(
-            (df['precision'] + df['recall']) != 0,
-            2 * ((df['precision'] * df['recall']) / (df['precision'] + df['recall'])),
-            0
-        )
-
         df['timestamp'] = datetime.now()
 
         return df
 
-    def model_export(self, model, model_name: str, target_directory: Path, evaluation_train: dict = {}, evaluation_test: dict = {}):
+    def performance_statistics_export(self, model, model_name: str, target_directory: Path, evaluation_train: dict = {}, evaluation_test: dict = {}):
         """
         Exports the trained model, similarity map, and evaluation metrics to the specified directory.
 
@@ -177,19 +156,6 @@ class Training(SuperClass):
             # Create the directory if it does not exist
             os.mkdir(model_dir)
             print(f"Directory {model_dir} created for model export.")
-
-        # # Save the model
-        # model.save(
-        #     model_dir / f'model_{model_name}', 
-        #     overwrite=True, 
-        #     save_format='tf', 
-        #     include_optimizer=False, 
-        #     save_traces=False
-        # )
-
-        # Save similarity map
-        with open(model_dir / 'similarity_map.pkl', 'wb') as fp:
-            dill.dump(self.similarity_map, fp, protocol=dill.HIGHEST_PROTOCOL)
 
         # Generate performance metrics and save
         if evaluation_test and evaluation_train:
