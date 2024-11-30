@@ -24,6 +24,8 @@ If no new build wanted:
 
 	pytest tests/test_prepare.py -v
 	pytest tests/test_training.py -v
+	pytest tests/test_split.py -v -s
+	pytest tests/test_split_duplicates.py -v -s
 
 
 # Documentation

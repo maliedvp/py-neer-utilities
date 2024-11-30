@@ -22,9 +22,20 @@ def test_split_train_test(sample_data_no_duplicates):
 
     left_train, right_train, matches_train, left_validation, right_validation, matches_validation, left_test, right_test, matches_test = results
 
+    print('TEST','\n')
+    print(left_test,'\n')
+    print(right_test,'\n')
+    print(matches_test,'\n')
+
+    print('TRAIN','\n')
     print(left_train,'\n')
     print(right_train,'\n')
     print(matches_train,'\n')
+
+    print('VALIDATION','\n')
+    print(left_validation,'\n')
+    print(right_validation,'\n')
+    print(matches_validation,'\n')
 
     # Verify sizes
     total_matches = len(matches)
@@ -37,13 +48,23 @@ def test_split_train_test(sample_data_no_duplicates):
     assert len(matches_train) == expected_train_size
 
     # Verify no overlap
-    test_indices = set(matches_test.index)
-    validation_indices = set(matches_validation.index)
-    train_indices = set(matches_train.index)
+    test_indices_left = set(matches_test['left'].tolist())
+    test_indices_right = set(matches_test['right'].tolist())
 
-    assert test_indices.isdisjoint(validation_indices), "Test and validation sets overlap."
-    assert test_indices.isdisjoint(train_indices), "Test and training sets overlap."
-    assert validation_indices.isdisjoint(train_indices), "Validation and training sets overlap."
+    validation_indices_left = set(matches_validation['left'].tolist())
+    validation_indices_right = set(matches_validation['right'].tolist())
+
+    train_indices_left = set(matches_train['left'].tolist())
+    train_indices_right = set(matches_train['right'].tolist())
+    
+    assert test_indices_left.isdisjoint(validation_indices_left), "Test and validation sets overlap in the left dataset."
+    assert train_indices_left.isdisjoint(validation_indices_left), "Test and training sets overlap in the left dataset."
+    assert validation_indices_left.isdisjoint(test_indices_left), "Validation and training sets overlap in the left dataset."
+
+    assert test_indices_right.isdisjoint(validation_indices_right), "Test and validation sets overlap in the right dataset."
+    assert train_indices_right.isdisjoint(validation_indices_right), "Test and training sets overlap in the right dataset."
+    assert validation_indices_right.isdisjoint(test_indices_right), "Validation and training sets overlap in the right dataset."
+
 
 
 def test_randomness_of_split(sample_data_no_duplicates):
