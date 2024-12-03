@@ -34,6 +34,7 @@ coverage.xml
 ._*                       # macOS resource forks
 .fseventsd                # macOS file system events
 .VolumeIcon.icns          # macOS volume icon
+.*
 
 Thumbs.db                 # Windows thumbnail cache
 ehthumbs.db               # Windows enhanced thumbnail cache
