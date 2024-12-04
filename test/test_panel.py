@@ -1,6 +1,6 @@
 import pytest
 import pandas as pd
-from neer_match_utilities.panel_setup import SetupData
+from neer_match_utilities.panel import SetupData
 
 
 @pytest.fixture
