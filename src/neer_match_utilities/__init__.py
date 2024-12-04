@@ -1,5 +1,5 @@
 # Define the package version
-__version__ = "0.1.3-alpha"
+__version__ = "0.2.0-alpha"
 
 # Import public classes and functions
 from .base import SuperClass
