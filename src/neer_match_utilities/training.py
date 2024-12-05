@@ -126,10 +126,6 @@ class Training(SuperClass):
         --------
         None
 
-        Raises:
-        -------
-        None, but prompts the user to confirm overwriting if the target directory exists.
-
         Notes:
         ------
         - The method creates a subdirectory named after `model_name` inside `target_directory`.
@@ -139,27 +135,16 @@ class Training(SuperClass):
         # Construct the full path for the model directory
         model_dir = target_directory / model_name
 
-        # Check if the directory already exists
-        if model_dir.exists():
-            # Ask the user whether to overwrite the existing directory
-            user_input = input(f"The directory {model_dir} already exists. Overwrite? [y/N]: ").strip().lower()
-            if user_input == 'y':
-                # Remove the existing directory and its contents
-                shutil.rmtree(model_dir)
-                print(f"Removed existing directory: {model_dir}")
-                os.mkdir(model_dir)
-                print(f"Directory {model_dir} created for model export.")
-            else:
-                print("Model export aborted: Existing directory not overwritten.")
-                return
-        else:
-            # Create the directory if it does not exist
+        # Ensure the directory exists
+        if not model_dir.exists():
             os.mkdir(model_dir)
             print(f"Directory {model_dir} created for model export.")
+        else:
+            print(f"Directory {model_dir} already exists. Files will be written into it.")
 
         # Generate performance metrics and save
         if evaluation_test and evaluation_train:
             df_evaluate = self.evaluate_dataframe(evaluation_test, evaluation_train)
             df_evaluate.to_csv(model_dir / 'performance.csv', index=False)
+            print(f"Performance metrics saved to {model_dir / 'performance.csv'}")
 
-        print(f"Model successfully exported to {model_dir}/")

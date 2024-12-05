@@ -8,16 +8,34 @@ import typing
 import uuid
 import pandas as pd
 import numpy as np
+import shutil
+import sys
 
 
 class Model:
     @staticmethod
     def save(
-        model: typing.Union[DLMatchingModel, NSMatchingModel],
+        model: typing.Union["DLMatchingModel", "NSMatchingModel"],
         target_directory: Path,
         name: str,
     ) -> None:
         target_directory = Path(target_directory) / name / "model"
+        
+        # Check if the directory already exists
+        if target_directory.exists():
+            replace = input(f"Directory '{target_directory}' already exists. Replace the old model? (y/n): ").strip().lower()
+            if replace == "y":
+                # Remove the existing directory
+                shutil.rmtree(target_directory)
+                print(f"Old model at '{target_directory}' has been replaced.")
+            elif replace == "n":
+                print("Execution halted as per user request.")
+                sys.exit(0)
+            else:
+                print("Invalid input. Please type 'y' or 'n'. Aborting operation.")
+                return
+
+        # Create the directory and save the model
         target_directory.mkdir(parents=True, exist_ok=True)
 
         # Save the similarity map
