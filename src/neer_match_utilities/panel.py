@@ -233,22 +233,18 @@ class GenerateID:
     """
     A class to generate and harmonize unique IDs across time periods for panel data.
 
-    Attributes
-    ----------
-    df_panel : pd.DataFrame
-        The panel dataset.
-    panel_var : str
-        The panel identifier variable that is supposed to be created.
-    time_var : str
-        The time period variable.
-    subgroups : list
-        List of subgroup variables for slicing.
-    model : object
-        A model object with a `suggest` method for generating ID suggestions.
-    similarity_map : dict
-        A dictionary mapping column names to their similarity functions.
-    prediction_threshold : float
-        Threshold for prediction acceptance. Default is 0.9.
+    Methods
+    -------
+    group_by_subgroups():
+        Group the panel data into subgroups.
+    generate_suggestions(df_slice):
+        Generate ID suggestions for consecutive time periods.
+    harmonize_ids(suggestions, periods, original_df):
+        Harmonize IDs across time periods.
+    assign_ids(id_mapping):
+        Assign unique IDs to the harmonized IDs.
+    execute():
+        Execute the full ID generation and harmonization process.
     """
 
     def __init__(
