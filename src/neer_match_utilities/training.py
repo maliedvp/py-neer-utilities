@@ -91,6 +91,7 @@ class Training(SuperClass):
             A DataFrame with accuracy, precision, recall, F-score, and a timestamp
             for both test and training datasets.
         """
+
         # Create DataFrames for test and training metrics
         df_test = pd.DataFrame([evaluation_test])
         df_test.insert(0, 'data', ['test'])
@@ -132,6 +133,7 @@ class Training(SuperClass):
         - If `evaluation_train` and `evaluation_test` are provided, their metrics are saved as a CSV file.
         - Similarity maps are serialized using `dill` and saved in the export directory.
         """
+        
         # Construct the full path for the model directory
         model_dir = target_directory / model_name
 

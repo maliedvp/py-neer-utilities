@@ -10,17 +10,22 @@ class SetupData:
     """
     A class for processing and preparing data with overlapping matches and panel relationships.
 
-    Attributes:
-        matches (list): A list of tuples representing matches.
+    Attributes
+    ----------
+    matches : list
+        A list of tuples representing matches.
     """
 
     def __init__(self, matches: list = None):
         """
         Initialize the SetupData class.
 
-        Args:
-            matches (list): A list of tuples representing matches. Default is an empty list.
+        Parameters
+        ----------
+        matches : list, optional
+            A list of tuples representing matches. Defaults to an empty list.
         """
+        
         self.matches = matches if matches is not None else []
         self.dfm = pd.DataFrame(self.matches, columns=['left', 'right'])
 
@@ -28,12 +33,17 @@ class SetupData:
         """
         Adjust the overlap between left and right columns in the DataFrame.
 
-        Args:
-            dfm (pd.DataFrame): DataFrame containing 'left' and 'right' columns.
+        Parameters
+        ----------
+        dfm : pd.DataFrame
+            DataFrame containing 'left' and 'right' columns.
 
-        Returns:
-            pd.DataFrame: DataFrame with overlaps adjusted and additional combinations added.
+        Returns
+        -------
+        pd.DataFrame
+            DataFrame with overlaps adjusted and additional combinations added.
         """
+
         if not set(dfm['left']).isdisjoint(dfm['right']):
             overlapping_ids = set(dfm['left']).intersection(dfm['right'])
 
@@ -49,9 +59,9 @@ class SetupData:
                     columns=['left', 'right']
                 )
                 dfm = pd.concat([dfm, combinations_df], ignore_index=True) \
-                	.drop_duplicates(ignore_index=True) \
-                	.sort_values(by='left') \
-                	.reset_index(drop=True)
+                    .drop_duplicates(ignore_index=True) \
+                    .sort_values(by='left') \
+                    .reset_index(drop=True)
 
         return dfm
 
@@ -60,38 +70,43 @@ class SetupData:
         """
         Remove duplicate pairs in the DataFrame irrespective of order.
 
-        Args:
-            df (pd.DataFrame): DataFrame containing 'left' and 'right' columns.
+        Parameters
+        ----------
+        df : pd.DataFrame
+            DataFrame containing 'left' and 'right' columns.
 
-        Returns:
-            pd.DataFrame: DataFrame with duplicates removed.
+        Returns
+        -------
+        pd.DataFrame
+            DataFrame with duplicates removed.
         """
+
         df['sorted_pair'] = df.apply(lambda row: tuple(sorted([row['left'], row['right']])), axis=1)
         df = df.drop_duplicates(subset=['sorted_pair']).drop(columns=['sorted_pair'])
         return df
 
-
-    def create_connected_groups(self, df_dict, matches):
+    def create_connected_groups(self, df_dict: Dict, matches: List[Tuple[int, int]]) -> List[List[int]]:
         """
-        Create a list of lists where sublists contain connected values as one (if a connection exists)
-        and the normal values for keys without connections.
+        Create a list of lists where sublists contain connected values as one group.
 
-        Args:
-            df_dict (dict): A dictionary where keys are numpy integers and values are lists of integers.
-            matches (list): A list of tuples representing connections between values.
+        Parameters
+        ----------
+        df_dict : dict
+            A dictionary where keys are integers and values are lists of integers.
+        matches : list of tuple of int
+            A list of tuples representing connections between values.
 
-        Returns:
-            list: A list of lists with connected values grouped together.
+        Returns
+        -------
+        list of list of int
+            A list of lists with connected values grouped together.
         """
-        # Flatten df_dict into a value-to-key mapping
+
         value_to_key = {val: key for key, values in df_dict.items() for val in values}
-
-        # Build a connection map from matches
         connections = {}
         for left, right in matches:
             key_left, key_right = value_to_key.get(left), value_to_key.get(right)
             if key_left and key_right:
-                # Merge sets of connected keys
                 if key_left in connections:
                     connections[key_left].add(key_right)
                 else:
@@ -102,7 +117,6 @@ class SetupData:
                 else:
                     connections[key_right] = {key_left, key_right}
 
-        # Combine connected keys into groups
         connected_groups = []
         visited = set()
         for key in df_dict.keys():
@@ -121,7 +135,6 @@ class SetupData:
             else:
                 connected_groups.append({key})
 
-        # Map connected groups back to values
         result = []
         for group in connected_groups:
             combined_values = []
@@ -131,20 +144,27 @@ class SetupData:
 
         return result
 
-
     def panel_preparation(self, dfm: pd.DataFrame, df_panel: pd.DataFrame, unique_id: str, panel_id: str) -> pd.DataFrame:
         """
         Generate combinations of IDs for each panel and append them to the DataFrame.
 
-        Args:
-            dfm (pd.DataFrame): DataFrame to append combinations to.
-            df_panel (pd.DataFrame): Panel DataFrame containing IDs and panel information.
-            unique_id (str): Column name of unique identifiers in df_panel.
-            panel_id (str): Column name of panel identifiers in df_panel.
+        Parameters
+        ----------
+        dfm : pd.DataFrame
+            DataFrame to append combinations to.
+        df_panel : pd.DataFrame
+            Panel DataFrame containing IDs and panel information.
+        unique_id : str
+            Column name of unique identifiers in df_panel.
+        panel_id : str
+            Column name of panel identifiers in df_panel.
 
-        Returns:
-            pd.DataFrame: Updated DataFrame with appended combinations.
+        Returns
+        -------
+        pd.DataFrame
+            Updated DataFrame with appended combinations.
         """
+
         df_dict = {}
 
         for pid in df_panel[panel_id].unique():
@@ -152,8 +172,8 @@ class SetupData:
             df_dict[pid] = unique_ids
 
         groups = self.create_connected_groups(
-            df_dict = df_dict,
-            matches = self.matches
+            df_dict=df_dict,
+            matches=self.matches
         )
         for g in groups:
             combinations_df = pd.DataFrame(list(combinations(g, 2)), columns=['left', 'right'])
@@ -161,17 +181,23 @@ class SetupData:
 
         return dfm
 
-    def data_preparation(self, df_panel: pd.DataFrame, unique_id: str, panel_id: str = None):
+    def data_preparation(self, df_panel: pd.DataFrame, unique_id: str, panel_id: str = None) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
         """
         Prepare data by handling overlaps, panel combinations, and duplicates.
 
-        Args:
-            df_panel (pd.DataFrame): Panel DataFrame containing IDs and panel information.
-            unique_id (str): Column name of unique identifiers in df_panel.
-            panel_id (str): Column name of panel identifiers in df_panel (optional).
+        Parameters
+        ----------
+        df_panel : pd.DataFrame
+            Panel DataFrame containing IDs and panel information.
+        unique_id : str
+            Column name of unique identifiers in df_panel.
+        panel_id : str, optional
+            Column name of panel identifiers in df_panel.
 
-        Returns:
-            tuple: DataFrames for left, right, and the final matches.
+        Returns
+        -------
+        tuple
+            DataFrames for left, right, and the final matches.
         """
 
         try:
@@ -187,10 +213,8 @@ class SetupData:
             dfm = self.panel_preparation(dfm, df_panel, unique_id, panel_id)
 
         dfm = self.adjust_overlap(dfm)
-
         dfm = self.drop_repetitions(dfm)
 
-        # Cast the `left` and `right` columns to the stable dtype
         dfm['left'] = dfm['left'].astype(stabile_dtype)
         dfm['right'] = dfm['right'].astype(stabile_dtype)
 
@@ -209,14 +233,22 @@ class GenerateID:
     """
     A class to generate and harmonize unique IDs across time periods for panel data.
 
-    Attributes:
-        df_panel (pd.DataFrame): The panel dataset.
-        panel_var (str): The panel identifier variable that is supposed to be created.
-        time_var (str): The time period variable.
-        subgroups (list): List of subgroup variables for slicing.
-        model: A model object with a `suggest` method for generating ID suggestions.
-        similarity_map (dict): A dictionary mapping column names to their similarity functions.
-        prediction_threshold (float): Threshold for prediction acceptance. Default is 0.9.
+    Attributes
+    ----------
+    df_panel : pd.DataFrame
+        The panel dataset.
+    panel_var : str
+        The panel identifier variable that is supposed to be created.
+    time_var : str
+        The time period variable.
+    subgroups : list
+        List of subgroup variables for slicing.
+    model : object
+        A model object with a `suggest` method for generating ID suggestions.
+    similarity_map : dict
+        A dictionary mapping column names to their similarity functions.
+    prediction_threshold : float
+        Threshold for prediction acceptance. Default is 0.9.
     """
 
     def __init__(
@@ -232,15 +264,24 @@ class GenerateID:
         """
         Initialize the GenerateID class.
 
-        Args:
-            df_panel (pd.DataFrame): The panel dataset.
-            panel_var (str): The panel identifier variable that is supposed to be created.
-            time_var (str): The time period variable.
-            subgroups (list, optional): List of subgroup variables for slicing.
-            model: A model object with a `suggest` method.
-            similarity_map (dict): A dictionary of similarity functions for columns.
-            prediction_threshold (float, optional): Threshold for predictions. Defaults to 0.9.
+        Parameters
+        ----------
+        df_panel : pd.DataFrame
+            The panel dataset.
+        panel_var : str
+            The panel identifier variable that is supposed to be created.
+        time_var : str
+            The time period variable.
+        subgroups : list, optional
+            List of subgroup variables for slicing. Defaults to None.
+        model : object
+            A model object with a `suggest` method.
+        similarity_map : dict
+            A dictionary of similarity functions for columns.
+        prediction_threshold : float, optional
+            Threshold for predictions. Defaults to 0.9.
         """
+
         subgroups = subgroups or []
 
         if df_panel.index.duplicated().any():
@@ -262,21 +303,31 @@ class GenerateID:
         """
         Group the panel data into subgroups.
 
-        Returns:
-            pd.core.groupby.generic.DataFrameGroupBy: Grouped dataframe by subgroups.
+        Returns
+        -------
+        pd.core.groupby.generic.DataFrameGroupBy
+            Grouped dataframe by subgroups.
         """
+
         return self.df_panel.groupby(self.subgroups)
 
     def generate_suggestions(self, df_slice: pd.DataFrame) -> Tuple[pd.DataFrame, List[int]]:
         """
         Generate ID suggestions for consecutive time periods.
 
-        Args:
-            df_slice (pd.DataFrame): A dataframe slice.
+        Parameters
+        ----------
+        df_slice : pd.DataFrame
+            A dataframe slice.
 
-        Returns:
-            Tuple[pd.DataFrame, List[int]]: A concatenated dataframe of suggestions and a list of periods.
+        Returns
+        -------
+        tuple
+            A tuple containing:
+            - pd.DataFrame: A concatenated dataframe of suggestions.
+            - list of int: A list of periods.
         """
+
         periods = sorted(df_slice[self.time_var].unique())
         suggestions_dict = {}
 
@@ -321,14 +372,21 @@ class GenerateID:
         """
         Harmonize IDs across time periods.
 
-        Args:
-            suggestions (pd.DataFrame): The dataframe with suggestions.
-            periods (List[int]): List of periods.
-            original_df (pd.DataFrame): The original dataframe.
+        Parameters
+        ----------
+        suggestions : pd.DataFrame
+            The dataframe with suggestions.
+        periods : list of int
+            List of periods.
+        original_df : pd.DataFrame
+            The original dataframe.
 
-        Returns:
-            pd.DataFrame: Harmonized ID mapping.
+        Returns
+        -------
+        pd.DataFrame
+            Harmonized ID mapping.
         """
+
         unique_ids = list(original_df.index)
 
         id_mapping = pd.DataFrame({
@@ -352,12 +410,17 @@ class GenerateID:
         """
         Assign unique IDs to the harmonized IDs.
 
-        Args:
-            id_mapping (pd.DataFrame): The harmonized ID mapping dataframe.
+        Parameters
+        ----------
+        id_mapping : pd.DataFrame
+            The harmonized ID mapping dataframe.
 
-        Returns:
-            pd.DataFrame: Dataframe with assigned unique IDs.
+        Returns
+        -------
+        pd.DataFrame
+            Dataframe with assigned unique IDs.
         """
+
         unique_indices = id_mapping['index_harm'].unique()
         id_map = {idx: uuid.uuid4() for idx in unique_indices}
 
@@ -369,9 +432,12 @@ class GenerateID:
         """
         Execute the full ID generation and harmonization process.
 
-        Returns:
-            pd.DataFrame: The final ID mapping.
+        Returns
+        -------
+        pd.DataFrame
+            The final ID mapping.
         """
+
         if self.subgroups:
             harmonized_dict = {}
             for subgroup, group_df in self.group_by_subgroups():

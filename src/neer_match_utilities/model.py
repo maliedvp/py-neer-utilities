@@ -13,19 +13,46 @@ import sys
 
 
 class Model:
+    """
+    A class for saving and loading matching models.
+
+    Methods
+    -------
+    save(model, target_directory, name):
+        Save the specified model to a target directory.
+    load(model_directory):
+        Load a model from a given directory.
+    """
+
     @staticmethod
     def save(
         model: typing.Union["DLMatchingModel", "NSMatchingModel"],
         target_directory: Path,
         name: str,
     ) -> None:
+        """
+        Save the model to a specified directory.
+
+        Parameters
+        ----------
+        model : DLMatchingModel or NSMatchingModel
+            The model to be saved.
+        target_directory : Path
+            The directory where the model should be saved.
+        name : str
+            Name of the model directory.
+
+        Raises
+        ------
+        ValueError
+            If the model is not an instance of DLMatchingModel or NSMatchingModel.
+        """
+
         target_directory = Path(target_directory) / name / "model"
-        
-        # Check if the directory already exists
+
         if target_directory.exists():
             replace = input(f"Directory '{target_directory}' already exists. Replace the old model? (y/n): ").strip().lower()
             if replace == "y":
-                # Remove the existing directory
                 shutil.rmtree(target_directory)
                 print(f"Old model at '{target_directory}' has been replaced.")
             elif replace == "n":
@@ -35,17 +62,14 @@ class Model:
                 print("Invalid input. Please type 'y' or 'n'. Aborting operation.")
                 return
 
-        # Create the directory and save the model
         target_directory.mkdir(parents=True, exist_ok=True)
 
-        # Save the similarity map
         with open(target_directory / "similarity_map.pkl", "wb") as f:
             pickle.dump(model.similarity_map, f)
 
         if isinstance(model, DLMatchingModel):
             model.save_weights(target_directory / "model.weights.h5")
-
-            if hasattr(model, "optimizer") and model.optimizer is not None:
+            if hasattr(model, "optimizer") and model.optimizer:
                 optimizer_config = {
                     "class_name": model.optimizer.__class__.__name__,
                     "config": model.optimizer.get_config(),
@@ -57,7 +81,7 @@ class Model:
             model.record_pair_network.save_weights(
                 target_directory / "record_pair_network.weights.h5"
             )
-            if hasattr(model, "optimizer") and model.optimizer is not None:
+            if hasattr(model, "optimizer") and model.optimizer:
                 optimizer_config = {
                     "class_name": model.optimizer.__class__.__name__,
                     "config": model.optimizer.get_config(),
@@ -73,11 +97,31 @@ class Model:
 
     @staticmethod
     def load(model_directory: Path) -> typing.Union[DLMatchingModel, NSMatchingModel]:
+        """
+        Load a model from a specified directory.
+
+        Parameters
+        ----------
+        model_directory : Path
+            The directory containing the saved model.
+
+        Returns
+        -------
+        DLMatchingModel or NSMatchingModel
+            The loaded model.
+
+        Raises
+        ------
+        FileNotFoundError
+            If the model directory does not exist.
+        ValueError
+            If the model type cannot be determined.
+        """
+
         model_directory = Path(model_directory) / "model"
         if not model_directory.exists():
             raise FileNotFoundError(f"Model directory '{model_directory}' does not exist.")
 
-        # Load the similarity map
         with open(model_directory / "similarity_map.pkl", "rb") as f:
             similarity_map = pickle.load(f)
 
@@ -117,14 +161,18 @@ class GenerateID:
     """
     A class to generate and harmonize unique IDs across time periods for panel data.
 
-    Attributes:
-        df_panel (pd.DataFrame): The panel dataset.
-        panel_var (str): The panel identifier variable.
-        time_var (str): The time period variable.
-        subgroups (list): List of subgroup variables for slicing.
-        model: A model object with a `suggest` method for generating ID suggestions.
-        similarity_map (dict): A dictionary mapping column names to their similarity functions.
-        prediction_threshold (float): Threshold for prediction acceptance. Default is 0.9.
+    Methods
+    -------
+    group_by_subgroups():
+        Group the panel data into subgroups.
+    generate_suggestions(df_slice):
+        Generate ID suggestions for consecutive time periods.
+    harmonize_ids(suggestions, periods, original_df):
+        Harmonize IDs across time periods.
+    assign_ids(id_mapping):
+        Assign unique IDs to the harmonized IDs.
+    execute():
+        Execute the full ID generation and harmonization process.
     """
 
     def __init__(
@@ -140,15 +188,29 @@ class GenerateID:
         """
         Initialize the GenerateID class.
 
-        Args:
-            df_panel (pd.DataFrame): The panel dataset.
-            panel_var (str): The panel identifier variable that is supposed to be created.
-            time_var (str): The time period variable.
-            subgroups (list, optional): List of subgroup variables for slicing.
-            model: A model object with a `suggest` method.
-            similarity_map (dict): A dictionary of similarity functions for columns.
-            prediction_threshold (float, optional): Threshold for predictions. Defaults to 0.9.
+        Parameters
+        ----------
+        df_panel : pd.DataFrame
+            The panel dataset.
+        panel_var : str
+            The panel identifier variable.
+        time_var : str
+            The time period variable.
+        model : object
+            A model object with a `suggest` method.
+        similarity_map : dict
+            A dictionary mapping column names to their similarity functions.
+        prediction_threshold : float, optional
+            Threshold for prediction acceptance. Defaults to 0.9.
+        subgroups : list, optional
+            List of subgroup variables for slicing. Defaults to None.
+
+        Raises
+        ------
+        ValueError
+            If the index of `df_panel` contains duplicate entries.
         """
+        
         subgroups = subgroups or []
 
         if df_panel.index.duplicated().any():
@@ -161,7 +223,6 @@ class GenerateID:
         self.similarity_map = similarity_map
         self.prediction_threshold = prediction_threshold
 
-        # Ensure df_panel only includes relevant columns
         self.df_panel = df_panel[
             [col for col in df_panel.columns if col in similarity_map.keys() or col in subgroups or col == time_var]
         ]
@@ -170,8 +231,10 @@ class GenerateID:
         """
         Group the panel data into subgroups.
 
-        Returns:
-            pd.core.groupby.generic.DataFrameGroupBy: Grouped dataframe by subgroups.
+        Returns
+        -------
+        pd.core.groupby.generic.DataFrameGroupBy
+            Grouped dataframe by subgroups.
         """
         return self.df_panel.groupby(self.subgroups)
 
@@ -179,12 +242,19 @@ class GenerateID:
         """
         Generate ID suggestions for consecutive time periods.
 
-        Args:
-            df_slice (pd.DataFrame): A dataframe slice.
+        Parameters
+        ----------
+        df_slice : pd.DataFrame
+            A dataframe slice.
 
-        Returns:
-            Tuple[pd.DataFrame, List[int]]: A concatenated dataframe of suggestions and a list of periods.
+        Returns
+        -------
+        tuple
+            A tuple containing:
+            - pd.DataFrame: A concatenated dataframe of suggestions.
+            - list of int: A list of periods.
         """
+
         periods = sorted(df_slice[self.time_var].unique())
         suggestions_dict = {}
 
@@ -229,14 +299,21 @@ class GenerateID:
         """
         Harmonize IDs across time periods.
 
-        Args:
-            suggestions (pd.DataFrame): The dataframe with suggestions.
-            periods (List[int]): List of periods.
-            original_df (pd.DataFrame): The original dataframe.
+        Parameters
+        ----------
+        suggestions : pd.DataFrame
+            The dataframe with suggestions.
+        periods : list of int
+            List of periods.
+        original_df : pd.DataFrame
+            The original dataframe.
 
-        Returns:
-            pd.DataFrame: Harmonized ID mapping.
+        Returns
+        -------
+        pd.DataFrame
+            Harmonized ID mapping.
         """
+
         unique_ids = list(original_df.index)
 
         id_mapping = pd.DataFrame({
@@ -260,12 +337,17 @@ class GenerateID:
         """
         Assign unique IDs to the harmonized IDs.
 
-        Args:
-            id_mapping (pd.DataFrame): The harmonized ID mapping dataframe.
+        Parameters
+        ----------
+        id_mapping : pd.DataFrame
+            The harmonized ID mapping dataframe.
 
-        Returns:
-            pd.DataFrame: Dataframe with assigned unique IDs.
+        Returns
+        -------
+        pd.DataFrame
+            Dataframe with assigned unique IDs.
         """
+
         unique_indices = id_mapping['index_harm'].unique()
         id_map = {idx: uuid.uuid4() for idx in unique_indices}
 
@@ -277,9 +359,12 @@ class GenerateID:
         """
         Execute the full ID generation and harmonization process.
 
-        Returns:
-            pd.DataFrame: The final ID mapping.
+        Returns
+        -------
+        pd.DataFrame
+            The final ID mapping.
         """
+
         if self.subgroups:
             harmonized_dict = {}
             for subgroup, group_df in self.group_by_subgroups():

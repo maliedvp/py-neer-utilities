@@ -63,8 +63,37 @@ class Prepare(SuperClass):
         - Supports flexible handling of missing values and type conversions.
         """
 
-        # Function to clean and process each DataFrame
         def process_df(df, columns, id_column):
+            """
+            Clean and process a DataFrame based on specified columns and an ID column.
+
+            This function performs a series of cleaning and transformation steps
+            on a DataFrame, including renaming columns, handling missing values,
+            converting data types, and optionally capitalizing strings.
+
+            Parameters
+            ----------
+            df : pd.DataFrame
+                The DataFrame to process.
+            columns : list of str
+                A list of column names to be processed.
+            id_column : str
+                The name of the ID column to retain in the DataFrame.
+
+            Returns
+            -------
+            pd.DataFrame
+                A cleaned and processed DataFrame.
+
+            Notes
+            -----
+            - Columns specified in `to_numeric` are converted to numeric dtype after 
+              removing non-numeric characters and optionally filling missing values.
+            - Non-numeric columns are converted to strings, with missing values 
+              optionally replaced by empty strings or left as NaN.
+            - If `capitalize` is True, string columns are converted to uppercase.
+            """
+
             # Select and rename relevant columns
             df = df[
                 [
