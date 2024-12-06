@@ -1,0 +1,17 @@
+.content .caption-text {
+  display: none!important;
+}
+
+.navbar .caption {
+  font-size: 12px;
+  margin: 12px 0px 0px 10px!important;
+  line-height: 25px;
+}
+
+.content p {
+  text-align: justify;
+}
+
+#sidebar > li, #sidebar > #sourcelink {
+  display: none;
+}

@@ -1,19 +1,40 @@
-.. neer-match-utilities documentation master file, created by
-   sphinx-quickstart on Thu Nov 28 17:10:17 2024.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+.. include:: README.md
+   :parser: commonmark
 
-neer-match-utilities documentation
-==================================
-
-Add your content using ``reStructuredText`` syntax. See the
-`reStructuredText <https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html>`_
-documentation for details.
-
+Examples
+========
 
 .. toctree::
-   :maxdepth: 3
-   :caption: Contents:
+   :maxdepth: 1
+   :caption: Examples
 
-   modules
-   neer_match_utilities
+   preparation.md
+
+Documentation
+=============
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Documentation
+
+   base
+   model
+   panel
+   prepare
+   split
+   training
+
+License
+=======
+
+.. toctree::
+   :maxdepth: 2
+   :caption: License
+
+   LICENSE
+
+Indices and Tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
