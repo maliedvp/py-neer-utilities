@@ -12,8 +12,8 @@ def split_test_train(left: pd.DataFrame, right: pd.DataFrame, matches: pd.DataFr
     This function ensures that only observations from `left` and `right` that are referenced
     in the `matches` DataFrame are included in the split process.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     left : pd.DataFrame
         The left dataset to split.
     right : pd.DataFrame
@@ -26,9 +26,10 @@ def split_test_train(left: pd.DataFrame, right: pd.DataFrame, matches: pd.DataFr
     validation_ratio : float, optional
         The proportion of the data to be used for validation (default is 0.1).
 
-    Returns:
-    --------
-    tuple:
+    Returns
+    -------
+    tuple
+        A tuple containing:
         - left_train : pd.DataFrame
         - right_train : pd.DataFrame
         - matches_train : pd.DataFrame
@@ -39,8 +40,8 @@ def split_test_train(left: pd.DataFrame, right: pd.DataFrame, matches: pd.DataFr
         - right_test : pd.DataFrame
         - matches_test : pd.DataFrame
 
-    Raises:
-    -------
+    Raises
+    ------
     SplitError
         If the total counts of split subsets do not match the original dataset size.
     """

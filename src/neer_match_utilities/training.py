@@ -22,8 +22,8 @@ class Training(SuperClass):
         Reorders a matches DataFrame to include indices from the left and 
         right DataFrames instead of their original IDs.
 
-        Parameters:
-        -----------
+        Parameters
+        ----------
         matches : pd.DataFrame
             DataFrame containing matching pairs.
         matches_id_left : str
@@ -31,12 +31,13 @@ class Training(SuperClass):
         matches_id_right : str
             Column name in the `matches` DataFrame corresponding to the right IDs.
 
-        Returns:
-        --------
+        Returns
+        -------
         pd.DataFrame
             A DataFrame with columns `left` and `right`, representing the indices
             of matching pairs in the left and right DataFrames.
         """
+        
         # Add custom indices
         self.df_left['index_left'] = self.df_left.index
         self.df_right['index_right'] = self.df_right.index
@@ -78,15 +79,15 @@ class Training(SuperClass):
         """
         Combines and evaluates test and training performance metrics.
 
-        Parameters:
-        -----------
+        Parameters
+        ----------
         evaluation_test : dict
             Dictionary containing performance metrics for the test dataset.
         evaluation_train : dict
             Dictionary containing performance metrics for the training dataset.
 
-        Returns:
-        --------
+        Returns
+        -------
         pd.DataFrame
             A DataFrame with accuracy, precision, recall, F-score, and a timestamp
             for both test and training datasets.
@@ -133,7 +134,7 @@ class Training(SuperClass):
         - If `evaluation_train` and `evaluation_test` are provided, their metrics are saved as a CSV file.
         - Similarity maps are serialized using `dill` and saved in the export directory.
         """
-        
+
         # Construct the full path for the model directory
         model_dir = target_directory / model_name
 
