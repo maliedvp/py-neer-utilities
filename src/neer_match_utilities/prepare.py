@@ -34,7 +34,7 @@ class Prepare(SuperClass):
         It handles numeric and string conversions, fills missing values, and ensures
         consistent data types between the columns of the two DataFrames.
 
-        Parameters:
+        Parameters
         ----------
         fill_numeric_na : bool, optional
             If True, fills missing numeric values with `0` before conversion to numeric dtype.
@@ -49,20 +49,19 @@ class Prepare(SuperClass):
             If True, capitalizes string values in non-numeric columns.
             Default is False.
 
-        Returns:
+        Returns
         -------
         tuple[pandas.DataFrame, pandas.DataFrame]
             A tuple containing the processed left (`df_left_processed`) and right
             (`df_right_processed`) DataFrames.
 
-        Notes:
+        Notes
         -----
         - Columns are processed and aligned according to the `similarity_map`:
-            * If both columns are numeric, their types are aligned.
-            * If types differ, columns are converted to strings while preserving `NaN`.
+            - If both columns are numeric, their types are aligned.
+            - If types differ, columns are converted to strings while preserving `NaN`.
         - Supports flexible handling of missing values and type conversions.
         """
-
 
         # Function to clean and process each DataFrame
         def process_df(df, columns, id_column):
