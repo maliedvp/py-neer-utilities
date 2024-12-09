@@ -1,0 +1,95 @@
+/* Entire sidebar container (affects both the top and the scrollable area) */
+.wy-side-nav {
+    background-color: #001626; /* Sidebar background color */
+    color: #ecf0f1; /* Default text color for the sidebar */
+}
+
+/* Top bar (search box and navigation top) */
+.wy-side-nav-search, .wy-nav-top {
+    background-color: #001626; /* Matches the sidebar background */
+    color: #ecf0f1; /* Text color for the top area */
+}
+
+/* Sidebar content menu (affects the scrollable area below the top) */
+.wy-side-scroll {
+    background-color: #001626; /* Matches the sidebar background */
+    color: #ecf0f1; /* Text color for sidebar content */
+}
+
+/* Sidebar links */
+.wy-side-nav .toctree-l1 > a {
+    color: #ecf0f1; /* Top-level TOC link color */
+    font-weight: bold; /* Bold for top-level items */
+}
+
+.wy-side-nav .toctree-l1 > a:hover {
+    color: #3498db; /* Hover color for top-level links */
+}
+
+/* Nested links (second-level TOC items) */
+.wy-side-nav .toctree-l2 > a {
+    color: #b0bec5; /* Second-level link color */
+}
+
+.wy-side-nav .toctree-l2 > a:hover {
+    color: #80d8ff; /* Hover color for second-level links */
+}
+
+/* Adjust text and link styles globally in the sidebar */
+.wy-side-nav a {
+    text-decoration: none; /* Remove underline from links */
+    color: inherit; /* Use the color specified above */
+}
+
+.wy-nav-content {
+    margin: 0; /* Remove any margins */
+    padding-top: 20px; /* Space below the top bar */
+    padding-left: 20px; /* Optional: Add left padding for readability */
+    padding-right: 20px; /* Optional: Add right padding */
+    flex: 1;
+    width: 100%; /* Ensure the content spans the full width */
+    max-width: 100%; /* Remove any max-width restrictions */
+    background-color: #fefefd; /* Content background color */
+    box-sizing: border-box; /* Include padding in width calculations */
+}
+
+/* Main content container */
+.wy-nav-content-wrap {
+    margin-left: 300px; /* Adjust for sidebar width */
+    width: calc(100% - 300px); /* Content width fills remaining space */
+    flex: 1;
+    background-color: #fefefd; /* Ensure the background is consistent */
+}
+
+
+/* Make the HTML and body take up the full height of the viewport */
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Footer styles */
+footer {
+    background-color: #fefefd; /* Footer background color */
+    color: #333; /* Footer text color */
+    padding: 10px;
+    text-align: center;
+    position: relative; /* Positioned within the flexbox layout */
+    bottom: 0;
+    width: 100%; /* Ensures footer spans the full width */
+}
+/* General link styling */
+a {
+    color: #2980b9; /* Default link color */
+}
+a:hover {
+    color: #3498db; /* Link hover color */
+}
+
+/* Body text color */
+body {
+    color: #333; /* General text color */
+}

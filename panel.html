@@ -1,0 +1,446 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel &mdash; Neer Match Utilities 0.2.0-alpha documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
+      <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css" />
+
+  
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=74c14a11"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+      <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Prepare" href="prepare.html" />
+    <link rel="prev" title="Model" href="model.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Neer Match Utilities
+              <img src="_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="preparation.html">Setting up the Preparation Pipeline</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="preparation.html#prerequisites">Prerequisites</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="base.html">Base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="model.html#neer_match_utilities.model.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="model.html#neer_match_utilities.model.Model.load"><code class="docutils literal notranslate"><span class="pre">Model.load()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#neer_match_utilities.model.Model.save"><code class="docutils literal notranslate"><span class="pre">Model.save()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Panel</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.panel.GenerateID"><code class="docutils literal notranslate"><span class="pre">GenerateID</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.panel.GenerateID.__init__"><code class="docutils literal notranslate"><span class="pre">GenerateID.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.panel.GenerateID.assign_ids"><code class="docutils literal notranslate"><span class="pre">GenerateID.assign_ids()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.panel.GenerateID.execute"><code class="docutils literal notranslate"><span class="pre">GenerateID.execute()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.panel.GenerateID.generate_suggestions"><code class="docutils literal notranslate"><span class="pre">GenerateID.generate_suggestions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.panel.GenerateID.group_by_subgroups"><code class="docutils literal notranslate"><span class="pre">GenerateID.group_by_subgroups()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.panel.GenerateID.harmonize_ids"><code class="docutils literal notranslate"><span class="pre">GenerateID.harmonize_ids()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.panel.SetupData"><code class="docutils literal notranslate"><span class="pre">SetupData</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.panel.SetupData.matches"><code class="docutils literal notranslate"><span class="pre">SetupData.matches</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.panel.SetupData.__init__"><code class="docutils literal notranslate"><span class="pre">SetupData.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.panel.SetupData.adjust_overlap"><code class="docutils literal notranslate"><span class="pre">SetupData.adjust_overlap()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.panel.SetupData.create_connected_groups"><code class="docutils literal notranslate"><span class="pre">SetupData.create_connected_groups()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.panel.SetupData.data_preparation"><code class="docutils literal notranslate"><span class="pre">SetupData.data_preparation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.panel.SetupData.drop_repetitions"><code class="docutils literal notranslate"><span class="pre">SetupData.drop_repetitions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.panel.SetupData.panel_preparation"><code class="docutils literal notranslate"><span class="pre">SetupData.panel_preparation()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="prepare.html">Prepare</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.Prepare"><code class="docutils literal notranslate"><span class="pre">Prepare</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.Prepare.format"><code class="docutils literal notranslate"><span class="pre">Prepare.format()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="split.html">Split</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="split.html#neer_match_utilities.split.SplitError"><code class="docutils literal notranslate"><span class="pre">SplitError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="split.html#neer_match_utilities.split.split_test_train"><code class="docutils literal notranslate"><span class="pre">split_test_train()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="training.html">Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="training.html#neer_match_utilities.training.Training"><code class="docutils literal notranslate"><span class="pre">Training</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="training.html#neer_match_utilities.training.Training.evaluate_dataframe"><code class="docutils literal notranslate"><span class="pre">Training.evaluate_dataframe()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="training.html#neer_match_utilities.training.Training.matches_reorder"><code class="docutils literal notranslate"><span class="pre">Training.matches_reorder()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="training.html#neer_match_utilities.training.Training.performance_statistics_export"><code class="docutils literal notranslate"><span class="pre">Training.performance_statistics_export()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="LICENSE.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Neer Match Utilities</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Panel</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/panel.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-neer_match_utilities.panel">
+<span id="panel"></span><h1>Panel<a class="headerlink" href="#module-neer_match_utilities.panel" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="neer_match_utilities.panel.GenerateID">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">neer_match_utilities.panel.</span></span><span class="sig-name descname"><span class="pre">GenerateID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_panel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">panel_var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">similarity_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prediction_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subgroups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/panel.html#GenerateID"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.panel.GenerateID" title="Link to this definition"></a></dt>
+<dd><p>A class to generate and harmonize unique IDs across time periods for panel data.</p>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">group_by_subgroups():</span></span></dt>
+<dd><p>Group the panel data into subgroups.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">generate_suggestions(df_slice):</span></span></dt>
+<dd><p>Generate ID suggestions for consecutive time periods.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">harmonize_ids(suggestions,</span> <span class="pre">periods,</span> <span class="pre">original_df):</span></span></dt>
+<dd><p>Harmonize IDs across time periods.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">assign_ids(id_mapping):</span></span></dt>
+<dd><p>Assign unique IDs to the harmonized IDs.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">execute():</span></span></dt>
+<dd><p>Execute the full ID generation and harmonization process.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neer_match_utilities.panel.GenerateID.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_panel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">panel_var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">similarity_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prediction_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subgroups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/panel.html#GenerateID.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.panel.GenerateID.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize the GenerateID class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df_panel</strong> (<em>pd.DataFrame</em>) – The panel dataset.</p></li>
+<li><p><strong>panel_var</strong> (<em>str</em>) – The panel identifier variable that is supposed to be created.</p></li>
+<li><p><strong>time_var</strong> (<em>str</em>) – The time period variable.</p></li>
+<li><p><strong>subgroups</strong> (<em>list</em><em>, </em><em>optional</em>) – List of subgroup variables for slicing. Defaults to None.</p></li>
+<li><p><strong>model</strong> (<em>object</em>) – A model object with a <cite>suggest</cite> method.</p></li>
+<li><p><strong>similarity_map</strong> (<em>dict</em>) – A dictionary of similarity functions for columns.</p></li>
+<li><p><strong>prediction_threshold</strong> (<em>float</em><em>, </em><em>optional</em>) – Threshold for predictions. Defaults to 0.9.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neer_match_utilities.panel.GenerateID.assign_ids">
+<span class="sig-name descname"><span class="pre">assign_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_mapping</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/panel.html#GenerateID.assign_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.panel.GenerateID.assign_ids" title="Link to this definition"></a></dt>
+<dd><p>Assign unique IDs to the harmonized IDs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>id_mapping</strong> (<em>pd.DataFrame</em>) – The harmonized ID mapping dataframe.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dataframe with assigned unique IDs.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neer_match_utilities.panel.GenerateID.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/panel.html#GenerateID.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.panel.GenerateID.execute" title="Link to this definition"></a></dt>
+<dd><p>Execute the full ID generation and harmonization process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The final ID mapping.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neer_match_utilities.panel.GenerateID.generate_suggestions">
+<span class="sig-name descname"><span class="pre">generate_suggestions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_slice</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/panel.html#GenerateID.generate_suggestions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.panel.GenerateID.generate_suggestions" title="Link to this definition"></a></dt>
+<dd><p>Generate ID suggestions for consecutive time periods.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>df_slice</strong> (<em>pd.DataFrame</em>) – A dataframe slice.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple containing:
+- pd.DataFrame: A concatenated dataframe of suggestions.
+- list of int: A list of periods.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neer_match_utilities.panel.GenerateID.group_by_subgroups">
+<span class="sig-name descname"><span class="pre">group_by_subgroups</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/panel.html#GenerateID.group_by_subgroups"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.panel.GenerateID.group_by_subgroups" title="Link to this definition"></a></dt>
+<dd><p>Group the panel data into subgroups.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Grouped dataframe by subgroups.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>pd.core.groupby.generic.DataFrameGroupBy</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neer_match_utilities.panel.GenerateID.harmonize_ids">
+<span class="sig-name descname"><span class="pre">harmonize_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">suggestions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">periods</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">original_df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/panel.html#GenerateID.harmonize_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.panel.GenerateID.harmonize_ids" title="Link to this definition"></a></dt>
+<dd><p>Harmonize IDs across time periods.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>suggestions</strong> (<em>pd.DataFrame</em>) – The dataframe with suggestions.</p></li>
+<li><p><strong>periods</strong> (<em>list</em><em> of </em><em>int</em>) – List of periods.</p></li>
+<li><p><strong>original_df</strong> (<em>pd.DataFrame</em>) – The original dataframe.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Harmonized ID mapping.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="neer_match_utilities.panel.SetupData">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">neer_match_utilities.panel.</span></span><span class="sig-name descname"><span class="pre">SetupData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matches</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/panel.html#SetupData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.panel.SetupData" title="Link to this definition"></a></dt>
+<dd><p>A class for processing and preparing data with overlapping matches and panel relationships.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neer_match_utilities.panel.SetupData.matches">
+<span class="sig-name descname"><span class="pre">matches</span></span><a class="headerlink" href="#neer_match_utilities.panel.SetupData.matches" title="Link to this definition"></a></dt>
+<dd><p>A list of tuples representing matches.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neer_match_utilities.panel.SetupData.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matches</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/panel.html#SetupData.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.panel.SetupData.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize the SetupData class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>matches</strong> (<em>list</em><em>, </em><em>optional</em>) – A list of tuples representing matches. Defaults to an empty list.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neer_match_utilities.panel.SetupData.adjust_overlap">
+<span class="sig-name descname"><span class="pre">adjust_overlap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dfm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/panel.html#SetupData.adjust_overlap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.panel.SetupData.adjust_overlap" title="Link to this definition"></a></dt>
+<dd><p>Adjust the overlap between left and right columns in the DataFrame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dfm</strong> (<em>pd.DataFrame</em>) – DataFrame containing ‘left’ and ‘right’ columns.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>DataFrame with overlaps adjusted and additional combinations added.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neer_match_utilities.panel.SetupData.create_connected_groups">
+<span class="sig-name descname"><span class="pre">create_connected_groups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/panel.html#SetupData.create_connected_groups"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.panel.SetupData.create_connected_groups" title="Link to this definition"></a></dt>
+<dd><p>Create a list of lists where sublists contain connected values as one group.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df_dict</strong> (<em>dict</em>) – A dictionary where keys are integers and values are lists of integers.</p></li>
+<li><p><strong>matches</strong> (<em>list</em><em> of </em><em>tuple</em><em> of </em><em>int</em>) – A list of tuples representing connections between values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of lists with connected values grouped together.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of list of int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neer_match_utilities.panel.SetupData.data_preparation">
+<span class="sig-name descname"><span class="pre">data_preparation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_panel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">panel_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/panel.html#SetupData.data_preparation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.panel.SetupData.data_preparation" title="Link to this definition"></a></dt>
+<dd><p>Prepare data by handling overlaps, panel combinations, and duplicates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df_panel</strong> (<em>pd.DataFrame</em>) – Panel DataFrame containing IDs and panel information.</p></li>
+<li><p><strong>unique_id</strong> (<em>str</em>) – Column name of unique identifiers in df_panel.</p></li>
+<li><p><strong>panel_id</strong> (<em>str</em><em>, </em><em>optional</em>) – Column name of panel identifiers in df_panel.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>DataFrames for left, right, and the final matches.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neer_match_utilities.panel.SetupData.drop_repetitions">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">drop_repetitions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/panel.html#SetupData.drop_repetitions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.panel.SetupData.drop_repetitions" title="Link to this definition"></a></dt>
+<dd><p>Remove duplicate pairs in the DataFrame irrespective of order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>df</strong> (<em>pd.DataFrame</em>) – DataFrame containing ‘left’ and ‘right’ columns.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>DataFrame with duplicates removed.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neer_match_utilities.panel.SetupData.panel_preparation">
+<span class="sig-name descname"><span class="pre">panel_preparation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dfm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_panel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">panel_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/panel.html#SetupData.panel_preparation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.panel.SetupData.panel_preparation" title="Link to this definition"></a></dt>
+<dd><p>Generate combinations of IDs for each panel and append them to the DataFrame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dfm</strong> (<em>pd.DataFrame</em>) – DataFrame to append combinations to.</p></li>
+<li><p><strong>df_panel</strong> (<em>pd.DataFrame</em>) – Panel DataFrame containing IDs and panel information.</p></li>
+<li><p><strong>unique_id</strong> (<em>str</em>) – Column name of unique identifiers in df_panel.</p></li>
+<li><p><strong>panel_id</strong> (<em>str</em>) – Column name of panel identifiers in df_panel.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Updated DataFrame with appended combinations.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="model.html" class="btn btn-neutral float-left" title="Model" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="prepare.html" class="btn btn-neutral float-right" title="Prepare" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Pantelis Karapanagiotis, Marius Liebald.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

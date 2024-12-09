@@ -1,0 +1,306 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>neer_match_utilities.split &mdash; Neer Match Utilities 0.2.0-alpha documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/extra.css?v=503a7970" />
+      <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=74c14a11"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+      <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Neer Match Utilities
+              <img src="../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../preparation.html">Setting up the Preparation Pipeline</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../preparation.html#prerequisites">Prerequisites</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../base.html">Base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../model.html">Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../model.html#neer_match_utilities.model.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../model.html#neer_match_utilities.model.Model.load"><code class="docutils literal notranslate"><span class="pre">Model.load()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../model.html#neer_match_utilities.model.Model.save"><code class="docutils literal notranslate"><span class="pre">Model.save()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../panel.html">Panel</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../panel.html#neer_match_utilities.panel.GenerateID"><code class="docutils literal notranslate"><span class="pre">GenerateID</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../panel.html#neer_match_utilities.panel.GenerateID.__init__"><code class="docutils literal notranslate"><span class="pre">GenerateID.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../panel.html#neer_match_utilities.panel.GenerateID.assign_ids"><code class="docutils literal notranslate"><span class="pre">GenerateID.assign_ids()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../panel.html#neer_match_utilities.panel.GenerateID.execute"><code class="docutils literal notranslate"><span class="pre">GenerateID.execute()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../panel.html#neer_match_utilities.panel.GenerateID.generate_suggestions"><code class="docutils literal notranslate"><span class="pre">GenerateID.generate_suggestions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../panel.html#neer_match_utilities.panel.GenerateID.group_by_subgroups"><code class="docutils literal notranslate"><span class="pre">GenerateID.group_by_subgroups()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../panel.html#neer_match_utilities.panel.GenerateID.harmonize_ids"><code class="docutils literal notranslate"><span class="pre">GenerateID.harmonize_ids()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../panel.html#neer_match_utilities.panel.SetupData"><code class="docutils literal notranslate"><span class="pre">SetupData</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../panel.html#neer_match_utilities.panel.SetupData.matches"><code class="docutils literal notranslate"><span class="pre">SetupData.matches</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../panel.html#neer_match_utilities.panel.SetupData.__init__"><code class="docutils literal notranslate"><span class="pre">SetupData.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../panel.html#neer_match_utilities.panel.SetupData.adjust_overlap"><code class="docutils literal notranslate"><span class="pre">SetupData.adjust_overlap()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../panel.html#neer_match_utilities.panel.SetupData.create_connected_groups"><code class="docutils literal notranslate"><span class="pre">SetupData.create_connected_groups()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../panel.html#neer_match_utilities.panel.SetupData.data_preparation"><code class="docutils literal notranslate"><span class="pre">SetupData.data_preparation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../panel.html#neer_match_utilities.panel.SetupData.drop_repetitions"><code class="docutils literal notranslate"><span class="pre">SetupData.drop_repetitions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../panel.html#neer_match_utilities.panel.SetupData.panel_preparation"><code class="docutils literal notranslate"><span class="pre">SetupData.panel_preparation()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../prepare.html">Prepare</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../prepare.html#neer_match_utilities.prepare.Prepare"><code class="docutils literal notranslate"><span class="pre">Prepare</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../prepare.html#neer_match_utilities.prepare.Prepare.format"><code class="docutils literal notranslate"><span class="pre">Prepare.format()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../split.html">Split</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../split.html#neer_match_utilities.split.SplitError"><code class="docutils literal notranslate"><span class="pre">SplitError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../split.html#neer_match_utilities.split.split_test_train"><code class="docutils literal notranslate"><span class="pre">split_test_train()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../training.html">Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../training.html#neer_match_utilities.training.Training"><code class="docutils literal notranslate"><span class="pre">Training</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../training.html#neer_match_utilities.training.Training.evaluate_dataframe"><code class="docutils literal notranslate"><span class="pre">Training.evaluate_dataframe()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../training.html#neer_match_utilities.training.Training.matches_reorder"><code class="docutils literal notranslate"><span class="pre">Training.matches_reorder()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../training.html#neer_match_utilities.training.Training.performance_statistics_export"><code class="docutils literal notranslate"><span class="pre">Training.performance_statistics_export()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../LICENSE.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Neer Match Utilities</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">neer_match_utilities.split</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for neer_match_utilities.split</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<div class="viewcode-block" id="SplitError">
+<a class="viewcode-back" href="../../split.html#neer_match_utilities.split.SplitError">[docs]</a>
+<span class="k">class</span> <span class="nc">SplitError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom exception for errors in data splitting.&quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+
+<div class="viewcode-block" id="split_test_train">
+<a class="viewcode-back" href="../../split.html#neer_match_utilities.split.split_test_train">[docs]</a>
+<span class="k">def</span> <span class="nf">split_test_train</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">matches</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">test_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,</span> <span class="n">validation_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Splits datasets into training, validation, and testing subsets.</span>
+
+<span class="sd">    This function ensures that only observations from `left` and `right` that are referenced</span>
+<span class="sd">    in the `matches` DataFrame are included in the split process.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    left : pd.DataFrame</span>
+<span class="sd">        The left dataset to split.</span>
+<span class="sd">    right : pd.DataFrame</span>
+<span class="sd">        The right dataset to split.</span>
+<span class="sd">    matches : pd.DataFrame</span>
+<span class="sd">        A DataFrame containing matching pairs between the left and right datasets.</span>
+<span class="sd">        It must include columns &#39;left&#39; and &#39;right&#39;, referencing indices in `left` and `right`.</span>
+<span class="sd">    test_ratio : float, optional</span>
+<span class="sd">        The proportion of the data to be used for testing (default is 0.3).</span>
+<span class="sd">    validation_ratio : float, optional</span>
+<span class="sd">        The proportion of the data to be used for validation (default is 0.1).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple</span>
+<span class="sd">        A tuple containing:</span>
+<span class="sd">        - left_train : pd.DataFrame</span>
+<span class="sd">        - right_train : pd.DataFrame</span>
+<span class="sd">        - matches_train : pd.DataFrame</span>
+<span class="sd">        - left_validation : pd.DataFrame</span>
+<span class="sd">        - right_validation : pd.DataFrame</span>
+<span class="sd">        - matches_validation : pd.DataFrame</span>
+<span class="sd">        - left_test : pd.DataFrame</span>
+<span class="sd">        - right_test : pd.DataFrame</span>
+<span class="sd">        - matches_test : pd.DataFrame</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    SplitError</span>
+<span class="sd">        If the total counts of split subsets do not match the original dataset size.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="c1"># Filter `left` and `right` to only include rows referenced in `matches`</span>
+    <span class="n">left</span> <span class="o">=</span> <span class="n">left</span><span class="p">[</span><span class="n">left</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">matches</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">])]</span>
+    <span class="n">right</span> <span class="o">=</span> <span class="n">right</span><span class="p">[</span><span class="n">right</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">matches</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">])]</span>
+
+    <span class="c1"># Get absolute counts for each subset</span>
+    <span class="n">matches_test_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">test_ratio</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">)))</span>
+    <span class="n">matches_validation_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">validation_ratio</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">)))</span>
+    <span class="n">matches_train_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span> <span class="o">-</span> <span class="n">matches_test_count</span> <span class="o">-</span> <span class="n">matches_validation_count</span>
+
+    <span class="c1"># Validate the requested counts</span>
+    <span class="k">if</span> <span class="n">matches_test_count</span> <span class="o">+</span> <span class="n">matches_validation_count</span> <span class="o">+</span> <span class="n">matches_train_count</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">SplitError</span><span class="p">(</span><span class="s2">&quot;Split does not work correctly: The sum of observations in the three datasets is not equal to the number of observations in matches&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">subsets</span><span class="p">(</span><span class="n">matches_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">matches_exclude_index</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generates random subsets for matches DataFrame and corresponding rows in `left` and `right`.&quot;&quot;&quot;</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">matches</span><span class="p">[</span><span class="o">~</span><span class="n">matches</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">matches_exclude_index</span><span class="p">)]</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">matches_count</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">l</span> <span class="o">=</span> <span class="n">left</span><span class="p">[</span><span class="n">left</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">])]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">right</span><span class="p">[</span><span class="n">right</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">])]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">m</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">r</span>
+
+    <span class="n">matches_test</span><span class="p">,</span> <span class="n">left_test</span><span class="p">,</span> <span class="n">right_test</span> <span class="o">=</span> <span class="n">subsets</span><span class="p">(</span>
+        <span class="n">matches_test_count</span><span class="p">,</span> 
+        <span class="n">matches_exclude_index</span><span class="o">=</span><span class="p">[]</span>
+    <span class="p">)</span>
+    <span class="n">matches_exclude_index</span> <span class="o">=</span> <span class="n">matches_test</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+    <span class="n">matches_validation</span><span class="p">,</span> <span class="n">left_validation</span><span class="p">,</span> <span class="n">right_validation</span> <span class="o">=</span> <span class="n">subsets</span><span class="p">(</span>
+        <span class="n">matches_validation_count</span><span class="p">,</span> 
+        <span class="n">matches_exclude_index</span><span class="o">=</span><span class="n">matches_exclude_index</span>
+    <span class="p">)</span>
+    <span class="n">matches_exclude_index</span> <span class="o">+=</span> <span class="n">matches_validation</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+    <span class="n">matches_train</span><span class="p">,</span> <span class="n">left_train</span><span class="p">,</span> <span class="n">right_train</span> <span class="o">=</span> <span class="n">subsets</span><span class="p">(</span>
+        <span class="n">matches_train_count</span><span class="p">,</span> 
+        <span class="n">matches_exclude_index</span><span class="o">=</span><span class="n">matches_exclude_index</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">process_dataset</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Processes a single dataset by adding an &#39;index_original&#39; column,</span>
+<span class="sd">        resetting the index, and creating a mapping dictionary.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;index_original&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">mapping_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;index_original&#39;</span><span class="p">],</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">df</span><span class="p">,</span> <span class="n">mapping_dict</span>
+
+    <span class="c1"># Process datasets individually</span>
+    <span class="n">left_train</span><span class="p">,</span> <span class="n">left_train_dict</span> <span class="o">=</span> <span class="n">process_dataset</span><span class="p">(</span><span class="n">left_train</span><span class="p">)</span>
+    <span class="n">right_train</span><span class="p">,</span> <span class="n">right_train_dict</span> <span class="o">=</span> <span class="n">process_dataset</span><span class="p">(</span><span class="n">right_train</span><span class="p">)</span>
+
+    <span class="n">left_test</span><span class="p">,</span> <span class="n">left_test_dict</span> <span class="o">=</span> <span class="n">process_dataset</span><span class="p">(</span><span class="n">left_test</span><span class="p">)</span>
+    <span class="n">right_test</span><span class="p">,</span> <span class="n">right_test_dict</span> <span class="o">=</span> <span class="n">process_dataset</span><span class="p">(</span><span class="n">right_test</span><span class="p">)</span>
+
+    <span class="n">left_validation</span><span class="p">,</span> <span class="n">left_validate_dict</span> <span class="o">=</span> <span class="n">process_dataset</span><span class="p">(</span><span class="n">left_validation</span><span class="p">)</span>
+    <span class="n">right_validation</span><span class="p">,</span> <span class="n">right_validation_dict</span> <span class="o">=</span> <span class="n">process_dataset</span><span class="p">(</span><span class="n">right_validation</span><span class="p">)</span>
+
+    <span class="c1"># Update matches dataframes</span>
+    <span class="k">def</span> <span class="nf">update_matches</span><span class="p">(</span><span class="n">matches_df</span><span class="p">,</span> <span class="n">left_dict</span><span class="p">,</span> <span class="n">right_dict</span><span class="p">):</span>
+        <span class="n">matches_df</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">matches_df</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">left_dict</span><span class="p">)</span>
+        <span class="n">matches_df</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">matches_df</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">right_dict</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">matches_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">matches_train</span> <span class="o">=</span> <span class="n">update_matches</span><span class="p">(</span>
+        <span class="n">matches_train</span><span class="p">,</span> 
+        <span class="n">left_train_dict</span><span class="p">,</span> 
+        <span class="n">right_train_dict</span>
+    <span class="p">)</span>
+
+    <span class="n">matches_test</span> <span class="o">=</span> <span class="n">update_matches</span><span class="p">(</span>
+        <span class="n">matches_test</span><span class="p">,</span> 
+        <span class="n">left_test_dict</span><span class="p">,</span> 
+        <span class="n">right_test_dict</span>
+    <span class="p">)</span>
+
+    <span class="n">matches_validation</span> <span class="o">=</span> <span class="n">update_matches</span><span class="p">(</span>
+        <span class="n">matches_validation</span><span class="p">,</span> 
+        <span class="n">left_validate_dict</span><span class="p">,</span> 
+        <span class="n">right_validation_dict</span>
+    <span class="p">)</span>
+
+
+    <span class="k">return</span> <span class="n">left_train</span><span class="p">,</span> <span class="n">right_train</span><span class="p">,</span> <span class="n">matches_train</span><span class="p">,</span> <span class="n">left_validation</span><span class="p">,</span> <span class="n">right_validation</span><span class="p">,</span> <span class="n">matches_validation</span><span class="p">,</span> <span class="n">left_test</span><span class="p">,</span> <span class="n">right_test</span><span class="p">,</span> <span class="n">matches_test</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Pantelis Karapanagiotis, Marius Liebald.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
