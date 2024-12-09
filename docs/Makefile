@@ -26,7 +26,10 @@ help:
 	(echo "# License\n" && cat $(PACKAGEDIR)/LICENSE.txt) > $(SOURCEDIR)/LICENSE.md
 
 	# Render the README file with Quarto
-	quarto render $(SOURCEDIR)/_static/README.qmd -t gfm --output-dir ../
+	# Render the README file with Quarto
+	quarto render $(SOURCEDIR)/_static/README.qmd -t gfm
+	mv $(SOURCEDIR)/_static/README.md $(SOURCEDIR)/README.md
+
 
 	# Prepare README.md for the root directory
 	cp $(SOURCEDIR)/README.md ../README.md
