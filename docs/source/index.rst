@@ -1,5 +1,9 @@
+.. include:: README_sphinx.md
+   :parser: commonmark
+
 .. include:: README.md
    :parser: commonmark
+
 
 Examples
 ========

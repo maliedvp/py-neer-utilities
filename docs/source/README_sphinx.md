@@ -18,6 +18,6 @@ Test
 
 # License
 
-The package is distributed under the [MIT license](LICENSE.txt).
+The package is distributed under the <a href="LICENSE.html">MIT license</a>.
 
 # References
