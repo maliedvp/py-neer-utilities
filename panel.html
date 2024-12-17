@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Panel &mdash; Neer Match Utilities 0.2.0-alpha documentation</title>
+  <title>Panel &mdash; Neer Match Utilities 0.3.0-alpha documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=74c14a11"></script>
+      <script src="_static/documentation_options.js?v=09ba180a"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -74,6 +74,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.panel.GenerateID.generate_suggestions"><code class="docutils literal notranslate"><span class="pre">GenerateID.generate_suggestions()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.panel.GenerateID.group_by_subgroups"><code class="docutils literal notranslate"><span class="pre">GenerateID.group_by_subgroups()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.panel.GenerateID.harmonize_ids"><code class="docutils literal notranslate"><span class="pre">GenerateID.harmonize_ids()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.panel.GenerateID.relations_left_right"><code class="docutils literal notranslate"><span class="pre">GenerateID.relations_left_right()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.panel.SetupData"><code class="docutils literal notranslate"><span class="pre">SetupData</span></code></a><ul>
@@ -143,7 +144,7 @@
 <span id="panel"></span><h1>Panel<a class="headerlink" href="#module-neer_match_utilities.panel" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="neer_match_utilities.panel.GenerateID">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">neer_match_utilities.panel.</span></span><span class="sig-name descname"><span class="pre">GenerateID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_panel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">panel_var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">similarity_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prediction_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subgroups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/panel.html#GenerateID"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.panel.GenerateID" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">neer_match_utilities.panel.</span></span><span class="sig-name descname"><span class="pre">GenerateID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_panel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">panel_var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">similarity_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prediction_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subgroups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'m:m'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/panel.html#GenerateID"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.panel.GenerateID" title="Link to this definition"></a></dt>
 <dd><p>A class to generate and harmonize unique IDs across time periods for panel data.</p>
 <dl class="py method">
 <dt class="sig sig-object py">
@@ -177,7 +178,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="neer_match_utilities.panel.GenerateID.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_panel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">panel_var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">similarity_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prediction_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subgroups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/panel.html#GenerateID.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.panel.GenerateID.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_panel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">panel_var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">similarity_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prediction_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subgroups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'m:m'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/panel.html#GenerateID.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.panel.GenerateID.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initialize the GenerateID class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -189,6 +190,7 @@
 <li><p><strong>model</strong> (<em>object</em>) – A model object with a <cite>suggest</cite> method.</p></li>
 <li><p><strong>similarity_map</strong> (<em>dict</em>) – A dictionary of similarity functions for columns.</p></li>
 <li><p><strong>prediction_threshold</strong> (<em>float</em><em>, </em><em>optional</em>) – Threshold for predictions. Defaults to 0.9.</p></li>
+<li><p><strong>relation</strong> (<em>str</em><em>, </em><em>optional</em>) – Relationship between observations in cross sectional data. Default is ‘m:m’</p></li>
 </ul>
 </dd>
 </dl>
@@ -231,7 +233,7 @@
 <dd><p>Generate ID suggestions for consecutive time periods.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>df_slice</strong> (<em>pd.DataFrame</em>) – A dataframe slice.</p>
+<dd class="field-odd"><p><strong>df_slice</strong> (<em>pd.DataFrame</em>) – A dataframe slice containing data to process.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A tuple containing:
@@ -275,6 +277,34 @@
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neer_match_utilities.panel.GenerateID.relations_left_right">
+<span class="sig-name descname"><span class="pre">relations_left_right</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/panel.html#GenerateID.relations_left_right"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.panel.GenerateID.relations_left_right" title="Link to this definition"></a></dt>
+<dd><p>Apply validation rules to enforce relationships between matched observations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – DataFrame containing ‘left’, ‘right’, and ‘prediction’ columns.</p></li>
+<li><p><strong>relation</strong> (<em>str</em><em>, </em><em>optional</em>) – Validation mode for relationships. If None, defaults to <cite>self.relation</cite>.
+Options:
+- ‘m:m’ : Many-to-many, no duplicates removed.
+- ‘1:m’ : Unique ‘left’ values.
+- ‘m:1’ : Unique ‘right’ values.
+- ‘1:1’ : Unique ‘left’ and ‘right’ values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A reduced DataFrame with relationships enforced based on <cite>relation</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If <cite>relation</cite> is not one of [‘m:m’, ‘1:m’, ‘m:1’, ‘1:1’].</p>
 </dd>
 </dl>
 </dd></dl>
