@@ -255,7 +255,8 @@ class GenerateID:
         model, 
         similarity_map: Dict, 
         prediction_threshold: float = 0.9, 
-        subgroups: List[str] = None
+        subgroups: List[str] = None,
+        relation: str = 'm:m'
     ):
         """
         Initialize the GenerateID class.
@@ -276,6 +277,8 @@ class GenerateID:
             A dictionary of similarity functions for columns.
         prediction_threshold : float, optional
             Threshold for predictions. Defaults to 0.9.
+        relation : str, optional
+            Relationship between observations in cross sectional data. Default is 'm:m'
         """
 
         subgroups = subgroups or []
@@ -289,6 +292,7 @@ class GenerateID:
         self.model = model
         self.similarity_map = similarity_map
         self.prediction_threshold = prediction_threshold
+        self.relation = relation
 
         # Ensure df_panel only includes relevant columns
         self.df_panel = df_panel[
@@ -307,6 +311,73 @@ class GenerateID:
 
         return self.df_panel.groupby(self.subgroups)
 
+    def relations_left_right(self, df: pd.DataFrame, relation: str = None) -> pd.DataFrame:
+        """
+        Apply validation rules to enforce relationships between matched observations.
+
+        Parameters
+        ----------
+        df : pd.DataFrame
+            DataFrame containing 'left', 'right', and 'prediction' columns.
+        relation : str, optional
+            Validation mode for relationships. If None, defaults to `self.relation`.
+            Options:
+            - 'm:m' : Many-to-many, no duplicates removed.
+            - '1:m' : Unique 'left' values.
+            - 'm:1' : Unique 'right' values.
+            - '1:1' : Unique 'left' and 'right' values.
+
+        Returns
+        -------
+        pd.DataFrame
+            A reduced DataFrame with relationships enforced based on `relation`.
+
+        Raises
+        ------
+        ValueError
+            If `relation` is not one of ['m:m', '1:m', 'm:1', '1:1'].
+        """
+
+        relation = relation if relation is not None else self.relation
+
+        if relation == 'm:m':
+            pass
+        else:
+            df = df.sort_values(
+                by = 'prediction',
+                ascending = False,
+                ignore_index = True
+            )
+
+            if relation == '1:m':        
+                df = df.drop_duplicates(
+                    subset = 'left',
+                    keep='first'
+                )
+            elif relation == 'm:1':
+                df = df.drop_duplicates(
+                    subset = 'right',
+                    keep='first'
+                )
+            elif relation == '1:1':
+                df = df.drop_duplicates(
+                    subset = 'left',
+                    keep='first'
+                )
+                df = df.drop_duplicates(
+                    subset = 'right',
+                    keep='first'
+                )
+            else:
+                raise ValueError(
+                    f"Invalid value for `relation`: '{relation}'. "
+                    "It must be one of ['m:m', '1:m', 'm:1', '1:1']."
+                )
+
+            df = df.reset_index(drop=False)
+
+        return df
+
     def generate_suggestions(self, df_slice: pd.DataFrame) -> Tuple[pd.DataFrame, List[int]]:
         """
         Generate ID suggestions for consecutive time periods.
@@ -314,7 +385,7 @@ class GenerateID:
         Parameters
         ----------
         df_slice : pd.DataFrame
-            A dataframe slice.
+            A dataframe slice containing data to process.
 
         Returns
         -------
@@ -335,6 +406,12 @@ class GenerateID:
 
             suggestions = self.model.suggest(left, right, count=1)
             suggestions = suggestions[suggestions['prediction'] >= self.prediction_threshold]
+
+            suggestions = self.relations_left_right(
+                  df = suggestions,
+                  relation = self.relation
+            )
+
 
             suggestions = pd.merge(
                 left[['index']], suggestions, left_index=True, right_on='left'
