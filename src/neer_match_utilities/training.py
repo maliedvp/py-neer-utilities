@@ -6,6 +6,8 @@ import shutil
 import dill
 import os
 import numpy as np
+import tensorflow.keras.backend as K
+
 
 class Training(SuperClass):
     """
@@ -150,4 +152,78 @@ class Training(SuperClass):
             df_evaluate = self.evaluate_dataframe(evaluation_test, evaluation_train)
             df_evaluate.to_csv(model_dir / 'performance.csv', index=False)
             print(f"Performance metrics saved to {model_dir / 'performance.csv'}")
+
+
+def focal_loss(alpha=0.25, gamma=2.0):
+    """
+    Focal Loss function for binary classification tasks.
+
+    Focal Loss is designed to address class imbalance by assigning higher weights to the 
+    minority class and focusing the model's learning on hard-to-classify examples. 
+    It reduces the loss contribution from well-classified examples, making it 
+    particularly effective for imbalanced datasets.
+
+    Parameters
+    ----------
+    alpha : float, optional, default=0.25
+        Weighting factor for the positive class (minority class). 
+        - Must be in the range [0, 1].
+        - A higher value increases the loss contribution from the positive class 
+          (underrepresented class) relative to the negative class (overrepresented class).
+
+    gamma : float, optional, default=2.0
+        Focusing parameter that reduces the loss contribution from easy examples.
+        - \( \gamma = 0 \): No focusing, equivalent to Weighted Binary Cross-Entropy Loss.
+        - \( \gamma > 0 \): Focuses more on hard-to-classify examples.
+        - Larger values emphasize harder examples more strongly.
+
+    Returns
+    -------
+    loss : callable
+        A loss function that computes the focal loss given the true labels (`y_true`)
+        and predicted probabilities (`y_pred`).
+
+    Raises
+    ------
+    ValueError
+        If `alpha` is not in the range [0, 1].
+
+    Notes
+    -----
+    - The positive class (minority or underrepresented class) is weighted by `alpha`.
+    - The negative class (majority or overrepresented class) is automatically weighted 
+      by \( 1 - \alpha \).
+    - Ensure `alpha` is set appropriately to reflect the level of imbalance in the dataset.
+
+    References
+    ----------
+    Lin, T.-Y., Goyal, P., Girshick, R., He, K., & Dollár, P. (2017).
+    Focal Loss for Dense Object Detection. In ICCV.
+
+    Explanation of Key Terms
+    ------------------------
+    - **Positive Class (Underrepresented):**
+      - Refers to the class with fewer examples in the dataset.
+      - Typically weighted by `alpha`, which should be greater than \( 0.5 \) in 
+        highly imbalanced datasets.
+
+    - **Negative Class (Overrepresented):**
+      - Refers to the class with more examples in the dataset.
+      - Its weight is automatically \( 1 - \alpha \).
+
+    """
+    if not (0 <= alpha <= 1):
+        raise ValueError("Parameter `alpha` must be in the range [0, 1].")
+
+    def loss(y_true, y_pred):
+        # Compute the binary cross-entropy
+        bce = K.binary_crossentropy(y_true, y_pred)
+
+        # Compute p_t, the probability of the true class
+        p_t = y_true * y_pred + (1 - y_true) * (1 - y_pred)
+
+        # Apply focal loss scaling
+        return K.mean(alpha * K.pow(1 - p_t, gamma) * bce)
+
+    return loss
 
