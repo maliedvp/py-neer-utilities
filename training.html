@@ -6,8 +6,8 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Training &mdash; Neer Match Utilities 0.3.0-alpha documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+  <title>Training &mdash; Neer Match Utilities 0.3.1-alpha documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
       <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=09ba180a"></script>
+      <script src="_static/documentation_options.js?v=19ff20c4"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -108,6 +108,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.training.Training.performance_statistics_export"><code class="docutils literal notranslate"><span class="pre">Training.performance_statistics_export()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.training.focal_loss"><code class="docutils literal notranslate"><span class="pre">focal_loss()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -228,6 +229,68 @@ None</p>
 </section>
 </dd></dl>
 
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="neer_match_utilities.training.focal_loss">
+<span class="sig-prename descclassname"><span class="pre">neer_match_utilities.training.</span></span><span class="sig-name descname"><span class="pre">focal_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/training.html#focal_loss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.training.focal_loss" title="Link to this definition"></a></dt>
+<dd><p>Focal Loss function for binary classification tasks.</p>
+<p>Focal Loss is designed to address class imbalance by assigning higher weights to the
+minority class and focusing the model’s learning on hard-to-classify examples.
+It reduces the loss contribution from well-classified examples, making it
+particularly effective for imbalanced datasets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>alpha</strong> (<em>float</em><em>, </em><em>optional</em><em>, </em><em>default=0.25</em>) – <p>Weighting factor for the positive class (minority class).
+- Must be in the range [0, 1].
+- A higher value increases the loss contribution from the positive class</p>
+<blockquote>
+<div><p>(underrepresented class) relative to the negative class (overrepresented class).</p>
+</div></blockquote>
+</p></li>
+<li><p><strong>gamma</strong> (<em>float</em><em>, </em><em>optional</em><em>, </em><em>default=2.0</em>) – Focusing parameter that reduces the loss contribution from easy examples.
+- ( gamma = 0 ): No focusing, equivalent to Weighted Binary Cross-Entropy Loss.
+- ( gamma &gt; 0 ): Focuses more on hard-to-classify examples.
+- Larger values emphasize harder examples more strongly.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>loss</strong> – A loss function that computes the focal loss given the true labels (<cite>y_true</cite>)
+and predicted probabilities (<cite>y_pred</cite>).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>callable</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If <cite>alpha</cite> is not in the range [0, 1].</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The positive class (minority or underrepresented class) is weighted by <cite>alpha</cite>.</p></li>
+<li><p>The negative class (majority or overrepresented class) is automatically weighted
+by ( 1 - lpha ).</p></li>
+<li><p>Ensure <cite>alpha</cite> is set appropriately to reflect the level of imbalance in the dataset.</p></li>
+</ul>
+<p class="rubric">References</p>
+<p>Lin, T.-Y., Goyal, P., Girshick, R., He, K., &amp; Dollár, P. (2017).
+Focal Loss for Dense Object Detection. In ICCV.</p>
+<section id="explanation-of-key-terms">
+<h2>Explanation of Key Terms<a class="headerlink" href="#explanation-of-key-terms" title="Link to this heading"></a></h2>
+<ul>
+<li><p><strong>Positive Class (Underrepresented):</strong>
+- Refers to the class with fewer examples in the dataset.
+- Typically weighted by <cite>alpha</cite>, which should be greater than ( 0.5 ) in</p>
+<blockquote>
+<div><p>highly imbalanced datasets.</p>
+</div></blockquote>
+</li>
+<li><p><strong>Negative Class (Overrepresented):</strong>
+- Refers to the class with more examples in the dataset.
+- Its weight is automatically ( 1 - lpha ).</p></li>
+</ul>
 </section>
 </dd></dl>
 

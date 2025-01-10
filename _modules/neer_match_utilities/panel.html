@@ -5,8 +5,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.panel &mdash; Neer Match Utilities 0.3.0-alpha documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+  <title>neer_match_utilities.panel &mdash; Neer Match Utilities 0.3.1-alpha documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/extra.css?v=503a7970" />
       <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css" />
@@ -15,7 +15,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=09ba180a"></script>
+      <script src="../../_static/documentation_options.js?v=19ff20c4"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -105,6 +105,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../training.html#neer_match_utilities.training.Training.performance_statistics_export"><code class="docutils literal notranslate"><span class="pre">Training.performance_statistics_export()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../training.html#neer_match_utilities.training.focal_loss"><code class="docutils literal notranslate"><span class="pre">focal_loss()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -138,17 +139,17 @@
            <div itemprop="articleBody">
              
   <h1>Source code for neer_match_utilities.panel</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">combinations</span>
-<span class="kn">import</span> <span class="nn">uuid</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span>
-<span class="kn">from</span> <span class="nn">neer_match.matching_model</span> <span class="kn">import</span> <span class="n">DLMatchingModel</span><span class="p">,</span> <span class="n">NSMatchingModel</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">combinations</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neer_match.matching_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">DLMatchingModel</span><span class="p">,</span> <span class="n">NSMatchingModel</span>
 
 
 <div class="viewcode-block" id="SetupData">
 <a class="viewcode-back" href="../../panel.html#neer_match_utilities.panel.SetupData">[docs]</a>
-<span class="k">class</span> <span class="nc">SetupData</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SetupData</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A class for processing and preparing data with overlapping matches and panel relationships.</span>
 
@@ -160,7 +161,7 @@
 
 <div class="viewcode-block" id="SetupData.__init__">
 <a class="viewcode-back" href="../../panel.html#neer_match_utilities.panel.SetupData.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matches</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matches</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the SetupData class.</span>
 
@@ -176,7 +177,7 @@
 
 <div class="viewcode-block" id="SetupData.adjust_overlap">
 <a class="viewcode-back" href="../../panel.html#neer_match_utilities.panel.SetupData.adjust_overlap">[docs]</a>
-    <span class="k">def</span> <span class="nf">adjust_overlap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dfm</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">adjust_overlap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dfm</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adjust the overlap between left and right columns in the DataFrame.</span>
 
@@ -216,7 +217,7 @@
 <div class="viewcode-block" id="SetupData.drop_repetitions">
 <a class="viewcode-back" href="../../panel.html#neer_match_utilities.panel.SetupData.drop_repetitions">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">drop_repetitions</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">drop_repetitions</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove duplicate pairs in the DataFrame irrespective of order.</span>
 
@@ -238,7 +239,7 @@
 
 <div class="viewcode-block" id="SetupData.create_connected_groups">
 <a class="viewcode-back" href="../../panel.html#neer_match_utilities.panel.SetupData.create_connected_groups">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_connected_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">matches</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_connected_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">matches</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a list of lists where sublists contain connected values as one group.</span>
 
@@ -300,7 +301,7 @@
 
 <div class="viewcode-block" id="SetupData.panel_preparation">
 <a class="viewcode-back" href="../../panel.html#neer_match_utilities.panel.SetupData.panel_preparation">[docs]</a>
-    <span class="k">def</span> <span class="nf">panel_preparation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dfm</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">df_panel</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">unique_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">panel_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">panel_preparation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dfm</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">df_panel</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">unique_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">panel_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate combinations of IDs for each panel and append them to the DataFrame.</span>
 
@@ -340,7 +341,7 @@
 
 <div class="viewcode-block" id="SetupData.data_preparation">
 <a class="viewcode-back" href="../../panel.html#neer_match_utilities.panel.SetupData.data_preparation">[docs]</a>
-    <span class="k">def</span> <span class="nf">data_preparation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df_panel</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">unique_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">panel_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">data_preparation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df_panel</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">unique_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">panel_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Prepare data by handling overlaps, panel combinations, and duplicates.</span>
 
@@ -392,7 +393,7 @@
 
 <div class="viewcode-block" id="GenerateID">
 <a class="viewcode-back" href="../../panel.html#neer_match_utilities.panel.GenerateID">[docs]</a>
-<span class="k">class</span> <span class="nc">GenerateID</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GenerateID</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A class to generate and harmonize unique IDs across time periods for panel data.</span>
 
@@ -412,7 +413,7 @@
 
 <div class="viewcode-block" id="GenerateID.__init__">
 <a class="viewcode-back" href="../../panel.html#neer_match_utilities.panel.GenerateID.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> 
         <span class="n">df_panel</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> 
         <span class="n">panel_var</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
@@ -467,7 +468,7 @@
 
 <div class="viewcode-block" id="GenerateID.group_by_subgroups">
 <a class="viewcode-back" href="../../panel.html#neer_match_utilities.panel.GenerateID.group_by_subgroups">[docs]</a>
-    <span class="k">def</span> <span class="nf">group_by_subgroups</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">group_by_subgroups</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Group the panel data into subgroups.</span>
 
@@ -482,7 +483,7 @@
 
 <div class="viewcode-block" id="GenerateID.relations_left_right">
 <a class="viewcode-back" href="../../panel.html#neer_match_utilities.panel.GenerateID.relations_left_right">[docs]</a>
-    <span class="k">def</span> <span class="nf">relations_left_right</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">relation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">relations_left_right</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">relation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Apply validation rules to enforce relationships between matched observations.</span>
 
@@ -552,7 +553,7 @@
 
 <div class="viewcode-block" id="GenerateID.generate_suggestions">
 <a class="viewcode-back" href="../../panel.html#neer_match_utilities.panel.GenerateID.generate_suggestions">[docs]</a>
-    <span class="k">def</span> <span class="nf">generate_suggestions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df_slice</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_suggestions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df_slice</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate ID suggestions for consecutive time periods.</span>
 
@@ -618,7 +619,7 @@
 
 <div class="viewcode-block" id="GenerateID.harmonize_ids">
 <a class="viewcode-back" href="../../panel.html#neer_match_utilities.panel.GenerateID.harmonize_ids">[docs]</a>
-    <span class="k">def</span> <span class="nf">harmonize_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suggestions</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">periods</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">original_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">harmonize_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suggestions</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">periods</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">original_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Harmonize IDs across time periods.</span>
 
@@ -659,7 +660,7 @@
 
 <div class="viewcode-block" id="GenerateID.assign_ids">
 <a class="viewcode-back" href="../../panel.html#neer_match_utilities.panel.GenerateID.assign_ids">[docs]</a>
-    <span class="k">def</span> <span class="nf">assign_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_mapping</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">assign_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_mapping</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Assign unique IDs to the harmonized IDs.</span>
 
@@ -684,7 +685,7 @@
 
 <div class="viewcode-block" id="GenerateID.execute">
 <a class="viewcode-back" href="../../panel.html#neer_match_utilities.panel.GenerateID.execute">[docs]</a>
-    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Execute the full ID generation and harmonization process.</span>
 
