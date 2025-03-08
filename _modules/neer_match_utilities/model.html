@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.model &mdash; Neer Match Utilities 0.3.1-alpha documentation</title>
+  <title>neer_match_utilities.model &mdash; Neer Match Utilities 0.3.2-alpha documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/extra.css?v=503a7970" />
@@ -15,7 +15,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=19ff20c4"></script>
+      <script src="../../_static/documentation_options.js?v=29306996"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -144,11 +144,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">neer_match.matching_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">DLMatchingModel</span><span class="p">,</span> <span class="n">NSMatchingModel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">neer_match.similarity_map</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimilarityMap</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">typing</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 
@@ -186,17 +182,14 @@
 <span class="sd">            The directory where the model should be saved.</span>
 <span class="sd">        name : str</span>
 <span class="sd">            Name of the model directory.</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        ValueError</span>
-<span class="sd">            If the model is not an instance of DLMatchingModel or NSMatchingModel.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">target_directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">target_directory</span><span class="p">)</span> <span class="o">/</span> <span class="n">name</span> <span class="o">/</span> <span class="s2">&quot;model&quot;</span>
 
         <span class="k">if</span> <span class="n">target_directory</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-            <span class="n">replace</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Directory &#39;</span><span class="si">{</span><span class="n">target_directory</span><span class="si">}</span><span class="s2">&#39; already exists. Replace the old model? (y/n): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="n">replace</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Directory &#39;</span><span class="si">{</span><span class="n">target_directory</span><span class="si">}</span><span class="s2">&#39; already exists. Replace the old model? (y/n): &quot;</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">replace</span> <span class="o">==</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span>
                 <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">target_directory</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Old model at &#39;</span><span class="si">{</span><span class="n">target_directory</span><span class="si">}</span><span class="s2">&#39; has been replaced.&quot;</span><span class="p">)</span>
@@ -209,8 +202,35 @@
 
         <span class="n">target_directory</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">target_directory</span> <span class="o">/</span> <span class="s2">&quot;similarity_map.pkl&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">similarity_map</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+        <span class="c1"># --- Build composite similarity info ---</span>
+        <span class="c1"># Use the original instructions stored in the SimilarityMap.</span>
+        <span class="c1"># We assume model.similarity_map.instructions is a dict: { field: [metric1, metric2, ...], ... }</span>
+        <span class="n">instructions</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">similarity_map</span><span class="o">.</span><span class="n">instructions</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">instructions</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">association_sizes</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">similarity_map</span><span class="o">.</span><span class="n">association_sizes</span><span class="p">()</span>  <span class="c1"># aggregated sizes per field</span>
+        <span class="n">composite_similarity_info</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">field</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fields</span><span class="p">):</span>
+            <span class="n">agg_size</span> <span class="o">=</span> <span class="n">association_sizes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">metrics</span> <span class="o">=</span> <span class="n">instructions</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>  <span class="c1"># list of metric names as originally provided</span>
+            <span class="n">composite_similarity_info</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;metrics&quot;</span><span class="p">:</span> <span class="n">metrics</span><span class="p">,</span>
+                <span class="s2">&quot;aggregated_size&quot;</span><span class="p">:</span> <span class="n">agg_size</span><span class="p">,</span>
+                <span class="s2">&quot;per_metric_size&quot;</span><span class="p">:</span> <span class="n">agg_size</span> <span class="o">//</span> <span class="nb">len</span><span class="p">(</span><span class="n">metrics</span><span class="p">)</span>
+            <span class="p">}</span>
+
+        <span class="c1"># --- Save model initialization parameters from the record pair network ---</span>
+        <span class="n">model_params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;initial_feature_width_scales&quot;</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">record_pair_network</span><span class="o">.</span><span class="n">initial_feature_width_scales</span><span class="p">,</span>
+            <span class="s2">&quot;feature_depths&quot;</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">record_pair_network</span><span class="o">.</span><span class="n">feature_depths</span><span class="p">,</span>
+            <span class="s2">&quot;initial_record_width_scale&quot;</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">record_pair_network</span><span class="o">.</span><span class="n">initial_record_width_scale</span><span class="p">,</span>
+            <span class="s2">&quot;record_depth&quot;</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">record_pair_network</span><span class="o">.</span><span class="n">record_depth</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="c1"># Save a composite dictionary containing both similarity info and model parameters.</span>
+        <span class="n">composite_save</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;similarity_info&quot;</span><span class="p">:</span> <span class="n">composite_similarity_info</span><span class="p">,</span> <span class="s2">&quot;model_params&quot;</span><span class="p">:</span> <span class="n">model_params</span><span class="p">}</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">target_directory</span> <span class="o">/</span> <span class="s2">&quot;model_info.pkl&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">composite_save</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+        <span class="c1"># --- End composite info saving ---</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">DLMatchingModel</span><span class="p">):</span>
             <span class="n">model</span><span class="o">.</span><span class="n">save_weights</span><span class="p">(</span><span class="n">target_directory</span> <span class="o">/</span> <span class="s2">&quot;model.weights.h5&quot;</span><span class="p">)</span>
@@ -221,11 +241,8 @@
                 <span class="p">}</span>
                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">target_directory</span> <span class="o">/</span> <span class="s2">&quot;optimizer.pkl&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                     <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">optimizer_config</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
-
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">NSMatchingModel</span><span class="p">):</span>
-            <span class="n">model</span><span class="o">.</span><span class="n">record_pair_network</span><span class="o">.</span><span class="n">save_weights</span><span class="p">(</span>
-                <span class="n">target_directory</span> <span class="o">/</span> <span class="s2">&quot;record_pair_network.weights.h5&quot;</span>
-            <span class="p">)</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">record_pair_network</span><span class="o">.</span><span class="n">save_weights</span><span class="p">(</span><span class="n">target_directory</span> <span class="o">/</span> <span class="s2">&quot;record_pair_network.weights.h5&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;optimizer&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">model</span><span class="o">.</span><span class="n">optimizer</span><span class="p">:</span>
                 <span class="n">optimizer_config</span> <span class="o">=</span> <span class="p">{</span>
                     <span class="s2">&quot;class_name&quot;</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
@@ -234,9 +251,7 @@
                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">target_directory</span> <span class="o">/</span> <span class="s2">&quot;optimizer.pkl&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                     <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">optimizer_config</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;The model must be an instance of DLMatchingModel or NSMatchingModel&quot;</span>
-            <span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The model must be an instance of DLMatchingModel or NSMatchingModel&quot;</span><span class="p">)</span>
 
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model successfully saved to </span><span class="si">{</span><span class="n">target_directory</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
@@ -257,29 +272,51 @@
 <span class="sd">        -------</span>
 <span class="sd">        DLMatchingModel or NSMatchingModel</span>
 <span class="sd">            The loaded model.</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        FileNotFoundError</span>
-<span class="sd">            If the model directory does not exist.</span>
-<span class="sd">        ValueError</span>
-<span class="sd">            If the model type cannot be determined.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">model_directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">model_directory</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;model&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">model_directory</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
             <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model directory &#39;</span><span class="si">{</span><span class="n">model_directory</span><span class="si">}</span><span class="s2">&#39; does not exist.&quot;</span><span class="p">)</span>
 
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">model_directory</span> <span class="o">/</span> <span class="s2">&quot;similarity_map.pkl&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">similarity_map</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="c1"># --- Load composite model info (similarity info and model parameters) ---</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">model_directory</span> <span class="o">/</span> <span class="s2">&quot;model_info.pkl&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">composite_save</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="n">composite_similarity_info</span> <span class="o">=</span> <span class="n">composite_save</span><span class="p">[</span><span class="s2">&quot;similarity_info&quot;</span><span class="p">]</span>
+        <span class="n">model_params</span> <span class="o">=</span> <span class="n">composite_save</span><span class="p">[</span><span class="s2">&quot;model_params&quot;</span><span class="p">]</span>
+
+        <span class="c1"># Reconstruct the original similarity_map as expected by DLMatchingModel:</span>
+        <span class="c1"># (a plain dict mapping each field to its list of metric names)</span>
+        <span class="n">original_similarity_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">field</span><span class="p">:</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;metrics&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">composite_similarity_info</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+        <span class="c1"># IMPORTANT: Reconstruct a SimilarityMap instance from the plain dict.</span>
+        <span class="n">similarity_map_instance</span> <span class="o">=</span> <span class="n">SimilarityMap</span><span class="p">(</span><span class="n">original_similarity_map</span><span class="p">)</span>
+
+        <span class="c1"># Compute aggregated sizes in the order of fields.</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">composite_similarity_info</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">aggregated_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="n">composite_similarity_info</span><span class="p">[</span><span class="n">field</span><span class="p">][</span><span class="s2">&quot;aggregated_size&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">]</span>
+        <span class="c1"># --- End loading composite info ---</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="n">model_directory</span> <span class="o">/</span> <span class="s2">&quot;model.weights.h5&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-            <span class="n">model</span> <span class="o">=</span> <span class="n">DLMatchingModel</span><span class="p">(</span><span class="n">similarity_map</span><span class="p">)</span>
-            <span class="n">input_shapes</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="n">tf</span><span class="o">.</span><span class="n">TensorShape</span><span class="p">([</span><span class="kc">None</span><span class="p">,</span> <span class="n">feature_size</span><span class="p">])</span>
-                <span class="k">for</span> <span class="n">feature_size</span> <span class="ow">in</span> <span class="n">similarity_map</span><span class="o">.</span><span class="n">association_sizes</span><span class="p">()</span>
-            <span class="p">]</span>
+            <span class="c1"># Initialize the model using the reconstructed SimilarityMap instance and stored parameters.</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">DLMatchingModel</span><span class="p">(</span>
+                <span class="n">similarity_map</span><span class="o">=</span><span class="n">similarity_map_instance</span><span class="p">,</span>
+                <span class="n">initial_feature_width_scales</span><span class="o">=</span><span class="n">model_params</span><span class="p">[</span><span class="s2">&quot;initial_feature_width_scales&quot;</span><span class="p">],</span>
+                <span class="n">feature_depths</span><span class="o">=</span><span class="n">model_params</span><span class="p">[</span><span class="s2">&quot;feature_depths&quot;</span><span class="p">],</span>
+                <span class="n">initial_record_width_scale</span><span class="o">=</span><span class="n">model_params</span><span class="p">[</span><span class="s2">&quot;initial_record_width_scale&quot;</span><span class="p">],</span>
+                <span class="n">record_depth</span><span class="o">=</span><span class="n">model_params</span><span class="p">[</span><span class="s2">&quot;record_depth&quot;</span><span class="p">],</span>
+            <span class="p">)</span>
+            <span class="n">input_shapes</span> <span class="o">=</span> <span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">TensorShape</span><span class="p">([</span><span class="kc">None</span><span class="p">,</span> <span class="n">s</span><span class="p">])</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">aggregated_sizes</span><span class="p">]</span>
             <span class="n">model</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">input_shapes</span><span class="o">=</span><span class="n">input_shapes</span><span class="p">)</span>
+
+            <span class="c1"># --- Build dummy inputs as a list of tensors (one per field) ---</span>
+            <span class="c1"># Each dummy tensor has shape (1, aggregated_size) for that field.</span>
+            <span class="n">dummy_tensors</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">composite_similarity_info</span><span class="p">[</span><span class="n">field</span><span class="p">][</span><span class="s2">&quot;aggregated_size&quot;</span><span class="p">]))</span>
+                <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span>
+            <span class="p">]</span>
+            <span class="c1"># --- End dummy inputs ---</span>
+
+            <span class="n">_</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">dummy_tensors</span><span class="p">)</span>  <span class="c1"># Forward pass to instantiate all sublayers.</span>
             <span class="n">model</span><span class="o">.</span><span class="n">load_weights</span><span class="p">(</span><span class="n">model_directory</span> <span class="o">/</span> <span class="s2">&quot;model.weights.h5&quot;</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="p">(</span><span class="n">model_directory</span> <span class="o">/</span> <span class="s2">&quot;optimizer.pkl&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
@@ -287,9 +324,8 @@
                     <span class="n">optimizer_config</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
                 <span class="n">optimizer_class</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="p">,</span> <span class="n">optimizer_config</span><span class="p">[</span><span class="s2">&quot;class_name&quot;</span><span class="p">])</span>
                 <span class="n">model</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">optimizer_class</span><span class="o">.</span><span class="n">from_config</span><span class="p">(</span><span class="n">optimizer_config</span><span class="p">[</span><span class="s2">&quot;config&quot;</span><span class="p">])</span>
-
         <span class="k">elif</span> <span class="p">(</span><span class="n">model_directory</span> <span class="o">/</span> <span class="s2">&quot;record_pair_network.weights.h5&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-            <span class="n">model</span> <span class="o">=</span> <span class="n">NSMatchingModel</span><span class="p">(</span><span class="n">similarity_map</span><span class="p">)</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">NSMatchingModel</span><span class="p">(</span><span class="n">original_similarity_map</span><span class="p">)</span>
             <span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
             <span class="n">model</span><span class="o">.</span><span class="n">record_pair_network</span><span class="o">.</span><span class="n">load_weights</span><span class="p">(</span><span class="n">model_directory</span> <span class="o">/</span> <span class="s2">&quot;record_pair_network.weights.h5&quot;</span><span class="p">)</span>
 
@@ -298,7 +334,6 @@
                     <span class="n">optimizer_config</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
                 <span class="n">optimizer_class</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="p">,</span> <span class="n">optimizer_config</span><span class="p">[</span><span class="s2">&quot;class_name&quot;</span><span class="p">])</span>
                 <span class="n">model</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">optimizer_class</span><span class="o">.</span><span class="n">from_config</span><span class="p">(</span><span class="n">optimizer_config</span><span class="p">[</span><span class="s2">&quot;config&quot;</span><span class="p">])</span>
-
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid model directory: neither DLMatchingModel nor NSMatchingModel was detected.&quot;</span><span class="p">)</span>
 
