@@ -422,12 +422,14 @@ class GenerateID:
                   relation = self.relation
             )
 
-
             suggestions = pd.merge(
-                left[['index']], suggestions, left_index=True, right_on='left'
+                left[['index']].rename(columns={'index': 'index_left'}),
+                suggestions, left_index=True, right_on='left'
             )
             suggestions = pd.merge(
-                suggestions, right[['index']], left_on='right', right_index=True, suffixes=('_left', '_right')
+                suggestions,
+                right[['index']].rename(columns={'index': 'index_right'}),
+                left_on='right', right_index=True
             )
 
             suggestions['period_left'] = period
