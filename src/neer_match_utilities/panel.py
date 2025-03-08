@@ -2,8 +2,9 @@ import pandas as pd
 import numpy as np
 from itertools import combinations
 import uuid
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Union
 from neer_match.matching_model import DLMatchingModel, NSMatchingModel
+from neer_match.similarity_map import SimilarityMap
 
 
 class SetupData:
@@ -253,7 +254,7 @@ class GenerateID:
         panel_var: str, 
         time_var: str, 
         model, 
-        similarity_map: Dict, 
+        similarity_map: Union[dict, "SimilarityMap", None] = None, 
         prediction_threshold: float = 0.9, 
         subgroups: List[str] = None,
         relation: str = 'm:m'
@@ -290,13 +291,22 @@ class GenerateID:
         self.time_var = time_var
         self.subgroups = subgroups
         self.model = model
-        self.similarity_map = similarity_map
+        # Use the provided similarity_map, or if not provided, take the model's own similarity_map.
+        self.similarity_map = similarity_map if similarity_map is not None else model.similarity_map
         self.prediction_threshold = prediction_threshold
         self.relation = relation
 
-        # Ensure df_panel only includes relevant columns
+        # Extract the top-level field keys from the similarity map.
+        if isinstance(self.similarity_map, dict):
+            field_keys = list(self.similarity_map.keys())
+        elif hasattr(self.similarity_map, "instructions"):
+            field_keys = list(self.similarity_map.instructions.keys())
+        else:
+            field_keys = []
+        
+        # Ensure df_panel only includes columns corresponding to these field keys, subgroups, or the time variable.
         self.df_panel = df_panel[
-            [col for col in df_panel.columns if col in similarity_map.keys() or col in subgroups or col == time_var]
+            [col for col in df_panel.columns if col in field_keys or col in subgroups or col == time_var]
         ]
 
     def group_by_subgroups(self):

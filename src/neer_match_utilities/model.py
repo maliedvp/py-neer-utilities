@@ -3,11 +3,7 @@ import pickle
 from neer_match.matching_model import DLMatchingModel, NSMatchingModel
 from neer_match.similarity_map import SimilarityMap
 import tensorflow as tf
-from typing import Dict, List, Tuple
 import typing
-import uuid
-import pandas as pd
-import numpy as np
 import shutil
 import sys
 
@@ -41,17 +37,14 @@ class Model:
             The directory where the model should be saved.
         name : str
             Name of the model directory.
-
-        Raises
-        ------
-        ValueError
-            If the model is not an instance of DLMatchingModel or NSMatchingModel.
         """
 
         target_directory = Path(target_directory) / name / "model"
 
         if target_directory.exists():
-            replace = input(f"Directory '{target_directory}' already exists. Replace the old model? (y/n): ").strip().lower()
+            replace = input(
+                f"Directory '{target_directory}' already exists. Replace the old model? (y/n): "
+            ).strip().lower()
             if replace == "y":
                 shutil.rmtree(target_directory)
                 print(f"Old model at '{target_directory}' has been replaced.")
@@ -64,8 +57,35 @@ class Model:
 
         target_directory.mkdir(parents=True, exist_ok=True)
 
-        with open(target_directory / "similarity_map.pkl", "wb") as f:
-            pickle.dump(model.similarity_map, f)
+        # --- Build composite similarity info ---
+        # Use the original instructions stored in the SimilarityMap.
+        # We assume model.similarity_map.instructions is a dict: { field: [metric1, metric2, ...], ... }
+        instructions = model.similarity_map.instructions
+        fields = list(instructions.keys())
+        association_sizes = model.similarity_map.association_sizes()  # aggregated sizes per field
+        composite_similarity_info = {}
+        for i, field in enumerate(fields):
+            agg_size = association_sizes[i]
+            metrics = instructions[field]  # list of metric names as originally provided
+            composite_similarity_info[field] = {
+                "metrics": metrics,
+                "aggregated_size": agg_size,
+                "per_metric_size": agg_size // len(metrics)
+            }
+
+        # --- Save model initialization parameters from the record pair network ---
+        model_params = {
+            "initial_feature_width_scales": model.record_pair_network.initial_feature_width_scales,
+            "feature_depths": model.record_pair_network.feature_depths,
+            "initial_record_width_scale": model.record_pair_network.initial_record_width_scale,
+            "record_depth": model.record_pair_network.record_depth,
+        }
+
+        # Save a composite dictionary containing both similarity info and model parameters.
+        composite_save = {"similarity_info": composite_similarity_info, "model_params": model_params}
+        with open(target_directory / "model_info.pkl", "wb") as f:
+            pickle.dump(composite_save, f)
+        # --- End composite info saving ---
 
         if isinstance(model, DLMatchingModel):
             model.save_weights(target_directory / "model.weights.h5")
@@ -76,11 +96,8 @@ class Model:
                 }
                 with open(target_directory / "optimizer.pkl", "wb") as f:
                     pickle.dump(optimizer_config, f)
-
         elif isinstance(model, NSMatchingModel):
-            model.record_pair_network.save_weights(
-                target_directory / "record_pair_network.weights.h5"
-            )
+            model.record_pair_network.save_weights(target_directory / "record_pair_network.weights.h5")
             if hasattr(model, "optimizer") and model.optimizer:
                 optimizer_config = {
                     "class_name": model.optimizer.__class__.__name__,
@@ -89,9 +106,7 @@ class Model:
                 with open(target_directory / "optimizer.pkl", "wb") as f:
                     pickle.dump(optimizer_config, f)
         else:
-            raise ValueError(
-                "The model must be an instance of DLMatchingModel or NSMatchingModel"
-            )
+            raise ValueError("The model must be an instance of DLMatchingModel or NSMatchingModel")
 
         print(f"Model successfully saved to {target_directory}")
 
@@ -109,29 +124,51 @@ class Model:
         -------
         DLMatchingModel or NSMatchingModel
             The loaded model.
-
-        Raises
-        ------
-        FileNotFoundError
-            If the model directory does not exist.
-        ValueError
-            If the model type cannot be determined.
         """
 
         model_directory = Path(model_directory) / "model"
         if not model_directory.exists():
             raise FileNotFoundError(f"Model directory '{model_directory}' does not exist.")
 
-        with open(model_directory / "similarity_map.pkl", "rb") as f:
-            similarity_map = pickle.load(f)
+        # --- Load composite model info (similarity info and model parameters) ---
+        with open(model_directory / "model_info.pkl", "rb") as f:
+            composite_save = pickle.load(f)
+        composite_similarity_info = composite_save["similarity_info"]
+        model_params = composite_save["model_params"]
+
+        # Reconstruct the original similarity_map as expected by DLMatchingModel:
+        # (a plain dict mapping each field to its list of metric names)
+        original_similarity_map = {field: info["metrics"] for field, info in composite_similarity_info.items()}
+
+        # IMPORTANT: Reconstruct a SimilarityMap instance from the plain dict.
+        similarity_map_instance = SimilarityMap(original_similarity_map)
+
+        # Compute aggregated sizes in the order of fields.
+        fields = list(composite_similarity_info.keys())
+        aggregated_sizes = [composite_similarity_info[field]["aggregated_size"] for field in fields]
+        # --- End loading composite info ---
 
         if (model_directory / "model.weights.h5").exists():
-            model = DLMatchingModel(similarity_map)
-            input_shapes = [
-                tf.TensorShape([None, feature_size])
-                for feature_size in similarity_map.association_sizes()
-            ]
+            # Initialize the model using the reconstructed SimilarityMap instance and stored parameters.
+            model = DLMatchingModel(
+                similarity_map=similarity_map_instance,
+                initial_feature_width_scales=model_params["initial_feature_width_scales"],
+                feature_depths=model_params["feature_depths"],
+                initial_record_width_scale=model_params["initial_record_width_scale"],
+                record_depth=model_params["record_depth"],
+            )
+            input_shapes = [tf.TensorShape([None, s]) for s in aggregated_sizes]
             model.build(input_shapes=input_shapes)
+
+            # --- Build dummy inputs as a list of tensors (one per field) ---
+            # Each dummy tensor has shape (1, aggregated_size) for that field.
+            dummy_tensors = [
+                tf.zeros((1, composite_similarity_info[field]["aggregated_size"]))
+                for field in fields
+            ]
+            # --- End dummy inputs ---
+
+            _ = model(dummy_tensors)  # Forward pass to instantiate all sublayers.
             model.load_weights(model_directory / "model.weights.h5")
 
             if (model_directory / "optimizer.pkl").exists():
@@ -139,9 +176,8 @@ class Model:
                     optimizer_config = pickle.load(f)
                 optimizer_class = getattr(tf.keras.optimizers, optimizer_config["class_name"])
                 model.optimizer = optimizer_class.from_config(optimizer_config["config"])
-
         elif (model_directory / "record_pair_network.weights.h5").exists():
-            model = NSMatchingModel(similarity_map)
+            model = NSMatchingModel(original_similarity_map)
             model.compile()
             model.record_pair_network.load_weights(model_directory / "record_pair_network.weights.h5")
 
@@ -150,7 +186,6 @@ class Model:
                     optimizer_config = pickle.load(f)
                 optimizer_class = getattr(tf.keras.optimizers, optimizer_config["class_name"])
                 model.optimizer = optimizer_class.from_config(optimizer_config["config"])
-
         else:
             raise ValueError("Invalid model directory: neither DLMatchingModel nor NSMatchingModel was detected.")
 
