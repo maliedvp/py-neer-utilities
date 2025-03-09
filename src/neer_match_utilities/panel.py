@@ -26,8 +26,13 @@ class SetupData:
         matches : list, optional
             A list of tuples representing matches. Defaults to an empty list.
         """
-        
-        self.matches = list(matches.itertuples(index=False, name=None)) if matches is not None else []
+        if matches is None:
+            self.matches = []
+        elif isinstance(matches, list):
+            self.matches = matches
+        elif isinstance(matches, pd.DataFrame):
+            self.matches = list(matches.itertuples(index=False, name=None))
+
         self.dfm = pd.DataFrame(self.matches, columns=['left', 'right'])
 
     def adjust_overlap(self, dfm: pd.DataFrame) -> pd.DataFrame:
@@ -63,9 +68,20 @@ class SetupData:
         
         new_df = pd.DataFrame(new_pairs, columns=['left', 'right'])
         
-        # Merge with the original matches and drop only exact duplicates
-        dfm = pd.concat([dfm, new_df], ignore_index=True).drop_duplicates(ignore_index=True)
-        return dfm
+        # Append new rows to the original dfm without resetting its order:
+        original_dfm = dfm.copy()
+        if not original_dfm.empty:
+            start_index = original_dfm.index.max() + 1
+        else:
+            start_index = 0
+        new_df.index = range(start_index, start_index + len(new_df))
+        
+        combined = pd.concat([original_dfm, new_df])
+        # Drop duplicates using keep='first' to preserve the original row if a duplicate exists
+        combined = combined.drop_duplicates(keep='first')
+        # Sort by index to preserve the original order for existing rows
+        combined = combined.sort_index()
+        return combined
 
     @staticmethod
     def drop_repetitions(df: pd.DataFrame) -> pd.DataFrame:
@@ -220,20 +236,27 @@ class SetupData:
 
         dfm = self.adjust_overlap(dfm)
         dfm = self.drop_repetitions(dfm)
+        dfm = dfm.reset_index(drop=True)
 
         dfm['left'] = dfm['left'].astype(stabile_dtype)
         dfm['right'] = dfm['right'].astype(stabile_dtype)
 
         # define left and right directly from the full set of matches.
         unique_ids = set(dfm['left']).union(set(dfm['right']))
-        combined = df_panel[df_panel[unique_id].isin(unique_ids)].drop_duplicates(ignore_index=True)
+        combined = df_panel[df_panel[unique_id].isin(unique_ids)].drop_duplicates()
+        
+        # Keep the original index order from df_panel:
+        left = combined[combined[unique_id].isin(dfm['left'])].copy()
+        if panel_id:
+            left = left[[c for c in left.columns if c != panel_id]]
+        left.loc[:, unique_id] = left[unique_id].astype(stabile_dtype)
+        left = left.reset_index(drop=True)
 
-        # Assign the same combined DataFrame to both left and right and keep only the relevant rows
-        left = combined.copy()
-        left = left[left[unique_id].isin(dfm['left'])].reset_index(drop=True)
-
-        right = combined.copy()
-        right = right[right[unique_id].isin(dfm['right'])].reset_index(drop=True)
+        right = combined[combined[unique_id].isin(dfm['right'])].copy()
+        if panel_id:
+            right = right[[c for c in right.columns if c != panel_id]]
+        right.loc[:, unique_id] = right[unique_id].astype(stabile_dtype)
+        right = right.reset_index(drop=True)
 
         return left, right, dfm
 
