@@ -8,6 +8,7 @@ SPHINXBUILD   ?= sphinx-build
 SOURCEDIR     = source
 BUILDDIR      = build
 PACKAGEDIR    = $(SOURCEDIR)/../..
+STATICDIR     = $(SOURCEDIR)/_static/
 EXAMPLEDIR    = $(SOURCEDIR)/_static/examples
 
 # OS-specific variables
@@ -32,6 +33,7 @@ help:
 	# Prepare README.md for the root directory
 	cp $(SOURCEDIR)/README.md ../README.md
 	$(SED_INPLACE) 's|\[MIT license\](LICENSE.html)|[MIT license](LICENSE.txt)|g' ../README.md
+	$(SED_INPLACE) 's|\_static\/|docs/source/_static/|g' ../README.md
 
 	# Prepare README.md for Sphinx HTML documentation
 # 	cp $(SOURCEDIR)/README.md $(SOURCEDIR)/README.md
@@ -49,6 +51,17 @@ help:
 		$(SED_INPLACE) "s/$${file%.qmd}_files/_static\/examples\/$${file%.qmd}_files/g" \
 			"$(SOURCEDIR)/$${file%.qmd}.md"; \
 	done
+
+	# Process other files in _static/
+	for path in $(STATICDIR)/*.qmd; do \
+		file=$$(basename "$$path"); \
+		if [ "$$file" = "README.qmd" ]; then continue; fi; \
+		quarto render "$(STATICDIR)/$$file" -t gfm; \
+		mv "$(STATICDIR)/$${file%.qmd}.md" "$(SOURCEDIR)/$${file%.qmd}.md"; \
+		$(SED_INPLACE) "s/$${file%.qmd}_files/_static\/$${file%.qmd}_files/g" "$(SOURCEDIR)/$${file%.qmd}.md"; \
+	done
+
+
 
 	# Build the Sphinx documentation
 	@$(SPHINXBUILD) -M $@ $(SOURCEDIR) $(BUILDDIR) $(SPHINXOPTS) $(O)
