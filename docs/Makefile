@@ -26,18 +26,16 @@ help:
 	(echo "# License\n" && cat $(PACKAGEDIR)/LICENSE.txt) > $(SOURCEDIR)/LICENSE.md
 
 	# Render the README file with Quarto
-	# Render the README file with Quarto
 	quarto render $(SOURCEDIR)/_static/README.qmd -t gfm
 	mv $(SOURCEDIR)/_static/README.md $(SOURCEDIR)/README.md
 
-
 	# Prepare README.md for the root directory
 	cp $(SOURCEDIR)/README.md ../README.md
-	$(SED_INPLACE) 's|<a href="LICENSE.html">MIT license</a>|[MIT license](LICENSE.txt)|g' ../README.md
+	$(SED_INPLACE) 's|\[MIT license\](LICENSE.html)|[MIT license](LICENSE.txt)|g' ../README.md
 
 	# Prepare README.md for Sphinx HTML documentation
-	cp $(SOURCEDIR)/README.md $(SOURCEDIR)/README_sphinx.md
-	$(SED_INPLACE) 's|\[MIT license\](LICENSE.txt)|<a href="LICENSE.html">MIT license</a>|g' $(SOURCEDIR)/README_sphinx.md
+# 	cp $(SOURCEDIR)/README.md $(SOURCEDIR)/README.md
+	$(SED_INPLACE) 's|\[MIT license\](LICENSE.html)|<a href="LICENSE.html">MIT license</a>|g' $(SOURCEDIR)/README.md
 
 	# Ensure LICENSE.html exists in Sphinx output
 	mkdir -p $(BUILDDIR)/html
