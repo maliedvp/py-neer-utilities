@@ -10,7 +10,7 @@
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
 <!-- badges: end -->
 
-The framework `neermatch` provices a set of tools for entity matching
+The framework `neermatch` provides a set of tools for entity matching
 based on deep learning, symbolic learning, and a hybrid approach
 combining both deep and symbolic learning. It is designed to support
 easy set-up, training, and inference of entity matching models. The
