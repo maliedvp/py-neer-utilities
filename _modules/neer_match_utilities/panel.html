@@ -56,7 +56,16 @@
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../preparation.html">Data Preparation for Training</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../preparation.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../preparation.html#different-data-relationship">Different Data Relationship</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../preparation.html#loading-the-data">1. Loading the Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../preparation.html#inspecting-the-data">2. Inspecting the Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../preparation.html#simulating-a-many-to-many-relationship">3. Simulating a Many-to-Many Relationship</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../preparation.html#understanding-the-matching-issue">4. Understanding the Matching Issue</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../preparation.html#correcting-the-relationships">5. Correcting the Relationships</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../preparation.html#verifying-the-adjustments">6. Verifying the Adjustments</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../preparation.html#number-2">Number 2</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../model_save.html">Saving a Model</a><ul>
@@ -194,8 +203,13 @@
 <span class="sd">        matches : list, optional</span>
 <span class="sd">            A list of tuples representing matches. Defaults to an empty list.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        
-        <span class="bp">self</span><span class="o">.</span><span class="n">matches</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">matches</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">))</span> <span class="k">if</span> <span class="n">matches</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">matches</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">matches</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">matches</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">matches</span> <span class="o">=</span> <span class="n">matches</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">matches</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">matches</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">matches</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">))</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">dfm</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matches</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">])</span></div>
 
 
@@ -232,9 +246,20 @@
         
         <span class="n">new_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">new_pairs</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">])</span>
         
-        <span class="c1"># Merge with the original matches and drop only exact duplicates</span>
-        <span class="n">dfm</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">dfm</span><span class="p">,</span> <span class="n">new_df</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">dfm</span>
+        <span class="c1"># Append new rows to the original dfm without resetting its order:</span>
+        <span class="n">original_dfm</span> <span class="o">=</span> <span class="n">dfm</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">original_dfm</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="n">start_index</span> <span class="o">=</span> <span class="n">original_dfm</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">start_index</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">new_df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">start_index</span><span class="p">,</span> <span class="n">start_index</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_df</span><span class="p">))</span>
+        
+        <span class="n">combined</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">original_dfm</span><span class="p">,</span> <span class="n">new_df</span><span class="p">])</span>
+        <span class="c1"># Drop duplicates using keep=&#39;first&#39; to preserve the original row if a duplicate exists</span>
+        <span class="n">combined</span> <span class="o">=</span> <span class="n">combined</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">keep</span><span class="o">=</span><span class="s1">&#39;first&#39;</span><span class="p">)</span>
+        <span class="c1"># Sort by index to preserve the original order for existing rows</span>
+        <span class="n">combined</span> <span class="o">=</span> <span class="n">combined</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">combined</span>
 
 <div class="viewcode-block" id="SetupData.drop_repetitions">
 <a class="viewcode-back" href="../../panel.html#neer_match_utilities.panel.SetupData.drop_repetitions">[docs]</a>
@@ -400,20 +425,27 @@
 
         <span class="n">dfm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adjust_overlap</span><span class="p">(</span><span class="n">dfm</span><span class="p">)</span>
         <span class="n">dfm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">drop_repetitions</span><span class="p">(</span><span class="n">dfm</span><span class="p">)</span>
+        <span class="n">dfm</span> <span class="o">=</span> <span class="n">dfm</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="n">dfm</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dfm</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">stabile_dtype</span><span class="p">)</span>
         <span class="n">dfm</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dfm</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">stabile_dtype</span><span class="p">)</span>
 
         <span class="c1"># define left and right directly from the full set of matches.</span>
         <span class="n">unique_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">dfm</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">dfm</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]))</span>
-        <span class="n">combined</span> <span class="o">=</span> <span class="n">df_panel</span><span class="p">[</span><span class="n">df_panel</span><span class="p">[</span><span class="n">unique_id</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">unique_ids</span><span class="p">)]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">combined</span> <span class="o">=</span> <span class="n">df_panel</span><span class="p">[</span><span class="n">df_panel</span><span class="p">[</span><span class="n">unique_id</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">unique_ids</span><span class="p">)]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
+        
+        <span class="c1"># Keep the original index order from df_panel:</span>
+        <span class="n">left</span> <span class="o">=</span> <span class="n">combined</span><span class="p">[</span><span class="n">combined</span><span class="p">[</span><span class="n">unique_id</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">dfm</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">])]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">panel_id</span><span class="p">:</span>
+            <span class="n">left</span> <span class="o">=</span> <span class="n">left</span><span class="p">[[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">left</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span> <span class="o">!=</span> <span class="n">panel_id</span><span class="p">]]</span>
+        <span class="n">left</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">unique_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">left</span><span class="p">[</span><span class="n">unique_id</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">stabile_dtype</span><span class="p">)</span>
+        <span class="n">left</span> <span class="o">=</span> <span class="n">left</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="c1"># Assign the same combined DataFrame to both left and right and keep only the relevant rows</span>
-        <span class="n">left</span> <span class="o">=</span> <span class="n">combined</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">left</span> <span class="o">=</span> <span class="n">left</span><span class="p">[</span><span class="n">left</span><span class="p">[</span><span class="n">unique_id</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">dfm</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">])]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-        <span class="n">right</span> <span class="o">=</span> <span class="n">combined</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">right</span> <span class="o">=</span> <span class="n">right</span><span class="p">[</span><span class="n">right</span><span class="p">[</span><span class="n">unique_id</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">dfm</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">])]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">right</span> <span class="o">=</span> <span class="n">combined</span><span class="p">[</span><span class="n">combined</span><span class="p">[</span><span class="n">unique_id</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">dfm</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">])]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">panel_id</span><span class="p">:</span>
+            <span class="n">right</span> <span class="o">=</span> <span class="n">right</span><span class="p">[[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">right</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span> <span class="o">!=</span> <span class="n">panel_id</span><span class="p">]]</span>
+        <span class="n">right</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">unique_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">right</span><span class="p">[</span><span class="n">unique_id</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">stabile_dtype</span><span class="p">)</span>
+        <span class="n">right</span> <span class="o">=</span> <span class="n">right</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">dfm</span></div>
 </div>

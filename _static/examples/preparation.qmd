@@ -2,12 +2,144 @@
 title: "Data Preparation for Training"
 ---
 
-## Prerequisites
-Load the libraries we will use and set the seed for reproducibility.
-```{python}
-#| label: setup
-#| output: false
+This document explains the data preparation process for training our matching model. The example data comes from a research project that digitized historic records of German companies (from the _Handbuch der Deutschen Aktiengesellschaften_) using OCR. The dataset includes three files:
 
-print('yes')
+- **left.csv**
+- **right.csv**
+- **matches.csv**
+
+Initially, the data has a one-to-one relationship: each record in `left.csv` corresponds to exactly one record in `right.csv`, and vice versa.
+
+## Different Data Relationship
+
+### 1. Loading the Data
+
+First, we import the necessary libraries and load the datasets.
+
+```{python}
+import random
+import pandas as pd
+
+random.seed(42)
+
+matches = pd.read_csv('matches.csv')
+left = pd.read_csv('left.csv')
+right = pd.read_csv('right.csv')
 ```
 
+### 2. Inspecting the Data
+
+Let's view the first few rows of each dataset to understand their structure.
+
+```{python}
+matches.head()
+```
+
+```{python}
+left.head()
+```
+
+```{python}
+right.head()
+```
+
+Since the original data is based on 1:1 relationships, all three datasets have the same number of observations:
+
+```{python}
+print(f'Number of observations in matches: {len(matches)}')
+print(f'Number of observations in left: {len(left)}')
+print(f'Number of observations in right: {len(right)}')
+```
+
+### 3. Simulating a Many-to-Many Relationship
+
+To demonstrate how to handle more complex matching scenarios, we simulate a many-to-many (m:m) relationship. For instance, assume that the company with `company_id` **1e87fc75b4** in the left dataset should match with two entries in the right dataset: the original match **0008e07878** and an additional match **8bf51ba8a0**.
+
+```{python}
+# Add an extra match to simulate a many-to-many relationship
+extra_match = pd.DataFrame({
+    'company_id_left' : ['1e87fc75b4'],
+    'company_id_right' : ['8bf51ba8a0']
+})
+matches = pd.concat([matches, extra_match], ignore_index=True)
+```
+
+Now, inspect the modified `matches` dataframe for the affected IDs:
+
+```{python}
+matches[
+    matches['company_id_left'].isin(['1e87fc75b4', '810c9c3435']) |
+    matches['company_id_right'].isin(['0008e07878', '8bf51ba8a0'])
+]
+```
+
+### 4. Understanding the Matching Issue
+
+Simply adding a new row to `matches` can be problematic. Consider this simplified example:
+
+| Left | Right | Implied Real-World Entity |
+|------|-------|---------------------------|
+| A    | C     | Entity 1                  |
+| B    | D     | Entity 2                  |
+
+If further evidence shows that record **A** and record **C** represent the same entity, then all related records (A, B, C, D) should be grouped together. The complete relationship should reflect every possible pair among these records:
+
+| Left | Right |
+|------|-------|
+| A    | B     |
+| A    | C     |
+| A    | D     |
+| B    | C     |
+| B    | D     |
+| C    | D     |
+
+This example highlights why a naive approach (merely adding an extra match) can distort the true relationships between records.
+
+### 5. Correcting the Relationships
+
+To resolve this issue and correctly group all records representing the same real-world entity, we use the `data_preparation_cs` method from the `SetupData` class in the `neer_match_utilities.panel` module. This method automatically completes the matching pairs and adjusts the `left` and `right` datasets accordingly.
+
+```{python}
+from neer_match_utilities.panel import SetupData
+
+left, right, matches = SetupData(matches=matches).data_preparation_cs(
+    df_left=left,
+    df_right=right,
+    unique_id='company_id'
+)
+```
+
+### 6. Verifying the Adjustments
+
+Finally, we verify that the adjustments correctly reflect the intended relationships by checking the relevant company IDs in the updated datasets.
+
+```{python}
+# Verify the updated matches for the specific company_ids
+matches_subset = matches[
+    matches['left'].isin(['1e87fc75b4', '810c9c3435', '0008e07878', '8bf51ba8a0']) |
+    matches['right'].isin(['1e87fc75b4', '810c9c3435', '0008e07878', '8bf51ba8a0'])
+].sort_values(['left', 'right'])
+matches_subset
+```
+
+```{python}
+# Check the corresponding records in the left dataset
+left_subset = left[
+    left['company_id'].isin(['1e87fc75b4', '810c9c3435', '0008e07878', '8bf51ba8a0'])
+][['company_id']]
+left_subset.head(10)
+```
+
+```{python}
+# Check the corresponding records in the right dataset
+right_subset = right[
+    right['company_id'].isin(['1e87fc75b4', '810c9c3435', '0008e07878', '8bf51ba8a0'])
+][['company_id']]
+right_subset
+```
+
+By following these steps, we ensure that the dataset accurately represents the underlying real-world relationships—even when the matching is more complex than a simple 1:1 mapping.
+
+---
+
+## Number 2
