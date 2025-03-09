@@ -48,10 +48,34 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="preparation.html">Setting up the Preparation Pipeline</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#pipy">PiPy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#from-source">From Source</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="preparation.html">Data Preparation for Training</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="preparation.html#prerequisites">Prerequisites</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="model_save.html">Saving a Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="model_save.html#prerequisites">Prerequisites</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="model_load.html">Loading a Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="model_load.html#prerequisites">Prerequisites</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="id_cross.html">Creating a common ID</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="id_cross.html#prerequisites">Prerequisites</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="id_panel.html">Creating a Panel ID</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="id_panel.html#prerequisites">Prerequisites</a></li>
 </ul>
 </li>
 </ul>
@@ -236,24 +260,27 @@ None</p>
 <dt class="sig sig-object py" id="neer_match_utilities.training.focal_loss">
 <span class="sig-prename descclassname"><span class="pre">neer_match_utilities.training.</span></span><span class="sig-name descname"><span class="pre">focal_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/training.html#focal_loss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.training.focal_loss" title="Link to this definition"></a></dt>
 <dd><p>Focal Loss function for binary classification tasks.</p>
-<p>Focal Loss is designed to address class imbalance by assigning higher weights to the
-minority class and focusing the model’s learning on hard-to-classify examples.
+<p>Focal Loss is designed to address class imbalance by assigning higher weights
+to the minority class and focusing the model’s learning on hard-to-classify examples.
 It reduces the loss contribution from well-classified examples, making it
 particularly effective for imbalanced datasets.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>alpha</strong> (<em>float</em><em>, </em><em>optional</em><em>, </em><em>default=0.25</em>) – <p>Weighting factor for the positive class (minority class).
-- Must be in the range [0, 1].
-- A higher value increases the loss contribution from the positive class</p>
-<blockquote>
-<div><p>(underrepresented class) relative to the negative class (overrepresented class).</p>
-</div></blockquote>
+<li><p><strong>alpha</strong> (<em>float</em><em>, </em><em>optional</em><em>, </em><em>default=0.25</em>) – <p>Weighting factor for the positive class (minority class).</p>
+<ul>
+<li><p>Must be in the range [0, 1].</p></li>
+<li><p>A higher value increases the loss contribution from the positive class
+(underrepresented class) relative to the negative class (overrepresented class).</p></li>
+</ul>
 </p></li>
-<li><p><strong>gamma</strong> (<em>float</em><em>, </em><em>optional</em><em>, </em><em>default=2.0</em>) – Focusing parameter that reduces the loss contribution from easy examples.
-- ( gamma = 0 ): No focusing, equivalent to Weighted Binary Cross-Entropy Loss.
-- ( gamma &gt; 0 ): Focuses more on hard-to-classify examples.
-- Larger values emphasize harder examples more strongly.</p></li>
+<li><p><strong>gamma</strong> (<em>float</em><em>, </em><em>optional</em><em>, </em><em>default=2.0</em>) – <p>Focusing parameter that reduces the loss contribution from easy examples.</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">gamma</span> <span class="pre">=</span> <span class="pre">0</span></code>: No focusing, equivalent to Weighted Binary Cross-Entropy Loss.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gamma</span> <span class="pre">&gt;</span> <span class="pre">0</span></code>: Focuses more on hard-to-classify examples.</p></li>
+<li><p>Larger values emphasize harder examples more strongly.</p></li>
+</ul>
+</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -271,7 +298,7 @@ and predicted probabilities (<cite>y_pred</cite>).</p>
 <ul class="simple">
 <li><p>The positive class (minority or underrepresented class) is weighted by <cite>alpha</cite>.</p></li>
 <li><p>The negative class (majority or overrepresented class) is automatically weighted
-by ( 1 - lpha ).</p></li>
+by <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">-</span> <span class="pre">alpha</span></code>.</p></li>
 <li><p>Ensure <cite>alpha</cite> is set appropriately to reflect the level of imbalance in the dataset.</p></li>
 </ul>
 <p class="rubric">References</p>
@@ -279,17 +306,19 @@ by ( 1 - lpha ).</p></li>
 Focal Loss for Dense Object Detection. In ICCV.</p>
 <section id="explanation-of-key-terms">
 <h2>Explanation of Key Terms<a class="headerlink" href="#explanation-of-key-terms" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Positive Class (Underrepresented):</strong></p>
 <ul>
-<li><p><strong>Positive Class (Underrepresented):</strong>
-- Refers to the class with fewer examples in the dataset.
-- Typically weighted by <cite>alpha</cite>, which should be greater than ( 0.5 ) in</p>
-<blockquote>
-<div><p>highly imbalanced datasets.</p>
-</div></blockquote>
+<li><p>Refers to the class with fewer examples in the dataset.</p></li>
+<li><p>Typically weighted by <cite>alpha</cite>, which should be greater than 0.5 in highly imbalanced datasets.</p></li>
+</ul>
 </li>
-<li><p><strong>Negative Class (Overrepresented):</strong>
-- Refers to the class with more examples in the dataset.
-- Its weight is automatically ( 1 - lpha ).</p></li>
+<li><p><strong>Negative Class (Overrepresented):</strong></p>
+<ul>
+<li><p>Refers to the class with more examples in the dataset.</p></li>
+<li><p>Its weight is automatically <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">-</span> <span class="pre">alpha</span></code>.</p></li>
+</ul>
+</li>
 </ul>
 </section>
 </dd></dl>
@@ -311,7 +340,7 @@ Focal Loss for Dense Object Detection. In ICCV.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, Pantelis Karapanagiotis, Marius Liebald.</p>
+    <p>&#169; Copyright 2025, Pantelis Karapanagiotis, Marius Liebald.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

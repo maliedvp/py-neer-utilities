@@ -24,7 +24,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Setting up the Preparation Pipeline" href="preparation.html" /> 
+    <link rel="next" title="Installation" href="install.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,10 +47,34 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="preparation.html">Setting up the Preparation Pipeline</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#pipy">PiPy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#from-source">From Source</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="preparation.html">Data Preparation for Training</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="preparation.html#prerequisites">Prerequisites</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="model_save.html">Saving a Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="model_save.html#prerequisites">Prerequisites</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="model_load.html">Loading a Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="model_load.html#prerequisites">Prerequisites</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="id_cross.html">Creating a common ID</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="id_cross.html#prerequisites">Prerequisites</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="id_panel.html">Creating a Panel ID</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="id_panel.html#prerequisites">Prerequisites</a></li>
 </ul>
 </li>
 </ul>
@@ -142,94 +166,69 @@
              
   <section id="neer-match-utilities">
 <h1>Neer Match Utilities<a class="headerlink" href="#neer-match-utilities" title="Link to this heading"></a></h1>
-<p><a href="https://py-neer-match-utilities.maliedvp.de" style="float:right;margin-left:10px;"><img src="docs/source/_static/img/hex-logo.png" align="right" height="139" alt="neermatch utilities website" /></a></p>
+<a href="https://www.marius-liebald.com/py-neer-utilities/index.html" style="float:right; margin-left:10px;">
+<img src="_static/img/hex-logo.png" style="height:139px !important; width:auto !important;" alt="neermatch utilities website" />
+</a>
 <!-- badges: start -->
 <p><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-blue.svg" /></p>
 <!-- badges: end -->
-<p>Needs to be filled…</p>
+<p>The framework <code class="docutils literal notranslate"><span class="pre">neermatch</span></code> provices a set of tools for entity matching
+based on deep learning, symbolic learning, and a hybrid approach
+combining both deep and symbolic learning. It is designed to support
+easy set-up, training, and inference of entity matching models. The
+package provides automated fuzzy logic reasoning (by refutation)
+functionality that can be used to examine the significance of particular
+associations between fields in an entity matching task.</p>
+<p><code class="docutils literal notranslate"><span class="pre">neermatch</span></code> encompasses three packages:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">py-neer-match</span></code>: The <code class="docutils literal notranslate"><span class="pre">Python</span></code> implementation of the basic
+functionalites. <a class="reference external" href="https://py-neer-match.pikappa.eu">Learn more</a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">py-neer-utilities</span></code>: A <code class="docutils literal notranslate"><span class="pre">Python</span></code> package that provides core utilities
+to streamline and support the entity matching workflow. (<strong>this
+current page</strong>; link to the <a class="reference external" href="https://www.marius-liebald.com/py-neer-utilities/index.html">official
+documentation</a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">r-neer-match</span></code>: The <code class="docutils literal notranslate"><span class="pre">R</span></code> implementation of the basic functionalites
+<a class="reference external" href="https://github.com/pi-kappa-devel/r-neer-match">Learn more</a></p></li>
+</ol>
+<p>The project is financially supported by the <a class="reference external" href="https://www.dfg.de/de">Deutsche
+Forschungsgemeinschaft</a> (DFG) under Grant
+539465691 as part of the Infrastructure Priority Programme <a class="reference external" href="https://www.new-data-spaces.de/en-us/"><em>New Data
+Spaces for the Social Sciences</em></a>
+(SPP 2431). Reading the article <a class="reference external" href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4541376"><em>Karapanagiotis and Liebald
+(2023)</em></a>
+helps to understand the theoretical foundation and design of
+<code class="docutils literal notranslate"><span class="pre">py-neer-match</span></code> (note that the article refers to an earlier version of
+the framework, previously labeled as <code class="docutils literal notranslate"><span class="pre">MLMATCH</span></code>).</p>
 </section>
 <section id="contributors">
 <h1>Contributors<a class="headerlink" href="#contributors" title="Link to this heading"></a></h1>
 <p><a class="reference external" href="https://www.marius-liebald.de">Marius Liebald</a> (maintainer)</p>
 <p><a class="reference external" href="https://www.pikappa.eu">Pantelis Karapanagiotis</a> (contributor)</p>
+</section>
+<section id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h1>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>neer-match
+pip<span class="w"> </span>install<span class="w"> </span>neer-match-utilities
+</pre></div>
+</div>
+</section>
+<section id="official-documentation">
+<h1>Official Documentation<a class="headerlink" href="#official-documentation" title="Link to this heading"></a></h1>
+<p>The documentation is hosted under
+<a class="reference external" href="https://www.marius-liebald.com/py-neer-utilities/index.html">https://www.marius-liebald.com/py-neer-utilities/index.html</a></p>
 </section>
 <section id="license">
 <h1>License<a class="headerlink" href="#license" title="Link to this heading"></a></h1>
 <p>The package is distributed under the <a href="LICENSE.html">MIT license</a>.</p>
 </section>
-<section id="references">
-<h1>References<a class="headerlink" href="#references" title="Link to this heading"></a></h1>
-</section>
-<section id="neer-match-utilities">
-<h1>Neer Match Utilities<a class="headerlink" href="#neer-match-utilities" title="Link to this heading"></a></h1>
-<p><a href="https://py-neer-match-utilities.maliedvp.de" style="float:right;margin-left:10px;"><img src="docs/source/_static/img/hex-logo.png" align="right" height="139" alt="neermatch utilities website" /></a></p>
-<!-- badges: start -->
-<p><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-blue.svg" /></p>
-<!-- badges: end -->
-<p>Needs to be filled…</p>
-</section>
-<section id="contributors">
-<h1>Contributors<a class="headerlink" href="#contributors" title="Link to this heading"></a></h1>
-<p><a class="reference external" href="https://www.marius-liebald.de">Marius Liebald</a> (maintainer)</p>
-<p><a class="reference external" href="https://www.pikappa.eu">Pantelis Karapanagiotis</a> (contributor)</p>
-</section>
-<section id="license">
-<h1>License<a class="headerlink" href="#license" title="Link to this heading"></a></h1>
-<p>The package is distributed under the <a href="#id1"><span class="problematic" id="id2">MIT license</span></a>.</p>
-</section>
-<section id="references">
-<h1>References<a class="headerlink" href="#references" title="Link to this heading"></a></h1>
-</section>
-<section id="examples">
-<h1>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h1>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="preparation.html">Setting up the Preparation Pipeline</a></li>
-</ul>
 </div>
-</section>
-<section id="documentation">
-<h1>Documentation<a class="headerlink" href="#documentation" title="Link to this heading"></a></h1>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="base.html">Base</a></li>
-<li class="toctree-l1"><a class="reference internal" href="model.html">Model</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="model.html#neer_match_utilities.model.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="panel.html">Panel</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="panel.html#neer_match_utilities.panel.GenerateID"><code class="docutils literal notranslate"><span class="pre">GenerateID</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="panel.html#neer_match_utilities.panel.SetupData"><code class="docutils literal notranslate"><span class="pre">SetupData</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="prepare.html">Prepare</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.Prepare"><code class="docutils literal notranslate"><span class="pre">Prepare</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="split.html">Split</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="split.html#neer_match_utilities.split.SplitError"><code class="docutils literal notranslate"><span class="pre">SplitError</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="split.html#neer_match_utilities.split.split_test_train"><code class="docutils literal notranslate"><span class="pre">split_test_train()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="training.html">Training</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="training.html#neer_match_utilities.training.Training"><code class="docutils literal notranslate"><span class="pre">Training</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="training.html#neer_match_utilities.training.focal_loss"><code class="docutils literal notranslate"><span class="pre">focal_loss()</span></code></a></li>
-</ul>
-</li>
-</ul>
 </div>
-</section>
-<section id="license">
-<h1>License<a class="headerlink" href="#license" title="Link to this heading"></a></h1>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">License</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="LICENSE.html">License</a></li>
-</ul>
 </div>
-</section>
+<div class="toctree-wrapper compound">
+</div>
 <section id="indices-and-tables">
 <h1>Indices and Tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading"></a></h1>
 <ul class="simple">
@@ -242,13 +241,13 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="preparation.html" class="btn btn-neutral float-right" title="Setting up the Preparation Pipeline" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="install.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, Pantelis Karapanagiotis, Marius Liebald.</p>
+    <p>&#169; Copyright 2025, Pantelis Karapanagiotis, Marius Liebald.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

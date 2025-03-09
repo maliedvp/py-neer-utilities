@@ -1,5 +1,5 @@
 ---
-title: "Setting up the Preparation Pipeline"
+title: "Data Preparation for Training"
 ---
 
 ## Prerequisites

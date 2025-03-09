@@ -45,10 +45,34 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../preparation.html">Setting up the Preparation Pipeline</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../install.html#pipy">PiPy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../install.html#from-source">From Source</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../preparation.html">Data Preparation for Training</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../preparation.html#prerequisites">Prerequisites</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../model_save.html">Saving a Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../model_save.html#prerequisites">Prerequisites</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../model_load.html">Loading a Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../model_load.html#prerequisites">Prerequisites</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../id_cross.html">Creating a common ID</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../id_cross.html#prerequisites">Prerequisites</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../id_panel.html">Creating a Panel ID</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../id_panel.html#prerequisites">Prerequisites</a></li>
 </ul>
 </li>
 </ul>
@@ -313,23 +337,25 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Focal Loss function for binary classification tasks.</span>
 
-<span class="sd">    Focal Loss is designed to address class imbalance by assigning higher weights to the </span>
-<span class="sd">    minority class and focusing the model&#39;s learning on hard-to-classify examples. </span>
-<span class="sd">    It reduces the loss contribution from well-classified examples, making it </span>
+<span class="sd">    Focal Loss is designed to address class imbalance by assigning higher weights</span>
+<span class="sd">    to the minority class and focusing the model&#39;s learning on hard-to-classify examples.</span>
+<span class="sd">    It reduces the loss contribution from well-classified examples, making it</span>
 <span class="sd">    particularly effective for imbalanced datasets.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    alpha : float, optional, default=0.25</span>
-<span class="sd">        Weighting factor for the positive class (minority class). </span>
+<span class="sd">        Weighting factor for the positive class (minority class).</span>
+
 <span class="sd">        - Must be in the range [0, 1].</span>
-<span class="sd">        - A higher value increases the loss contribution from the positive class </span>
+<span class="sd">        - A higher value increases the loss contribution from the positive class</span>
 <span class="sd">          (underrepresented class) relative to the negative class (overrepresented class).</span>
 
 <span class="sd">    gamma : float, optional, default=2.0</span>
 <span class="sd">        Focusing parameter that reduces the loss contribution from easy examples.</span>
-<span class="sd">        - \( \gamma = 0 \): No focusing, equivalent to Weighted Binary Cross-Entropy Loss.</span>
-<span class="sd">        - \( \gamma &gt; 0 \): Focuses more on hard-to-classify examples.</span>
+
+<span class="sd">        - ``gamma = 0``: No focusing, equivalent to Weighted Binary Cross-Entropy Loss.</span>
+<span class="sd">        - ``gamma &gt; 0``: Focuses more on hard-to-classify examples.</span>
 <span class="sd">        - Larger values emphasize harder examples more strongly.</span>
 
 <span class="sd">    Returns</span>
@@ -346,8 +372,8 @@
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 <span class="sd">    - The positive class (minority or underrepresented class) is weighted by `alpha`.</span>
-<span class="sd">    - The negative class (majority or overrepresented class) is automatically weighted </span>
-<span class="sd">      by \( 1 - \alpha \).</span>
+<span class="sd">    - The negative class (majority or overrepresented class) is automatically weighted</span>
+<span class="sd">      by ``1 - alpha``.</span>
 <span class="sd">    - Ensure `alpha` is set appropriately to reflect the level of imbalance in the dataset.</span>
 
 <span class="sd">    References</span>
@@ -356,17 +382,18 @@
 <span class="sd">    Focal Loss for Dense Object Detection. In ICCV.</span>
 
 <span class="sd">    Explanation of Key Terms</span>
-<span class="sd">    ------------------------</span>
+<span class="sd">    -------------------------</span>
 <span class="sd">    - **Positive Class (Underrepresented):**</span>
+
 <span class="sd">      - Refers to the class with fewer examples in the dataset.</span>
-<span class="sd">      - Typically weighted by `alpha`, which should be greater than \( 0.5 \) in </span>
-<span class="sd">        highly imbalanced datasets.</span>
+<span class="sd">      - Typically weighted by `alpha`, which should be greater than 0.5 in highly imbalanced datasets.</span>
 
 <span class="sd">    - **Negative Class (Overrepresented):**</span>
-<span class="sd">      - Refers to the class with more examples in the dataset.</span>
-<span class="sd">      - Its weight is automatically \( 1 - \alpha \).</span>
 
+<span class="sd">      - Refers to the class with more examples in the dataset.</span>
+<span class="sd">      - Its weight is automatically ``1 - alpha``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">alpha</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Parameter `alpha` must be in the range [0, 1].&quot;</span><span class="p">)</span>
 
@@ -392,7 +419,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, Pantelis Karapanagiotis, Marius Liebald.</p>
+    <p>&#169; Copyright 2025, Pantelis Karapanagiotis, Marius Liebald.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

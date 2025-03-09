@@ -1,25 +1,37 @@
-.. include:: README_sphinx.md
-   :parser: commonmark
-
 .. include:: README.md
    :parser: commonmark
 
+.. Installation
+.. ========
 
-Examples
-========
+.. toctree::
+   :maxdepth: 1
+   :caption: Installation
+   :hidden:
+
+   install.md
+
+.. Examples
+.. ========
 
 .. toctree::
    :maxdepth: 1
    :caption: Examples
+   :hidden:
 
    preparation.md
+   model_save.md
+   model_load.md
+   id_cross.md
+   id_panel.md
 
-Documentation
-=============
+.. Documentation
+.. =============
 
 .. toctree::
    :maxdepth: 2
    :caption: Documentation
+   :hidden:
 
    base
    model
@@ -28,12 +40,13 @@ Documentation
    split
    training
 
-License
-=======
+.. License
+.. =======
 
 .. toctree::
    :maxdepth: 2
    :caption: License
+   :hidden:
 
    LICENSE
 

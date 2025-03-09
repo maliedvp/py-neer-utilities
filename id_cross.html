@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Neer Match Utilities &mdash; Neer Match Utilities 0.3.3-alpha documentation</title>
+  <title>Creating a common ID &mdash; Neer Match Utilities 0.3.3-alpha documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
@@ -23,7 +23,9 @@
       <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Creating a Panel ID" href="id_panel.html" />
+    <link rel="prev" title="Loading a Model" href="model_load.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -46,10 +48,34 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="preparation.html">Setting up the Preparation Pipeline</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#pipy">PiPy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#from-source">From Source</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="preparation.html">Data Preparation for Training</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="preparation.html#prerequisites">Prerequisites</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="model_save.html">Saving a Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="model_save.html#prerequisites">Prerequisites</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="model_load.html">Loading a Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="model_load.html#prerequisites">Prerequisites</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Creating a common ID</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="id_panel.html">Creating a Panel ID</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="id_panel.html#prerequisites">Prerequisites</a></li>
 </ul>
 </li>
 </ul>
@@ -129,9 +155,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Neer Match Utilities</li>
+      <li class="breadcrumb-item active">Creating a common ID</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/README_sphinx.md.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/id_cross.md.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -139,36 +165,29 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section class="tex2jax_ignore mathjax_ignore" id="neer-match-utilities">
-<h1>Neer Match Utilities<a class="headerlink" href="#neer-match-utilities" title="Link to this heading"></a></h1>
-<p><a href="https://py-neer-match-utilities.maliedvp.de" style="float:right;margin-left:10px;"><img src="docs/source/_static/img/hex-logo.png" align="right" height="139" alt="neermatch utilities website" /></a></p>
-<!-- badges: start -->
-<p><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-blue.svg" /></p>
-<!-- badges: end -->
-<p>Needs to be filled…</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="creating-a-common-id">
+<h1>Creating a common ID<a class="headerlink" href="#creating-a-common-id" title="Link to this heading"></a></h1>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h2>
+<p>Load the libraries we will use and set the seed for reproducibility.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;yes&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </section>
-<section class="tex2jax_ignore mathjax_ignore" id="contributors">
-<h1>Contributors<a class="headerlink" href="#contributors" title="Link to this heading"></a></h1>
-<p><a class="reference external" href="https://www.marius-liebald.de">Marius Liebald</a> (maintainer)</p>
-<p><a class="reference external" href="https://www.pikappa.eu">Pantelis Karapanagiotis</a> (contributor)</p>
-</section>
-<section class="tex2jax_ignore mathjax_ignore" id="license">
-<h1>License<a class="headerlink" href="#license" title="Link to this heading"></a></h1>
-<p>The package is distributed under the <a href="LICENSE.html">MIT license</a>.</p>
-</section>
-<section class="tex2jax_ignore mathjax_ignore" id="references">
-<h1>References<a class="headerlink" href="#references" title="Link to this heading"></a></h1>
 </section>
 
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="model_load.html" class="btn btn-neutral float-left" title="Loading a Model" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="id_panel.html" class="btn btn-neutral float-right" title="Creating a Panel ID" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, Pantelis Karapanagiotis, Marius Liebald.</p>
+    <p>&#169; Copyright 2025, Pantelis Karapanagiotis, Marius Liebald.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
