@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from itertools import combinations
+from itertools import combinations, permutations
 import uuid
 from typing import List, Dict, Tuple, Union
 from neer_match.matching_model import DLMatchingModel, NSMatchingModel
@@ -27,43 +27,44 @@ class SetupData:
             A list of tuples representing matches. Defaults to an empty list.
         """
         
-        self.matches = matches if matches is not None else []
+        self.matches = list(matches.itertuples(index=False, name=None)) if matches is not None else []
         self.dfm = pd.DataFrame(self.matches, columns=['left', 'right'])
 
     def adjust_overlap(self, dfm: pd.DataFrame) -> pd.DataFrame:
-        """
-        Adjust the overlap between left and right columns in the DataFrame.
-
-        Parameters
-        ----------
-        dfm : pd.DataFrame
-            DataFrame containing 'left' and 'right' columns.
-
-        Returns
-        -------
-        pd.DataFrame
-            DataFrame with overlaps adjusted and additional combinations added.
-        """
-
-        if not set(dfm['left']).isdisjoint(dfm['right']):
-            overlapping_ids = set(dfm['left']).intersection(dfm['right'])
-
-            for overlap_id in overlapping_ids:
-                chain = set(
-                    dfm[dfm['left'] == overlap_id]['right'].tolist() +
-                    dfm[dfm['right'] == overlap_id]['left'].tolist() +
-                    [overlap_id]
-                )
-
-                combinations_df = pd.DataFrame(
-                    list(combinations(sorted(chain), 2)),
-                    columns=['left', 'right']
-                )
-                dfm = pd.concat([dfm, combinations_df], ignore_index=True) \
-                    .drop_duplicates(ignore_index=True) \
-                    .sort_values(by='left') \
-                    .reset_index(drop=True)
-
+        # Build the full connection graph from all matches
+        all_ids = set(dfm['left']).union(set(dfm['right']))
+        graph = {id_: set() for id_ in all_ids}
+        for _, row in dfm.iterrows():
+            l, r = row['left'], row['right']
+            graph[l].add(r)
+            graph[r].add(l)
+        
+        # Compute connected components using a depth-first search (DFS)
+        seen = set()
+        components = []
+        for id_ in all_ids:
+            if id_ not in seen:
+                component = set()
+                stack = [id_]
+                while stack:
+                    node = stack.pop()
+                    if node not in component:
+                        component.add(node)
+                        stack.extend(graph[node] - component)
+                seen.update(component)
+                components.append(component)
+        
+        # For each connected component, generate all ordered pairs (permutations)
+        new_pairs = []
+        for comp in components:
+            if len(comp) > 1:
+                # This generates both (A,B) and (B,A) for all distinct A and B.
+                new_pairs.extend(list(permutations(comp, 2)))
+        
+        new_df = pd.DataFrame(new_pairs, columns=['left', 'right'])
+        
+        # Merge with the original matches and drop only exact duplicates
+        dfm = pd.concat([dfm, new_df], ignore_index=True).drop_duplicates(ignore_index=True)
         return dfm
 
     @staticmethod
@@ -182,7 +183,11 @@ class SetupData:
 
         return dfm
 
-    def data_preparation(self, df_panel: pd.DataFrame, unique_id: str, panel_id: str = None) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    def data_preparation_cs(self, df_left: pd.DataFrame, df_right: pd.DataFrame, unique_id:str):
+        df_panel = pd.concat([df_left, df_right], ignore_index=True, axis=0)
+        return self.data_preparation_panel(df_panel=df_panel, unique_id=unique_id)
+
+    def data_preparation_panel(self, df_panel: pd.DataFrame, unique_id: str, panel_id: str = None) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
         """
         Prepare data by handling overlaps, panel combinations, and duplicates.
 
@@ -219,13 +224,16 @@ class SetupData:
         dfm['left'] = dfm['left'].astype(stabile_dtype)
         dfm['right'] = dfm['right'].astype(stabile_dtype)
 
-        left = df_panel[df_panel[unique_id].isin(dfm['left'])].drop_duplicates(ignore_index=True)
-        left = left[[c for c in left if c != panel_id]]
-        left[unique_id] = left[unique_id].astype(stabile_dtype)
+        # define left and right directly from the full set of matches.
+        unique_ids = set(dfm['left']).union(set(dfm['right']))
+        combined = df_panel[df_panel[unique_id].isin(unique_ids)].drop_duplicates(ignore_index=True)
 
-        right = df_panel[df_panel[unique_id].isin(dfm['right'])].drop_duplicates(ignore_index=True)
-        right = right[[c for c in right if c != panel_id]]
-        right[unique_id] = right[unique_id].astype(stabile_dtype)
+        # Assign the same combined DataFrame to both left and right and keep only the relevant rows
+        left = combined.copy()
+        left = left[left[unique_id].isin(dfm['left'])].reset_index(drop=True)
+
+        right = combined.copy()
+        right = right[right[unique_id].isin(dfm['right'])].reset_index(drop=True)
 
         return left, right, dfm
 
