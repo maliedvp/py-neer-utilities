@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Panel &mdash; Neer Match Utilities 0.3.3-alpha documentation</title>
+  <title>Panel &mdash; Neer Match Utilities 0.3.4-alpha documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=39755158"></script>
+      <script src="_static/documentation_options.js?v=48aefb32"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -104,9 +104,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.panel.SetupData"><code class="docutils literal notranslate"><span class="pre">SetupData</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.panel.SetupData.matches"><code class="docutils literal notranslate"><span class="pre">SetupData.matches</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.panel.SetupData.__init__"><code class="docutils literal notranslate"><span class="pre">SetupData.__init__()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.panel.SetupData.adjust_overlap"><code class="docutils literal notranslate"><span class="pre">SetupData.adjust_overlap()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.panel.SetupData.create_connected_groups"><code class="docutils literal notranslate"><span class="pre">SetupData.create_connected_groups()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.panel.SetupData.data_preparation"><code class="docutils literal notranslate"><span class="pre">SetupData.data_preparation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.panel.SetupData.data_preparation_panel"><code class="docutils literal notranslate"><span class="pre">SetupData.data_preparation_panel()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.panel.SetupData.drop_repetitions"><code class="docutils literal notranslate"><span class="pre">SetupData.drop_repetitions()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.panel.SetupData.panel_preparation"><code class="docutils literal notranslate"><span class="pre">SetupData.panel_preparation()</span></code></a></li>
 </ul>
@@ -363,23 +362,6 @@ Options:
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neer_match_utilities.panel.SetupData.adjust_overlap">
-<span class="sig-name descname"><span class="pre">adjust_overlap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dfm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/panel.html#SetupData.adjust_overlap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.panel.SetupData.adjust_overlap" title="Link to this definition"></a></dt>
-<dd><p>Adjust the overlap between left and right columns in the DataFrame.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>dfm</strong> (<em>pd.DataFrame</em>) – DataFrame containing ‘left’ and ‘right’ columns.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>DataFrame with overlaps adjusted and additional combinations added.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pd.DataFrame</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="neer_match_utilities.panel.SetupData.create_connected_groups">
 <span class="sig-name descname"><span class="pre">create_connected_groups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/panel.html#SetupData.create_connected_groups"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.panel.SetupData.create_connected_groups" title="Link to this definition"></a></dt>
 <dd><p>Create a list of lists where sublists contain connected values as one group.</p>
@@ -400,8 +382,8 @@ Options:
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="neer_match_utilities.panel.SetupData.data_preparation">
-<span class="sig-name descname"><span class="pre">data_preparation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_panel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">panel_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/panel.html#SetupData.data_preparation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.panel.SetupData.data_preparation" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="neer_match_utilities.panel.SetupData.data_preparation_panel">
+<span class="sig-name descname"><span class="pre">data_preparation_panel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_panel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">panel_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/panel.html#SetupData.data_preparation_panel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.panel.SetupData.data_preparation_panel" title="Link to this definition"></a></dt>
 <dd><p>Prepare data by handling overlaps, panel combinations, and duplicates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
