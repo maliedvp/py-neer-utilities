@@ -1,6 +1,7 @@
 import re
 import numpy as np
 import pandas as pd
+from collections import OrderedDict
 from .base import SuperClass
 
 class Prepare(SuperClass):
@@ -96,9 +97,9 @@ class Prepare(SuperClass):
 
             # Select and rename relevant columns
             df = df[
-                [
+                [id_column] + [
                 re.sub(r'\s', '', col) for col in columns
-                ] + [id_column]
+                ]
             ].copy()
 
 
@@ -130,17 +131,13 @@ class Prepare(SuperClass):
             return df
 
         # Prepare columns for both DataFrames
-        columns_left = list(set([
-            key.split('~')[0] 
-                if re.search('~',key)!= None 
-                else key 
+        columns_left = list(OrderedDict.fromkeys([
+            key.split('~')[0] if '~' in key else key
             for key in self.similarity_map
         ]))
 
-        columns_right = list(set([
-            key.split('~')[1] 
-                if re.search('~',key)!= None 
-                else key 
+        columns_right = list(OrderedDict.fromkeys([
+            key.split('~')[1] if '~' in key else key
             for key in self.similarity_map
         ]))
 
