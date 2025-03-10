@@ -40,13 +40,18 @@ class Training(SuperClass):
             of matching pairs in the left and right DataFrames.
         """
         
+        # Create local copies of the original dataframes
+        df_left = self.df_left.copy()
+        df_right = self.df_right.copy()
+
+
         # Add custom indices
-        self.df_left['index_left'] = self.df_left.index
-        self.df_right['index_right'] = self.df_right.index
+        df_left['index_left'] = self.df_left.index
+        df_right['index_right'] = self.df_right.index
 
         # Combine the datasets into one
         df = pd.merge(
-            self.df_left, 
+            df_left, 
             matches, 
             left_on=self.id_left, 
             right_on=matches_id_left,
@@ -57,7 +62,7 @@ class Training(SuperClass):
 
         df = pd.merge(
             df,
-            self.df_right,
+            df_right,
             left_on=matches_id_right,
             right_on=self.id_right,
             how='left',
