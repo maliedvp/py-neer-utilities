@@ -59,7 +59,7 @@ def example_2():
         ),
         "matches": [(1, 5), (2, 6), (3, 7), (7, 8)],
         "expected_df_matches": pd.DataFrame(
-            {"left": [1, 2, 3, 3, 7], "right": [5, 6, 7, 8, 8]}
+            {"left": [1, 2, 3, 3, 7, 7], "right": [5, 6, 7, 8, 8, 7]}
         ),
     }
 
@@ -95,8 +95,8 @@ def example_4():
         "matches": [(1, 8)],
         "expected_df_matches": pd.DataFrame(
             {
-                "left": [1, 1, 1, 2, 2, 3, 5, 7],
-                "right": [8, 2, 7, 7, 8, 4, 6, 8],
+                "left": [1, 1, 1, 2, 2, 3, 7, 5, 2, 7],
+                "right": [2, 7, 8, 7, 8, 4, 8, 6, 2, 7],
             }
         ),
     }
@@ -128,7 +128,7 @@ def test_example_2(example_2):
     )
 
     # Assert number of length of matches
-    assert len(example_2["expected_df_matches"]) == len(df_matches) == 5
+    assert len(example_2["expected_df_matches"]) == len(df_matches) == 6
 
     # assert identical matches (after re-ordering)
     pd.testing.assert_frame_equal(
@@ -171,8 +171,10 @@ def test_example_4(example_4):
         df_panel=example_4["df"], unique_id="id", panel_id="pid"
     )
 
+    print(df_matches)
+
     # Assert number of length of matches
-    assert len(example_4["expected_df_matches"]) == len(df_matches) == 8
+    assert len(example_4["expected_df_matches"]) == len(df_matches) == 10
 
     # assert identical matches (after re-ordering)
     pd.testing.assert_frame_equal(

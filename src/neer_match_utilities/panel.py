@@ -36,6 +36,41 @@ class SetupData:
         self.dfm = pd.DataFrame(self.matches, columns=['left', 'right'])
 
     def adjust_overlap(self, dfm: pd.DataFrame) -> pd.DataFrame:
+        """
+        Adjusts the overlap in the matches DataFrame by generating additional
+        ordered pairs from connected components in the match graph.
+
+        This function takes a DataFrame containing match pairs in the 'left' and
+        'right' columns. It constructs a full connection graph from these matches,
+        computes connected components using depth-first search (DFS), and then,
+        for each connected component with more than one element, generates all
+        ordered pairs (i.e. permutations) of distinct IDs. These new pairs are
+        appended to the original DataFrame.
+
+        Parameters
+        ----------
+        dfm : pd.DataFrame
+            A DataFrame with columns 'left' and 'right' representing the matching
+            pairs, where each entry is a unique identifier.
+
+        Returns
+        -------
+        pd.DataFrame
+            A combined DataFrame that includes both the original match pairs and
+            the newly generated pairs from connected components. Note that pairs
+            of the form (A, A) are not generated, and for any distinct IDs A and B,
+            both (A, B) and (B, A) may appear. Duplicates are not removed.
+
+        Notes
+        -----
+        - Connected components are determined by treating the match pairs as
+          edges in an undirected graph.
+        - The function uses permutations of length 2 to generate ordered pairs,
+          ensuring that only pairs of distinct IDs are created.
+        - The new pairs are simply appended to the original DataFrame without
+          dropping duplicates.
+        """
+
         # Build the full connection graph from all matches
         all_ids = set(dfm['left']).union(set(dfm['right']))
         graph = {id_: set() for id_ in all_ids}
@@ -67,40 +102,41 @@ class SetupData:
                 new_pairs.extend(list(permutations(comp, 2)))
         
         new_df = pd.DataFrame(new_pairs, columns=['left', 'right'])
-        
+
         # Append new rows to the original dfm without resetting its order:
-        original_dfm = dfm.copy()
-        if not original_dfm.empty:
-            start_index = original_dfm.index.max() + 1
-        else:
-            start_index = 0
-        new_df.index = range(start_index, start_index + len(new_df))
-        
-        combined = pd.concat([original_dfm, new_df])
-        # Drop duplicates using keep='first' to preserve the original row if a duplicate exists
-        combined = combined.drop_duplicates(keep='first')
-        # Sort by index to preserve the original order for existing rows
-        combined = combined.sort_index()
-        return combined
+        df_combi = pd.concat([dfm.copy(), new_df])
+
+        return df_combi
 
     @staticmethod
     def drop_repetitions(df: pd.DataFrame) -> pd.DataFrame:
         """
-        Remove duplicate pairs in the DataFrame irrespective of order.
+        Remove duplicate pairs in the DataFrame irrespective of the order of elements.
+
+        This function treats each pair in the 'left' and 'right' columns as unordered.
+        It creates a temporary column 'sorted_pair' that contains a sorted tuple of the 
+        'left' and 'right' values for each row. For example, the pairs (A, B) and (B, A)
+        will both be transformed into (A, B), and only one instance will be retained.
+        The function then drops duplicate rows based on this sorted pair and removes 
+        the temporary column before returning the result.
 
         Parameters
         ----------
         df : pd.DataFrame
-            DataFrame containing 'left' and 'right' columns.
+            A DataFrame containing at least the columns 'left' and 'right', which represent
+            paired elements.
 
         Returns
         -------
         pd.DataFrame
-            DataFrame with duplicates removed.
+            A DataFrame in which duplicate pairs (ignoring order) have been removed.
         """
 
         df['sorted_pair'] = df.apply(lambda row: tuple(sorted([row['left'], row['right']])), axis=1)
+        df = df.sort_values(['left','right'])
         df = df.drop_duplicates(subset=['sorted_pair']).drop(columns=['sorted_pair'])
+        df = df.reset_index(drop=True)
+
         return df
 
     def create_connected_groups(self, df_dict: Dict, matches: List[Tuple[int, int]]) -> List[List[int]]:
@@ -194,6 +230,7 @@ class SetupData:
             matches=self.matches
         )
         for g in groups:
+            sorted_group = sorted(g)
             combinations_df = pd.DataFrame(list(combinations(g, 2)), columns=['left', 'right'])
             dfm = pd.concat([dfm, combinations_df], ignore_index=True).drop_duplicates(ignore_index=True)
 
@@ -207,6 +244,11 @@ class SetupData:
         """
         Prepare data by handling overlaps, panel combinations, and duplicates.
 
+        This function converts the unique identifier column to a numeric type (if possible),
+        then prepares match pairs by adjusting overlaps and dropping duplicate pairs.
+        It then extracts the subset of the panel data corresponding to the matched IDs,
+        and finally sorts the left and right DataFrames according to the unique identifier.
+
         Parameters
         ----------
         df_panel : pd.DataFrame
@@ -219,9 +261,9 @@ class SetupData:
         Returns
         -------
         tuple
-            DataFrames for left, right, and the final matches.
+            A tuple of three DataFrames: left, right, and the final matches.
         """
-
+        # Convert unique_id to numeric if possible, else to string.
         try:
             df_panel[unique_id] = pd.to_numeric(df_panel[unique_id], errors='raise')
             stabile_dtype = df_panel[unique_id].dtype
@@ -236,27 +278,53 @@ class SetupData:
 
         dfm = self.adjust_overlap(dfm)
         dfm = self.drop_repetitions(dfm)
-        dfm = dfm.reset_index(drop=True)
 
-        dfm['left'] = dfm['left'].astype(stabile_dtype)
-        dfm['right'] = dfm['right'].astype(stabile_dtype)
-
-        # define left and right directly from the full set of matches.
+        # Define left and right directly from the full set of matches.
         unique_ids = set(dfm['left']).union(set(dfm['right']))
         combined = df_panel[df_panel[unique_id].isin(unique_ids)].drop_duplicates()
-        
-        # Keep the original index order from df_panel:
+
+        # Prepare left DataFrame, drop panel_id column if provided, convert type, sort by unique_id.
         left = combined[combined[unique_id].isin(dfm['left'])].copy()
         if panel_id:
             left = left[[c for c in left.columns if c != panel_id]]
         left.loc[:, unique_id] = left[unique_id].astype(stabile_dtype)
-        left = left.reset_index(drop=True)
+        left = left.sort_values(by=unique_id).reset_index(drop=True)
 
+        # Prepare right DataFrame similarly.
         right = combined[combined[unique_id].isin(dfm['right'])].copy()
         if panel_id:
             right = right[[c for c in right.columns if c != panel_id]]
         right.loc[:, unique_id] = right[unique_id].astype(stabile_dtype)
-        right = right.reset_index(drop=True)
+        right = right.sort_values(by=unique_id).reset_index(drop=True)
+
+        """
+        it is (correctly) possible that some observations now are included in left and right. (see test/test_setup.py)
+        identify them and add them to the dfm
+        """
+
+        lr_list = sorted(
+            list(
+                set(
+                    left['id']).intersection(set(right['id'])
+                )
+            )
+        )
+
+        dfm = pd.concat(
+            [
+                dfm,
+                pd.DataFrame({
+                    'left' : lr_list,
+                    'right' : lr_list
+                })
+            ],
+            axis=0,
+            ignore_index=True
+        )
+
+        dfm['left'] = dfm['left'].astype(stabile_dtype)
+        dfm['right'] = dfm['right'].astype(stabile_dtype)
+
 
         return left, right, dfm
 
