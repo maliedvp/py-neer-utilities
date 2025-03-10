@@ -167,3 +167,29 @@ class Prepare(SuperClass):
                     df_right_processed[cr] = df_right_processed[cr].apply(lambda x: str(x) if pd.notna(x) else x)
 
         return df_left_processed, df_right_processed
+
+
+def similarity_map_to_dict(items: list) -> dict:
+    """
+    Convert a list of similarity mappings into a dictionary representation.
+
+    The function accepts a list of tuples, where each tuple represents a mapping
+    with the form `(left, right, similarity)`. If the left and right column names
+    are identical, the dictionary key is that column name; otherwise, the key is formed
+    as `left~right`.
+
+    Returns
+    -------
+    dict
+        A dictionary where keys are column names (or `left~right` for differing columns)
+        and values are lists of similarity functions associated with those columns.
+    """
+    result = {}
+    for left, right, similarity in items:
+        # Use the left value as key if both columns are identical; otherwise, use 'left~right'
+        key = left if left == right else f"{left}~{right}"
+        if key in result:
+            result[key].append(similarity)
+        else:
+            result[key] = [similarity]
+    return result

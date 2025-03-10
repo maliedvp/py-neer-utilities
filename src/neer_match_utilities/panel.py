@@ -305,7 +305,7 @@ class SetupData:
         lr_list = sorted(
             list(
                 set(
-                    left['id']).intersection(set(right['id'])
+                    left[unique_id]).intersection(set(right[unique_id])
                 )
             )
         )
