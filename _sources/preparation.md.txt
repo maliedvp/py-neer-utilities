@@ -359,14 +359,16 @@ matches = matches[
 ### 1. A customized `similarity_map`
 
 Set up the `similarity_map`. Note that the columns as `city`,
-`industry`, and `purpose` contain missing values. To handle these, I
-define a custom [similarity
+`industry`, and `purpose` contain missing values. One way to improve the
+handling of these is to include a custom [similarity
 function](https://github.com/maliedvp/py-neer-match/blob/custom_similarity_functions/src/neer_match/similarity_map.py)
-`notmissing` that returns 0 it a least one observation of a record pair
-is any missing value (`None`, `np.nan`, `pd.nan` or and empty string)
-and 1 otherwise. Similarly, for numeric columns, the custom function
-`notzero` is added. These functions are not part of the released version
-of `neer_match.similarity_map.available_similarities()`.
+`notmissing` to the `similarity_map` that returns 0 if a least one
+observation of a record pair is any missing value (`None`, `np.nan`,
+`pd.nan` or and empty string) and 1 otherwise. Similarly, for numeric
+columns, the custom function `notzero` is added. These functions are not
+part of the released version of
+`neer_match.similarity_map.available_similarities()`, which is why they
+are outcommented in the example below.
 
 ``` python
 from neer_match.similarity_map import SimilarityMap
@@ -385,17 +387,17 @@ similarity_map = {
     "city" : [
         "levenshtein",
         "jaro_winkler",
-        "notmissing"
+        # "notmissing"
     ],
     "industry" : [
         "levenshtein",
         "jaro_winkler",
-        "notmissing"
+        # "notmissing"
     ],
     "purpose" : [
         "levenshtein",
         "jaro_winkler",
-        "notmissing",
+        # "notmissing",
         "token_sort_ratio",
         "token_set_ratio",
         "partial_token_set_ratio",
@@ -404,14 +406,14 @@ similarity_map = {
     "bs_text" : [
         "levenshtein",
         "jaro_winkler",
-        "notmissing",
+        # "notmissing",
         "token_sort_ratio",
         "token_set_ratio",
         "partial_token_set_ratio",
         "partial_token_sort_ratio",
     ],
     "found_year" : [
-        "notzero",
+        # "notzero",
         "discrete"
     ],
 }
@@ -592,11 +594,11 @@ matches_train.head()
 
 |     | left | right |
 |-----|------|-------|
-| 0   | 0    | 15    |
-| 1   | 1    | 22    |
-| 2   | 2    | 107   |
-| 3   | 3    | 5     |
-| 4   | 4    | 295   |
+| 0   | 0    | 13    |
+| 1   | 1    | 136   |
+| 2   | 2    | 74    |
+| 3   | 3    | 91    |
+| 4   | 4    | 223   |
 
 </div>
 
@@ -624,10 +626,10 @@ left_train[
 |  | company_id | company_name | city | industry | purpose | bs_text | found_year | index_original |
 |----|----|----|----|----|----|----|----|----|
 | 0 | 008fbe2454 | BETRAG IN RÜCKZAHLBAR VERSTÄRKTE | RÜCKZAHLBAR | ELEKTRISCHE STRASSENBAHNEN, KLEIN- UND PFERDEB... |  | BAHNH FE U GRUNDST CKE BAHNBAU U H LEITUNG MOT... | NaN | 0 |
-| 1 | 00d74f0e0b | DEUTSCHE RÜCK- U. MITVERSICHERUNGS-GESELLSCHAF... | BERLIN | VERSICHERUNGS-GESELLSCHAFTEN ALLER BRANCHEN. |  | AKTIENWECHSEL M EFFEKTEN M HYP DARLEHEN M INVE... | 1885.0 | 3 |
-| 2 | 0118303343 | CUXHAVENER GAS-ACTIEN-GESELLSCHAFT IN CUXHAVEN. | CUXHAVEN | GASANSTALTEN UND GASGLÜHLICHT-FABRIKEN. |  | ANLAGEKONTO M GRUNDST CK M WOANHAUS M KAUTION ... | 1884.0 | 5 |
-| 3 | 01a224579a | \*MASCHINEN- UND WERKZEUGFABRIK AKTIENGESELLSCHAFT | KÖTHEN | MASCHINEN- UND ARMATUREN-FABRIKEN, EISENGIESSE... | ÜBERNAHME UND FORTFÜHRUNG DER UNTER DER FIRMA ... |  | 1897.0 | 6 |
-| 4 | 02875aab9c | ACT.-GES. TONWERKE WÜBBENHORST IN DELMENHORST. | DELMENHORST | INDUSTRIE DER STEINE UND ERDEN. | ERWERB U. BETRIEB VON ZIEGELEIEN U. TONWARENFA... | AKTIVA GRUNDST CKE GEB UDE ANSCHLUSSGLEIS MASC... | 1911.0 | 9 |
+| 1 | 00a050af9d | ZUCKERFABRIK HARSUM IN HARSUM, PROV. HANNOVER. | HANNOVER | ZUCKER-FABRIKEN UND ZUCKER-RAFFINERIEN. | FABRIKATION VON ROHZUCKER. PRODUKTION 1896/97–... | GRUNDST CK M GEB UDE M MASCHINEN U APPARATE M | 1873.0 | 1 |
+| 2 | 01077b1f46 | GEBRÜDER ZSCHILLE TUCHFABRIK | GROSSENHAIN | TEXTIL-INDUSTRIE. | ÜBERNAHME UND FORTBETRIEB DER DER FIRMA GEBR. ... |  | 1899.0 | 4 |
+| 3 | 0325788dc4 | METALL ZIEHEFEF AKT.-GES. IN CÖLN-EHRENFELD. | CÖLN-EHRENFELD | METALL-INDUSTRIE. | ERWERB U. WEITERBETRIEB DER VON DER FIRMA EUGEN | WURDE ENTGEGEN DEN GESETZL BESTIMMUNGEN NOCH N... | 1906.0 | 11 |
+| 4 | 032ba76e05 | STETTINER KLECTRICITÄTSWERKE IN STETTIN, SCHUL... | STETTIN | ELEKRTOTECHNISCHE FABRIKEN, ELEKTRIZITÄTSWERKE... |  | IMMOBIL GRUND U BODEN SCHULZEN P LITZER | 1890.0 | 12 |
 
 </div>
 
@@ -654,10 +656,10 @@ right_train[
 
 |  | company_id | company_name | city | industry | purpose | bs_text | found_year | index_original |
 |----|----|----|----|----|----|----|----|----|
-| 5 | 16729a8d6a | MASCHINEN- UND WERKZEUGFABRIK AKTIENGESELLSCHAFT | CÖTHEN | MASCHINEN- UND ARMATUREN-FABRIKEN, EISENGIESSE... | ÜBERNAHME UND FORTFÜHRUNG DER UNTER DER FIRMA ... | GRUNDST CK M GEB UDE M MASCHINEN U UTENSILIEN M | 1897.0 | 16 |
-| 15 | 2eece3dd52 | BETRAG IN RÜCKZAHLBAR VERSTÄRKTE | RÜCKZAHLBAR | ELEKTRISCHE STRASSENBAHNEN, KLEIN- UND PFERDEB... |  | BAHNH FE U GRUNDST CKE BAHNBAU OBERIRDISCHE LE... | NaN | 34 |
-| 22 | 3a50b36f26 | DEUTSCHE RÜCK- U. MITVERSICHERUNGS-GESELLSCHAF... | BERLIN | VERSICHERUNGS-GESELLSCHAFTEN ALLER BRANCHEN. |  | AKTIENWECHSEL M EFFEKTEN M HYPOTHEKENDARLEHEN ... | 1885.0 | 46 |
-| 107 | 832a174691 | CUXHAVENER GAS-ACTIEN-GESELLSCHAFT IN CUXHAVEN | CUXHAVEN | GAS-GESELLSCHAFTEN. | BETRIEB EINES GASWERKES, SOWIE VERWERTUNG DER ... |  | 1884.0 | 196 |
-| 295 | eaa6910702 | \*ACT.-GES. TONWERKE WÜBBENHORST IN DELMENHORST. | DELMENHORST | INDUSTRIE DER STEINE UND ERDEN. | ERWERB U. BETRIEB VON ZIEGELEIEN U. TONWARENFA... |  | 1911.0 | 583 |
+| 13 | 2eece3dd52 | BETRAG IN RÜCKZAHLBAR VERSTÄRKTE | RÜCKZAHLBAR | ELEKTRISCHE STRASSENBAHNEN, KLEIN- UND PFERDEB... |  | BAHNH FE U GRUNDST CKE BAHNBAU OBERIRDISCHE LE... | NaN | 34 |
+| 74 | 721ce62f33 | GEBRÜDER ZSCHILLE TUCHFABRIK AKTIENGESELLSCHAF... | GROSSENHAIN | TEXTIL-INDUSTRIE. | ÜBERNAHME UND FORTBETRIEB DER DER FIRMA GEBR. ... | GRUNDST CKE U GEB UDE MASCHINEN U UTENSILIEN F... | 1899.0 | 149 |
+| 91 | 7c118c147f | METALL-ZIEHEREI AKT.-GES. IN CÖLN-KHRENFELD. | CÖLN-KHRENFELD | METALL-INDUSTRIE. | ERWERB U. WEITERBETRIEB DER VON DER FIRMA EUGEN | AKTIVA GRUNDST CK GEB UDE MASCH R WERKZEUG FUH... | 1906.0 | 174 |
+| 136 | 9740c7f92f | ZUCKERFABRIK HARSUM IN HARSUM. | HARSUM | NAHRUNGS- UND GENUSSMITTEL-INDUSTRIE. | FABRIKATION VON ROHZUCKER. | GRUNDST CK M GEB UDE M MASCHINEN U APPARATE M | 1873.0 | 267 |
+| 223 | c4ea40269b | STETTINER ELECTRICITÄTSWERKE IN STETTIN, | STETTIN | ELEKTROTECHNISCHE FABRIKEN, ELEKTRIZITÄTSWERKE... |  | GRUND U BODEN M BAULICHKEITEN KESSEL U MASCHIN... | NaN | 424 |
 
 </div>

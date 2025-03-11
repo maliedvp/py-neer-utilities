@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Data Preparation for Training &mdash; Neer Match Utilities 1.0.0-beta documentation</title>
+  <title>Data Preparation for Training &mdash; Neer Match Utilities 1.0.4-beta documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=3fd7a760"></script>
+      <script src="_static/documentation_options.js?v=2f4effcb"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
@@ -919,14 +919,16 @@ the next steps, we drop observations associated with these IDs.</p>
 <section id="a-customized-similarity-map">
 <h3>1. A customized <code class="docutils literal notranslate"><span class="pre">similarity_map</span></code><a class="headerlink" href="#a-customized-similarity-map" title="Link to this heading"></a></h3>
 <p>Set up the <code class="docutils literal notranslate"><span class="pre">similarity_map</span></code>. Note that the columns as <code class="docutils literal notranslate"><span class="pre">city</span></code>,
-<code class="docutils literal notranslate"><span class="pre">industry</span></code>, and <code class="docutils literal notranslate"><span class="pre">purpose</span></code> contain missing values. To handle these, I
-define a custom <a class="reference external" href="https://github.com/maliedvp/py-neer-match/blob/custom_similarity_functions/src/neer_match/similarity_map.py">similarity
+<code class="docutils literal notranslate"><span class="pre">industry</span></code>, and <code class="docutils literal notranslate"><span class="pre">purpose</span></code> contain missing values. One way to improve the
+handling of these is to include a custom <a class="reference external" href="https://github.com/maliedvp/py-neer-match/blob/custom_similarity_functions/src/neer_match/similarity_map.py">similarity
 function</a>
-<code class="docutils literal notranslate"><span class="pre">notmissing</span></code> that returns 0 it a least one observation of a record pair
-is any missing value (<code class="docutils literal notranslate"><span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">np.nan</span></code>, <code class="docutils literal notranslate"><span class="pre">pd.nan</span></code> or and empty string)
-and 1 otherwise. Similarly, for numeric columns, the custom function
-<code class="docutils literal notranslate"><span class="pre">notzero</span></code> is added. These functions are not part of the released version
-of <code class="docutils literal notranslate"><span class="pre">neer_match.similarity_map.available_similarities()</span></code>.</p>
+<code class="docutils literal notranslate"><span class="pre">notmissing</span></code> to the <code class="docutils literal notranslate"><span class="pre">similarity_map</span></code> that returns 0 if a least one
+observation of a record pair is any missing value (<code class="docutils literal notranslate"><span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">np.nan</span></code>,
+<code class="docutils literal notranslate"><span class="pre">pd.nan</span></code> or and empty string) and 1 otherwise. Similarly, for numeric
+columns, the custom function <code class="docutils literal notranslate"><span class="pre">notzero</span></code> is added. These functions are not
+part of the released version of
+<code class="docutils literal notranslate"><span class="pre">neer_match.similarity_map.available_similarities()</span></code>, which is why they
+are outcommented in the example below.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">neer_match.similarity_map</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimilarityMap</span>
 
 <span class="n">similarity_map</span> <span class="o">=</span> <span class="p">{</span>
@@ -943,17 +945,17 @@ of <code class="docutils literal notranslate"><span class="pre">neer_match.simil
     <span class="s2">&quot;city&quot;</span> <span class="p">:</span> <span class="p">[</span>
         <span class="s2">&quot;levenshtein&quot;</span><span class="p">,</span>
         <span class="s2">&quot;jaro_winkler&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;notmissing&quot;</span>
+        <span class="c1"># &quot;notmissing&quot;</span>
     <span class="p">],</span>
     <span class="s2">&quot;industry&quot;</span> <span class="p">:</span> <span class="p">[</span>
         <span class="s2">&quot;levenshtein&quot;</span><span class="p">,</span>
         <span class="s2">&quot;jaro_winkler&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;notmissing&quot;</span>
+        <span class="c1"># &quot;notmissing&quot;</span>
     <span class="p">],</span>
     <span class="s2">&quot;purpose&quot;</span> <span class="p">:</span> <span class="p">[</span>
         <span class="s2">&quot;levenshtein&quot;</span><span class="p">,</span>
         <span class="s2">&quot;jaro_winkler&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;notmissing&quot;</span><span class="p">,</span>
+        <span class="c1"># &quot;notmissing&quot;,</span>
         <span class="s2">&quot;token_sort_ratio&quot;</span><span class="p">,</span>
         <span class="s2">&quot;token_set_ratio&quot;</span><span class="p">,</span>
         <span class="s2">&quot;partial_token_set_ratio&quot;</span><span class="p">,</span>
@@ -962,14 +964,14 @@ of <code class="docutils literal notranslate"><span class="pre">neer_match.simil
     <span class="s2">&quot;bs_text&quot;</span> <span class="p">:</span> <span class="p">[</span>
         <span class="s2">&quot;levenshtein&quot;</span><span class="p">,</span>
         <span class="s2">&quot;jaro_winkler&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;notmissing&quot;</span><span class="p">,</span>
+        <span class="c1"># &quot;notmissing&quot;,</span>
         <span class="s2">&quot;token_sort_ratio&quot;</span><span class="p">,</span>
         <span class="s2">&quot;token_set_ratio&quot;</span><span class="p">,</span>
         <span class="s2">&quot;partial_token_set_ratio&quot;</span><span class="p">,</span>
         <span class="s2">&quot;partial_token_sort_ratio&quot;</span><span class="p">,</span>
     <span class="p">],</span>
     <span class="s2">&quot;found_year&quot;</span> <span class="p">:</span> <span class="p">[</span>
-        <span class="s2">&quot;notzero&quot;</span><span class="p">,</span>
+        <span class="c1"># &quot;notzero&quot;,</span>
         <span class="s2">&quot;discrete&quot;</span>
     <span class="p">],</span>
 <span class="p">}</span>
@@ -1272,23 +1274,23 @@ Note that since validation is not implemented yet, you can set
 <tbody>
 <tr class="row-even"><td><p>0</p></td>
 <td><p>0</p></td>
-<td><p>15</p></td>
+<td><p>13</p></td>
 </tr>
 <tr class="row-odd"><td><p>1</p></td>
 <td><p>1</p></td>
-<td><p>22</p></td>
+<td><p>136</p></td>
 </tr>
 <tr class="row-even"><td><p>2</p></td>
 <td><p>2</p></td>
-<td><p>107</p></td>
+<td><p>74</p></td>
 </tr>
 <tr class="row-odd"><td><p>3</p></td>
 <td><p>3</p></td>
-<td><p>5</p></td>
+<td><p>91</p></td>
 </tr>
 <tr class="row-even"><td><p>4</p></td>
 <td><p>4</p></td>
-<td><p>295</p></td>
+<td><p>223</p></td>
 </tr>
 </tbody>
 </table>
@@ -1337,44 +1339,44 @@ Note that since validation is not implemented yet, you can set
 <td><p>0</p></td>
 </tr>
 <tr class="row-odd"><td><p>1</p></td>
-<td><p>00d74f0e0b</p></td>
-<td><p>DEUTSCHE RÜCK- U. MITVERSICHERUNGS-GESELLSCHAF…</p></td>
-<td><p>BERLIN</p></td>
-<td><p>VERSICHERUNGS-GESELLSCHAFTEN ALLER BRANCHEN.</p></td>
-<td><p></p></td>
-<td><p>AKTIENWECHSEL M EFFEKTEN M HYP DARLEHEN M INVE…</p></td>
-<td><p>1885.0</p></td>
-<td><p>3</p></td>
+<td><p>00a050af9d</p></td>
+<td><p>ZUCKERFABRIK HARSUM IN HARSUM, PROV. HANNOVER.</p></td>
+<td><p>HANNOVER</p></td>
+<td><p>ZUCKER-FABRIKEN UND ZUCKER-RAFFINERIEN.</p></td>
+<td><p>FABRIKATION VON ROHZUCKER. PRODUKTION 1896/97–…</p></td>
+<td><p>GRUNDST CK M GEB UDE M MASCHINEN U APPARATE M</p></td>
+<td><p>1873.0</p></td>
+<td><p>1</p></td>
 </tr>
 <tr class="row-even"><td><p>2</p></td>
-<td><p>0118303343</p></td>
-<td><p>CUXHAVENER GAS-ACTIEN-GESELLSCHAFT IN CUXHAVEN.</p></td>
-<td><p>CUXHAVEN</p></td>
-<td><p>GASANSTALTEN UND GASGLÜHLICHT-FABRIKEN.</p></td>
+<td><p>01077b1f46</p></td>
+<td><p>GEBRÜDER ZSCHILLE TUCHFABRIK</p></td>
+<td><p>GROSSENHAIN</p></td>
+<td><p>TEXTIL-INDUSTRIE.</p></td>
+<td><p>ÜBERNAHME UND FORTBETRIEB DER DER FIRMA GEBR. …</p></td>
 <td><p></p></td>
-<td><p>ANLAGEKONTO M GRUNDST CK M WOANHAUS M KAUTION …</p></td>
-<td><p>1884.0</p></td>
-<td><p>5</p></td>
+<td><p>1899.0</p></td>
+<td><p>4</p></td>
 </tr>
 <tr class="row-odd"><td><p>3</p></td>
-<td><p>01a224579a</p></td>
-<td><p>*MASCHINEN- UND WERKZEUGFABRIK AKTIENGESELLSCHAFT</p></td>
-<td><p>KÖTHEN</p></td>
-<td><p>MASCHINEN- UND ARMATUREN-FABRIKEN, EISENGIESSE…</p></td>
-<td><p>ÜBERNAHME UND FORTFÜHRUNG DER UNTER DER FIRMA …</p></td>
-<td><p></p></td>
-<td><p>1897.0</p></td>
-<td><p>6</p></td>
+<td><p>0325788dc4</p></td>
+<td><p>METALL ZIEHEFEF AKT.-GES. IN CÖLN-EHRENFELD.</p></td>
+<td><p>CÖLN-EHRENFELD</p></td>
+<td><p>METALL-INDUSTRIE.</p></td>
+<td><p>ERWERB U. WEITERBETRIEB DER VON DER FIRMA EUGEN</p></td>
+<td><p>WURDE ENTGEGEN DEN GESETZL BESTIMMUNGEN NOCH N…</p></td>
+<td><p>1906.0</p></td>
+<td><p>11</p></td>
 </tr>
 <tr class="row-even"><td><p>4</p></td>
-<td><p>02875aab9c</p></td>
-<td><p>ACT.-GES. TONWERKE WÜBBENHORST IN DELMENHORST.</p></td>
-<td><p>DELMENHORST</p></td>
-<td><p>INDUSTRIE DER STEINE UND ERDEN.</p></td>
-<td><p>ERWERB U. BETRIEB VON ZIEGELEIEN U. TONWARENFA…</p></td>
-<td><p>AKTIVA GRUNDST CKE GEB UDE ANSCHLUSSGLEIS MASC…</p></td>
-<td><p>1911.0</p></td>
-<td><p>9</p></td>
+<td><p>032ba76e05</p></td>
+<td><p>STETTINER KLECTRICITÄTSWERKE IN STETTIN, SCHUL…</p></td>
+<td><p>STETTIN</p></td>
+<td><p>ELEKRTOTECHNISCHE FABRIKEN, ELEKTRIZITÄTSWERKE…</p></td>
+<td><p></p></td>
+<td><p>IMMOBIL GRUND U BODEN SCHULZEN P LITZER</p></td>
+<td><p>1890.0</p></td>
+<td><p>12</p></td>
 </tr>
 </tbody>
 </table>
@@ -1412,17 +1414,7 @@ Note that since validation is not implemented yet, you can set
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>5</p></td>
-<td><p>16729a8d6a</p></td>
-<td><p>MASCHINEN- UND WERKZEUGFABRIK AKTIENGESELLSCHAFT</p></td>
-<td><p>CÖTHEN</p></td>
-<td><p>MASCHINEN- UND ARMATUREN-FABRIKEN, EISENGIESSE…</p></td>
-<td><p>ÜBERNAHME UND FORTFÜHRUNG DER UNTER DER FIRMA …</p></td>
-<td><p>GRUNDST CK M GEB UDE M MASCHINEN U UTENSILIEN M</p></td>
-<td><p>1897.0</p></td>
-<td><p>16</p></td>
-</tr>
-<tr class="row-odd"><td><p>15</p></td>
+<tr class="row-even"><td><p>13</p></td>
 <td><p>2eece3dd52</p></td>
 <td><p>BETRAG IN RÜCKZAHLBAR VERSTÄRKTE</p></td>
 <td><p>RÜCKZAHLBAR</p></td>
@@ -1432,35 +1424,45 @@ Note that since validation is not implemented yet, you can set
 <td><p>NaN</p></td>
 <td><p>34</p></td>
 </tr>
-<tr class="row-even"><td><p>22</p></td>
-<td><p>3a50b36f26</p></td>
-<td><p>DEUTSCHE RÜCK- U. MITVERSICHERUNGS-GESELLSCHAF…</p></td>
-<td><p>BERLIN</p></td>
-<td><p>VERSICHERUNGS-GESELLSCHAFTEN ALLER BRANCHEN.</p></td>
-<td><p></p></td>
-<td><p>AKTIENWECHSEL M EFFEKTEN M HYPOTHEKENDARLEHEN …</p></td>
-<td><p>1885.0</p></td>
-<td><p>46</p></td>
+<tr class="row-odd"><td><p>74</p></td>
+<td><p>721ce62f33</p></td>
+<td><p>GEBRÜDER ZSCHILLE TUCHFABRIK AKTIENGESELLSCHAF…</p></td>
+<td><p>GROSSENHAIN</p></td>
+<td><p>TEXTIL-INDUSTRIE.</p></td>
+<td><p>ÜBERNAHME UND FORTBETRIEB DER DER FIRMA GEBR. …</p></td>
+<td><p>GRUNDST CKE U GEB UDE MASCHINEN U UTENSILIEN F…</p></td>
+<td><p>1899.0</p></td>
+<td><p>149</p></td>
 </tr>
-<tr class="row-odd"><td><p>107</p></td>
-<td><p>832a174691</p></td>
-<td><p>CUXHAVENER GAS-ACTIEN-GESELLSCHAFT IN CUXHAVEN</p></td>
-<td><p>CUXHAVEN</p></td>
-<td><p>GAS-GESELLSCHAFTEN.</p></td>
-<td><p>BETRIEB EINES GASWERKES, SOWIE VERWERTUNG DER …</p></td>
-<td><p></p></td>
-<td><p>1884.0</p></td>
-<td><p>196</p></td>
+<tr class="row-even"><td><p>91</p></td>
+<td><p>7c118c147f</p></td>
+<td><p>METALL-ZIEHEREI AKT.-GES. IN CÖLN-KHRENFELD.</p></td>
+<td><p>CÖLN-KHRENFELD</p></td>
+<td><p>METALL-INDUSTRIE.</p></td>
+<td><p>ERWERB U. WEITERBETRIEB DER VON DER FIRMA EUGEN</p></td>
+<td><p>AKTIVA GRUNDST CK GEB UDE MASCH R WERKZEUG FUH…</p></td>
+<td><p>1906.0</p></td>
+<td><p>174</p></td>
 </tr>
-<tr class="row-even"><td><p>295</p></td>
-<td><p>eaa6910702</p></td>
-<td><p>*ACT.-GES. TONWERKE WÜBBENHORST IN DELMENHORST.</p></td>
-<td><p>DELMENHORST</p></td>
-<td><p>INDUSTRIE DER STEINE UND ERDEN.</p></td>
-<td><p>ERWERB U. BETRIEB VON ZIEGELEIEN U. TONWARENFA…</p></td>
+<tr class="row-odd"><td><p>136</p></td>
+<td><p>9740c7f92f</p></td>
+<td><p>ZUCKERFABRIK HARSUM IN HARSUM.</p></td>
+<td><p>HARSUM</p></td>
+<td><p>NAHRUNGS- UND GENUSSMITTEL-INDUSTRIE.</p></td>
+<td><p>FABRIKATION VON ROHZUCKER.</p></td>
+<td><p>GRUNDST CK M GEB UDE M MASCHINEN U APPARATE M</p></td>
+<td><p>1873.0</p></td>
+<td><p>267</p></td>
+</tr>
+<tr class="row-even"><td><p>223</p></td>
+<td><p>c4ea40269b</p></td>
+<td><p>STETTINER ELECTRICITÄTSWERKE IN STETTIN,</p></td>
+<td><p>STETTIN</p></td>
+<td><p>ELEKTROTECHNISCHE FABRIKEN, ELEKTRIZITÄTSWERKE…</p></td>
 <td><p></p></td>
-<td><p>1911.0</p></td>
-<td><p>583</p></td>
+<td><p>GRUND U BODEN M BAULICHKEITEN KESSEL U MASCHIN…</p></td>
+<td><p>NaN</p></td>
+<td><p>424</p></td>
 </tr>
 </tbody>
 </table>
