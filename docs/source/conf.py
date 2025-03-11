@@ -8,7 +8,7 @@ from src import neer_match_utilities
 # -- Project information -----------------------------------------------------
 project = "Neer Match Utilities"
 copyright = "2025, Pantelis Karapanagiotis, Marius Liebald"
-author = "Pantelis Karapanagiotis, Marius Liebald"
+author = "Marius Liebald, Pantelis Karapanagiotis"
 release = neer_match_utilities.__version__
 
 # -- General configuration ---------------------------------------------------

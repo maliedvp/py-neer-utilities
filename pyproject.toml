@@ -8,8 +8,8 @@ build-backend = "setuptools.build_meta"
 name = "neer-match-utilities"
 dynamic = ["version"]
 authors = [
-    { name="Pantelis Karapanagiotis", email="pikappa.devel@gmail.com" },
-    { name="Marius Liebald", email="maliedvp@gmail.com" }]
+    { name="Marius Liebald", email="maliedvp@gmail.com" },
+    { name="Pantelis Karapanagiotis", email="pikappa.devel@gmail.com" }]
 description = "Extended funcationality for NEural-symbolic Entity Reasoning and Matching"
 readme = "README.md"
 requires-python = ">=3.10"
