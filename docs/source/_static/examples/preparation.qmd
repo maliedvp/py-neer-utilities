@@ -163,7 +163,7 @@ matches = matches[
 
 ### 1. A customized `similarity_map`
 
-Set up the `similarity_map`. Note that the columns as `city`, `industry`, and `purpose` contain missing values. To handle these, I define a custom [similarity function](https://github.com/maliedvp/py-neer-match/blob/custom_similarity_functions/src/neer_match/similarity_map.py) `notmissing` that returns 0 it a least one observation of a record pair is any missing value (`None`, `np.nan`, `pd.nan` or and empty string) and 1 otherwise. Similarly, for numeric columns, the custom function `notzero` is added. These functions are not part of the released version of `neer_match.similarity_map.available_similarities()`.
+Set up the `similarity_map`. Note that the columns as `city`, `industry`, and `purpose` contain missing values. One way to improve the handling of these is to include a custom [similarity function](https://github.com/maliedvp/py-neer-match/blob/custom_similarity_functions/src/neer_match/similarity_map.py) `notmissing` to the `similarity_map` that returns 0 if a least one observation of a record pair is any missing value (`None`, `np.nan`, `pd.nan` or and empty string) and 1 otherwise. Similarly, for numeric columns, the custom function `notzero` is added. These functions are not part of the released version of `neer_match.similarity_map.available_similarities()`, which is why they are outcommented in the example below.
 
 ```{python}
 from neer_match.similarity_map import SimilarityMap
@@ -182,17 +182,17 @@ similarity_map = {
     "city" : [
         "levenshtein",
         "jaro_winkler",
-        "notmissing"
+        # "notmissing"
     ],
     "industry" : [
         "levenshtein",
         "jaro_winkler",
-        "notmissing"
+        # "notmissing"
     ],
     "purpose" : [
         "levenshtein",
         "jaro_winkler",
-        "notmissing",
+        # "notmissing",
         "token_sort_ratio",
         "token_set_ratio",
         "partial_token_set_ratio",
@@ -201,14 +201,14 @@ similarity_map = {
     "bs_text" : [
         "levenshtein",
         "jaro_winkler",
-        "notmissing",
+        # "notmissing",
         "token_sort_ratio",
         "token_set_ratio",
         "partial_token_set_ratio",
         "partial_token_sort_ratio",
     ],
     "found_year" : [
-        "notzero",
+        # "notzero",
         "discrete"
     ],
 }

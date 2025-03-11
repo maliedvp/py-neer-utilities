@@ -50,17 +50,17 @@ similarity_map = {
     "city" : [
         "levenshtein",
         "jaro_winkler",
-        "notmissing"
+        # "notmissing"
     ],
     "industry" : [
         "levenshtein",
         "jaro_winkler",
-        "notmissing"
+        # "notmissing"
     ],
     "purpose" : [
         "levenshtein",
         "jaro_winkler",
-        "notmissing",
+        # "notmissing",
         "token_sort_ratio",
         "token_set_ratio",
         "partial_token_set_ratio",
@@ -69,14 +69,14 @@ similarity_map = {
     "bs_text" : [
         "levenshtein",
         "jaro_winkler",
-        "notmissing",
+        # "notmissing",
         "token_sort_ratio",
         "token_set_ratio",
         "partial_token_set_ratio",
         "partial_token_sort_ratio",
     ],
     "found_year" : [
-        "notzero",
+        # "notzero",
         "discrete"
     ],
 }
