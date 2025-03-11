@@ -1,0 +1,123 @@
+---
+title: "Creating a Common Identifier (ID)"
+execute:
+  eval: false
+---
+
+## Between Two Sources
+
+### 1. Load Data & Model
+
+Use the *demonstration_model* to generate a common ID for observations from the *left* and *right* DataFrames. To do so, we first have to load both the model and the data into memory.
+
+```{python}
+import pandas as pd
+
+from neer_match_utilities.model import Model
+from neer_match_utilities.prepare import Prepare, similarity_map_to_dict
+from pathlib import Path
+
+
+# Load model
+
+loaded_model = Model.load(
+    'demonstration_model'
+)
+
+# Load files
+
+left = pd.read_csv('left.csv')
+right = pd.read_csv('right.csv')
+```
+
+### 2. Harmonize Format
+
+After loading the model and data, it is crucial to ensure that the formatting applied to the data remains consistent with the preprocessing used during model training. The `Prepare` class is employed here to harmonize the left and right DataFrames. Notice that the `similarity_map is automatically loaded with the model, so there is no need to redefine it.
+
+```{python}
+prepare = Prepare(
+    similarity_map=similarity_map_to_dict(loaded_model.similarity_map), 
+    df_left=left, 
+    df_right=right, 
+    id_left='company_id', 
+    id_right='company_id'
+)
+
+left, right = prepare.format(
+    fill_numeric_na=False,
+    to_numeric=['found_year'],
+    fill_string_na=True, 
+    capitalize=True
+)
+```
+
+### 3. Generate a Common ID
+
+The `generate_ID` method from the `Panel` class is designed to generate a common identifier across multiple repeated cross sections. In our case, creating an ID for observations in the *left* and *right* datasets can be seen as a special case with two periods. Importantly, the `relation` parameter enables the method to handle various types of relationships between the observations in left and right (`1:1`, `1:m`, `m:1`, and `m:m`). Additionally, the `panel_var` parameter specifies the name of the variable that will store these common identifiers. The `time_var` parameter indicates the different cross sections (this could be *year* for annual data, for instance). In our example, to generate an ID for the *left* and *right* DataFrames, we first create a new column (labeled *side*) to distinguish the two sources. Then, we stack the two DataFrames vertically into a single DataFrame named *df*.
+
+```{python}
+from neer_match_utilities.panel import GenerateID
+
+left['side'] = 'left'
+right['side'] = 'right'
+
+df = pd.concat(
+	[
+		left,
+		right
+	],
+	axis=0,
+	ignore_index=True
+)
+
+# Create GenerateID instance
+
+id_generator = GenerateID(
+    df_panel=df,
+    panel_var='panel_id',
+    time_var='side',
+    model=loaded_model,
+    prediction_threshold=0.5,
+    subgroups=[],
+    relation='m:m',
+)
+
+# Execute the ID generation
+
+result = id_generator.execute()
+result.head()
+```
+
+The `generate_ID` method from the `Panel` class is designed to generate a common identifier across multiple repeated cross sections. In our case, creating an ID for observations in the left and right datasets can be seen as a special case with two periods. Importantly, the `relation` parameter enables the method to handle various types of relationships between the observations in left and right (such as `1:1`, `1:m`, `m:1`, and `m:m`). Additionally, the `panel_var` parameter specifies the name of the variable that will store these common identifiers.
+
+```{python}
+df = pd.merge(
+	df,
+	result,
+	left_index=True,
+	right_on='index',
+	validate='1:1'
+)
+
+df = df.sort_values(['panel_id', 'side', 'company_id']).reset_index(drop=True)
+
+# Prepare selection to be viewed
+
+selected_ids = ['1e87fc75b4', '0008e07878']
+columns_to_show = [
+    'panel_id',
+    'company_id',
+    'side',
+    'company_name',
+    'city',
+    'purpose',
+]
+
+df_selection= df[df['company_id'].isin(selected_ids)][columns_to_show]
+
+df_selection
+```
+
+## Repeated Cross-Sections (Panel ID)
+
+The method demonstrated above can be generalized to generate common identifiers across multiple repeated cross sections, not just the two in our example above (**left** and **right**). The same underlying logic applies regardless of the number of cross sections (i.e., periods), ensuring a consistent and unified ID generation process across your entire dataset.

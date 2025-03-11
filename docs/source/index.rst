@@ -22,8 +22,7 @@
    preparation.md
    model_save.md
    model_load.md
-   id_cross.md
-   id_panel.md
+   id_generation.md
 
 .. Documentation
 .. =============
