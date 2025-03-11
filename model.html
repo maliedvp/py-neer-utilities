@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Model &mdash; Neer Match Utilities 0.3.4-alpha documentation</title>
+  <title>Model &mdash; Neer Match Utilities 1.0.0-beta documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=48aefb32"></script>
+      <script src="_static/documentation_options.js?v=3fd7a760"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -59,7 +59,7 @@
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="preparation.html">Data Preparation for Training</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="preparation.html#different-data-relationship">Different Data Relationship</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="preparation.html#different-data-relationships">Different Data Relationships</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="preparation.html#loading-the-data">1. Loading the Data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="preparation.html#inspecting-the-data">2. Inspecting the Data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="preparation.html#simulating-a-many-to-many-relationship">3. Simulating a Many-to-Many Relationship</a></li>
@@ -68,23 +68,36 @@
 <li class="toctree-l3"><a class="reference internal" href="preparation.html#verifying-the-adjustments">6. Verifying the Adjustments</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="preparation.html#number-2">Number 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preparation.html#formatting">Formatting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="preparation.html#a-customized-similarity-map">1. A customized <code class="docutils literal notranslate"><span class="pre">similarity_map</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="preparation.html#harmonizing-the-data">2. Harmonizing the data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="preparation.html#re-structuring">Re-Structuring</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preparation.html#splitting-data">Splitting data</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="model_save.html">Saving a Model</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="model_save.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_save.html#prepare-the-data">Prepare the Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_save.html#train-the-model">Train the Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_save.html#export-the-model">Export the Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_save.html#export-performance-statistics">Export Performance Statistics</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="model_load.html">Loading a Model</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="model_load.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_load.html#load-data-model">Load Data &amp; Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_load.html#harmonize-format">Harmonize Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_load.html#make-suggestions">Make Suggestions</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="id_cross.html">Creating a common ID</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="id_cross.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="id_generation.html">Creating a Common Identifier (ID)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="id_generation.html#between-two-sources">Between Two Sources</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="id_generation.html#load-data-model">1. Load Data &amp; Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="id_generation.html#harmonize-format">2. Harmonize Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="id_generation.html#generate-a-common-id">3. Generate a Common ID</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="id_panel.html">Creating a Panel ID</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="id_panel.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="id_generation.html#repeated-cross-sections-panel-id">Repeated Cross-Sections (Panel ID)</a></li>
 </ul>
 </li>
 </ul>
@@ -127,6 +140,7 @@
 <li class="toctree-l3"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.Prepare.format"><code class="docutils literal notranslate"><span class="pre">Prepare.format()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.similarity_map_to_dict"><code class="docutils literal notranslate"><span class="pre">similarity_map_to_dict()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="split.html">Split</a><ul>

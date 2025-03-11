@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Data Preparation for Training &mdash; Neer Match Utilities 0.3.4-alpha documentation</title>
+  <title>Data Preparation for Training &mdash; Neer Match Utilities 1.0.0-beta documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
@@ -16,9 +16,11 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=48aefb32"></script>
+      <script src="_static/documentation_options.js?v=3fd7a760"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
       <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -59,7 +61,7 @@
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Data Preparation for Training</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#different-data-relationship">Different Data Relationship</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#different-data-relationships">Different Data Relationships</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#loading-the-data">1. Loading the Data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#inspecting-the-data">2. Inspecting the Data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#simulating-a-many-to-many-relationship">3. Simulating a Many-to-Many Relationship</a></li>
@@ -68,23 +70,36 @@
 <li class="toctree-l3"><a class="reference internal" href="#verifying-the-adjustments">6. Verifying the Adjustments</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#number-2">Number 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#formatting">Formatting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#a-customized-similarity-map">1. A customized <code class="docutils literal notranslate"><span class="pre">similarity_map</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#harmonizing-the-data">2. Harmonizing the data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#re-structuring">Re-Structuring</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#splitting-data">Splitting data</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="model_save.html">Saving a Model</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="model_save.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_save.html#prepare-the-data">Prepare the Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_save.html#train-the-model">Train the Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_save.html#export-the-model">Export the Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_save.html#export-performance-statistics">Export Performance Statistics</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="model_load.html">Loading a Model</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="model_load.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_load.html#load-data-model">Load Data &amp; Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_load.html#harmonize-format">Harmonize Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_load.html#make-suggestions">Make Suggestions</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="id_cross.html">Creating a common ID</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="id_cross.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="id_generation.html">Creating a Common Identifier (ID)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="id_generation.html#between-two-sources">Between Two Sources</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="id_generation.html#load-data-model">1. Load Data &amp; Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="id_generation.html#harmonize-format">2. Harmonize Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="id_generation.html#generate-a-common-id">3. Generate a Common ID</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="id_panel.html">Creating a Panel ID</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="id_panel.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="id_generation.html#repeated-cross-sections-panel-id">Repeated Cross-Sections (Panel ID)</a></li>
 </ul>
 </li>
 </ul>
@@ -127,6 +142,7 @@
 <li class="toctree-l3"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.Prepare.format"><code class="docutils literal notranslate"><span class="pre">Prepare.format()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.similarity_map_to_dict"><code class="docutils literal notranslate"><span class="pre">similarity_map_to_dict()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="split.html">Split</a><ul>
@@ -178,26 +194,24 @@
 <h1>Data Preparation for Training<a class="headerlink" href="#data-preparation-for-training" title="Link to this heading"></a></h1>
 <p>This document explains the data preparation process for training our
 matching model. The example data comes from a research project that
-digitized historic records of German companies (from the <em>Handbuch der
-Deutschen Aktiengesellschaften</em>) using OCR. The dataset includes three
-files:</p>
+digitized historic records of German joint-stock companies <a class="reference external" href="https://dl.acm.org/doi/10.1145/3531533">(Gram et
+al. 2022)</a>. The data contains
+inconsistencies in spelling, primarily due to variations in abbreviation
+conventions and OCR errors, across most variables. These challenges make
+it a compelling real-world use case for entity matching.</p>
+<p>The data consists of three files:</p>
 <ul class="simple">
-<li><p><strong>left.csv</strong></p></li>
-<li><p><strong>right.csv</strong></p></li>
-<li><p><strong>matches.csv</strong></p></li>
+<li><p><em>left.csv</em></p></li>
+<li><p><em>right.csv</em></p></li>
+<li><p><em>matches.csv</em></p></li>
 </ul>
-<p>Initially, the data has a one-to-one relationship: each record in
-<code class="docutils literal notranslate"><span class="pre">left.csv</span></code> corresponds to exactly one record in <code class="docutils literal notranslate"><span class="pre">right.csv</span></code>, and vice
-versa.</p>
-<section id="different-data-relationship">
-<h2>Different Data Relationship<a class="headerlink" href="#different-data-relationship" title="Link to this heading"></a></h2>
+<section id="different-data-relationships">
+<h2>Different Data Relationships<a class="headerlink" href="#different-data-relationships" title="Link to this heading"></a></h2>
 <section id="loading-the-data">
 <h3>1. Loading the Data<a class="headerlink" href="#loading-the-data" title="Link to this heading"></a></h3>
 <p>First, we import the necessary libraries and load the datasets.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-
-<span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 
 <span class="n">matches</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;matches.csv&#39;</span><span class="p">)</span>
 <span class="n">left</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;left.csv&#39;</span><span class="p">)</span>
@@ -577,8 +591,7 @@ structure.</p>
 </table>
 <p>5 rows × 21 columns</p>
 </div>
-<p>Since the original data is based on 1:1 relationships, all three
-datasets have the same number of observations:</p>
+<p>All three DataFrames have the same number of observations:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Number of observations in matches: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Number of observations in left: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">left</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Number of observations in right: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">right</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -594,10 +607,11 @@ Number of observations in right: 692
 <h3>3. Simulating a Many-to-Many Relationship<a class="headerlink" href="#simulating-a-many-to-many-relationship" title="Link to this heading"></a></h3>
 <p>To demonstrate how to handle more complex matching scenarios, we
 simulate a many-to-many (m:m) relationship. For instance, assume that
-the company with <code class="docutils literal notranslate"><span class="pre">company_id</span></code> <strong>1e87fc75b4</strong> in the left dataset should
-match with two entries in the right dataset: the original match
-<strong>0008e07878</strong> and an additional match <strong>8bf51ba8a0</strong>.</p>
+the company with <code class="docutils literal notranslate"><span class="pre">company_id</span></code> <em>1e87fc75b4</em> in the <em>left</em> DataFrame
+should match with two entries in the <em>right</em> DataFrame: the original
+match <em>0008e07878</em> and an additional match <em>8bf51ba8a0</em>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Add an extra match to simulate a many-to-many relationship</span>
+
 <span class="n">extra_match</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
     <span class="s1">&#39;company_id_left&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;1e87fc75b4&#39;</span><span class="p">],</span>
     <span class="s1">&#39;company_id_right&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;8bf51ba8a0&#39;</span><span class="p">]</span>
@@ -650,8 +664,8 @@ match with two entries in the right dataset: the original match
 </section>
 <section id="understanding-the-matching-issue">
 <h3>4. Understanding the Matching Issue<a class="headerlink" href="#understanding-the-matching-issue" title="Link to this heading"></a></h3>
-<p>Simply adding a new row to <code class="docutils literal notranslate"><span class="pre">matches</span></code> can be problematic. Consider this
-simplified example:</p>
+<p>Simply adding a new row to the <em>matches</em> DataFrame can be problematic.
+Consider this simplified example:</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Left</p></th>
@@ -670,10 +684,17 @@ simplified example:</p>
 </tr>
 </tbody>
 </table>
-<p>If further evidence shows that record <strong>A</strong> and record <strong>C</strong> represent
-the same entity, then all related records (A, B, C, D) should be grouped
-together. The complete relationship should reflect every possible pair
-among these records:</p>
+<p>If further evidence shows that record <em>A</em> and record <em>C</em> represent the
+same entity, then all related records (<em>A</em>, <em>B</em>, <em>C</em>, <em>D</em>) should be
+grouped together. This comprehensive grouping implies that every
+possible pair among these records should be represented (as shown in the
+first six rows of the table below). Notice that the observations <em>B</em> and
+<em>C</em> would consequently appear in both the <em>Left</em> and <em>Right</em> columns.
+Therefore, the <em>left</em> and <em>right</em> DataFrames need to be adjusted,
+ensuring these observations will be included in both of these
+DataFrames. As a result, the <em>matches</em> DataFrame must be expanded with
+an additional set of corresponding entries (highlighted by the
+<span style="color: orange;">orange</span> rows):</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Left</p></th>
@@ -699,10 +720,16 @@ among these records:</p>
 <tr class="row-odd"><td><p>C</p></td>
 <td><p>D</p></td>
 </tr>
+<tr class="row-even"><td><p><span style="color: orange;">B</span></p></td>
+<td><p><span style="color: orange;">B</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><span style="color: orange;">C</span></p></td>
+<td><p><span style="color: orange;">C</span></p></td>
+</tr>
 </tbody>
 </table>
 <p>This example highlights why a naive approach (merely adding an extra
-match) can distort the true relationships between records.</p>
+match) does not fully capture the nature of the linking problem.</p>
 </section>
 <section id="correcting-the-relationships">
 <h3>5. Correcting the Relationships<a class="headerlink" href="#correcting-the-relationships" title="Link to this heading"></a></h3>
@@ -727,10 +754,14 @@ and <code class="docutils literal notranslate"><span class="pre">right</span></c
 relationships by checking the relevant company IDs in the updated
 datasets.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Verify the updated matches for the specific company_ids</span>
+
+<span class="n">artificial_group</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;1e87fc75b4&#39;</span><span class="p">,</span> <span class="s1">&#39;810c9c3435&#39;</span><span class="p">,</span> <span class="s1">&#39;0008e07878&#39;</span><span class="p">,</span> <span class="s1">&#39;8bf51ba8a0&#39;</span><span class="p">]</span>
+
 <span class="n">matches_subset</span> <span class="o">=</span> <span class="n">matches</span><span class="p">[</span>
-    <span class="n">matches</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">&#39;1e87fc75b4&#39;</span><span class="p">,</span> <span class="s1">&#39;810c9c3435&#39;</span><span class="p">,</span> <span class="s1">&#39;0008e07878&#39;</span><span class="p">,</span> <span class="s1">&#39;8bf51ba8a0&#39;</span><span class="p">])</span> <span class="o">|</span>
-    <span class="n">matches</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">&#39;1e87fc75b4&#39;</span><span class="p">,</span> <span class="s1">&#39;810c9c3435&#39;</span><span class="p">,</span> <span class="s1">&#39;0008e07878&#39;</span><span class="p">,</span> <span class="s1">&#39;8bf51ba8a0&#39;</span><span class="p">])</span>
+    <span class="n">matches</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">artificial_group</span><span class="p">)</span> <span class="o">|</span>
+    <span class="n">matches</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">artificial_group</span><span class="p">)</span>
 <span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">])</span>
+
 <span class="n">matches_subset</span>
 </pre></div>
 </div>
@@ -754,27 +785,35 @@ datasets.</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>694</p></td>
-<td><p>0008e07878</p></td>
-<td><p>810c9c3435</p></td>
-</tr>
-<tr class="row-odd"><td><p>695</p></td>
-<td><p>0008e07878</p></td>
-<td><p>8bf51ba8a0</p></td>
-</tr>
 <tr class="row-even"><td><p>0</p></td>
-<td><p>1e87fc75b4</p></td>
 <td><p>0008e07878</p></td>
-</tr>
-<tr class="row-odd"><td><p>693</p></td>
 <td><p>1e87fc75b4</p></td>
-<td><p>810c9c3435</p></td>
-</tr>
-<tr class="row-even"><td><p>692</p></td>
-<td><p>1e87fc75b4</p></td>
-<td><p>8bf51ba8a0</p></td>
 </tr>
 <tr class="row-odd"><td><p>1</p></td>
+<td><p>0008e07878</p></td>
+<td><p>810c9c3435</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>0008e07878</p></td>
+<td><p>8bf51ba8a0</p></td>
+</tr>
+<tr class="row-odd"><td><p>696</p></td>
+<td><p>1e87fc75b4</p></td>
+<td><p>1e87fc75b4</p></td>
+</tr>
+<tr class="row-even"><td><p>183</p></td>
+<td><p>1e87fc75b4</p></td>
+<td><p>810c9c3435</p></td>
+</tr>
+<tr class="row-odd"><td><p>184</p></td>
+<td><p>1e87fc75b4</p></td>
+<td><p>8bf51ba8a0</p></td>
+</tr>
+<tr class="row-even"><td><p>705</p></td>
+<td><p>810c9c3435</p></td>
+<td><p>810c9c3435</p></td>
+</tr>
+<tr class="row-odd"><td><p>524</p></td>
 <td><p>810c9c3435</p></td>
 <td><p>8bf51ba8a0</p></td>
 </tr>
@@ -782,8 +821,9 @@ datasets.</p>
 </table>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check the corresponding records in the left dataset</span>
+
 <span class="n">left_subset</span> <span class="o">=</span> <span class="n">left</span><span class="p">[</span>
-    <span class="n">left</span><span class="p">[</span><span class="s1">&#39;company_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">&#39;1e87fc75b4&#39;</span><span class="p">,</span> <span class="s1">&#39;810c9c3435&#39;</span><span class="p">,</span> <span class="s1">&#39;0008e07878&#39;</span><span class="p">,</span> <span class="s1">&#39;8bf51ba8a0&#39;</span><span class="p">])</span>
+    <span class="n">left</span><span class="p">[</span><span class="s1">&#39;company_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">artificial_group</span><span class="p">)</span>
 <span class="p">][[</span><span class="s1">&#39;company_id&#39;</span><span class="p">]]</span>
 <span class="n">left_subset</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
@@ -808,20 +848,21 @@ datasets.</p>
 </thead>
 <tbody>
 <tr class="row-even"><td><p>0</p></td>
+<td><p>0008e07878</p></td>
+</tr>
+<tr class="row-odd"><td><p>181</p></td>
 <td><p>1e87fc75b4</p></td>
 </tr>
-<tr class="row-odd"><td><p>1</p></td>
+<tr class="row-even"><td><p>521</p></td>
 <td><p>810c9c3435</p></td>
-</tr>
-<tr class="row-even"><td><p>692</p></td>
-<td><p>0008e07878</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check the corresponding records in the right dataset</span>
+
 <span class="n">right_subset</span> <span class="o">=</span> <span class="n">right</span><span class="p">[</span>
-    <span class="n">right</span><span class="p">[</span><span class="s1">&#39;company_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">&#39;1e87fc75b4&#39;</span><span class="p">,</span> <span class="s1">&#39;810c9c3435&#39;</span><span class="p">,</span> <span class="s1">&#39;0008e07878&#39;</span><span class="p">,</span> <span class="s1">&#39;8bf51ba8a0&#39;</span><span class="p">])</span>
+    <span class="n">right</span><span class="p">[</span><span class="s1">&#39;company_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">artificial_group</span><span class="p">)</span>
 <span class="p">][[</span><span class="s1">&#39;company_id&#39;</span><span class="p">]]</span>
 <span class="n">right_subset</span>
 </pre></div>
@@ -845,26 +886,585 @@ datasets.</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>0</p></td>
+<tr class="row-even"><td><p>19</p></td>
+<td><p>1e87fc75b4</p></td>
+</tr>
+<tr class="row-odd"><td><p>191</p></td>
 <td><p>810c9c3435</p></td>
 </tr>
-<tr class="row-odd"><td><p>19</p></td>
-<td><p>0008e07878</p></td>
-</tr>
-<tr class="row-even"><td><p>20</p></td>
+<tr class="row-even"><td><p>223</p></td>
 <td><p>8bf51ba8a0</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>By following these steps, we ensure that the dataset accurately
-represents the underlying real-world relationships—even when the
-matching is more complex than a simple 1:1 mapping.</p>
+<p>By following these steps, we ensure that the data accurately represents
+the underlying real-world relationships, even when the matching is more
+complex than a simple 1:1 mapping. To not have the manual change affect
+the next steps, we drop observations associated with these IDs.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">left</span> <span class="o">=</span> <span class="n">left</span><span class="p">[</span><span class="o">~</span><span class="n">left</span><span class="p">[</span><span class="s1">&#39;company_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">artificial_group</span><span class="p">)]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">right</span> <span class="o">=</span> <span class="n">right</span><span class="p">[</span><span class="o">~</span><span class="n">right</span><span class="p">[</span><span class="s1">&#39;company_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">artificial_group</span><span class="p">)]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">matches</span> <span class="o">=</span> <span class="n">matches</span><span class="p">[</span>
+    <span class="p">(</span><span class="o">~</span><span class="n">matches</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">artificial_group</span><span class="p">))</span>
+    <span class="o">&amp;</span>
+    <span class="p">(</span><span class="o">~</span><span class="n">matches</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">artificial_group</span><span class="p">))</span>
+<span class="p">]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
 </section>
 </section>
 <hr class="docutils" />
-<section id="number-2">
-<h2>Number 2<a class="headerlink" href="#number-2" title="Link to this heading"></a></h2>
+<section id="formatting">
+<h2>Formatting<a class="headerlink" href="#formatting" title="Link to this heading"></a></h2>
+<section id="a-customized-similarity-map">
+<h3>1. A customized <code class="docutils literal notranslate"><span class="pre">similarity_map</span></code><a class="headerlink" href="#a-customized-similarity-map" title="Link to this heading"></a></h3>
+<p>Set up the <code class="docutils literal notranslate"><span class="pre">similarity_map</span></code>. Note that the columns as <code class="docutils literal notranslate"><span class="pre">city</span></code>,
+<code class="docutils literal notranslate"><span class="pre">industry</span></code>, and <code class="docutils literal notranslate"><span class="pre">purpose</span></code> contain missing values. To handle these, I
+define a custom <a class="reference external" href="https://github.com/maliedvp/py-neer-match/blob/custom_similarity_functions/src/neer_match/similarity_map.py">similarity
+function</a>
+<code class="docutils literal notranslate"><span class="pre">notmissing</span></code> that returns 0 it a least one observation of a record pair
+is any missing value (<code class="docutils literal notranslate"><span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">np.nan</span></code>, <code class="docutils literal notranslate"><span class="pre">pd.nan</span></code> or and empty string)
+and 1 otherwise. Similarly, for numeric columns, the custom function
+<code class="docutils literal notranslate"><span class="pre">notzero</span></code> is added. These functions are not part of the released version
+of <code class="docutils literal notranslate"><span class="pre">neer_match.similarity_map.available_similarities()</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">neer_match.similarity_map</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimilarityMap</span>
+
+<span class="n">similarity_map</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;company_name&quot;</span> <span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;levenshtein&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;jaro_winkler&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;prefix&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;postfix&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;token_sort_ratio&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;token_set_ratio&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;partial_token_set_ratio&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;partial_token_sort_ratio&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;city&quot;</span> <span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;levenshtein&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;jaro_winkler&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;notmissing&quot;</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;industry&quot;</span> <span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;levenshtein&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;jaro_winkler&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;notmissing&quot;</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;purpose&quot;</span> <span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;levenshtein&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;jaro_winkler&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;notmissing&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;token_sort_ratio&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;token_set_ratio&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;partial_token_set_ratio&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;partial_token_sort_ratio&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;bs_text&quot;</span> <span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;levenshtein&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;jaro_winkler&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;notmissing&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;token_sort_ratio&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;token_set_ratio&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;partial_token_set_ratio&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;partial_token_sort_ratio&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;found_year&quot;</span> <span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;notzero&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;discrete&quot;</span>
+    <span class="p">],</span>
+<span class="p">}</span>
+
+<span class="n">smap</span> <span class="o">=</span> <span class="n">SimilarityMap</span><span class="p">(</span><span class="n">similarity_map</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="harmonizing-the-data">
+<h3>2. Harmonizing the data<a class="headerlink" href="#harmonizing-the-data" title="Link to this heading"></a></h3>
+<p>Next, data formatting can be harmonized using the <code class="docutils literal notranslate"><span class="pre">Prepare</span></code> class. This
+class enables operations such as capitalizing string variables and
+converting other values to numeric types. Importantly, these operations
+are applied consistently to both the <em>left</em> and <em>right</em> DataFrames.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.prepare</span><span class="w"> </span><span class="kn">import</span> <span class="n">Prepare</span>
+
+<span class="c1"># Initialize the Prepare object</span>
+
+<span class="n">prepare</span> <span class="o">=</span> <span class="n">Prepare</span><span class="p">(</span>
+    <span class="n">similarity_map</span><span class="o">=</span><span class="n">similarity_map</span><span class="p">,</span> 
+    <span class="n">df_left</span><span class="o">=</span><span class="n">left</span><span class="p">,</span> 
+    <span class="n">df_right</span><span class="o">=</span><span class="n">right</span><span class="p">,</span> 
+    <span class="n">id_left</span><span class="o">=</span><span class="s1">&#39;company_id&#39;</span><span class="p">,</span> 
+    <span class="n">id_right</span><span class="o">=</span><span class="s1">&#39;company_id&#39;</span>
+<span class="p">)</span>
+
+<span class="c1"># Get formatted and harmonized datasets</span>
+
+<span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">prepare</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+    <span class="n">fill_numeric_na</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">to_numeric</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;found_year&#39;</span><span class="p">],</span>
+    <span class="n">fill_string_na</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+    <span class="n">capitalize</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">left</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&#10;    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+&#10;    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p>company_id</p></th>
+<th class="head"><p>company_name</p></th>
+<th class="head"><p>city</p></th>
+<th class="head"><p>industry</p></th>
+<th class="head"><p>purpose</p></th>
+<th class="head"><p>bs_text</p></th>
+<th class="head"><p>found_year</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>008fbe2454</p></td>
+<td><p>BETRAG IN RÜCKZAHLBAR VERSTÄRKTE</p></td>
+<td><p>RÜCKZAHLBAR</p></td>
+<td><p>ELEKTRISCHE STRASSENBAHNEN, KLEIN- UND PFERDEB…</p></td>
+<td><p></p></td>
+<td><p>BAHNH FE U GRUNDST CKE BAHNBAU U H LEITUNG MOT…</p></td>
+<td><p>NaN</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>00a050af9d</p></td>
+<td><p>ZUCKERFABRIK HARSUM IN HARSUM, PROV. HANNOVER.</p></td>
+<td><p>HANNOVER</p></td>
+<td><p>ZUCKER-FABRIKEN UND ZUCKER-RAFFINERIEN.</p></td>
+<td><p>FABRIKATION VON ROHZUCKER. PRODUKTION 1896/97–…</p></td>
+<td><p>GRUNDST CK M GEB UDE M MASCHINEN U APPARATE M</p></td>
+<td><p>1873.0</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>00ce66e5a8</p></td>
+<td><p>AKTIENGESELLSCHAFT FÜR LINIIR-APPARATE, PATENT…</p></td>
+<td><p>LEIPZIG</p></td>
+<td><p>METALL-INDUSTRIE.</p></td>
+<td><p>ERWERB, AUSBEUTUNG UND SONSTIGE VERWERTUNG DER…</p></td>
+<td><p>PATENTE BETRIEBSMASCHINEN INVENTAR UTENSIL WAR…</p></td>
+<td><p>1899.0</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>00d74f0e0b</p></td>
+<td><p>DEUTSCHE RÜCK- U. MITVERSICHERUNGS-GESELLSCHAF…</p></td>
+<td><p>BERLIN</p></td>
+<td><p>VERSICHERUNGS-GESELLSCHAFTEN ALLER BRANCHEN.</p></td>
+<td><p></p></td>
+<td><p>AKTIENWECHSEL M EFFEKTEN M HYP DARLEHEN M INVE…</p></td>
+<td><p>1885.0</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>01077b1f46</p></td>
+<td><p>GEBRÜDER ZSCHILLE TUCHFABRIK</p></td>
+<td><p>GROSSENHAIN</p></td>
+<td><p>TEXTIL-INDUSTRIE.</p></td>
+<td><p>ÜBERNAHME UND FORTBETRIEB DER DER FIRMA GEBR. …</p></td>
+<td><p></p></td>
+<td><p>1899.0</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">right</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&#10;    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+&#10;    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p>company_id</p></th>
+<th class="head"><p>company_name</p></th>
+<th class="head"><p>city</p></th>
+<th class="head"><p>industry</p></th>
+<th class="head"><p>purpose</p></th>
+<th class="head"><p>bs_text</p></th>
+<th class="head"><p>found_year</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>0562ddb063</p></td>
+<td><p>DEUTSCHE GAS-SELBSTZÜNDER-A.-G. IN BERLIN, HOL…</p></td>
+<td><p>BERLIN</p></td>
+<td><p>GESELLSCHAFTEN FÜR GAS-, PETROLEUM- UND SPIRIT…</p></td>
+<td><p>HERSTELLUNG U. VERTRIEB VON GASSELBSTZÜNDERN, …</p></td>
+<td><p>KASSA BANKGUTH AUSSENST NDE VORSCHUSS ZAHLUNG …</p></td>
+<td><p>1897.0</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>05cdac2565</p></td>
+<td><p>ACT.-GES. FÜR GRUNDBESITZ U. HYPOTHEKENVERKEHR…</p></td>
+<td><p>BERLIN</p></td>
+<td><p>BAU-BANKEN, BAU-, TERRAIN- UND IMMOBILIEN-GESE…</p></td>
+<td><p></p></td>
+<td><p>IMMOBIL I DO II EIG HYPOTH WERTP PFLASTERKAUTI…</p></td>
+<td><p>1883.0</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>0a1e2ae043</p></td>
+<td><p>KIELER DOCK GESELLSCHAFT J. W. SEIBEL IN KIEL.</p></td>
+<td><p>KIEL</p></td>
+<td><p>SCHIFFSBAU-ANSTALTEN UND DOCK-GESELLSCHAFTEN.</p></td>
+<td><p>ERWERB U. BETRIEB VON SCHWIMMDOCKS. GEDOCKT WU…</p></td>
+<td><p>DOCKBAU INVENTAR KASSA BANKGUTH SWENTINE DOCK …</p></td>
+<td><p>1876.0</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>0bab236590</p></td>
+<td><p>HESSISCHE EISENBAHN-AKTIENGESELLSCHAFT IN DARM…</p></td>
+<td><p>DARMSTADT</p></td>
+<td><p>ELEKTRISCHE STRASSENBAHNEN, KLEIN- UND PFERDEB…</p></td>
+<td><p>ERBAUUNG, ERWERBUNG, PACHTUNG U. BETRIEB VON B…</p></td>
+<td><p></p></td>
+<td><p>1912.0</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>1090024903</p></td>
+<td><p>* BEVENSER MASCHINENFABRIK AKT.-GES. IN BEVENSEN</p></td>
+<td><p>BEVENSEN</p></td>
+<td><p>MASCHINEN- UND ARMATUREN-FABRIKEN, EISENGIESSE…</p></td>
+<td><p>ÜBERNAHME U. FORTBETRIEB DES FABRIKATIONS- U. …</p></td>
+<td><p></p></td>
+<td><p>1909.0</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="re-structuring">
+<h2>Re-Structuring<a class="headerlink" href="#re-structuring" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">neer-match</span></code> requires that the <em>matches</em> DataFrame be structured with
+the indices from the left and right datasets instead of their unique
+IDs. To convert your <em>matches</em> DataFrame into the required format, you
+can run:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.training</span><span class="w"> </span><span class="kn">import</span> <span class="n">Training</span>
+
+<span class="n">training</span> <span class="o">=</span> <span class="n">Training</span><span class="p">(</span>
+    <span class="n">similarity_map</span><span class="o">=</span><span class="n">similarity_map</span><span class="p">,</span> 
+    <span class="n">df_left</span><span class="o">=</span><span class="n">left</span><span class="p">,</span> 
+    <span class="n">df_right</span><span class="o">=</span><span class="n">right</span><span class="p">,</span> 
+    <span class="n">id_left</span><span class="o">=</span><span class="s1">&#39;company_id&#39;</span><span class="p">,</span> 
+    <span class="n">id_right</span><span class="o">=</span><span class="s1">&#39;company_id&#39;</span>
+<span class="p">)</span>
+
+<span class="n">matches</span> <span class="o">=</span> <span class="n">training</span><span class="o">.</span><span class="n">matches_reorder</span><span class="p">(</span>
+    <span class="n">matches</span><span class="p">,</span> 
+    <span class="n">matches_id_left</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> 
+    <span class="n">matches_id_right</span><span class="o">=</span><span class="s1">&#39;right&#39;</span>
+<span class="p">)</span>
+
+<span class="n">matches</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&#10;    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+&#10;    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p>left</p></th>
+<th class="head"><p>right</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>34</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>267</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>2</p></td>
+<td><p>141</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>3</p></td>
+<td><p>46</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>4</p></td>
+<td><p>149</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="splitting-data">
+<h2>Splitting data<a class="headerlink" href="#splitting-data" title="Link to this heading"></a></h2>
+<p>Subsequently, we need to split the data into training and test sets,
+each consisting of three DataFrames. The training ratio is given by
+<span class="math notranslate nohighlight">\(\text{training_ratio} = 1 - (\text{test_ratio} + \text{validation_ratio})\)</span>.
+Note that since validation is not implemented yet, you can set
+<span class="math notranslate nohighlight">\(\text{validation_ratio} = 0\)</span>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.split</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_test_train</span>
+
+<span class="n">left_train</span><span class="p">,</span> <span class="n">right_train</span><span class="p">,</span> <span class="n">matches_train</span><span class="p">,</span> <span class="n">left_validation</span><span class="p">,</span> <span class="n">right_validation</span><span class="p">,</span> <span class="n">matches_validation</span><span class="p">,</span> <span class="n">left_test</span><span class="p">,</span> <span class="n">right_test</span><span class="p">,</span> <span class="n">matches_test</span> <span class="o">=</span> <span class="n">split_test_train</span><span class="p">(</span>
+    <span class="n">left</span> <span class="o">=</span> <span class="n">left</span><span class="p">,</span>
+    <span class="n">right</span> <span class="o">=</span> <span class="n">right</span><span class="p">,</span>
+    <span class="n">matches</span> <span class="o">=</span> <span class="n">matches</span><span class="p">,</span>
+    <span class="n">test_ratio</span> <span class="o">=</span> <span class="mf">.5</span><span class="p">,</span>
+    <span class="n">validation_ratio</span> <span class="o">=</span> <span class="mf">.0</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">matches_train</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&#10;    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+&#10;    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p>left</p></th>
+<th class="head"><p>right</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>15</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>22</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>2</p></td>
+<td><p>107</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>3</p></td>
+<td><p>5</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>4</p></td>
+<td><p>295</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">left_train</span><span class="p">[</span>
+    <span class="n">left_train</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span>
+        <span class="n">matches_train</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+    <span class="p">)</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&#10;    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+&#10;    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p>company_id</p></th>
+<th class="head"><p>company_name</p></th>
+<th class="head"><p>city</p></th>
+<th class="head"><p>industry</p></th>
+<th class="head"><p>purpose</p></th>
+<th class="head"><p>bs_text</p></th>
+<th class="head"><p>found_year</p></th>
+<th class="head"><p>index_original</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>008fbe2454</p></td>
+<td><p>BETRAG IN RÜCKZAHLBAR VERSTÄRKTE</p></td>
+<td><p>RÜCKZAHLBAR</p></td>
+<td><p>ELEKTRISCHE STRASSENBAHNEN, KLEIN- UND PFERDEB…</p></td>
+<td><p></p></td>
+<td><p>BAHNH FE U GRUNDST CKE BAHNBAU U H LEITUNG MOT…</p></td>
+<td><p>NaN</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>00d74f0e0b</p></td>
+<td><p>DEUTSCHE RÜCK- U. MITVERSICHERUNGS-GESELLSCHAF…</p></td>
+<td><p>BERLIN</p></td>
+<td><p>VERSICHERUNGS-GESELLSCHAFTEN ALLER BRANCHEN.</p></td>
+<td><p></p></td>
+<td><p>AKTIENWECHSEL M EFFEKTEN M HYP DARLEHEN M INVE…</p></td>
+<td><p>1885.0</p></td>
+<td><p>3</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>0118303343</p></td>
+<td><p>CUXHAVENER GAS-ACTIEN-GESELLSCHAFT IN CUXHAVEN.</p></td>
+<td><p>CUXHAVEN</p></td>
+<td><p>GASANSTALTEN UND GASGLÜHLICHT-FABRIKEN.</p></td>
+<td><p></p></td>
+<td><p>ANLAGEKONTO M GRUNDST CK M WOANHAUS M KAUTION …</p></td>
+<td><p>1884.0</p></td>
+<td><p>5</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>01a224579a</p></td>
+<td><p>*MASCHINEN- UND WERKZEUGFABRIK AKTIENGESELLSCHAFT</p></td>
+<td><p>KÖTHEN</p></td>
+<td><p>MASCHINEN- UND ARMATUREN-FABRIKEN, EISENGIESSE…</p></td>
+<td><p>ÜBERNAHME UND FORTFÜHRUNG DER UNTER DER FIRMA …</p></td>
+<td><p></p></td>
+<td><p>1897.0</p></td>
+<td><p>6</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>02875aab9c</p></td>
+<td><p>ACT.-GES. TONWERKE WÜBBENHORST IN DELMENHORST.</p></td>
+<td><p>DELMENHORST</p></td>
+<td><p>INDUSTRIE DER STEINE UND ERDEN.</p></td>
+<td><p>ERWERB U. BETRIEB VON ZIEGELEIEN U. TONWARENFA…</p></td>
+<td><p>AKTIVA GRUNDST CKE GEB UDE ANSCHLUSSGLEIS MASC…</p></td>
+<td><p>1911.0</p></td>
+<td><p>9</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">right_train</span><span class="p">[</span>
+    <span class="n">right_train</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span>
+        <span class="n">matches_train</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+    <span class="p">)</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&#10;    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+&#10;    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p>company_id</p></th>
+<th class="head"><p>company_name</p></th>
+<th class="head"><p>city</p></th>
+<th class="head"><p>industry</p></th>
+<th class="head"><p>purpose</p></th>
+<th class="head"><p>bs_text</p></th>
+<th class="head"><p>found_year</p></th>
+<th class="head"><p>index_original</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>5</p></td>
+<td><p>16729a8d6a</p></td>
+<td><p>MASCHINEN- UND WERKZEUGFABRIK AKTIENGESELLSCHAFT</p></td>
+<td><p>CÖTHEN</p></td>
+<td><p>MASCHINEN- UND ARMATUREN-FABRIKEN, EISENGIESSE…</p></td>
+<td><p>ÜBERNAHME UND FORTFÜHRUNG DER UNTER DER FIRMA …</p></td>
+<td><p>GRUNDST CK M GEB UDE M MASCHINEN U UTENSILIEN M</p></td>
+<td><p>1897.0</p></td>
+<td><p>16</p></td>
+</tr>
+<tr class="row-odd"><td><p>15</p></td>
+<td><p>2eece3dd52</p></td>
+<td><p>BETRAG IN RÜCKZAHLBAR VERSTÄRKTE</p></td>
+<td><p>RÜCKZAHLBAR</p></td>
+<td><p>ELEKTRISCHE STRASSENBAHNEN, KLEIN- UND PFERDEB…</p></td>
+<td><p></p></td>
+<td><p>BAHNH FE U GRUNDST CKE BAHNBAU OBERIRDISCHE LE…</p></td>
+<td><p>NaN</p></td>
+<td><p>34</p></td>
+</tr>
+<tr class="row-even"><td><p>22</p></td>
+<td><p>3a50b36f26</p></td>
+<td><p>DEUTSCHE RÜCK- U. MITVERSICHERUNGS-GESELLSCHAF…</p></td>
+<td><p>BERLIN</p></td>
+<td><p>VERSICHERUNGS-GESELLSCHAFTEN ALLER BRANCHEN.</p></td>
+<td><p></p></td>
+<td><p>AKTIENWECHSEL M EFFEKTEN M HYPOTHEKENDARLEHEN …</p></td>
+<td><p>1885.0</p></td>
+<td><p>46</p></td>
+</tr>
+<tr class="row-odd"><td><p>107</p></td>
+<td><p>832a174691</p></td>
+<td><p>CUXHAVENER GAS-ACTIEN-GESELLSCHAFT IN CUXHAVEN</p></td>
+<td><p>CUXHAVEN</p></td>
+<td><p>GAS-GESELLSCHAFTEN.</p></td>
+<td><p>BETRIEB EINES GASWERKES, SOWIE VERWERTUNG DER …</p></td>
+<td><p></p></td>
+<td><p>1884.0</p></td>
+<td><p>196</p></td>
+</tr>
+<tr class="row-even"><td><p>295</p></td>
+<td><p>eaa6910702</p></td>
+<td><p>*ACT.-GES. TONWERKE WÜBBENHORST IN DELMENHORST.</p></td>
+<td><p>DELMENHORST</p></td>
+<td><p>INDUSTRIE DER STEINE UND ERDEN.</p></td>
+<td><p>ERWERB U. BETRIEB VON ZIEGELEIEN U. TONWARENFA…</p></td>
+<td><p></p></td>
+<td><p>1911.0</p></td>
+<td><p>583</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </section>
 </section>
 

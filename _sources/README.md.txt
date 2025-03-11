@@ -17,15 +17,15 @@ package provides automated fuzzy logic reasoning (by refutation)
 functionality that can be used to examine the significance of particular
 associations between fields in an entity matching task.
 
-`neermatch` encompasses three packages:
+The `neermatch` framework encompasses three packages:
 
 1.  `py-neer-match`: The `Python` implementation of the basic
-    functionalites. [Learn more](https://py-neer-match.pikappa.eu)
-2.  `py-neer-utilities`: A `Python` package that provides core utilities
-    to streamline and support the entity matching workflow. (**this
-    current page**; link to the [official
-    documentation](https://www.marius-liebald.com/py-neer-utilities/index.html))
-3.  `r-neer-match`: The `R` implementation of the basic functionalites
+    functionalities. [Learn more](https://py-neer-match.pikappa.eu)
+2.  `py-neer-utilities`: A `Python` package that provides additional
+    functionalities to streamline and support the entity matching
+    workflow. ([this
+    project](https://www.marius-liebald.com/py-neer-utilities/index.html))
+3.  `r-neer-match`: The `R` implementation of the basic functionalites.
     [Learn more](https://github.com/pi-kappa-devel/r-neer-match)
 
 The project is financially supported by the [Deutsche
@@ -34,9 +34,9 @@ Forschungsgemeinschaft](https://www.dfg.de/de) (DFG) under Grant
 Spaces for the Social Sciences*](https://www.new-data-spaces.de/en-us/)
 (SPP 2431). Reading the article [*Karapanagiotis and Liebald
 (2023)*](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4541376)
-helps to understand the theoretical foundation and design of
-`py-neer-match` (note that the article refers to an earlier version of
-the framework, previously labeled as `MLMATCH`).
+helps to understand the theoretical foundation and design of `neermatch`
+(note that the article refers to an earlier version of the framework,
+previously labeled as `mlmatch`).
 
 # Contributors
 
