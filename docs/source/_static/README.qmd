@@ -3,7 +3,8 @@ title: "Neer Match Utilities"
 self-contained: true
 resource-path:
   - "../../../"
-bibliography: bibliography.bib 
+bibliography: bibliography.bib
+nocite: "@*"
 ---
 
 <a href="https://www.marius-liebald.com/py-neer-utilities/index.html" style="float:right; margin-left:10px;">
@@ -46,3 +47,8 @@ The documentation is hosted under [https://www.marius-liebald.com/py-neer-utilit
 # License
 
 The package is distributed under the [MIT license](LICENSE.html).
+
+# References
+
+::: {#refs}
+:::

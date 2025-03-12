@@ -60,3 +60,52 @@ The documentation is hosted under
 # License
 
 The package is distributed under the <a href="LICENSE.html">MIT license</a>.
+
+# References
+
+<div id="refs" class="references csl-bib-body hanging-indent"
+entry-spacing="0">
+
+<div id="ref-gram2022" class="csl-entry">
+
+Gram, Dennis, Pantelis Karapanagiotis, Marius Liebald, and Uwe Walz.
+2022. “Design and Implementation of a Historical German Firm-Level
+Financial Database.” *ACM Journal of Data and Information Quality
+(JDIQ)* 14 (3): 1–22. <https://doi.org/10.1145/3531533>.
+
+</div>
+
+<div id="ref-karapanagiotis2023" class="csl-entry">
+
+Karapanagiotis, Pantelis, and Marius Liebald. 2023. “Entity Matching
+with Similarity Encoding: A Supervised Learning Recommendation Framework
+for Linking (Big) Data.” <http://dx.doi.org/10.2139/ssrn.4541376>.
+
+</div>
+
+<div id="ref-pyneermatch2024" class="csl-entry">
+
+———. 2024a. “<span class="nocase">NEural-symbolic</span> Entity
+Reasoning and Matching (Python Neer Match).”
+<https://github.com/pi-kappa-devel/py-neer-match>.
+
+</div>
+
+<div id="ref-rneermatch2024" class="csl-entry">
+
+———. 2024b. “<span class="nocase">NEural-symbolic</span> Entity
+Reasoning and Matching (R Neer Match).”
+<https://github.com/pi-kappa-devel/r-neer-match>.
+
+</div>
+
+<div id="ref-lin2017" class="csl-entry">
+
+Lin, Tsung-Yi, Priya Goyal, Ross Girshick, Kaiming He, and Piotr Dollár.
+2017. “Focal Loss for Dense Object Detection.” In *Proceedings of the
+IEEE International Conference on Computer Vision (ICCV)*, 2980–88. IEEE.
+<https://doi.org/10.1109/ICCV.2017.324>.
+
+</div>
+
+</div>
