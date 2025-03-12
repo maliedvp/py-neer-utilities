@@ -53,7 +53,9 @@ left, right = prepare.format(
 
 ### 3. Generate a Common ID
 
-The `generate_ID` method from the `Panel` class is designed to generate a common identifier across multiple repeated cross sections. In our case, creating an ID for observations in the *left* and *right* datasets can be seen as a special case with two periods. Importantly, the `relation` parameter enables the method to handle various types of relationships between the observations in left and right (`1:1`, `1:m`, `m:1`, and `m:m`). Additionally, the `panel_var` parameter specifies the name of the variable that will store these common identifiers. The `time_var` parameter indicates the different cross sections (this could be *year* for annual data, for instance). In our example, to generate an ID for the *left* and *right* DataFrames, we first create a new column (labeled *side*) to distinguish the two sources. Then, we stack the two DataFrames vertically into a single DataFrame named *df*.
+The `generate_ID` method from the `Panel` class is designed to generate a common identifier across multiple repeated cross sections. In our case, creating an ID for observations in the *left* and *right* datasets can be seen as a special case with two periods. Importantly, the `relation` parameter enables the method to handle various types of relationships between the observations in left and right (`1:1`, `1:m`, `m:1`, and `m:m`). Additionally, the `panel_var` parameter specifies the name of the variable that will store these common identifiers. The `time_var` parameter indicates the different cross sections (this could be *year* for annual data, for instance). In our example, to generate an ID for the *left* and *right* DataFrames, we first create a new column (labeled *side*) to distinguish the two sources. Then, we stack the two DataFrames vertically into a single DataFrame named *df*. 
+
+Importantly, the subgroups parameter allows you to implement a blocking strategy. Variables listed under this parameter restrict the ID generation process to comparing observations only within each subgroup. This can drastically minimize the required computation time because, by default, every observation in one cross section is compared to all observations in the comparison cross section. In our example, we could, for instance, create a new column that lists the first letter of each company entry, and include this newly created variable in the list of the subgroups parameter.
 
 ```{python}
 from neer_match_utilities.panel import GenerateID
@@ -77,7 +79,7 @@ id_generator = GenerateID(
     panel_var='panel_id',
     time_var='side',
     model=loaded_model,
-    prediction_threshold=0.5,
+    prediction_threshold=0.45,
     subgroups=[],
     relation='m:m',
 )
@@ -120,4 +122,4 @@ df_selection
 
 ## Repeated Cross-Sections (Panel ID)
 
-The method demonstrated above can be generalized to generate common identifiers across multiple repeated cross sections, not just the two in our example above (**left** and **right**). The same underlying logic applies regardless of the number of cross sections (i.e., periods), ensuring a consistent and unified ID generation process across your entire dataset.
+The method demonstrated above can be generalized to generate common identifiers across multiple repeated cross sections, not just the two in our example above (*left* and *right*). The same underlying logic applies regardless of the number of cross sections (i.e., periods), ensuring a consistent and unified ID generation process across your entire dataset.

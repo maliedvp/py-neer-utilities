@@ -30,7 +30,7 @@ dependencies = [
     "pandas>=2.2.3",
     "rapidfuzz>=3.10.1",
     "tensorflow>=2.18.0",
-    "neer-match>=0.7.32",
+    "neer-match>=0.7.38",
     "dill>=0.3.8"
 ]
 
