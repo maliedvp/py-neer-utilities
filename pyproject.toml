@@ -35,10 +35,10 @@ dependencies = [
 ]
 
 [project.urls]
-"Homepage" = "https://py-neer-utils.marius-liebald.de/"
-"Documentation" = "https://py-neer-utils.marius-liebald.de/"
-"Source Code" = "https://github.com/maliedvp/py-neer-utils"
-"Bug Tracker" = "https://github.com/maliedvp/py-neer-utils/issues"
+"Homepage" = "https://www.marius-liebald.com/py-neer-utilities/"
+"Documentation" = "https://www.marius-liebald.com/py-neer-utilities/"
+"Source Code" = "https://github.com/maliedvp/py-neer-utilities"
+"Bug Tracker" = "https://github.com/maliedvp/py-neer-utilities/issues"
 
 [project.optional-dependencies]
 tests = ['pytest']
