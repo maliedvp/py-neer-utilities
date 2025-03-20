@@ -38,6 +38,11 @@ helps to understand the theoretical foundation and design of `neermatch`
 (note that the article refers to an earlier version of the framework,
 previously labeled as `mlmatch`).
 
+The documentation provides examples of how `neermatch` may be used. The
+data used in these examples are available in this
+[folder](https://github.com/maliedvp/py-neer-utilities/tree/master/docs/source/_static/examples)
+of the GitHub repository.
+
 # Contributors
 
 [Marius Liebald](https://www.marius-liebald.de) (maintainer)
