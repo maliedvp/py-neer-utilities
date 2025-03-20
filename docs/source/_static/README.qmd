@@ -26,6 +26,7 @@ The `neermatch` framework encompasses three packages:
 
 The project is financially supported by the [Deutsche Forschungsgemeinschaft](https://www.dfg.de/de) (DFG) under Grant 539465691 as part of the Infrastructure Priority Programme [*New Data Spaces for the Social Sciences*](https://www.new-data-spaces.de/en-us/) (SPP 2431). Reading the article [*Karapanagiotis and Liebald (2023)*](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4541376) helps to understand the theoretical foundation and design of `neermatch` (note that the article refers to an earlier version of the framework, previously labeled as `mlmatch`).
 
+The documentation provides examples of how `neermatch` may be used. The data used in these examples are available in this [folder](https://github.com/maliedvp/py-neer-utilities/tree/master/docs/source/_static/examples) of the GitHub repository.
 
 # Contributors
 
