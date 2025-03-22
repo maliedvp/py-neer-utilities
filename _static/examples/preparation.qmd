@@ -275,12 +275,21 @@ matches = training.matches_reorder(
 matches.head()
 ```
 
+Let's track down the observations from *matches* in *left* .
 
+```{python}
+left_index = matches.loc[4,'left']
+left[left.index==left_index]
+```
+and *right*
+
+```{python}
+right_index = matches.loc[4,'right']
+right[right.index==right_index]
+```
 ## Splitting data
 
 Subsequently, we need to split the data into training and test sets, each consisting of three DataFrames. The training ratio is given by $\text{training_ratio} = 1 - (\text{test_ratio} + \text{validation_ratio})$. Note that since validation is not implemented yet, you can set $\text{validation_ratio} = 0$.
-
-
 
 ```{python}
 from neer_match_utilities.split import split_test_train
@@ -313,4 +322,3 @@ right_train[
     )
 ]
 ```
-

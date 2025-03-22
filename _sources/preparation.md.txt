@@ -555,6 +555,58 @@ matches.head()
 
 </div>
 
+Let’s track down the observations from *matches* in *left* .
+
+``` python
+left_index = matches.loc[4,'left']
+left[left.index==left_index]
+```
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&#10;    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+&#10;    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+
+|  | company_id | company_name | city | industry | purpose | bs_text | found_year |
+|----|----|----|----|----|----|----|----|
+| 4 | 01077b1f46 | GEBRÜDER ZSCHILLE TUCHFABRIK | GROSSENHAIN | TEXTIL-INDUSTRIE. | ÜBERNAHME UND FORTBETRIEB DER DER FIRMA GEBR. ... |  | 1899.0 |
+
+</div>
+
+and *right*
+
+``` python
+right_index = matches.loc[4,'right']
+right[right.index==right_index]
+```
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&#10;    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+&#10;    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+
+|  | company_id | company_name | city | industry | purpose | bs_text | found_year |
+|----|----|----|----|----|----|----|----|
+| 149 | 721ce62f33 | GEBRÜDER ZSCHILLE TUCHFABRIK AKTIENGESELLSCHAF... | GROSSENHAIN | TEXTIL-INDUSTRIE. | ÜBERNAHME UND FORTBETRIEB DER DER FIRMA GEBR. ... | GRUNDST CKE U GEB UDE MASCHINEN U UTENSILIEN F... | 1899.0 |
+
+</div>
+
 ## Splitting data
 
 Subsequently, we need to split the data into training and test sets,
@@ -594,11 +646,11 @@ matches_train.head()
 
 |     | left | right |
 |-----|------|-------|
-| 0   | 0    | 142   |
-| 1   | 1    | 23    |
-| 2   | 2    | 7     |
-| 3   | 3    | 272   |
-| 4   | 4    | 216   |
+| 0   | 0    | 18    |
+| 1   | 1    | 144   |
+| 2   | 2    | 23    |
+| 3   | 3    | 262   |
+| 4   | 4    | 291   |
 
 </div>
 
@@ -625,11 +677,11 @@ left_train[
 
 |  | company_id | company_name | city | industry | purpose | bs_text | found_year | index_original |
 |----|----|----|----|----|----|----|----|----|
-| 0 | 00a050af9d | ZUCKERFABRIK HARSUM IN HARSUM, PROV. HANNOVER. | HANNOVER | ZUCKER-FABRIKEN UND ZUCKER-RAFFINERIEN. | FABRIKATION VON ROHZUCKER. PRODUKTION 1896/97–... | GRUNDST CK M GEB UDE M MASCHINEN U APPARATE M | 1873.0 | 1 |
-| 1 | 00d74f0e0b | DEUTSCHE RÜCK- U. MITVERSICHERUNGS-GESELLSCHAF... | BERLIN | VERSICHERUNGS-GESELLSCHAFTEN ALLER BRANCHEN. |  | AKTIENWECHSEL M EFFEKTEN M HYP DARLEHEN M INVE... | 1885.0 | 3 |
-| 2 | 01a224579a | \*MASCHINEN- UND WERKZEUGFABRIK AKTIENGESELLSCHAFT | KÖTHEN | MASCHINEN- UND ARMATUREN-FABRIKEN, EISENGIESSE... | ÜBERNAHME UND FORTFÜHRUNG DER UNTER DER FIRMA ... |  | 1897.0 | 6 |
+| 0 | 008fbe2454 | BETRAG IN RÜCKZAHLBAR VERSTÄRKTE | RÜCKZAHLBAR | ELEKTRISCHE STRASSENBAHNEN, KLEIN- UND PFERDEB... |  | BAHNH FE U GRUNDST CKE BAHNBAU U H LEITUNG MOT... | NaN | 0 |
+| 1 | 00a050af9d | ZUCKERFABRIK HARSUM IN HARSUM, PROV. HANNOVER. | HANNOVER | ZUCKER-FABRIKEN UND ZUCKER-RAFFINERIEN. | FABRIKATION VON ROHZUCKER. PRODUKTION 1896/97–... | GRUNDST CK M GEB UDE M MASCHINEN U APPARATE M | 1873.0 | 1 |
+| 2 | 00d74f0e0b | DEUTSCHE RÜCK- U. MITVERSICHERUNGS-GESELLSCHAF... | BERLIN | VERSICHERUNGS-GESELLSCHAFTEN ALLER BRANCHEN. |  | AKTIENWECHSEL M EFFEKTEN M HYP DARLEHEN M INVE... | 1885.0 | 3 |
 | 3 | 024d595151 | MOHLER, DEVIN & CIE., OBEREHNHEIM. |  | TEXTIL-INDUSTRIE. | WOLL- U. BAUMWOLLWEBEREI, AUCH EIGENE FÄRBEREI... | KASSA M MASCHINEN M DEBITOREN M WARENBESTAND M... | NaN | 8 |
-| 4 | 032ba76e05 | STETTINER KLECTRICITÄTSWERKE IN STETTIN, SCHUL... | STETTIN | ELEKRTOTECHNISCHE FABRIKEN, ELEKTRIZITÄTSWERKE... |  | IMMOBIL GRUND U BODEN SCHULZEN P LITZER | 1890.0 | 12 |
+| 4 | 02875aab9c | ACT.-GES. TONWERKE WÜBBENHORST IN DELMENHORST. | DELMENHORST | INDUSTRIE DER STEINE UND ERDEN. | ERWERB U. BETRIEB VON ZIEGELEIEN U. TONWARENFA... | AKTIVA GRUNDST CKE GEB UDE ANSCHLUSSGLEIS MASC... | 1911.0 | 9 |
 
 </div>
 
@@ -656,10 +708,10 @@ right_train[
 
 |  | company_id | company_name | city | industry | purpose | bs_text | found_year | index_original |
 |----|----|----|----|----|----|----|----|----|
-| 7 | 16729a8d6a | MASCHINEN- UND WERKZEUGFABRIK AKTIENGESELLSCHAFT | CÖTHEN | MASCHINEN- UND ARMATUREN-FABRIKEN, EISENGIESSE... | ÜBERNAHME UND FORTFÜHRUNG DER UNTER DER FIRMA ... | GRUNDST CK M GEB UDE M MASCHINEN U UTENSILIEN M | 1897.0 | 16 |
+| 18 | 2eece3dd52 | BETRAG IN RÜCKZAHLBAR VERSTÄRKTE | RÜCKZAHLBAR | ELEKTRISCHE STRASSENBAHNEN, KLEIN- UND PFERDEB... |  | BAHNH FE U GRUNDST CKE BAHNBAU OBERIRDISCHE LE... | NaN | 34 |
 | 23 | 3a50b36f26 | DEUTSCHE RÜCK- U. MITVERSICHERUNGS-GESELLSCHAF... | BERLIN | VERSICHERUNGS-GESELLSCHAFTEN ALLER BRANCHEN. |  | AKTIENWECHSEL M EFFEKTEN M HYPOTHEKENDARLEHEN ... | 1885.0 | 46 |
-| 142 | 9740c7f92f | ZUCKERFABRIK HARSUM IN HARSUM. | HARSUM | NAHRUNGS- UND GENUSSMITTEL-INDUSTRIE. | FABRIKATION VON ROHZUCKER. | GRUNDST CK M GEB UDE M MASCHINEN U APPARATE M | 1873.0 | 267 |
-| 216 | c4ea40269b | STETTINER ELECTRICITÄTSWERKE IN STETTIN, | STETTIN | ELEKTROTECHNISCHE FABRIKEN, ELEKTRIZITÄTSWERKE... |  | GRUND U BODEN M BAULICHKEITEN KESSEL U MASCHIN... | NaN | 424 |
-| 272 | dcf18a4b38 | MOHLER, DEVIN & CIE., OBEREHNHEIM. |  | TEXTIL-INDUSTRIE. | WOLL- U. BAUMWOLLWEBEREI, AUCH EIGENE FÄRBEREI... | KASSA MASCHINEN DEBITOREN WARENBESTAND PASSIVA... | NaN | 526 |
+| 144 | 9740c7f92f | ZUCKERFABRIK HARSUM IN HARSUM. | HARSUM | NAHRUNGS- UND GENUSSMITTEL-INDUSTRIE. | FABRIKATION VON ROHZUCKER. | GRUNDST CK M GEB UDE M MASCHINEN U APPARATE M | 1873.0 | 267 |
+| 262 | dcf18a4b38 | MOHLER, DEVIN & CIE., OBEREHNHEIM. |  | TEXTIL-INDUSTRIE. | WOLL- U. BAUMWOLLWEBEREI, AUCH EIGENE FÄRBEREI... | KASSA MASCHINEN DEBITOREN WARENBESTAND PASSIVA... | NaN | 526 |
+| 291 | eaa6910702 | \*ACT.-GES. TONWERKE WÜBBENHORST IN DELMENHORST. | DELMENHORST | INDUSTRIE DER STEINE UND ERDEN. | ERWERB U. BETRIEB VON ZIEGELEIEN U. TONWARENFA... |  | 1911.0 | 583 |
 
 </div>
