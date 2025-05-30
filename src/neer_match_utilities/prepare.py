@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 from collections import OrderedDict
 from .base import SuperClass
+import spacy
 
 class Prepare(SuperClass):
     """
@@ -25,9 +26,80 @@ class Prepare(SuperClass):
         Column name representing unique IDs in the left DataFrame.
     id_right : str
         Column name representing unique IDs in the right DataFrame.
+    spacy_pipeline : str
+        Name of the spaCy model loaded for NLP tasks (e.g., "en_core_web_sm").
+        If empty, no spaCy pipeline is used. (see https://spacy.io/models for avaiable models)
+    additional_stop_words : list of str
+        Extra tokens to mark as stop-words in the spaCy pipeline.
     """
+
+
+    def __init__(
+        self,
+        similarity_map: dict,
+        df_left: pd.DataFrame,
+        df_right: pd.DataFrame,
+        id_left: str,
+        id_right: str,
+        spacy_pipeline: str = '',
+        additional_stop_words: list = [],
+    ):
+        super().__init__(similarity_map, df_left, df_right, id_left, id_right)
+        
+        # Load spaCy model once and store for reuse
+        # Attempt to load the spaCy model, downloading if necessary
+        if spacy_pipeline != '':
+            try:
+                self.nlp = spacy.load(spacy_pipeline)
+            except OSError:
+                from spacy.cli import download
+                download(spacy_pipeline)
+                self.nlp = spacy.load(spacy_pipeline)
+
+            # Register any additional stop words
+            self.additional_stop_words = additional_stop_words or []
+            for stop in self.additional_stop_words:
+                self.nlp.vocab[stop].is_stop = True
+                self.nlp.Defaults.stop_words.add(stop)
+        else:
+            self.nlp = spacy.blank("en")
+
+
+    def do_remove_stop_words(self, text: str) -> str:
+        """
+        Removes stop words and non-alphabetic tokens from text.
+
+        Attributes:
+        -----------
+        text : str
+            The input text to process.
+
+        Returns:
+        --------
+        str
+            A space-separated string of unique lemmas after tokenization, lemmatization,
+            and duplicate removal.
+        """
+        doc = self.nlp(text)
+        lemmas = [
+            token.lemma_
+            for token in doc
+            if token.is_alpha and not token.is_stop
+        ]
+
+        unique_lemmas = list(dict.fromkeys(lemmas))
+        return ' '.join(unique_lemmas)
     
-    def format(self, fill_numeric_na: bool = False, to_numeric: list = [], fill_string_na: bool = False, capitalize: bool = False):
+
+    def format(
+            self, 
+            fill_numeric_na: bool = False, 
+            to_numeric: list = [], 
+            fill_string_na: bool = False, 
+            capitalize: bool = False, 
+            lower_case: bool = False, 
+            remove_stop_words: bool = False,
+        ):
         """
         Cleans, processes, and aligns the columns of two DataFrames (`df_left` and `df_right`).
 
@@ -48,6 +120,13 @@ class Prepare(SuperClass):
             Default is False.
         capitalize : bool, optional
             If True, capitalizes string values in non-numeric columns.
+            Default is False.
+        lower_case : bool, optional
+            If True, uses lower-case string values in non-numeric columns.
+            Default is False.
+        remove_stop_words : bool, optional
+            If True, applies stop-word removal and lemmatization to non-numeric columns using the `do_remove_stop_words` method.
+            Importantly, this only works if a proper Spacy pipeline is defined when initializing the Prepare object.
             Default is False.
 
         Returns
@@ -122,11 +201,23 @@ class Prepare(SuperClass):
                     else:
                          df[col] = df[col].fillna(np.nan)
 
+            # Remove Stop Words
+            if remove_stop_words == True:
+                for col in columns:
+                    if not col in to_numeric:
+                        df[col] = df[col].apply(self.do_remove_stop_words)
+
             # Capitalize if wished
             if capitalize == True:
                 for col in columns:
                     if not col in to_numeric:
                         df[col] = df[col].str.upper()
+
+            # Lower Case if specified
+            if lower_case == True:
+                for col in columns:
+                    if not col in to_numeric:
+                        df[col] = df[col].str.lower()
 
             return df
 

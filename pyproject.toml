@@ -31,7 +31,8 @@ dependencies = [
     "rapidfuzz>=3.10.1",
     "tensorflow>=2.18.0",
     "neer-match>=0.7.38",
-    "dill>=0.3.8"
+    "dill>=0.3.8",
+    "spacy>=3.8.7"
 ]
 
 [project.urls]
