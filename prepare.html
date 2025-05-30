@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prepare &mdash; Neer Match Utilities 1.0.7-beta documentation</title>
+  <title>Prepare &mdash; Neer Match Utilities 1.0.9-beta documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=55f84424"></script>
+      <script src="_static/documentation_options.js?v=81a782ac"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -137,6 +137,8 @@
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Prepare</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.prepare.Prepare"><code class="docutils literal notranslate"><span class="pre">Prepare</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.prepare.Prepare.__init__"><code class="docutils literal notranslate"><span class="pre">Prepare.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.prepare.Prepare.do_remove_stop_words"><code class="docutils literal notranslate"><span class="pre">Prepare.do_remove_stop_words()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.prepare.Prepare.format"><code class="docutils literal notranslate"><span class="pre">Prepare.format()</span></code></a></li>
 </ul>
 </li>
@@ -155,7 +157,9 @@
 <li class="toctree-l3"><a class="reference internal" href="training.html#neer_match_utilities.training.Training.performance_statistics_export"><code class="docutils literal notranslate"><span class="pre">Training.performance_statistics_export()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="training.html#neer_match_utilities.training.combined_loss"><code class="docutils literal notranslate"><span class="pre">combined_loss()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="training.html#neer_match_utilities.training.focal_loss"><code class="docutils literal notranslate"><span class="pre">focal_loss()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="training.html#neer_match_utilities.training.soft_f1_loss"><code class="docutils literal notranslate"><span class="pre">soft_f1_loss()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -192,7 +196,7 @@
 <span id="prepare"></span><h1>Prepare<a class="headerlink" href="#module-neer_match_utilities.prepare" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="neer_match_utilities.prepare.Prepare">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">neer_match_utilities.prepare.</span></span><span class="sig-name descname"><span class="pre">Prepare</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">similarity_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_left=Empty</span> <span class="pre">DataFrame</span> <span class="pre">Columns:</span> <span class="pre">[]</span> <span class="pre">Index:</span> <span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_right=Empty</span> <span class="pre">DataFrame</span> <span class="pre">Columns:</span> <span class="pre">[]</span> <span class="pre">Index:</span> <span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_left='id'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_right='id'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/prepare.html#Prepare"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.prepare.Prepare" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">neer_match_utilities.prepare.</span></span><span class="sig-name descname"><span class="pre">Prepare</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">similarity_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacy_pipeline</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_stop_words</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/prepare.html#Prepare"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.prepare.Prepare" title="Link to this definition"></a></dt>
 <dd><p>A class for preparing and processing data based on similarity mappings.</p>
 <p>The Prepare class inherits from SuperClass and provides functionality to
 clean, preprocess, and align two pandas DataFrames (<cite>df_left</cite> and <cite>df_right</cite>)
@@ -211,10 +215,47 @@ data compatibility before comparison or matching operations.</p>
 </dd>
 <dt>id_right<span class="classifier">str</span></dt><dd><p>Column name representing unique IDs in the right DataFrame.</p>
 </dd>
+<dt>spacy_pipeline<span class="classifier">str</span></dt><dd><p>Name of the spaCy model loaded for NLP tasks (e.g., “en_core_web_sm”).
+If empty, no spaCy pipeline is used. (see <a class="reference external" href="https://spacy.io/models">https://spacy.io/models</a> for avaiable models)</p>
+</dd>
+<dt>additional_stop_words<span class="classifier">list of str</span></dt><dd><p>Extra tokens to mark as stop-words in the spaCy pipeline.</p>
+</dd>
 </dl>
 <dl class="py method">
+<dt class="sig sig-object py" id="neer_match_utilities.prepare.Prepare.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">similarity_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacy_pipeline</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_stop_words</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/prepare.html#Prepare.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.prepare.Prepare.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neer_match_utilities.prepare.Prepare.do_remove_stop_words">
+<span class="sig-name descname"><span class="pre">do_remove_stop_words</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/prepare.html#Prepare.do_remove_stop_words"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.prepare.Prepare.do_remove_stop_words" title="Link to this definition"></a></dt>
+<dd><p>Removes stop words and non-alphabetic tokens from text.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
+</dd>
+</dl>
+<section id="id1">
+<h3>Attributes:<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>text<span class="classifier">str</span></dt><dd><p>The input text to process.</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h3>Returns:<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
+<p>:
+str</p>
+<blockquote>
+<div><p>A space-separated string of unique lemmas after tokenization, lemmatization,
+and duplicate removal.</p>
+</div></blockquote>
+</section>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="neer_match_utilities.prepare.Prepare.format">
-<span class="sig-name descname"><span class="pre">format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fill_numeric_na</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_numeric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_string_na</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capitalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/prepare.html#Prepare.format"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.prepare.Prepare.format" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fill_numeric_na</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_numeric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_string_na</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capitalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower_case</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_stop_words</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/prepare.html#Prepare.format"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.prepare.Prepare.format" title="Link to this definition"></a></dt>
 <dd><p>Cleans, processes, and aligns the columns of two DataFrames (<cite>df_left</cite> and <cite>df_right</cite>).</p>
 <p>This method applies transformations based on column mappings defined in <cite>similarity_map</cite>.
 It handles numeric and string conversions, fills missing values, and ensures
@@ -229,6 +270,11 @@ Default is an empty list.</p></li>
 <li><p><strong>fill_string_na</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, fills missing string values with empty strings.
 Default is False.</p></li>
 <li><p><strong>capitalize</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, capitalizes string values in non-numeric columns.
+Default is False.</p></li>
+<li><p><strong>lower_case</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, uses lower-case string values in non-numeric columns.
+Default is False.</p></li>
+<li><p><strong>remove_stop_words</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, applies stop-word removal and lemmatization to non-numeric columns using the <cite>do_remove_stop_words</cite> method.
+Importantly, this only works if a proper Spacy pipeline is defined when initializing the Prepare object.
 Default is False.</p></li>
 </ul>
 </dd>

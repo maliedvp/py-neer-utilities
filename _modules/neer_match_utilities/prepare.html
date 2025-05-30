@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.prepare &mdash; Neer Match Utilities 1.0.7-beta documentation</title>
+  <title>neer_match_utilities.prepare &mdash; Neer Match Utilities 1.0.9-beta documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/extra.css?v=503a7970" />
@@ -15,7 +15,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=55f84424"></script>
+      <script src="../../_static/documentation_options.js?v=81a782ac"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -134,6 +134,8 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../prepare.html">Prepare</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../prepare.html#neer_match_utilities.prepare.Prepare"><code class="docutils literal notranslate"><span class="pre">Prepare</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../prepare.html#neer_match_utilities.prepare.Prepare.__init__"><code class="docutils literal notranslate"><span class="pre">Prepare.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../prepare.html#neer_match_utilities.prepare.Prepare.do_remove_stop_words"><code class="docutils literal notranslate"><span class="pre">Prepare.do_remove_stop_words()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../prepare.html#neer_match_utilities.prepare.Prepare.format"><code class="docutils literal notranslate"><span class="pre">Prepare.format()</span></code></a></li>
 </ul>
 </li>
@@ -152,7 +154,9 @@
 <li class="toctree-l3"><a class="reference internal" href="../../training.html#neer_match_utilities.training.Training.performance_statistics_export"><code class="docutils literal notranslate"><span class="pre">Training.performance_statistics_export()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../training.html#neer_match_utilities.training.combined_loss"><code class="docutils literal notranslate"><span class="pre">combined_loss()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../training.html#neer_match_utilities.training.focal_loss"><code class="docutils literal notranslate"><span class="pre">focal_loss()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../training.html#neer_match_utilities.training.soft_f1_loss"><code class="docutils literal notranslate"><span class="pre">soft_f1_loss()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -191,6 +195,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderedDict</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">SuperClass</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">spacy</span>
 
 <div class="viewcode-block" id="Prepare">
 <a class="viewcode-back" href="../../prepare.html#neer_match_utilities.prepare.Prepare">[docs]</a>
@@ -215,11 +220,88 @@
 <span class="sd">        Column name representing unique IDs in the left DataFrame.</span>
 <span class="sd">    id_right : str</span>
 <span class="sd">        Column name representing unique IDs in the right DataFrame.</span>
+<span class="sd">    spacy_pipeline : str</span>
+<span class="sd">        Name of the spaCy model loaded for NLP tasks (e.g., &quot;en_core_web_sm&quot;).</span>
+<span class="sd">        If empty, no spaCy pipeline is used. (see https://spacy.io/models for avaiable models)</span>
+<span class="sd">    additional_stop_words : list of str</span>
+<span class="sd">        Extra tokens to mark as stop-words in the spaCy pipeline.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="Prepare.__init__">
+<a class="viewcode-back" href="../../prepare.html#neer_match_utilities.prepare.Prepare.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">similarity_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+        <span class="n">df_left</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">df_right</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">id_left</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">id_right</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">spacy_pipeline</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="n">additional_stop_words</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[],</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">similarity_map</span><span class="p">,</span> <span class="n">df_left</span><span class="p">,</span> <span class="n">df_right</span><span class="p">,</span> <span class="n">id_left</span><span class="p">,</span> <span class="n">id_right</span><span class="p">)</span>
+        
+        <span class="c1"># Load spaCy model once and store for reuse</span>
+        <span class="c1"># Attempt to load the spaCy model, downloading if necessary</span>
+        <span class="k">if</span> <span class="n">spacy_pipeline</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">nlp</span> <span class="o">=</span> <span class="n">spacy</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">spacy_pipeline</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+                <span class="kn">from</span><span class="w"> </span><span class="nn">spacy.cli</span><span class="w"> </span><span class="kn">import</span> <span class="n">download</span>
+                <span class="n">download</span><span class="p">(</span><span class="n">spacy_pipeline</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">nlp</span> <span class="o">=</span> <span class="n">spacy</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">spacy_pipeline</span><span class="p">)</span>
+
+            <span class="c1"># Register any additional stop words</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">additional_stop_words</span> <span class="o">=</span> <span class="n">additional_stop_words</span> <span class="ow">or</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">stop</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">additional_stop_words</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">nlp</span><span class="o">.</span><span class="n">vocab</span><span class="p">[</span><span class="n">stop</span><span class="p">]</span><span class="o">.</span><span class="n">is_stop</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">nlp</span><span class="o">.</span><span class="n">Defaults</span><span class="o">.</span><span class="n">stop_words</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">stop</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nlp</span> <span class="o">=</span> <span class="n">spacy</span><span class="o">.</span><span class="n">blank</span><span class="p">(</span><span class="s2">&quot;en&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="Prepare.do_remove_stop_words">
+<a class="viewcode-back" href="../../prepare.html#neer_match_utilities.prepare.Prepare.do_remove_stop_words">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">do_remove_stop_words</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Removes stop words and non-alphabetic tokens from text.</span>
+
+<span class="sd">        Attributes:</span>
+<span class="sd">        -----------</span>
+<span class="sd">        text : str</span>
+<span class="sd">            The input text to process.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        --------</span>
+<span class="sd">        str</span>
+<span class="sd">            A space-separated string of unique lemmas after tokenization, lemmatization,</span>
+<span class="sd">            and duplicate removal.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">doc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nlp</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="n">lemmas</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">token</span><span class="o">.</span><span class="n">lemma_</span>
+            <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">doc</span>
+            <span class="k">if</span> <span class="n">token</span><span class="o">.</span><span class="n">is_alpha</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">token</span><span class="o">.</span><span class="n">is_stop</span>
+        <span class="p">]</span>
+
+        <span class="n">unique_lemmas</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">lemmas</span><span class="p">))</span>
+        <span class="k">return</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">unique_lemmas</span><span class="p">)</span></div>
+
     
+
 <div class="viewcode-block" id="Prepare.format">
 <a class="viewcode-back" href="../../prepare.html#neer_match_utilities.prepare.Prepare.format">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fill_numeric_na</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">to_numeric</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[],</span> <span class="n">fill_string_na</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">capitalize</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> 
+            <span class="n">fill_numeric_na</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+            <span class="n">to_numeric</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[],</span> 
+            <span class="n">fill_string_na</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+            <span class="n">capitalize</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+            <span class="n">lower_case</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+            <span class="n">remove_stop_words</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Cleans, processes, and aligns the columns of two DataFrames (`df_left` and `df_right`).</span>
 
@@ -240,6 +322,13 @@
 <span class="sd">            Default is False.</span>
 <span class="sd">        capitalize : bool, optional</span>
 <span class="sd">            If True, capitalizes string values in non-numeric columns.</span>
+<span class="sd">            Default is False.</span>
+<span class="sd">        lower_case : bool, optional</span>
+<span class="sd">            If True, uses lower-case string values in non-numeric columns.</span>
+<span class="sd">            Default is False.</span>
+<span class="sd">        remove_stop_words : bool, optional</span>
+<span class="sd">            If True, applies stop-word removal and lemmatization to non-numeric columns using the `do_remove_stop_words` method.</span>
+<span class="sd">            Importantly, this only works if a proper Spacy pipeline is defined when initializing the Prepare object.</span>
 <span class="sd">            Default is False.</span>
 
 <span class="sd">        Returns</span>
@@ -314,11 +403,23 @@
                     <span class="k">else</span><span class="p">:</span>
                          <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
 
+            <span class="c1"># Remove Stop Words</span>
+            <span class="k">if</span> <span class="n">remove_stop_words</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">to_numeric</span><span class="p">:</span>
+                        <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">do_remove_stop_words</span><span class="p">)</span>
+
             <span class="c1"># Capitalize if wished</span>
             <span class="k">if</span> <span class="n">capitalize</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">to_numeric</span><span class="p">:</span>
                         <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+
+            <span class="c1"># Lower Case if specified</span>
+            <span class="k">if</span> <span class="n">lower_case</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">to_numeric</span><span class="p">:</span>
+                        <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
             <span class="k">return</span> <span class="n">df</span>
 

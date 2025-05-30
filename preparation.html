@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Data Preparation for Training &mdash; Neer Match Utilities 1.0.7-beta documentation</title>
+  <title>Data Preparation for Training &mdash; Neer Match Utilities 1.0.9-beta documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=55f84424"></script>
+      <script src="_static/documentation_options.js?v=81a782ac"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
@@ -139,6 +139,8 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="prepare.html">Prepare</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.Prepare"><code class="docutils literal notranslate"><span class="pre">Prepare</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.Prepare.__init__"><code class="docutils literal notranslate"><span class="pre">Prepare.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.Prepare.do_remove_stop_words"><code class="docutils literal notranslate"><span class="pre">Prepare.do_remove_stop_words()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.Prepare.format"><code class="docutils literal notranslate"><span class="pre">Prepare.format()</span></code></a></li>
 </ul>
 </li>
@@ -157,7 +159,9 @@
 <li class="toctree-l3"><a class="reference internal" href="training.html#neer_match_utilities.training.Training.performance_statistics_export"><code class="docutils literal notranslate"><span class="pre">Training.performance_statistics_export()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="training.html#neer_match_utilities.training.combined_loss"><code class="docutils literal notranslate"><span class="pre">combined_loss()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="training.html#neer_match_utilities.training.focal_loss"><code class="docutils literal notranslate"><span class="pre">focal_loss()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="training.html#neer_match_utilities.training.soft_f1_loss"><code class="docutils literal notranslate"><span class="pre">soft_f1_loss()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -995,7 +999,9 @@ are applied consistently to both the <em>left</em> and <em>right</em> DataFrames
     <span class="n">df_left</span><span class="o">=</span><span class="n">left</span><span class="p">,</span> 
     <span class="n">df_right</span><span class="o">=</span><span class="n">right</span><span class="p">,</span> 
     <span class="n">id_left</span><span class="o">=</span><span class="s1">&#39;company_id&#39;</span><span class="p">,</span> 
-    <span class="n">id_right</span><span class="o">=</span><span class="s1">&#39;company_id&#39;</span>
+    <span class="n">id_right</span><span class="o">=</span><span class="s1">&#39;company_id&#39;</span><span class="p">,</span>
+    <span class="n">spacy_pipeline</span><span class="o">=</span><span class="s1">&#39;de_core_news_sm&#39;</span><span class="p">,</span>
+    <span class="n">additional_stop_words</span><span class="o">=</span><span class="p">[]</span>
 <span class="p">)</span>
 
 <span class="c1"># Get formatted and harmonized datasets</span>
@@ -1004,7 +1010,9 @@ are applied consistently to both the <em>left</em> and <em>right</em> DataFrames
     <span class="n">fill_numeric_na</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="n">to_numeric</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;found_year&#39;</span><span class="p">],</span>
     <span class="n">fill_string_na</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
-    <span class="n">capitalize</span><span class="o">=</span><span class="kc">True</span>
+    <span class="n">capitalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">lower_case</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">remove_stop_words</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -1362,19 +1370,19 @@ Note that since validation is not implemented yet, you can set
 </tr>
 <tr class="row-odd"><td><p>1</p></td>
 <td><p>1</p></td>
-<td><p>144</p></td>
+<td><p>145</p></td>
 </tr>
 <tr class="row-even"><td><p>2</p></td>
 <td><p>2</p></td>
-<td><p>23</p></td>
+<td><p>104</p></td>
 </tr>
 <tr class="row-odd"><td><p>3</p></td>
 <td><p>3</p></td>
-<td><p>262</p></td>
+<td><p>9</p></td>
 </tr>
 <tr class="row-even"><td><p>4</p></td>
 <td><p>4</p></td>
-<td><p>291</p></td>
+<td><p>215</p></td>
 </tr>
 </tbody>
 </table>
@@ -1433,34 +1441,34 @@ Note that since validation is not implemented yet, you can set
 <td><p>1</p></td>
 </tr>
 <tr class="row-even"><td><p>2</p></td>
-<td><p>00d74f0e0b</p></td>
-<td><p>DEUTSCHE RÜCK- U. MITVERSICHERUNGS-GESELLSCHAF…</p></td>
-<td><p>BERLIN</p></td>
-<td><p>VERSICHERUNGS-GESELLSCHAFTEN ALLER BRANCHEN.</p></td>
+<td><p>0118303343</p></td>
+<td><p>CUXHAVENER GAS-ACTIEN-GESELLSCHAFT IN CUXHAVEN.</p></td>
+<td><p>CUXHAVEN</p></td>
+<td><p>GASANSTALTEN UND GASGLÜHLICHT-FABRIKEN.</p></td>
 <td><p></p></td>
-<td><p>AKTIENWECHSEL M EFFEKTEN M HYP DARLEHEN M INVE…</p></td>
-<td><p>1885.0</p></td>
-<td><p>3</p></td>
+<td><p>ANLAGEKONTO M GRUNDST CK M WOANHAUS M KAUTION …</p></td>
+<td><p>1884.0</p></td>
+<td><p>5</p></td>
 </tr>
 <tr class="row-odd"><td><p>3</p></td>
-<td><p>024d595151</p></td>
-<td><p>MOHLER, DEVIN &amp; CIE., OBEREHNHEIM.</p></td>
+<td><p>01a224579a</p></td>
+<td><p>*MASCHINEN- UND WERKZEUGFABRIK AKTIENGESELLSCHAFT</p></td>
+<td><p>KÖTHEN</p></td>
+<td><p>MASCHINEN- UND ARMATUREN-FABRIKEN, EISENGIESSE…</p></td>
+<td><p>ÜBERNAHME UND FORTFÜHRUNG DER UNTER DER FIRMA …</p></td>
 <td><p></p></td>
-<td><p>TEXTIL-INDUSTRIE.</p></td>
-<td><p>WOLL- U. BAUMWOLLWEBEREI, AUCH EIGENE FÄRBEREI…</p></td>
-<td><p>KASSA M MASCHINEN M DEBITOREN M WARENBESTAND M…</p></td>
-<td><p>NaN</p></td>
-<td><p>8</p></td>
+<td><p>1897.0</p></td>
+<td><p>6</p></td>
 </tr>
 <tr class="row-even"><td><p>4</p></td>
-<td><p>02875aab9c</p></td>
-<td><p>ACT.-GES. TONWERKE WÜBBENHORST IN DELMENHORST.</p></td>
-<td><p>DELMENHORST</p></td>
-<td><p>INDUSTRIE DER STEINE UND ERDEN.</p></td>
-<td><p>ERWERB U. BETRIEB VON ZIEGELEIEN U. TONWARENFA…</p></td>
-<td><p>AKTIVA GRUNDST CKE GEB UDE ANSCHLUSSGLEIS MASC…</p></td>
-<td><p>1911.0</p></td>
-<td><p>9</p></td>
+<td><p>022f81a1cb</p></td>
+<td><p>BERLINER KRONEN-BRAUEREI ACTIENGESELLSCHAFT IN…</p></td>
+<td><p>BERLIN</p></td>
+<td><p>BRAUEREIEN.</p></td>
+<td><p>BIERBRAUEREIBETRIEB. ABSATZ CA. 45 676 HL. KAP…</p></td>
+<td><p>GRUNDST CKE U MIETSH USER M BRAUEREIGEB UDE M …</p></td>
+<td><p>1891.0</p></td>
+<td><p>7</p></td>
 </tr>
 </tbody>
 </table>
@@ -1498,7 +1506,17 @@ Note that since validation is not implemented yet, you can set
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>18</p></td>
+<tr class="row-even"><td><p>9</p></td>
+<td><p>16729a8d6a</p></td>
+<td><p>MASCHINEN- UND WERKZEUGFABRIK AKTIENGESELLSCHAFT</p></td>
+<td><p>CÖTHEN</p></td>
+<td><p>MASCHINEN- UND ARMATUREN-FABRIKEN, EISENGIESSE…</p></td>
+<td><p>ÜBERNAHME UND FORTFÜHRUNG DER UNTER DER FIRMA …</p></td>
+<td><p>GRUNDST CK M GEB UDE M MASCHINEN U UTENSILIEN M</p></td>
+<td><p>1897.0</p></td>
+<td><p>16</p></td>
+</tr>
+<tr class="row-odd"><td><p>18</p></td>
 <td><p>2eece3dd52</p></td>
 <td><p>BETRAG IN RÜCKZAHLBAR VERSTÄRKTE</p></td>
 <td><p>RÜCKZAHLBAR</p></td>
@@ -1508,17 +1526,17 @@ Note that since validation is not implemented yet, you can set
 <td><p>NaN</p></td>
 <td><p>34</p></td>
 </tr>
-<tr class="row-odd"><td><p>23</p></td>
-<td><p>3a50b36f26</p></td>
-<td><p>DEUTSCHE RÜCK- U. MITVERSICHERUNGS-GESELLSCHAF…</p></td>
-<td><p>BERLIN</p></td>
-<td><p>VERSICHERUNGS-GESELLSCHAFTEN ALLER BRANCHEN.</p></td>
+<tr class="row-even"><td><p>104</p></td>
+<td><p>832a174691</p></td>
+<td><p>CUXHAVENER GAS-ACTIEN-GESELLSCHAFT IN CUXHAVEN</p></td>
+<td><p>CUXHAVEN</p></td>
+<td><p>GAS-GESELLSCHAFTEN.</p></td>
+<td><p>BETRIEB EINES GASWERKES, SOWIE VERWERTUNG DER …</p></td>
 <td><p></p></td>
-<td><p>AKTIENWECHSEL M EFFEKTEN M HYPOTHEKENDARLEHEN …</p></td>
-<td><p>1885.0</p></td>
-<td><p>46</p></td>
+<td><p>1884.0</p></td>
+<td><p>196</p></td>
 </tr>
-<tr class="row-even"><td><p>144</p></td>
+<tr class="row-odd"><td><p>145</p></td>
 <td><p>9740c7f92f</p></td>
 <td><p>ZUCKERFABRIK HARSUM IN HARSUM.</p></td>
 <td><p>HARSUM</p></td>
@@ -1528,25 +1546,15 @@ Note that since validation is not implemented yet, you can set
 <td><p>1873.0</p></td>
 <td><p>267</p></td>
 </tr>
-<tr class="row-odd"><td><p>262</p></td>
-<td><p>dcf18a4b38</p></td>
-<td><p>MOHLER, DEVIN &amp; CIE., OBEREHNHEIM.</p></td>
+<tr class="row-even"><td><p>215</p></td>
+<td><p>c2b13c295b</p></td>
+<td><p>BERLINER KRONEN-BRAUEREI ACTIENGESELLSCHAFT IN…</p></td>
+<td><p>BERLIN</p></td>
+<td><p>BRAUEREIEN.</p></td>
+<td><p>BIERBRAUEREIBETRIEB. BIERABSATZ 1895/96–1897/9…</p></td>
 <td><p></p></td>
-<td><p>TEXTIL-INDUSTRIE.</p></td>
-<td><p>WOLL- U. BAUMWOLLWEBEREI, AUCH EIGENE FÄRBEREI…</p></td>
-<td><p>KASSA MASCHINEN DEBITOREN WARENBESTAND PASSIVA…</p></td>
-<td><p>NaN</p></td>
-<td><p>526</p></td>
-</tr>
-<tr class="row-even"><td><p>291</p></td>
-<td><p>eaa6910702</p></td>
-<td><p>*ACT.-GES. TONWERKE WÜBBENHORST IN DELMENHORST.</p></td>
-<td><p>DELMENHORST</p></td>
-<td><p>INDUSTRIE DER STEINE UND ERDEN.</p></td>
-<td><p>ERWERB U. BETRIEB VON ZIEGELEIEN U. TONWARENFA…</p></td>
-<td><p></p></td>
-<td><p>1911.0</p></td>
-<td><p>583</p></td>
+<td><p>1891.0</p></td>
+<td><p>417</p></td>
 </tr>
 </tbody>
 </table>
