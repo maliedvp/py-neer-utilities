@@ -230,7 +230,9 @@ prepare = Prepare(
     df_left=left, 
     df_right=right, 
     id_left='company_id', 
-    id_right='company_id'
+    id_right='company_id',
+    spacy_pipeline='de_core_news_sm',
+    additional_stop_words=[]
 )
 
 # Get formatted and harmonized datasets
@@ -239,7 +241,9 @@ left, right = prepare.format(
     fill_numeric_na=False,
     to_numeric=['found_year'],
     fill_string_na=True, 
-    capitalize=True
+    capitalize=True,
+    lower_case=False,
+    remove_stop_words=False,
 )
 ```
 
