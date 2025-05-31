@@ -190,3 +190,57 @@ class Model:
             raise ValueError("Invalid model directory: neither DLMatchingModel nor NSMatchingModel was detected.")
 
         return model
+
+
+class EpochEndSaver(tf.keras.callbacks.Callback):
+    """
+    Custom Keras callback to save weights and biases at the end of every epoch
+    using the `Model.save(...)` static method.
+    """
+
+    def __init__(self, base_dir: Path, model_name: str):
+        """
+        Parameters
+        ----------
+        base_dir : Path
+            The root directory under which the model subdirectories will be created.
+            For instance: Path(__file__).resolve().parent / MODEL_NAME
+        model_name : str
+            A short identifier for the model. Each epoch’s directory will be
+            base_dir / model_name / "epoch_<NN>"
+        """
+        super().__init__()
+        self.base_dir = Path(base_dir)
+        self.model_name = model_name
+
+    def on_epoch_end(self, epoch: int, logs=None):
+        """
+        At the end of each epoch, call Model.save(...) so that
+        weights and optimizer state are pickled as per your spec.
+        """
+        # epoch is zero‐indexed, but we probably want to save as "epoch_01", etc.
+        epoch_index = epoch + 1
+        epoch_dir_name = f"epoch_{epoch_index:02d}"
+        
+        # Build the directory where we want to dump model info & weights
+        target_directory = self.base_dir / self.model_name / "checkpoints"
+
+
+        # Ensure the parent directory exists; your Model.save(...) will
+        # create the exact "model" subdirectory under this path.
+        target_directory.mkdir(parents=True, exist_ok=True)
+
+        # The checkpoints `self.model` attribute is the actual keras.Model (or subclass).
+        ## We only proceed if it’s an instance of DLMatchingModel or NSMatchingModel:
+        if not isinstance(self.model, (DLMatchingModel, NSMatchingModel)):
+            raise ValueError(
+                f"`EpochEndSaver` expected DLMatchingModel or NSMatchingModel, got {type(self.model)}"
+            )
+
+        # Now call your custom save function:
+        Model.save(
+            model=self.model,
+            target_directory=target_directory,
+            name=epoch_dir_name
+        )
+
