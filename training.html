@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Training &mdash; Neer Match Utilities 1.0.9-beta documentation</title>
+  <title>Training &mdash; Neer Match Utilities 1.0.10-beta documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=81a782ac"></script>
+      <script src="_static/documentation_options.js?v=b59d3201"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -105,6 +105,11 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="base.html">Base</a></li>
 <li class="toctree-l1"><a class="reference internal" href="model.html">Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="model.html#neer_match_utilities.model.EpochEndSaver"><code class="docutils literal notranslate"><span class="pre">EpochEndSaver</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="model.html#neer_match_utilities.model.EpochEndSaver.__init__"><code class="docutils literal notranslate"><span class="pre">EpochEndSaver.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#neer_match_utilities.model.EpochEndSaver.on_epoch_end"><code class="docutils literal notranslate"><span class="pre">EpochEndSaver.on_epoch_end()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="model.html#neer_match_utilities.model.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="model.html#neer_match_utilities.model.Model.load"><code class="docutils literal notranslate"><span class="pre">Model.load()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="model.html#neer_match_utilities.model.Model.save"><code class="docutils literal notranslate"><span class="pre">Model.save()</span></code></a></li>
@@ -337,12 +342,12 @@ and focus on hard‐to‐classify samples.</p>
 <li><p>Adjust <cite>weight_f1</cite> to prioritize either overall F1 (higher weight_f1) or hard‐example mining (lower weight_f1).</p></li>
 </ul>
 <p class="rubric">References</p>
-<dl class="simple">
-<dt>Lin, T.-Y., Goyal, P., Girshick, R., He, K., &amp; Dollár, P. (2017).</dt><dd><p>Focal Loss for Dense Object Detection. <em>ICCV</em>.</p>
-</dd>
-<dt>Sahu, S., &amp; Wig, G. S. (2020). Soft F1 and Dice Loss for Deep Learning.</dt><dd><p><em>arXiv:2004.13709</em>.</p>
-</dd>
-</dl>
+<ul class="simple">
+<li><p>Lin, T.-Y., Goyal, P., Girshick, R., He, K., &amp; Dollár, P. (2017).
+Focal Loss for Dense Object Detection. <em>ICCV</em>.</p></li>
+<li><p>Bénédict, G., Koops, V., Odijk D., &amp; de Rijke M. (2021). SigmoidF1: A
+Smooth F1 Score Surrogate Loss for Multilabel Classification. <em>arXiv 2108.10566</em>.</p></li>
+</ul>
 <section id="explanation-of-key-terms">
 <h2>Explanation of Key Terms<a class="headerlink" href="#explanation-of-key-terms" title="Link to this heading"></a></h2>
 <ul class="simple">
@@ -464,10 +469,8 @@ probabilities rather than thresholded predictions.</p></li>
 </ul>
 <p class="rubric">References</p>
 <ul class="simple">
-<li><p>Sahu, S., &amp; Wig, G. S. (2020). Soft F1 and Dice Loss for Deep Learning.
-<em>arXiv preprint arXiv:2004.13709</em>.</p></li>
-<li><p>Zhang, X., &amp; Yang, Y. (2018). An Improved Cross-Entropy Focal Loss for
-Imbalanced Classification. <em>Proceedings of the AAAI Conference on Artificial Intelligence</em>.</p></li>
+<li><p>Bénédict, G., Koops, V., Odijk D., &amp; de Rijke M. (2021). SigmoidF1: A
+Smooth F1 Score Surrogate Loss for Multilabel Classification. <em>arXiv 2108.10566</em>.</p></li>
 </ul>
 <section id="id10">
 <h2>Explanation of Key Terms<a class="headerlink" href="#id10" title="Link to this heading"></a></h2>

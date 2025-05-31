@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Data Preparation for Training &mdash; Neer Match Utilities 1.0.9-beta documentation</title>
+  <title>Data Preparation for Training &mdash; Neer Match Utilities 1.0.10-beta documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=81a782ac"></script>
+      <script src="_static/documentation_options.js?v=b59d3201"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
@@ -107,6 +107,11 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="base.html">Base</a></li>
 <li class="toctree-l1"><a class="reference internal" href="model.html">Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="model.html#neer_match_utilities.model.EpochEndSaver"><code class="docutils literal notranslate"><span class="pre">EpochEndSaver</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="model.html#neer_match_utilities.model.EpochEndSaver.__init__"><code class="docutils literal notranslate"><span class="pre">EpochEndSaver.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#neer_match_utilities.model.EpochEndSaver.on_epoch_end"><code class="docutils literal notranslate"><span class="pre">EpochEndSaver.on_epoch_end()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="model.html#neer_match_utilities.model.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="model.html#neer_match_utilities.model.Model.load"><code class="docutils literal notranslate"><span class="pre">Model.load()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="model.html#neer_match_utilities.model.Model.save"><code class="docutils literal notranslate"><span class="pre">Model.save()</span></code></a></li>
@@ -1370,19 +1375,19 @@ Note that since validation is not implemented yet, you can set
 </tr>
 <tr class="row-odd"><td><p>1</p></td>
 <td><p>1</p></td>
-<td><p>145</p></td>
+<td><p>80</p></td>
 </tr>
 <tr class="row-even"><td><p>2</p></td>
 <td><p>2</p></td>
-<td><p>104</p></td>
+<td><p>7</p></td>
 </tr>
 <tr class="row-odd"><td><p>3</p></td>
 <td><p>3</p></td>
-<td><p>9</p></td>
+<td><p>205</p></td>
 </tr>
 <tr class="row-even"><td><p>4</p></td>
 <td><p>4</p></td>
-<td><p>215</p></td>
+<td><p>294</p></td>
 </tr>
 </tbody>
 </table>
@@ -1431,26 +1436,16 @@ Note that since validation is not implemented yet, you can set
 <td><p>0</p></td>
 </tr>
 <tr class="row-odd"><td><p>1</p></td>
-<td><p>00a050af9d</p></td>
-<td><p>ZUCKERFABRIK HARSUM IN HARSUM, PROV. HANNOVER.</p></td>
-<td><p>HANNOVER</p></td>
-<td><p>ZUCKER-FABRIKEN UND ZUCKER-RAFFINERIEN.</p></td>
-<td><p>FABRIKATION VON ROHZUCKER. PRODUKTION 1896/97–…</p></td>
-<td><p>GRUNDST CK M GEB UDE M MASCHINEN U APPARATE M</p></td>
-<td><p>1873.0</p></td>
-<td><p>1</p></td>
+<td><p>01077b1f46</p></td>
+<td><p>GEBRÜDER ZSCHILLE TUCHFABRIK</p></td>
+<td><p>GROSSENHAIN</p></td>
+<td><p>TEXTIL-INDUSTRIE.</p></td>
+<td><p>ÜBERNAHME UND FORTBETRIEB DER DER FIRMA GEBR. …</p></td>
+<td><p></p></td>
+<td><p>1899.0</p></td>
+<td><p>4</p></td>
 </tr>
 <tr class="row-even"><td><p>2</p></td>
-<td><p>0118303343</p></td>
-<td><p>CUXHAVENER GAS-ACTIEN-GESELLSCHAFT IN CUXHAVEN.</p></td>
-<td><p>CUXHAVEN</p></td>
-<td><p>GASANSTALTEN UND GASGLÜHLICHT-FABRIKEN.</p></td>
-<td><p></p></td>
-<td><p>ANLAGEKONTO M GRUNDST CK M WOANHAUS M KAUTION …</p></td>
-<td><p>1884.0</p></td>
-<td><p>5</p></td>
-</tr>
-<tr class="row-odd"><td><p>3</p></td>
 <td><p>01a224579a</p></td>
 <td><p>*MASCHINEN- UND WERKZEUGFABRIK AKTIENGESELLSCHAFT</p></td>
 <td><p>KÖTHEN</p></td>
@@ -1460,7 +1455,7 @@ Note that since validation is not implemented yet, you can set
 <td><p>1897.0</p></td>
 <td><p>6</p></td>
 </tr>
-<tr class="row-even"><td><p>4</p></td>
+<tr class="row-odd"><td><p>3</p></td>
 <td><p>022f81a1cb</p></td>
 <td><p>BERLINER KRONEN-BRAUEREI ACTIENGESELLSCHAFT IN…</p></td>
 <td><p>BERLIN</p></td>
@@ -1469,6 +1464,16 @@ Note that since validation is not implemented yet, you can set
 <td><p>GRUNDST CKE U MIETSH USER M BRAUEREIGEB UDE M …</p></td>
 <td><p>1891.0</p></td>
 <td><p>7</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>02875aab9c</p></td>
+<td><p>ACT.-GES. TONWERKE WÜBBENHORST IN DELMENHORST.</p></td>
+<td><p>DELMENHORST</p></td>
+<td><p>INDUSTRIE DER STEINE UND ERDEN.</p></td>
+<td><p>ERWERB U. BETRIEB VON ZIEGELEIEN U. TONWARENFA…</p></td>
+<td><p>AKTIVA GRUNDST CKE GEB UDE ANSCHLUSSGLEIS MASC…</p></td>
+<td><p>1911.0</p></td>
+<td><p>9</p></td>
 </tr>
 </tbody>
 </table>
@@ -1506,7 +1511,7 @@ Note that since validation is not implemented yet, you can set
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>9</p></td>
+<tr class="row-even"><td><p>7</p></td>
 <td><p>16729a8d6a</p></td>
 <td><p>MASCHINEN- UND WERKZEUGFABRIK AKTIENGESELLSCHAFT</p></td>
 <td><p>CÖTHEN</p></td>
@@ -1526,27 +1531,17 @@ Note that since validation is not implemented yet, you can set
 <td><p>NaN</p></td>
 <td><p>34</p></td>
 </tr>
-<tr class="row-even"><td><p>104</p></td>
-<td><p>832a174691</p></td>
-<td><p>CUXHAVENER GAS-ACTIEN-GESELLSCHAFT IN CUXHAVEN</p></td>
-<td><p>CUXHAVEN</p></td>
-<td><p>GAS-GESELLSCHAFTEN.</p></td>
-<td><p>BETRIEB EINES GASWERKES, SOWIE VERWERTUNG DER …</p></td>
-<td><p></p></td>
-<td><p>1884.0</p></td>
-<td><p>196</p></td>
+<tr class="row-even"><td><p>80</p></td>
+<td><p>721ce62f33</p></td>
+<td><p>GEBRÜDER ZSCHILLE TUCHFABRIK AKTIENGESELLSCHAF…</p></td>
+<td><p>GROSSENHAIN</p></td>
+<td><p>TEXTIL-INDUSTRIE.</p></td>
+<td><p>ÜBERNAHME UND FORTBETRIEB DER DER FIRMA GEBR. …</p></td>
+<td><p>GRUNDST CKE U GEB UDE MASCHINEN U UTENSILIEN F…</p></td>
+<td><p>1899.0</p></td>
+<td><p>149</p></td>
 </tr>
-<tr class="row-odd"><td><p>145</p></td>
-<td><p>9740c7f92f</p></td>
-<td><p>ZUCKERFABRIK HARSUM IN HARSUM.</p></td>
-<td><p>HARSUM</p></td>
-<td><p>NAHRUNGS- UND GENUSSMITTEL-INDUSTRIE.</p></td>
-<td><p>FABRIKATION VON ROHZUCKER.</p></td>
-<td><p>GRUNDST CK M GEB UDE M MASCHINEN U APPARATE M</p></td>
-<td><p>1873.0</p></td>
-<td><p>267</p></td>
-</tr>
-<tr class="row-even"><td><p>215</p></td>
+<tr class="row-odd"><td><p>205</p></td>
 <td><p>c2b13c295b</p></td>
 <td><p>BERLINER KRONEN-BRAUEREI ACTIENGESELLSCHAFT IN…</p></td>
 <td><p>BERLIN</p></td>
@@ -1555,6 +1550,16 @@ Note that since validation is not implemented yet, you can set
 <td><p></p></td>
 <td><p>1891.0</p></td>
 <td><p>417</p></td>
+</tr>
+<tr class="row-even"><td><p>294</p></td>
+<td><p>eaa6910702</p></td>
+<td><p>*ACT.-GES. TONWERKE WÜBBENHORST IN DELMENHORST.</p></td>
+<td><p>DELMENHORST</p></td>
+<td><p>INDUSTRIE DER STEINE UND ERDEN.</p></td>
+<td><p>ERWERB U. BETRIEB VON ZIEGELEIEN U. TONWARENFA…</p></td>
+<td><p></p></td>
+<td><p>1911.0</p></td>
+<td><p>583</p></td>
 </tr>
 </tbody>
 </table>

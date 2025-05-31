@@ -69,6 +69,14 @@ The package is distributed under the <a href="LICENSE.html">MIT license</a>.
 
 <div id="refs" class="references csl-bib-body hanging-indent">
 
+<div id="ref-benedict2022sigmoidf1smoothf1score" class="csl-entry">
+
+Bénédict, Gabriel, Vincent Koops, Daan Odijk, and Maarten de Rijke.
+2022. “sigmoidF1: A Smooth F1 Score Surrogate Loss for Multilabel
+Classification.” <https://arxiv.org/abs/2108.10566>.
+
+</div>
+
 <div id="ref-gram2022" class="csl-entry">
 
 Gram, Dennis, Pantelis Karapanagiotis, Marius Liebald, and Uwe Walz.
