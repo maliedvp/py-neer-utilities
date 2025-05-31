@@ -274,10 +274,8 @@ def soft_f1_loss(epsilon: float = 1e-7):
 
     References
     ----------
-    - Sahu, S., & Wig, G. S. (2020). Soft F1 and Dice Loss for Deep Learning.
-      *arXiv preprint arXiv:2004.13709*.
-    - Zhang, X., & Yang, Y. (2018). An Improved Cross-Entropy Focal Loss for
-      Imbalanced Classification. *Proceedings of the AAAI Conference on Artificial Intelligence*.
+    - Bénédict, G., Koops, V., Odijk D., & de Rijke M. (2021). SigmoidF1: A 
+      Smooth F1 Score Surrogate Loss for Multilabel Classification. *arXiv 2108.10566*.
 
     Explanation of Key Terms
     ------------------------
@@ -373,10 +371,10 @@ def combined_loss(
 
     References
     ----------
-    Lin, T.-Y., Goyal, P., Girshick, R., He, K., & Dollár, P. (2017).
+    - Lin, T.-Y., Goyal, P., Girshick, R., He, K., & Dollár, P. (2017).
       Focal Loss for Dense Object Detection. *ICCV*.
-    Sahu, S., & Wig, G. S. (2020). Soft F1 and Dice Loss for Deep Learning.
-      *arXiv:2004.13709*.
+    - Bénédict, G., Koops, V., Odijk D., & de Rijke M. (2021). SigmoidF1: A 
+      Smooth F1 Score Surrogate Loss for Multilabel Classification. *arXiv 2108.10566*.
 
     Explanation of Key Terms
     ------------------------
