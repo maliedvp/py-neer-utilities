@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prepare &mdash; Neer Match Utilities 1.0.10-beta documentation</title>
+  <title>Prepare &mdash; Neer Match Utilities 1.0.11-beta documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=b59d3201"></script>
+      <script src="_static/documentation_options.js?v=2adfa69b"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -148,6 +148,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.prepare.similarity_map_to_dict"><code class="docutils literal notranslate"><span class="pre">similarity_map_to_dict()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.prepare.synth_mismatches"><code class="docutils literal notranslate"><span class="pre">synth_mismatches()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="split.html">Split</a><ul>
@@ -323,6 +324,68 @@ and values are lists of similarity functions associated with those columns.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="neer_match_utilities.prepare.synth_mismatches">
+<span class="sig-prename descclassname"><span class="pre">neer_match_utilities.prepare.</span></span><span class="sig-name descname"><span class="pre">synth_mismatches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns_fix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns_change</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str_metric</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str_similarity_range</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pct_diff_range</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_cols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_mismatches</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_missing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nan_share</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">empty_share</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_share</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_right</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/prepare.html#synth_mismatches"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.prepare.synth_mismatches" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Generates synthetic mismatches for a share of observations in <cite>right</cite>. Returns:</dt><dd><ul class="simple">
+<li><p>All original rows from <cite>right</cite> (unchanged),</p></li>
+<li><p>Plus new synthetic mismatches (with new UUID4 IDs if id_right is specified), for a random subset
+of original rows of size = floor(sample_share * len(right)).
+Drops any synthetic row whose data‐portion duplicates an original <cite>right</cite> row
+or duplicates another synthetic row.</p></li>
+</ul>
+</dd>
+<dt>STRING‐columns in <cite>columns_change</cite>:</dt><dd><ul class="simple">
+<li><p>require str_similarity = normalized_similarity(orig, candidate) within [min_str_sim, max_str_sim].</p></li>
+<li><p>if no candidate qualifies, perturb orig until similarity is in that range.</p></li>
+</ul>
+</dd>
+<dt>NUMERIC‐columns in <cite>columns_change</cite>:</dt><dd><ul class="simple">
+<li><p>require percentage difference │orig - candidate│/│orig│ within [min_pct_diff, max_pct_diff].
+(If orig == 0, any candidate ≠ 0 counts as pct_diff = 1.0.)</p></li>
+<li><p>if no candidate qualifies, perturb orig until percentage difference is in that range,
+by taking orig * (1 ± min_pct_diff) or (1 ± max_pct_diff).</p></li>
+</ul>
+</dd>
+</dl>
+<p>keep_missing: if True, any NaN or “” in the original <cite>right</cite> row’s columns_change is preserved (no change).
+nan_share/empty_share: after generating all synthetics and deduplicating,</p>
+<blockquote>
+<div><p>inject NaN or “” into columns_change at the given probabilities.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>right</strong> (<em>pd.DataFrame</em>) – The DataFrame containing the “true” observations.</p></li>
+<li><p><strong>id_right</strong> (<em>str</em><em> or </em><em>None</em>) – Column name of the unique ID in <cite>right</cite>. If None, no ID column is created for synthetic rows.</p></li>
+<li><p><strong>columns_fix</strong> (<em>list</em><em> of </em><em>str</em>) – Columns whose values remain unchanged (copied directly from the original row).</p></li>
+<li><p><strong>columns_change</strong> (<em>list</em><em> of </em><em>str</em>) – Columns whose values are modified to create mismatches.</p></li>
+<li><p><strong>str_metric</strong> (<em>str</em>) – Name of the string‐similarity metric (key in available_similarities()).</p></li>
+<li><p><strong>str_similarity_range</strong> (<em>tuple</em><em> (</em><em>min_str_sim</em><em>, </em><em>max_str_sim</em><em>)</em>) – Range of allowed normalized_similarity (0–1). Candidate strings must satisfy
+min_str_sim ≤ similarity(orig, candidate) ≤ max_str_sim.</p></li>
+<li><p><strong>pct_diff_range</strong> (<em>tuple</em><em> (</em><em>min_pct_diff</em><em>, </em><em>max_pct_diff</em><em>)</em>) – For numeric columns: percentage difference │orig - candidate│/│orig│ must lie in [min_pct_diff, max_pct_diff].
+(pct_diff_range values are between 0.0 and 1.0.)</p></li>
+<li><p><strong>n_cols</strong> (<em>int</em>) – How many of the columns_change to modify per synthetic row. If n_cols &lt; len(columns_change),
+pick that many at random; if n_cols &gt; len(columns_change), warn and modify all.</p></li>
+<li><p><strong>n_mismatches</strong> (<em>int</em>) – How many synthetic mismatches to generate per each selected original <cite>right</cite> row.</p></li>
+<li><p><strong>keep_missing</strong> (<em>bool</em>) – If True, any NaN or “” in the original row’s columns_change is preserved (no change).</p></li>
+<li><p><strong>nan_share</strong> (<em>float in</em><em> [</em><em>0</em><em>,</em><em>1</em><em>]</em>) – After deduplication, each synthetic cell in columns_change has probability nan_share → NaN.</p></li>
+<li><p><strong>empty_share</strong> (<em>float in</em><em> [</em><em>0</em><em>,</em><em>1</em><em>]</em>) – After deduplication, each synthetic cell in columns_change has probability empty_share → “”.
+(Applied after nan_share.)</p></li>
+<li><p><strong>sample_share</strong> (<em>float in</em><em> [</em><em>0</em><em>,</em><em>1</em><em>]</em><em>, </em><em>default=1.0</em>) – Proportion of original <cite>right</cite> rows to select at random for synthetics.
+If 1.0, all rows. If 0.5, floor(0.5 * n_rows) are chosen.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Expanded DataFrame with original + synthetic rows.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 </dl>
 </dd></dl>

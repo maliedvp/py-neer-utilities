@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Data Preparation for Training &mdash; Neer Match Utilities 1.0.10-beta documentation</title>
+  <title>Data Preparation for Training &mdash; Neer Match Utilities 1.0.11-beta documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=b59d3201"></script>
+      <script src="_static/documentation_options.js?v=2adfa69b"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
@@ -150,6 +150,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.similarity_map_to_dict"><code class="docutils literal notranslate"><span class="pre">similarity_map_to_dict()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.synth_mismatches"><code class="docutils literal notranslate"><span class="pre">synth_mismatches()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="split.html">Split</a><ul>
@@ -1371,23 +1372,23 @@ Note that since validation is not implemented yet, you can set
 <tbody>
 <tr class="row-even"><td><p>0</p></td>
 <td><p>0</p></td>
-<td><p>18</p></td>
+<td><p>13</p></td>
 </tr>
 <tr class="row-odd"><td><p>1</p></td>
 <td><p>1</p></td>
-<td><p>80</p></td>
+<td><p>75</p></td>
 </tr>
 <tr class="row-even"><td><p>2</p></td>
 <td><p>2</p></td>
-<td><p>7</p></td>
+<td><p>16</p></td>
 </tr>
 <tr class="row-odd"><td><p>3</p></td>
 <td><p>3</p></td>
-<td><p>205</p></td>
+<td><p>111</p></td>
 </tr>
 <tr class="row-even"><td><p>4</p></td>
 <td><p>4</p></td>
-<td><p>294</p></td>
+<td><p>207</p></td>
 </tr>
 </tbody>
 </table>
@@ -1436,26 +1437,36 @@ Note that since validation is not implemented yet, you can set
 <td><p>0</p></td>
 </tr>
 <tr class="row-odd"><td><p>1</p></td>
-<td><p>01077b1f46</p></td>
-<td><p>GEBRÜDER ZSCHILLE TUCHFABRIK</p></td>
-<td><p>GROSSENHAIN</p></td>
-<td><p>TEXTIL-INDUSTRIE.</p></td>
-<td><p>ÜBERNAHME UND FORTBETRIEB DER DER FIRMA GEBR. …</p></td>
-<td><p></p></td>
+<td><p>00ce66e5a8</p></td>
+<td><p>AKTIENGESELLSCHAFT FÜR LINIIR-APPARATE, PATENT…</p></td>
+<td><p>LEIPZIG</p></td>
+<td><p>METALL-INDUSTRIE.</p></td>
+<td><p>ERWERB, AUSBEUTUNG UND SONSTIGE VERWERTUNG DER…</p></td>
+<td><p>PATENTE BETRIEBSMASCHINEN INVENTAR UTENSIL WAR…</p></td>
 <td><p>1899.0</p></td>
-<td><p>4</p></td>
+<td><p>2</p></td>
 </tr>
 <tr class="row-even"><td><p>2</p></td>
-<td><p>01a224579a</p></td>
-<td><p>*MASCHINEN- UND WERKZEUGFABRIK AKTIENGESELLSCHAFT</p></td>
-<td><p>KÖTHEN</p></td>
-<td><p>MASCHINEN- UND ARMATUREN-FABRIKEN, EISENGIESSE…</p></td>
-<td><p>ÜBERNAHME UND FORTFÜHRUNG DER UNTER DER FIRMA …</p></td>
+<td><p>00d74f0e0b</p></td>
+<td><p>DEUTSCHE RÜCK- U. MITVERSICHERUNGS-GESELLSCHAF…</p></td>
+<td><p>BERLIN</p></td>
+<td><p>VERSICHERUNGS-GESELLSCHAFTEN ALLER BRANCHEN.</p></td>
 <td><p></p></td>
-<td><p>1897.0</p></td>
-<td><p>6</p></td>
+<td><p>AKTIENWECHSEL M EFFEKTEN M HYP DARLEHEN M INVE…</p></td>
+<td><p>1885.0</p></td>
+<td><p>3</p></td>
 </tr>
 <tr class="row-odd"><td><p>3</p></td>
+<td><p>0118303343</p></td>
+<td><p>CUXHAVENER GAS-ACTIEN-GESELLSCHAFT IN CUXHAVEN.</p></td>
+<td><p>CUXHAVEN</p></td>
+<td><p>GASANSTALTEN UND GASGLÜHLICHT-FABRIKEN.</p></td>
+<td><p></p></td>
+<td><p>ANLAGEKONTO M GRUNDST CK M WOANHAUS M KAUTION …</p></td>
+<td><p>1884.0</p></td>
+<td><p>5</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
 <td><p>022f81a1cb</p></td>
 <td><p>BERLINER KRONEN-BRAUEREI ACTIENGESELLSCHAFT IN…</p></td>
 <td><p>BERLIN</p></td>
@@ -1464,16 +1475,6 @@ Note that since validation is not implemented yet, you can set
 <td><p>GRUNDST CKE U MIETSH USER M BRAUEREIGEB UDE M …</p></td>
 <td><p>1891.0</p></td>
 <td><p>7</p></td>
-</tr>
-<tr class="row-even"><td><p>4</p></td>
-<td><p>02875aab9c</p></td>
-<td><p>ACT.-GES. TONWERKE WÜBBENHORST IN DELMENHORST.</p></td>
-<td><p>DELMENHORST</p></td>
-<td><p>INDUSTRIE DER STEINE UND ERDEN.</p></td>
-<td><p>ERWERB U. BETRIEB VON ZIEGELEIEN U. TONWARENFA…</p></td>
-<td><p>AKTIVA GRUNDST CKE GEB UDE ANSCHLUSSGLEIS MASC…</p></td>
-<td><p>1911.0</p></td>
-<td><p>9</p></td>
 </tr>
 </tbody>
 </table>
@@ -1511,17 +1512,7 @@ Note that since validation is not implemented yet, you can set
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>7</p></td>
-<td><p>16729a8d6a</p></td>
-<td><p>MASCHINEN- UND WERKZEUGFABRIK AKTIENGESELLSCHAFT</p></td>
-<td><p>CÖTHEN</p></td>
-<td><p>MASCHINEN- UND ARMATUREN-FABRIKEN, EISENGIESSE…</p></td>
-<td><p>ÜBERNAHME UND FORTFÜHRUNG DER UNTER DER FIRMA …</p></td>
-<td><p>GRUNDST CK M GEB UDE M MASCHINEN U UTENSILIEN M</p></td>
-<td><p>1897.0</p></td>
-<td><p>16</p></td>
-</tr>
-<tr class="row-odd"><td><p>18</p></td>
+<tr class="row-even"><td><p>13</p></td>
 <td><p>2eece3dd52</p></td>
 <td><p>BETRAG IN RÜCKZAHLBAR VERSTÄRKTE</p></td>
 <td><p>RÜCKZAHLBAR</p></td>
@@ -1531,17 +1522,37 @@ Note that since validation is not implemented yet, you can set
 <td><p>NaN</p></td>
 <td><p>34</p></td>
 </tr>
-<tr class="row-even"><td><p>80</p></td>
-<td><p>721ce62f33</p></td>
-<td><p>GEBRÜDER ZSCHILLE TUCHFABRIK AKTIENGESELLSCHAF…</p></td>
-<td><p>GROSSENHAIN</p></td>
-<td><p>TEXTIL-INDUSTRIE.</p></td>
-<td><p>ÜBERNAHME UND FORTBETRIEB DER DER FIRMA GEBR. …</p></td>
-<td><p>GRUNDST CKE U GEB UDE MASCHINEN U UTENSILIEN F…</p></td>
-<td><p>1899.0</p></td>
-<td><p>149</p></td>
+<tr class="row-odd"><td><p>16</p></td>
+<td><p>3a50b36f26</p></td>
+<td><p>DEUTSCHE RÜCK- U. MITVERSICHERUNGS-GESELLSCHAF…</p></td>
+<td><p>BERLIN</p></td>
+<td><p>VERSICHERUNGS-GESELLSCHAFTEN ALLER BRANCHEN.</p></td>
+<td><p></p></td>
+<td><p>AKTIENWECHSEL M EFFEKTEN M HYPOTHEKENDARLEHEN …</p></td>
+<td><p>1885.0</p></td>
+<td><p>46</p></td>
 </tr>
-<tr class="row-odd"><td><p>205</p></td>
+<tr class="row-even"><td><p>75</p></td>
+<td><p>6ed393b0a9</p></td>
+<td><p>A.-G. F. LINIIR-APPARATE, PATENT GROSSE IN LEI…</p></td>
+<td><p>LEIPZIG</p></td>
+<td><p>METALL-INDUSTRIE.</p></td>
+<td><p>ERWERB, AUSBEUTUNG UND SONST. VERWERTUNG DER V…</p></td>
+<td><p>PATENTE BETRIEBSMASCHINEN INVENTAR UTENSIL WAR…</p></td>
+<td><p>1899.0</p></td>
+<td><p>141</p></td>
+</tr>
+<tr class="row-odd"><td><p>111</p></td>
+<td><p>832a174691</p></td>
+<td><p>CUXHAVENER GAS-ACTIEN-GESELLSCHAFT IN CUXHAVEN</p></td>
+<td><p>CUXHAVEN</p></td>
+<td><p>GAS-GESELLSCHAFTEN.</p></td>
+<td><p>BETRIEB EINES GASWERKES, SOWIE VERWERTUNG DER …</p></td>
+<td><p></p></td>
+<td><p>1884.0</p></td>
+<td><p>196</p></td>
+</tr>
+<tr class="row-even"><td><p>207</p></td>
 <td><p>c2b13c295b</p></td>
 <td><p>BERLINER KRONEN-BRAUEREI ACTIENGESELLSCHAFT IN…</p></td>
 <td><p>BERLIN</p></td>
@@ -1550,16 +1561,6 @@ Note that since validation is not implemented yet, you can set
 <td><p></p></td>
 <td><p>1891.0</p></td>
 <td><p>417</p></td>
-</tr>
-<tr class="row-even"><td><p>294</p></td>
-<td><p>eaa6910702</p></td>
-<td><p>*ACT.-GES. TONWERKE WÜBBENHORST IN DELMENHORST.</p></td>
-<td><p>DELMENHORST</p></td>
-<td><p>INDUSTRIE DER STEINE UND ERDEN.</p></td>
-<td><p>ERWERB U. BETRIEB VON ZIEGELEIEN U. TONWARENFA…</p></td>
-<td><p></p></td>
-<td><p>1911.0</p></td>
-<td><p>583</p></td>
 </tr>
 </tbody>
 </table>
