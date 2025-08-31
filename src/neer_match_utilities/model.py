@@ -177,7 +177,7 @@ class Model:
                 optimizer_class = getattr(tf.keras.optimizers, optimizer_config["class_name"])
                 model.optimizer = optimizer_class.from_config(optimizer_config["config"])
         elif (model_directory / "record_pair_network.weights.h5").exists():
-            model = NSMatchingModel(original_similarity_map)
+            model = NSMatchingModel(similarity_map_instance)
             model.compile()
             model.record_pair_network.load_weights(model_directory / "record_pair_network.weights.h5")
 
