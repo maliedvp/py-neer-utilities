@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import re
 import numpy as np
 import pandas as pd
@@ -8,8 +10,9 @@ import random
 import string
 import uuid
 import warnings
-from neer_match.similarity_map import available_similarities
-from typing import List, Optional, Tuple
+import pandas as pd
+# from neer_match.similarity_map import available_similarities
+from typing import List, Optional, Tuple, Literal
 
 
 class Prepare(SuperClass):
@@ -262,6 +265,279 @@ class Prepare(SuperClass):
                     df_right_processed[cr] = df_right_processed[cr].apply(lambda x: str(x) if pd.notna(x) else x)
 
         return df_left_processed, df_right_processed
+
+
+class Commonness:
+    def __init__(
+        self,
+        variable_list: List[str],
+        df_left: pd.DataFrame,
+        df_right: pd.DataFrame,
+        df_left_full: pd.DataFrame,
+        df_right_full: pd.DataFrame,
+        commonness_source: Literal["left", "right", "both"] = "left",
+        *,
+        scoring: Literal["relative", "minmax", "log"] = "minmax",
+        scale: Literal["quantile", "percentile"] = "quantile",  # quantile: 0..1, percentile: 0..100
+        fill_value: float = 0.0,
+        preprocess: bool = False,
+    ):
+        """
+        Initialize a Commonness helper and extend available similarity functions.
+
+        This initializer stores references to the input DataFrames, configuration
+        for how to compute "commonness" scores, and (safely) monkey-patches
+        `neer_match.similarity_map.available_similarities` (and the bound reference
+        inside `neer_match.similarity_encoding`) to add a custom similarity
+        function named `"commonness_score"`.
+
+        Parameters
+        ----------
+        variable_list : list[str]
+            Names of columns for which commonness scores should be computed and
+            appended to `df_left` and `df_right` (as `<col>_commonness`).
+        df_left : pandas.DataFrame
+            Left DataFrame whose selected columns will receive commonness scores.
+        df_right : pandas.DataFrame
+            Right DataFrame whose selected columns will receive commonness scores.
+        df_left_full : pandas.DataFrame
+            Full left DataFrame used as a source for frequency estimation when
+            `commonness_source` is `"left"` or `"both"`.
+        df_right_full : pandas.DataFrame
+            Full right DataFrame used as a source for frequency estimation when
+            `commonness_source` is `"right"` or `"both"`.
+        commonness_source : {"left","right","both"}, optional
+            Which corpus to use for computing frequencies: the left full dataset,
+            the right full dataset, or the concatenation of both. Default is "left".
+        scoring : {"relative","minmax","log"}, optional
+            Strategy to convert raw value counts to a [0,1] commonness score:
+            - "relative": count / total (rare values near 0);
+            - "minmax": (count - min)/(max - min) with guard for equal counts;
+            - "log": log1p(count)/log1p(max_count).
+            Default is "minmax".
+        scale : {"quantile","percentile"}, optional
+            Reserved for future scaling behavior; currently unused. Default "quantile".
+        fill_value : float, optional
+            Value used when a category in `df_left`/`df_right` is not present in
+            the chosen frequency source. Default is 0.0.
+        preprocess : bool, optional
+            If True, string values are normalized (strip & lowercase) before
+            counting and mapping. Default is False.
+
+        Notes
+        -----
+        - This method patches `available_similarities()` at runtime to include
+          `"commonness_score"`. The original function is preserved once in the
+          module under `_original_available_similarities` to avoid stacked wrappers.
+        - Patching the bound name inside `similarity_encoding` ensures components
+          that imported the symbol earlier also see the extension.
+        """
+        self.variable_list = list(variable_list)
+        self.df_left = df_left.copy()
+        self.df_right = df_right.copy()
+        self.df_left_full = df_left_full
+        self.df_right_full = df_right_full
+        self.commonness_source = commonness_source
+        self.scoring = scoring
+        self.scale = scale
+        self.fill_value = fill_value
+        self.preprocess = preprocess
+
+        if self.commonness_source not in {"left", "right", "both"}:
+            raise ValueError(
+                "Argument `commonness_source` must be one of {'left','right','both'}."
+            )
+
+        # ---- Extend neer_match.similarity_map.available_similarities safely ----
+        from neer_match import similarity_map as _sim
+        from neer_match import similarity_encoding as _enc
+
+        # store original once
+        if not hasattr(_sim, "_original_available_similarities"):
+            _sim._original_available_similarities = _sim.available_similarities
+        orig = _sim._original_available_similarities
+
+        def _extended_available():
+            sims = orig().copy()
+            sims["commonness_score"] = self.commonness_score
+            return sims
+
+        # patch the module attribute
+        _sim.available_similarities = _extended_available
+        # patch the *bound name* inside similarity_encoding, too
+        _enc.available_similarities = _extended_available
+
+    @staticmethod
+    def _prep_series(s: pd.Series, preprocess: bool) -> pd.Series:
+        """
+        Normalize a Series for robust frequency counting and mapping.
+
+        Drops missing values and, if requested, normalizes textual content by
+        stripping surrounding whitespace and lowercasing.
+
+        Parameters
+        ----------
+        s : pandas.Series
+            Input Series to clean.
+        preprocess : bool
+            If True, cast to string, strip, and lowercase values.
+
+        Returns
+        -------
+        pandas.Series
+            Cleaned Series (with NA removed; optionally normalized).
+        """
+        # Drop NA; optionally normalize for robust matching
+        s = s.dropna()
+        if preprocess:
+            s = s.astype(str).str.strip().str.lower()
+        return s
+
+    @staticmethod
+    def _frequency_score(series: pd.Series, scoring: str = "minmax") -> dict:
+        """
+        Convert value frequencies into a [0,1] commonness score mapping.
+
+        Counts unique values in `series` and transforms raw counts into scores
+        according to the chosen `scoring` strategy.
+
+        Parameters
+        ----------
+        series : pandas.Series
+            Input data used to compute value frequencies.
+        scoring : {"relative","minmax","log"}, optional
+            Scoring strategy:
+            - "relative": score = count / total_count
+            - "minmax":  score = (count - min_count) / (max_count - min_count)
+                         (returns 1.0 for all values if max_count == min_count)
+            - "log":     score = log1p(count) / log1p(max_count)
+            Default is "minmax".
+
+        Returns
+        -------
+        dict
+            Mapping `{value: score}` with scores in [0,1].
+
+        Notes
+        -----
+        - Returns an empty dict if `series` has no non-NA values.
+        - For "minmax" with equal counts, all values receive 1.0 to avoid
+          division by zero and to indicate no variation in frequency.
+        """
+        vc = series.value_counts()           # index: value, values: counts
+        if vc.empty:
+            return {}
+
+        if scoring == "relative":
+            scores = vc / vc.sum()          # harshest on singletons
+        elif scoring == "minmax":
+            cmin, cmax = vc.min(), vc.max()
+            if cmax == cmin:                # all counts equal
+                scores = pd.Series(1.0, index=vc.index)
+            else:
+                scores = (vc - cmin) / (cmax - cmin)
+        elif scoring == "log":
+            cmax = vc.max()
+            if cmax == 0:
+                scores = pd.Series(0.0, index=vc.index)
+            else:
+                scores = np.log1p(vc) / np.log1p(cmax)
+        else:
+            raise ValueError("scoring must be one of {'relative','minmax','log'}")
+
+        return scores.to_dict()
+
+    def calculate(self) -> Tuple[pd.DataFrame, pd.DataFrame]:
+        """
+        Compute and append commonness scores for configured variables.
+
+        For each variable in `variable_list`, this method:
+        1) builds the frequency source per `commonness_source`,
+        2) computes a `{value: score}` mapping via `_frequency_score`,
+        3) maps scores to `df_left[v]` and `df_right[v]`, producing
+           `<v>_commonness` columns in both frames.
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        tuple[pandas.DataFrame, pandas.DataFrame]
+            The augmented left and right DataFrames with added
+            `<variable>_commonness` columns.
+
+        Notes
+        -----
+        - Unseen values (not present in the chosen frequency source) are filled
+          with `fill_value`.
+        - If `preprocess=True`, normalization (strip/lower) is applied both
+          when computing frequencies and when mapping, to ensure consistency.
+        """
+        for v in self.variable_list:
+            # Build source pool for frequency ranks
+            if self.commonness_source == "left":
+                source = self.df_left_full[v]
+            elif self.commonness_source == "right":
+                source = self.df_right_full[v]
+            else:  # both
+                source = pd.concat([self.df_left_full[v], self.df_right_full[v]], ignore_index=True)
+
+            source = self._prep_series(source, self.preprocess)
+
+            # Build mapping dict {value: quantile/percentile rank}
+            mapping = self._frequency_score(source, self.scoring)
+
+            # Map to both frames (prep their columns the same way for matching)
+            left_col = self._prep_series(self.df_left[v], self.preprocess)
+            right_col = self._prep_series(self.df_right[v], self.preprocess)
+
+            # To preserve original values but map by normalized view:
+            # create temporary normalized columns for mapping, then drop
+            self.df_left[v + "_commonness"] = left_col.map(mapping).reindex(self.df_left.index).fillna(self.fill_value)
+            self.df_right[v + "_commonness"] = right_col.map(mapping).reindex(self.df_right.index).fillna(self.fill_value)
+
+        return self.df_left, self.df_right
+
+    @staticmethod
+    def commonness_score(x: float, y: float) -> float:
+        """
+        Commonness-aware similarity in [0,1] favoring rare-and-equal matches.
+
+        The score rewards both *closeness* and *rareness*, defined on inputs
+        `x, y ∈ [0,1]` (interpreted as commonness scores). Identical rare values
+        receive high score; identical common values receive low score.
+
+        Formally:
+            diff = |x - y|
+            mean = (x + y)/2
+            score = (1 - diff) * (1 - mean)
+
+        Parameters
+        ----------
+        x : float
+            Commonness score of the left item, expected in [0,1].
+        y : float
+            Commonness score of the right item, expected in [0,1].
+
+        Returns
+        -------
+        float
+            Similarity value in [0,1].
+
+        Examples
+        --------
+        - x = y = 0    → score = 1.0  (rare & equal)
+        - x = y = 1    → score = 0.0  (common & equal)
+        - x = 0, y = 1 → score = 0.0  (maximally different)
+        - x = y = 0.5  → score = 0.5
+        """
+        x, y = float(x), float(y)
+        diff = abs(x - y)
+        mean = (x + y) / 2
+        # closeness = 1 - diff
+        # rarity factor = 1 - mean  (rare=1, common=0)
+        return (1.0 - diff) * (1.0 - mean)
 
 
 def similarity_map_to_dict(items: list) -> dict:
