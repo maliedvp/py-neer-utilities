@@ -160,7 +160,7 @@ class Training(SuperClass):
             print(f"Performance metrics saved to {model_dir / 'performance.csv'}")
 
 
-def focal_loss(alpha=0.75, gamma=2.0):
+def focal_loss(alpha=0.99, gamma=1.5):
     """
     Focal Loss function for binary classification tasks.
 
