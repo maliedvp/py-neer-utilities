@@ -317,83 +317,85 @@ def soft_f1_loss(epsilon: float = 1e-7):
 def combined_loss(
     weight_f1: float = 0.5,
     epsilon: float = 1e-7,
-    alpha: float = 0.25,
-    gamma: float = 2.0
+    alpha: float = 0.99,
+    gamma: float = 1.5
 ):
     """
-    Combined Loss: weighted sum of Soft F1 Loss and Focal Loss for imbalanced binary classification.
+    Combined loss: weighted sum of Soft F1 loss and Focal Loss for imbalanced binary classification.
 
     This loss blends the advantages of a differentiable F1-based objective (which balances
-    precision and recall) with the sample‐focusing property of Focal Loss (which down‐weights
-    easy examples). By tuning `weight_f1`, you can interpolate between solely optimizing
-    for F1 score (when `weight_f1=1.0`) and solely focusing on hard examples via focal loss
-    (when `weight_f1=0.0`).
+    precision and recall) with the sample-focusing property of Focal Loss (which down-weights
+    easy examples). By tuning ``weight_f1``, you can interpolate between solely optimizing
+    for F1 score (when ``weight_f1 = 1.0``) and solely focusing on hard examples via focal loss
+    (when ``weight_f1 = 0.0``).
 
     Parameters
     ----------
-    weight_f1 : float, optional, default=0.5
-        Mixing coefficient ∈ [0, 1].  
-        - `weight_f1=1.0`: optimize only Soft F1 Loss.  
-        - `weight_f1=0.0`: optimize only Focal Loss.  
+    weight_f1 : float, default=0.5
+        Mixing coefficient in ``[0, 1]``.
+        - ``weight_f1 = 1.0``: optimize only Soft F1 loss.
+        - ``weight_f1 = 0.0``: optimize only Focal Loss.
         - Intermediate values blend the two objectives proportionally.
-    epsilon : float, optional, default=1e-7
-        Small stabilizer for Soft F1 calculation. Must be > 0.
-    alpha : float, optional, default=0.25
-        Balancing factor for Focal Loss, weighting the positive (minority) class.  
-        Must lie in [0, 1].
-    gamma : float, optional, default=2.0
-        Focusing parameter for Focal Loss.  
-        - `gamma=0` → reduces to weighted BCE.  
-        - Larger `gamma` emphasizes harder (misclassified) examples.
+    epsilon : float, default=1e-7
+        Small stabilizer for Soft F1 calculation. Must be ``> 0``.
+    alpha : float, default=0.25
+        Balancing factor for Focal Loss, weighting the positive (minority) class.
+        Must lie in ``[0, 1]``.
+    gamma : float, default=2.0
+        Focusing parameter for Focal Loss.
+        - ``gamma = 0`` reduces to weighted BCE.
+        - Larger ``gamma`` emphasizes harder (misclassified) examples.
 
     Returns
     -------
-    loss : callable
-        A function `loss(y_true, y_pred)` that computes:
-        
-            weight_f1 * SoftF1(y_true, y_pred; ε)
-          + (1 − weight_f1) * FocalLoss(y_true, y_pred; α, γ)
+    callable
+        A function ``loss(y_true, y_pred)`` that computes
+
+        .. math::
+
+           \\text{CombinedLoss}
+           = \\text{weight\\_f1} \\cdot \\text{SoftF1}(y, \\hat{y};\\,\\varepsilon)
+             + (1 - \\text{weight\\_f1}) \\cdot \\text{FocalLoss}(y, \\hat{y};\\,\\alpha, \\gamma).
 
         Minimizing this combined loss encourages both a high F1 score
-        and focus on hard‐to‐classify samples.
+        and focus on hard-to-classify samples.
 
     Raises
     ------
     ValueError
-        If `weight_f1` is not in [0, 1], or if `epsilon` ≤ 0, or if `alpha` is not
-        in [0, 1], or if `gamma` < 0.
+        If ``weight_f1`` is not in ``[0, 1]``, or if ``epsilon <= 0``, or if ``alpha`` is not
+        in ``[0, 1]``, or if ``gamma < 0``.
 
     Notes
     -----
-    - **Soft F1 Loss** (1 − F1) is differentiable and promotes balanced precision/recall.  
-    - **Focal Loss** down‐weights well‐classified examples to focus learning on difficult cases.  
-    - Adjust `weight_f1` to prioritize either overall F1 (higher weight_f1) or hard‐example mining (lower weight_f1).
+    - **Soft F1 loss**: ``1 - \\text{SoftF1}``, where
+
+      .. math::
+
+         \\text{SoftF1} = \\frac{2\\,TP + \\varepsilon}{2\\,TP + FP + FN + \\varepsilon}.
+
+      Here ``TP``, ``FP``, and ``FN`` are *soft* counts computed from probabilities.
+    - **Focal Loss** down-weights well-classified examples to focus learning on difficult cases.
 
     References
     ----------
     - Lin, T.-Y., Goyal, P., Girshick, R., He, K., & Dollár, P. (2017).
       Focal Loss for Dense Object Detection. *ICCV*.
-    - Bénédict, G., Koops, V., Odijk D., & de Rijke M. (2021). SigmoidF1: A 
-      Smooth F1 Score Surrogate Loss for Multilabel Classification. *arXiv 2108.10566*.
-
-    Explanation of Key Terms
-    ------------------------
-    - **Soft F1**: (2·TP + ε) / (2·TP + FP + FN + ε), differentiable surrogate for the F1 score.
-    - **Focal Loss**: α·(1−p_t)ᵞ·BCE(p_t), where p_t is the model’s estimated probability for the true class.
-    - **TP, FP, FN**: soft counts over probabilities (see Soft F1 docs).
+    - Bénédict, G., Koops, V., Odijk, D., & de Rijke, M. (2021).
+      SigmoidF1: A Smooth F1 Score Surrogate Loss for Multilabel Classification. *arXiv:2108.10566*.
 
     Examples
     --------
-    ```python
-    # create combined loss with equal weighting
-    loss_fn = combined_loss(weight_f1=0.5, epsilon=1e-6, alpha=0.25, gamma=2.0)
+    .. code-block:: python
 
-    y_true = tf.constant([[1, 0, 1]], dtype=tf.float32)
-    y_pred = tf.constant([[0.9, 0.2, 0.7]], dtype=tf.float32)
+       import tensorflow as tf
+       loss_fn = combined_loss(weight_f1=0.5, epsilon=1e-6, alpha=0.25, gamma=2.0)
 
-    value = loss_fn(y_true, y_pred)
-    print("Combined loss:", value.numpy())
-    ```
+       y_true = tf.constant([[1, 0, 1]], dtype=tf.float32)
+       y_pred = tf.constant([[0.9, 0.2, 0.7]], dtype=tf.float32)
+
+       value = loss_fn(y_true, y_pred)
+       print("Combined loss:", float(value.numpy()))
     """
     # Validate hyper-parameters
     if not (0.0 <= weight_f1 <= 1.0):
@@ -415,3 +417,24 @@ def combined_loss(
                 + (1.0 - weight_f1) * focal_fn(y_true, y_pred))
 
     return loss
+
+def alpha_balanced(left, right, matches, mismatch_share:float=1.0) -> float:
+    """
+    Compute α so that α*N_pos = (1-α)*N_neg.
+
+    Parameters
+    ----------
+    left, right : pandas.DataFrame
+    matches     : pandas.DataFrame
+
+    Returns
+    -------
+    float
+        α in [0,1] for focal loss (positive-class weight).
+    """
+    N_pos   = len(matches)
+    N_total = len(left) * len(right)
+    if N_total <= 0:
+        raise ValueError("Total number of pairs is zero.")
+    N_neg = (N_total - N_pos) * mismatch_share
+    return N_neg / N_total
