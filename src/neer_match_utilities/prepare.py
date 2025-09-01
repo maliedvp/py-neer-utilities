@@ -79,13 +79,13 @@ class Prepare(SuperClass):
         """
         Removes stop words and non-alphabetic tokens from text.
 
-        Attributes:
-        -----------
+        Parameters
+        ----------
         text : str
             The input text to process.
 
-        Returns:
-        --------
+        Returns
+        -------
         str
             A space-separated string of unique lemmas after tokenization, lemmatization,
             and duplicate removal.
@@ -582,65 +582,68 @@ def synth_mismatches(
     id_right: Optional[str] = None,
 ) -> pd.DataFrame:
     """
-    Generates synthetic mismatches for a share of observations in `right`. Returns:
-      - All original rows from `right` (unchanged),
-      - Plus new synthetic mismatches (with new UUID4 IDs if id_right is specified), for a random subset
-        of original rows of size = floor(sample_share * len(right)).
-        Drops any synthetic row whose data‐portion duplicates an original `right` row
-        or duplicates another synthetic row.
+    Generate synthetic mismatches for a subset of rows in ``right``.
 
-    STRING‐columns in `columns_change`:
-      - require str_similarity = normalized_similarity(orig, candidate) within [min_str_sim, max_str_sim].
-      - if no candidate qualifies, perturb orig until similarity is in that range.
-
-    NUMERIC‐columns in `columns_change`:
-      - require percentage difference │orig - candidate│/│orig│ within [min_pct_diff, max_pct_diff].
-        (If orig == 0, any candidate ≠ 0 counts as pct_diff = 1.0.)
-      - if no candidate qualifies, perturb orig until percentage difference is in that range,
-        by taking orig * (1 ± min_pct_diff) or (1 ± max_pct_diff).
-
-    keep_missing: if True, any NaN or "" in the original `right` row’s columns_change is preserved (no change).
-    nan_share/empty_share: after generating all synthetics and deduplicating,
-      inject NaN or "" into columns_change at the given probabilities.
+    The output contains all original rows plus additional synthetic rows created by
+    modifying selected columns. Synthetic rows are deduplicated against the original
+    data and against each other.
 
     Parameters
     ----------
-    right : pd.DataFrame
-        The DataFrame containing the “true” observations.
-    id_right : str or None
-        Column name of the unique ID in `right`. If None, no ID column is created for synthetic rows.
+    right : pandas.DataFrame
+        The DataFrame containing the original (true) observations.
     columns_fix : list of str
-        Columns whose values remain unchanged (copied directly from the original row).
+        Column names whose values remain unchanged (copied from the original row).
     columns_change : list of str
-        Columns whose values are modified to create mismatches.
+        Column names whose values are modified to create mismatches.
     str_metric : str
-        Name of the string‐similarity metric (key in available_similarities()).
-    str_similarity_range : tuple (min_str_sim, max_str_sim)
-        Range of allowed normalized_similarity (0–1). Candidate strings must satisfy
-        min_str_sim ≤ similarity(orig, candidate) ≤ max_str_sim.
-    pct_diff_range : tuple (min_pct_diff, max_pct_diff)
-        For numeric columns: percentage difference │orig - candidate│/│orig│ must lie in [min_pct_diff, max_pct_diff].
-        (pct_diff_range values are between 0.0 and 1.0.)
+        Name of the string-similarity metric (key in ``available_similarities()``).
+    str_similarity_range : tuple of (float, float)
+        Allowed range ``(min_str_sim, max_str_sim)`` for normalized string similarity
+        of STRING columns in ``columns_change``. Candidates must satisfy
+        ``min_str_sim <= similarity(orig, candidate) <= max_str_sim``.
+    pct_diff_range : tuple of (float, float)
+        Allowed range ``(min_pct_diff, max_pct_diff)`` for percentage difference of
+        NUMERIC columns in ``columns_change``: ``abs(orig - candidate) / abs(orig)``.
+        If ``orig == 0``, any ``candidate != 0`` is treated as percentage difference 1.0.
     n_cols : int
-        How many of the columns_change to modify per synthetic row. If n_cols < len(columns_change),
-        pick that many at random; if n_cols > len(columns_change), warn and modify all.
-    n_mismatches : int
-        How many synthetic mismatches to generate per each selected original `right` row.
-    keep_missing : bool
-        If True, any NaN or "" in the original row’s columns_change is preserved (no change).
-    nan_share : float in [0,1]
-        After deduplication, each synthetic cell in columns_change has probability nan_share → NaN.
-    empty_share : float in [0,1]
-        After deduplication, each synthetic cell in columns_change has probability empty_share → "".
-        (Applied after nan_share.)
-    sample_share : float in [0,1], default=1.0
-        Proportion of original `right` rows to select at random for synthetics.
-        If 1.0, all rows. If 0.5, floor(0.5 * n_rows) are chosen.
+        Number of columns from ``columns_change`` to modify per synthetic row.
+        If ``n_cols < len(columns_change)``, pick that many at random. If
+        ``n_cols > len(columns_change)``, all columns in ``columns_change`` are modified.
+    n_mismatches : int, default=1
+        Number of synthetic mismatches to generate per selected original row.
+    keep_missing : bool, default=True
+        If True, preserve ``NaN`` or empty-string values in ``columns_change`` of the
+        original row (no change applied to those cells).
+    nan_share : float, default=0.0
+        After deduplication, probability to inject ``NaN`` into each synthetic cell of
+        ``columns_change``.
+    empty_share : float, default=0.0
+        After deduplication, probability to inject ``""`` into each synthetic cell of
+        ``columns_change``. Applied after ``nan_share``.
+    sample_share : float, default=1.0
+        Proportion in ``[0, 1]`` of original rows in ``right`` to select at random
+        for synthetic generation. For example, ``0.5`` selects ``floor(0.5 * n_rows)``.
+    id_right : str or None, default=None
+        Name of a unique-ID column in ``right``. If provided, synthetic rows receive
+        new UUID4 IDs in this column. If None, no ID column is created or modified.
+
 
     Returns
     -------
-    pd.DataFrame
-        Expanded DataFrame with original + synthetic rows.
+    pandas.DataFrame
+        Expanded DataFrame with the original rows plus the synthetic mismatch rows.
+
+    Notes
+    -----
+    - STRING columns in ``columns_change`` must meet the configured string-similarity
+      range. If no candidate qualifies, the original string is perturbed until the
+      similarity lies within the requested bounds.
+    - NUMERIC columns in ``columns_change`` must meet the configured percentage
+      difference range. If no candidate qualifies, the value is perturbed toward
+      the boundary (e.g., ``orig * (1 ± min_pct_diff)`` or ``orig * (1 ± max_pct_diff)``).
+    - After generating synthetics, any synthetic row whose modified data portion
+      exactly matches an original row (or another synthetic row) is dropped.
     """
 
     # Validate shares and ranges
