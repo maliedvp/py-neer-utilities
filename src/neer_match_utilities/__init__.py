@@ -1,5 +1,5 @@
 # Define the package version
-__version__ = "1.0.16-beta"
+__version__ = "1.0.17-beta"
 
 
 # Import public classes and functions
@@ -9,3 +9,4 @@ from .prepare import Prepare
 from .training import Training
 from .split import split_test_train, SplitError
 from .model import Model
+from .custom_similarities import CustomSimilarities
