@@ -302,6 +302,9 @@ def soft_f1_loss(epsilon: float = 1e-7):
         y_true = tf.cast(y_true, tf.float32)
         y_pred = tf.cast(y_pred, tf.float32)
 
+        # Clip predictions for numerical stability
+        y_pred = tf.clip_by_value(y_pred, epsilon, 1.0 - epsilon)
+
         # Soft counts
         tp = tf.reduce_sum(y_pred * y_true)
         fp = tf.reduce_sum(y_pred * (1 - y_true))
