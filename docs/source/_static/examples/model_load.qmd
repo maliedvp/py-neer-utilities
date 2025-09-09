@@ -14,11 +14,16 @@ import pandas as pd
 from neer_match_utilities.model import Model
 from neer_match_utilities.prepare import Prepare, similarity_map_to_dict
 from pathlib import Path
+from neer_match_utilities.custom_similarities import CustomSimilarities
 
 # Load files
 
 left = pd.read_csv('left.csv')
 right = pd.read_csv('right.csv')
+
+# Load custom similarity functions
+
+CustomSimilarities()
 
 # Load model
 
@@ -58,7 +63,7 @@ Now we can make suggestions:
 # Make suggestions for the first observation in left
 
 suggestions = loaded_model.suggest(
-    left[:1], 
+    left[:2], 
     right, 
     count=10, 
     verbose=0
@@ -70,11 +75,9 @@ suggestions
 Based on this output, we can assess whether the suggestion is correct.
 
 ```{python}
-left.iloc[0]
+left.iloc[1]
 ```
 
 ```{python}
-right.iloc[
-    suggestions.loc[0, 'right']
-]
+right.iloc[1]
 ```

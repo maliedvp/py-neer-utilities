@@ -372,6 +372,13 @@ are outcommented in the example below.
 
 ``` python
 from neer_match.similarity_map import SimilarityMap
+from neer_match_utilities.custom_similarities import CustomSimilarities
+
+# Load custom similarities dedicated to missing values from the utilities package
+
+CustomSimilarities()
+
+# Define similarity_map
 
 similarity_map = {
     "company_name" : [
@@ -387,35 +394,39 @@ similarity_map = {
     "city" : [
         "levenshtein",
         "jaro_winkler",
-        # "notmissing"
+        "notmissing",
     ],
     "industry" : [
         "levenshtein",
         "jaro_winkler",
-        # "notmissing"
+        "notmissing",
     ],
     "purpose" : [
         "levenshtein",
         "jaro_winkler",
-        # "notmissing",
         "token_sort_ratio",
         "token_set_ratio",
         "partial_token_set_ratio",
         "partial_token_sort_ratio",
+        "notmissing",
     ],
     "bs_text" : [
         "levenshtein",
         "jaro_winkler",
-        # "notmissing",
         "token_sort_ratio",
         "token_set_ratio",
         "partial_token_set_ratio",
         "partial_token_sort_ratio",
+        "notmissing",
     ],
     "found_year" : [
-        # "notzero",
-        "discrete"
+        "discrete",
+        "notzero"
     ],
+    "found_date_modified" : [
+        "discrete",
+        "notmissing",
+    ]
 }
 
 smap = SimilarityMap(similarity_map)
@@ -472,13 +483,13 @@ left.head()
     }
 </style>
 
-|  | company_id | company_name | city | industry | purpose | bs_text | found_year |
-|----|----|----|----|----|----|----|----|
-| 0 | 008fbe2454 | BETRAG IN RÜCKZAHLBAR VERSTÄRKTE | RÜCKZAHLBAR | ELEKTRISCHE STRASSENBAHNEN, KLEIN- UND PFERDEB... |  | BAHNH FE U GRUNDST CKE BAHNBAU U H LEITUNG MOT... | NaN |
-| 1 | 00a050af9d | ZUCKERFABRIK HARSUM IN HARSUM, PROV. HANNOVER. | HANNOVER | ZUCKER-FABRIKEN UND ZUCKER-RAFFINERIEN. | FABRIKATION VON ROHZUCKER. PRODUKTION 1896/97–... | GRUNDST CK M GEB UDE M MASCHINEN U APPARATE M | 1873.0 |
-| 2 | 00ce66e5a8 | AKTIENGESELLSCHAFT FÜR LINIIR-APPARATE, PATENT... | LEIPZIG | METALL-INDUSTRIE. | ERWERB, AUSBEUTUNG UND SONSTIGE VERWERTUNG DER... | PATENTE BETRIEBSMASCHINEN INVENTAR UTENSIL WAR... | 1899.0 |
-| 3 | 00d74f0e0b | DEUTSCHE RÜCK- U. MITVERSICHERUNGS-GESELLSCHAF... | BERLIN | VERSICHERUNGS-GESELLSCHAFTEN ALLER BRANCHEN. |  | AKTIENWECHSEL M EFFEKTEN M HYP DARLEHEN M INVE... | 1885.0 |
-| 4 | 01077b1f46 | GEBRÜDER ZSCHILLE TUCHFABRIK | GROSSENHAIN | TEXTIL-INDUSTRIE. | ÜBERNAHME UND FORTBETRIEB DER DER FIRMA GEBR. ... |  | 1899.0 |
+|  | company_id | company_name | city | industry | purpose | bs_text | found_year | found_date_modified |
+|----|----|----|----|----|----|----|----|----|
+| 0 | 008fbe2454 | BETRAG IN RÜCKZAHLBAR VERSTÄRKTE | RÜCKZAHLBAR | ELEKTRISCHE STRASSENBAHNEN, KLEIN- UND PFERDEB... |  | BAHNH FE U GRUNDST CKE BAHNBAU U H LEITUNG MOT... | NaN |  |
+| 1 | 00a050af9d | ZUCKERFABRIK HARSUM IN HARSUM, PROV. HANNOVER. | HANNOVER | ZUCKER-FABRIKEN UND ZUCKER-RAFFINERIEN. | FABRIKATION VON ROHZUCKER. PRODUKTION 1896/97–... | GRUNDST CK M GEB UDE M MASCHINEN U APPARATE M | 1873.0 | 1873-08-03 |
+| 2 | 00ce66e5a8 | AKTIENGESELLSCHAFT FÜR LINIIR-APPARATE, PATENT... | LEIPZIG | METALL-INDUSTRIE. | ERWERB, AUSBEUTUNG UND SONSTIGE VERWERTUNG DER... | PATENTE BETRIEBSMASCHINEN INVENTAR UTENSIL WAR... | 1899.0 | 1899-04-28 |
+| 3 | 00d74f0e0b | DEUTSCHE RÜCK- U. MITVERSICHERUNGS-GESELLSCHAF... | BERLIN | VERSICHERUNGS-GESELLSCHAFTEN ALLER BRANCHEN. |  | AKTIENWECHSEL M EFFEKTEN M HYP DARLEHEN M INVE... | 1885.0 | 1885-03-12 |
+| 4 | 01077b1f46 | GEBRÜDER ZSCHILLE TUCHFABRIK | GROSSENHAIN | TEXTIL-INDUSTRIE. | ÜBERNAHME UND FORTBETRIEB DER DER FIRMA GEBR. ... |  | 1899.0 | 1899-09-18 |
 
 </div>
 
@@ -499,13 +510,13 @@ right.head()
     }
 </style>
 
-|  | company_id | company_name | city | industry | purpose | bs_text | found_year |
-|----|----|----|----|----|----|----|----|
-| 0 | 0562ddb063 | DEUTSCHE GAS-SELBSTZÜNDER-A.-G. IN BERLIN, HOL... | BERLIN | GESELLSCHAFTEN FÜR GAS-, PETROLEUM- UND SPIRIT... | HERSTELLUNG U. VERTRIEB VON GASSELBSTZÜNDERN, ... | KASSA BANKGUTH AUSSENST NDE VORSCHUSS ZAHLUNG ... | 1897.0 |
-| 1 | 05cdac2565 | ACT.-GES. FÜR GRUNDBESITZ U. HYPOTHEKENVERKEHR... | BERLIN | BAU-BANKEN, BAU-, TERRAIN- UND IMMOBILIEN-GESE... |  | IMMOBIL I DO II EIG HYPOTH WERTP PFLASTERKAUTI... | 1883.0 |
-| 2 | 0a1e2ae043 | KIELER DOCK GESELLSCHAFT J. W. SEIBEL IN KIEL. | KIEL | SCHIFFSBAU-ANSTALTEN UND DOCK-GESELLSCHAFTEN. | ERWERB U. BETRIEB VON SCHWIMMDOCKS. GEDOCKT WU... | DOCKBAU INVENTAR KASSA BANKGUTH SWENTINE DOCK ... | 1876.0 |
-| 3 | 0bab236590 | HESSISCHE EISENBAHN-AKTIENGESELLSCHAFT IN DARM... | DARMSTADT | ELEKTRISCHE STRASSENBAHNEN, KLEIN- UND PFERDEB... | ERBAUUNG, ERWERBUNG, PACHTUNG U. BETRIEB VON B... |  | 1912.0 |
-| 4 | 1090024903 | \* BEVENSER MASCHINENFABRIK AKT.-GES. IN BEVENSEN | BEVENSEN | MASCHINEN- UND ARMATUREN-FABRIKEN, EISENGIESSE... | ÜBERNAHME U. FORTBETRIEB DES FABRIKATIONS- U. ... |  | 1909.0 |
+|  | company_id | company_name | city | industry | purpose | bs_text | found_year | found_date_modified |
+|----|----|----|----|----|----|----|----|----|
+| 0 | 0562ddb063 | DEUTSCHE GAS-SELBSTZÜNDER-A.-G. IN BERLIN, HOL... | BERLIN | GESELLSCHAFTEN FÜR GAS-, PETROLEUM- UND SPIRIT... | HERSTELLUNG U. VERTRIEB VON GASSELBSTZÜNDERN, ... | KASSA BANKGUTH AUSSENST NDE VORSCHUSS ZAHLUNG ... | 1897.0 | 1897-03-13 |
+| 1 | 05cdac2565 | ACT.-GES. FÜR GRUNDBESITZ U. HYPOTHEKENVERKEHR... | BERLIN | BAU-BANKEN, BAU-, TERRAIN- UND IMMOBILIEN-GESE... |  | IMMOBIL I DO II EIG HYPOTH WERTP PFLASTERKAUTI... | 1883.0 | 1883-06-16 |
+| 2 | 0a1e2ae043 | KIELER DOCK GESELLSCHAFT J. W. SEIBEL IN KIEL. | KIEL | SCHIFFSBAU-ANSTALTEN UND DOCK-GESELLSCHAFTEN. | ERWERB U. BETRIEB VON SCHWIMMDOCKS. GEDOCKT WU... | DOCKBAU INVENTAR KASSA BANKGUTH SWENTINE DOCK ... | 1876.0 | 1876-08-03 |
+| 3 | 0bab236590 | HESSISCHE EISENBAHN-AKTIENGESELLSCHAFT IN DARM... | DARMSTADT | ELEKTRISCHE STRASSENBAHNEN, KLEIN- UND PFERDEB... | ERBAUUNG, ERWERBUNG, PACHTUNG U. BETRIEB VON B... |  | 1912.0 | 1912-04-15 |
+| 4 | 1090024903 | \* BEVENSER MASCHINENFABRIK AKT.-GES. IN BEVENSEN | BEVENSEN | MASCHINEN- UND ARMATUREN-FABRIKEN, EISENGIESSE... | ÜBERNAHME U. FORTBETRIEB DES FABRIKATIONS- U. ... |  | 1909.0 | 1909-04-24 |
 
 </div>
 
@@ -579,9 +590,9 @@ left[left.index==left_index]
     }
 </style>
 
-|  | company_id | company_name | city | industry | purpose | bs_text | found_year |
-|----|----|----|----|----|----|----|----|
-| 4 | 01077b1f46 | GEBRÜDER ZSCHILLE TUCHFABRIK | GROSSENHAIN | TEXTIL-INDUSTRIE. | ÜBERNAHME UND FORTBETRIEB DER DER FIRMA GEBR. ... |  | 1899.0 |
+|  | company_id | company_name | city | industry | purpose | bs_text | found_year | found_date_modified |
+|----|----|----|----|----|----|----|----|----|
+| 4 | 01077b1f46 | GEBRÜDER ZSCHILLE TUCHFABRIK | GROSSENHAIN | TEXTIL-INDUSTRIE. | ÜBERNAHME UND FORTBETRIEB DER DER FIRMA GEBR. ... |  | 1899.0 | 1899-09-18 |
 
 </div>
 
@@ -605,9 +616,9 @@ right[right.index==right_index]
     }
 </style>
 
-|  | company_id | company_name | city | industry | purpose | bs_text | found_year |
-|----|----|----|----|----|----|----|----|
-| 149 | 721ce62f33 | GEBRÜDER ZSCHILLE TUCHFABRIK AKTIENGESELLSCHAF... | GROSSENHAIN | TEXTIL-INDUSTRIE. | ÜBERNAHME UND FORTBETRIEB DER DER FIRMA GEBR. ... | GRUNDST CKE U GEB UDE MASCHINEN U UTENSILIEN F... | 1899.0 |
+|  | company_id | company_name | city | industry | purpose | bs_text | found_year | found_date_modified |
+|----|----|----|----|----|----|----|----|----|
+| 149 | 721ce62f33 | GEBRÜDER ZSCHILLE TUCHFABRIK AKTIENGESELLSCHAF... | GROSSENHAIN | TEXTIL-INDUSTRIE. | ÜBERNAHME UND FORTBETRIEB DER DER FIRMA GEBR. ... | GRUNDST CKE U GEB UDE MASCHINEN U UTENSILIEN F... | 1899.0 | 1899-09-18 |
 
 </div>
 
@@ -650,11 +661,11 @@ matches_train.head()
 
 |     | left | right |
 |-----|------|-------|
-| 0   | 0    | 13    |
-| 1   | 1    | 75    |
-| 2   | 2    | 16    |
-| 3   | 3    | 111   |
-| 4   | 4    | 207   |
+| 0   | 0    | 204   |
+| 1   | 1    | 3     |
+| 2   | 2    | 89    |
+| 3   | 3    | 257   |
+| 4   | 4    | 222   |
 
 </div>
 
@@ -679,13 +690,13 @@ left_train[
     }
 </style>
 
-|  | company_id | company_name | city | industry | purpose | bs_text | found_year | index_original |
-|----|----|----|----|----|----|----|----|----|
-| 0 | 008fbe2454 | BETRAG IN RÜCKZAHLBAR VERSTÄRKTE | RÜCKZAHLBAR | ELEKTRISCHE STRASSENBAHNEN, KLEIN- UND PFERDEB... |  | BAHNH FE U GRUNDST CKE BAHNBAU U H LEITUNG MOT... | NaN | 0 |
-| 1 | 00ce66e5a8 | AKTIENGESELLSCHAFT FÜR LINIIR-APPARATE, PATENT... | LEIPZIG | METALL-INDUSTRIE. | ERWERB, AUSBEUTUNG UND SONSTIGE VERWERTUNG DER... | PATENTE BETRIEBSMASCHINEN INVENTAR UTENSIL WAR... | 1899.0 | 2 |
-| 2 | 00d74f0e0b | DEUTSCHE RÜCK- U. MITVERSICHERUNGS-GESELLSCHAF... | BERLIN | VERSICHERUNGS-GESELLSCHAFTEN ALLER BRANCHEN. |  | AKTIENWECHSEL M EFFEKTEN M HYP DARLEHEN M INVE... | 1885.0 | 3 |
-| 3 | 0118303343 | CUXHAVENER GAS-ACTIEN-GESELLSCHAFT IN CUXHAVEN. | CUXHAVEN | GASANSTALTEN UND GASGLÜHLICHT-FABRIKEN. |  | ANLAGEKONTO M GRUNDST CK M WOANHAUS M KAUTION ... | 1884.0 | 5 |
-| 4 | 022f81a1cb | BERLINER KRONEN-BRAUEREI ACTIENGESELLSCHAFT IN... | BERLIN | BRAUEREIEN. | BIERBRAUEREIBETRIEB. ABSATZ CA. 45 676 HL. KAP... | GRUNDST CKE U MIETSH USER M BRAUEREIGEB UDE M ... | 1891.0 | 7 |
+|  | company_id | company_name | city | industry | purpose | bs_text | found_year | found_date_modified | index_original |
+|----|----|----|----|----|----|----|----|----|----|
+| 0 | 022f81a1cb | BERLINER KRONEN-BRAUEREI ACTIENGESELLSCHAFT IN... | BERLIN | BRAUEREIEN. | BIERBRAUEREIBETRIEB. ABSATZ CA. 45 676 HL. KAP... | GRUNDST CKE U MIETSH USER M BRAUEREIGEB UDE M ... | 1891.0 | 1891-08-03 | 7 |
+| 1 | 029832df3c | KUR-U. WASSERHEILANSTALT ZU GODESBERG AKTIEN-G... | GODESBERG | BÄDER, QUELLEN-PRODUKTE, WASCH-ANSTALTEN ETC. |  | IMMOBILIEN MOBILIEN BANKGUTHABEN KASSA PASSIVA... | 1900.0 | 1900-08-03 | 10 |
+| 2 | 0325788dc4 | METALL ZIEHEFEF AKT.-GES. IN CÖLN-EHRENFELD. | CÖLN-EHRENFELD | METALL-INDUSTRIE. | ERWERB U. WEITERBETRIEB DER VON DER FIRMA EUGEN | WURDE ENTGEGEN DEN GESETZL BESTIMMUNGEN NOCH N... | 1906.0 | 1906-11-29 | 11 |
+| 3 | 03d559a18b | MEMELER KLEINBAHN-AKT.-GES. IN MEMEL. | MEMEL | ELEKTRISCHE STRASSENBAHNEN, KLEIN- UND PFERDEB... | BAU U. DER BETRIEB FOLGENDER KLEINBAHNLINIEN: ... |  | 1904.0 | 1904-04-15 | 15 |
+| 4 | 04d4f1304a | ACTIEN-BIERBRAUEREI MEISSNER FELSENKELLER IN M... | MEISSEN | BRAUEREIEN. | BIERBRAUEREIBETRIEB. SPECIFIKATION DES BESITZT... | IMMOBILIEN MASCHINEN GEF SSE PFERDE WAGEN U GE... | 1885.0 | 1885-08-03 | 16 |
 
 </div>
 
@@ -710,12 +721,12 @@ right_train[
     }
 </style>
 
-|  | company_id | company_name | city | industry | purpose | bs_text | found_year | index_original |
-|----|----|----|----|----|----|----|----|----|
-| 13 | 2eece3dd52 | BETRAG IN RÜCKZAHLBAR VERSTÄRKTE | RÜCKZAHLBAR | ELEKTRISCHE STRASSENBAHNEN, KLEIN- UND PFERDEB... |  | BAHNH FE U GRUNDST CKE BAHNBAU OBERIRDISCHE LE... | NaN | 34 |
-| 16 | 3a50b36f26 | DEUTSCHE RÜCK- U. MITVERSICHERUNGS-GESELLSCHAF... | BERLIN | VERSICHERUNGS-GESELLSCHAFTEN ALLER BRANCHEN. |  | AKTIENWECHSEL M EFFEKTEN M HYPOTHEKENDARLEHEN ... | 1885.0 | 46 |
-| 75 | 6ed393b0a9 | A.-G. F. LINIIR-APPARATE, PATENT GROSSE IN LEI... | LEIPZIG | METALL-INDUSTRIE. | ERWERB, AUSBEUTUNG UND SONST. VERWERTUNG DER V... | PATENTE BETRIEBSMASCHINEN INVENTAR UTENSIL WAR... | 1899.0 | 141 |
-| 111 | 832a174691 | CUXHAVENER GAS-ACTIEN-GESELLSCHAFT IN CUXHAVEN | CUXHAVEN | GAS-GESELLSCHAFTEN. | BETRIEB EINES GASWERKES, SOWIE VERWERTUNG DER ... |  | 1884.0 | 196 |
-| 207 | c2b13c295b | BERLINER KRONEN-BRAUEREI ACTIENGESELLSCHAFT IN... | BERLIN | BRAUEREIEN. | BIERBRAUEREIBETRIEB. BIERABSATZ 1895/96–1897/9... |  | 1891.0 | 417 |
+|  | company_id | company_name | city | industry | purpose | bs_text | found_year | found_date_modified | index_original |
+|----|----|----|----|----|----|----|----|----|----|
+| 3 | 127292ac62 | KUR- U. WASSERHEILANSTALT GODESBERG AKTIEN-GES... | GODESBERG | BÄDER, QUELLEN-PRODUKTE, WASCH-ANSTALTEN ETC. | BETRIEB EINER KUR- U. WASSÉRHEILANSTALT. | IMMOBIL MOBIL BANKGUTH DEPOSITENKASSE KASSA EF... | 1900.0 | 1900-02-28 | 13 |
+| 89 | 7c118c147f | METALL-ZIEHEREI AKT.-GES. IN CÖLN-KHRENFELD. | CÖLN-KHRENFELD | METALL-INDUSTRIE. | ERWERB U. WEITERBETRIEB DER VON DER FIRMA EUGEN | AKTIVA GRUNDST CK GEB UDE MASCH R WERKZEUG FUH... | 1906.0 | 1906-11-29 | 174 |
+| 204 | c2b13c295b | BERLINER KRONEN-BRAUEREI ACTIENGESELLSCHAFT IN... | BERLIN | BRAUEREIEN. | BIERBRAUEREIBETRIEB. BIERABSATZ 1895/96–1897/9... |  | 1891.0 | 1891-08-03 | 417 |
+| 222 | cab76e9bfa | ACTIEN-BIERBRAUEREI MEISSNER FELSENKELLER IN M... | MEISSEN | BRAUEREIEN. | BIERBRAUEREIBETRIEB. SPECIFIKATION DES BESITZT... | IMMOBILIEN MASCHINEN GEF SSE PFERDE WAGEN U GE... | 1885.0 | 1885-08-03 | 450 |
+| 257 | dbe2526e6d | MEMELER KLEINBAHN-AKT.-GES. IN MEMEL. | MEMEL | ELEKTRISCHE STRASSENBAHNEN, KLEIN- UND PFERDEB... | BAU U. DER BETRIEB FOLGENDER KLEINBAHNLINIEN: ... |  | 1904.0 | 1904-04-15 | 520 |
 
 </div>
