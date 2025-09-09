@@ -300,19 +300,21 @@ def soft_f1_loss(epsilon: float = 1e-7):
     """
     def loss(y_true, y_pred):
         y_true = tf.cast(y_true, tf.float32)
-        y_pred = tf.cast(y_pred, tf.float32)
-
-        # Clip predictions for numerical stability
-        y_pred = tf.clip_by_value(y_pred, epsilon, 1.0 - epsilon)
+        y_pred = tf.clip_by_value(tf.cast(y_pred, tf.float32), epsilon, 1.0 - epsilon)
 
         # Soft counts
         tp = tf.reduce_sum(y_pred * y_true)
         fp = tf.reduce_sum(y_pred * (1 - y_true))
         fn = tf.reduce_sum((1 - y_pred) * y_true)
 
-        # Soft F1 calculation
-        soft_f1 = (2 * tp + epsilon) / (2 * tp + fp + fn + epsilon)
-        return 1.0 - soft_f1
+        # Denominator
+        denom = 2 * tp + fp + fn + epsilon
+
+        # Avoid NaNs from 0/0
+        soft_f1 = tf.where(denom > 0, (2 * tp + epsilon) / denom, tf.constant(0.0))
+
+        loss_val = 1.0 - soft_f1
+        return tf.where(tf.math.is_finite(loss_val), loss_val, tf.constant(1.0))
 
     return loss
 
