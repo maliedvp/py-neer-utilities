@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Data Preparation for Training &mdash; Neer Match Utilities 1.0.11-beta documentation</title>
+  <title>Data Preparation for Training &mdash; Neer Match Utilities 1.0.18-beta documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=2adfa69b"></script>
+      <script src="_static/documentation_options.js?v=94af8357"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
@@ -165,6 +165,7 @@
 <li class="toctree-l3"><a class="reference internal" href="training.html#neer_match_utilities.training.Training.performance_statistics_export"><code class="docutils literal notranslate"><span class="pre">Training.performance_statistics_export()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="training.html#neer_match_utilities.training.alpha_balanced"><code class="docutils literal notranslate"><span class="pre">alpha_balanced()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="training.html#neer_match_utilities.training.combined_loss"><code class="docutils literal notranslate"><span class="pre">combined_loss()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="training.html#neer_match_utilities.training.focal_loss"><code class="docutils literal notranslate"><span class="pre">focal_loss()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="training.html#neer_match_utilities.training.soft_f1_loss"><code class="docutils literal notranslate"><span class="pre">soft_f1_loss()</span></code></a></li>
@@ -940,6 +941,13 @@ part of the released version of
 <code class="docutils literal notranslate"><span class="pre">neer_match.similarity_map.available_similarities()</span></code>, which is why they
 are outcommented in the example below.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">neer_match.similarity_map</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimilarityMap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.custom_similarities</span><span class="w"> </span><span class="kn">import</span> <span class="n">CustomSimilarities</span>
+
+<span class="c1"># Load custom similarities dedicated to missing values from the utilities package</span>
+
+<span class="n">CustomSimilarities</span><span class="p">()</span>
+
+<span class="c1"># Define similarity_map</span>
 
 <span class="n">similarity_map</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;company_name&quot;</span> <span class="p">:</span> <span class="p">[</span>
@@ -955,35 +963,39 @@ are outcommented in the example below.</p>
     <span class="s2">&quot;city&quot;</span> <span class="p">:</span> <span class="p">[</span>
         <span class="s2">&quot;levenshtein&quot;</span><span class="p">,</span>
         <span class="s2">&quot;jaro_winkler&quot;</span><span class="p">,</span>
-        <span class="c1"># &quot;notmissing&quot;</span>
+        <span class="s2">&quot;notmissing&quot;</span><span class="p">,</span>
     <span class="p">],</span>
     <span class="s2">&quot;industry&quot;</span> <span class="p">:</span> <span class="p">[</span>
         <span class="s2">&quot;levenshtein&quot;</span><span class="p">,</span>
         <span class="s2">&quot;jaro_winkler&quot;</span><span class="p">,</span>
-        <span class="c1"># &quot;notmissing&quot;</span>
+        <span class="s2">&quot;notmissing&quot;</span><span class="p">,</span>
     <span class="p">],</span>
     <span class="s2">&quot;purpose&quot;</span> <span class="p">:</span> <span class="p">[</span>
         <span class="s2">&quot;levenshtein&quot;</span><span class="p">,</span>
         <span class="s2">&quot;jaro_winkler&quot;</span><span class="p">,</span>
-        <span class="c1"># &quot;notmissing&quot;,</span>
         <span class="s2">&quot;token_sort_ratio&quot;</span><span class="p">,</span>
         <span class="s2">&quot;token_set_ratio&quot;</span><span class="p">,</span>
         <span class="s2">&quot;partial_token_set_ratio&quot;</span><span class="p">,</span>
         <span class="s2">&quot;partial_token_sort_ratio&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;notmissing&quot;</span><span class="p">,</span>
     <span class="p">],</span>
     <span class="s2">&quot;bs_text&quot;</span> <span class="p">:</span> <span class="p">[</span>
         <span class="s2">&quot;levenshtein&quot;</span><span class="p">,</span>
         <span class="s2">&quot;jaro_winkler&quot;</span><span class="p">,</span>
-        <span class="c1"># &quot;notmissing&quot;,</span>
         <span class="s2">&quot;token_sort_ratio&quot;</span><span class="p">,</span>
         <span class="s2">&quot;token_set_ratio&quot;</span><span class="p">,</span>
         <span class="s2">&quot;partial_token_set_ratio&quot;</span><span class="p">,</span>
         <span class="s2">&quot;partial_token_sort_ratio&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;notmissing&quot;</span><span class="p">,</span>
     <span class="p">],</span>
     <span class="s2">&quot;found_year&quot;</span> <span class="p">:</span> <span class="p">[</span>
-        <span class="c1"># &quot;notzero&quot;,</span>
-        <span class="s2">&quot;discrete&quot;</span>
+        <span class="s2">&quot;discrete&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;notzero&quot;</span>
     <span class="p">],</span>
+    <span class="s2">&quot;found_date_modified&quot;</span> <span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;discrete&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;notmissing&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
 <span class="p">}</span>
 
 <span class="n">smap</span> <span class="o">=</span> <span class="n">SimilarityMap</span><span class="p">(</span><span class="n">similarity_map</span><span class="p">)</span>
@@ -1047,6 +1059,7 @@ are applied consistently to both the <em>left</em> and <em>right</em> DataFrames
 <th class="head"><p>purpose</p></th>
 <th class="head"><p>bs_text</p></th>
 <th class="head"><p>found_year</p></th>
+<th class="head"><p>found_date_modified</p></th>
 </tr>
 </thead>
 <tbody>
@@ -1058,6 +1071,7 @@ are applied consistently to both the <em>left</em> and <em>right</em> DataFrames
 <td><p></p></td>
 <td><p>BAHNH FE U GRUNDST CKE BAHNBAU U H LEITUNG MOT…</p></td>
 <td><p>NaN</p></td>
+<td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p>1</p></td>
 <td><p>00a050af9d</p></td>
@@ -1067,6 +1081,7 @@ are applied consistently to both the <em>left</em> and <em>right</em> DataFrames
 <td><p>FABRIKATION VON ROHZUCKER. PRODUKTION 1896/97–…</p></td>
 <td><p>GRUNDST CK M GEB UDE M MASCHINEN U APPARATE M</p></td>
 <td><p>1873.0</p></td>
+<td><p>1873-08-03</p></td>
 </tr>
 <tr class="row-even"><td><p>2</p></td>
 <td><p>00ce66e5a8</p></td>
@@ -1076,6 +1091,7 @@ are applied consistently to both the <em>left</em> and <em>right</em> DataFrames
 <td><p>ERWERB, AUSBEUTUNG UND SONSTIGE VERWERTUNG DER…</p></td>
 <td><p>PATENTE BETRIEBSMASCHINEN INVENTAR UTENSIL WAR…</p></td>
 <td><p>1899.0</p></td>
+<td><p>1899-04-28</p></td>
 </tr>
 <tr class="row-odd"><td><p>3</p></td>
 <td><p>00d74f0e0b</p></td>
@@ -1085,6 +1101,7 @@ are applied consistently to both the <em>left</em> and <em>right</em> DataFrames
 <td><p></p></td>
 <td><p>AKTIENWECHSEL M EFFEKTEN M HYP DARLEHEN M INVE…</p></td>
 <td><p>1885.0</p></td>
+<td><p>1885-03-12</p></td>
 </tr>
 <tr class="row-even"><td><p>4</p></td>
 <td><p>01077b1f46</p></td>
@@ -1094,6 +1111,7 @@ are applied consistently to both the <em>left</em> and <em>right</em> DataFrames
 <td><p>ÜBERNAHME UND FORTBETRIEB DER DER FIRMA GEBR. …</p></td>
 <td><p></p></td>
 <td><p>1899.0</p></td>
+<td><p>1899-09-18</p></td>
 </tr>
 </tbody>
 </table>
@@ -1123,6 +1141,7 @@ are applied consistently to both the <em>left</em> and <em>right</em> DataFrames
 <th class="head"><p>purpose</p></th>
 <th class="head"><p>bs_text</p></th>
 <th class="head"><p>found_year</p></th>
+<th class="head"><p>found_date_modified</p></th>
 </tr>
 </thead>
 <tbody>
@@ -1134,6 +1153,7 @@ are applied consistently to both the <em>left</em> and <em>right</em> DataFrames
 <td><p>HERSTELLUNG U. VERTRIEB VON GASSELBSTZÜNDERN, …</p></td>
 <td><p>KASSA BANKGUTH AUSSENST NDE VORSCHUSS ZAHLUNG …</p></td>
 <td><p>1897.0</p></td>
+<td><p>1897-03-13</p></td>
 </tr>
 <tr class="row-odd"><td><p>1</p></td>
 <td><p>05cdac2565</p></td>
@@ -1143,6 +1163,7 @@ are applied consistently to both the <em>left</em> and <em>right</em> DataFrames
 <td><p></p></td>
 <td><p>IMMOBIL I DO II EIG HYPOTH WERTP PFLASTERKAUTI…</p></td>
 <td><p>1883.0</p></td>
+<td><p>1883-06-16</p></td>
 </tr>
 <tr class="row-even"><td><p>2</p></td>
 <td><p>0a1e2ae043</p></td>
@@ -1152,6 +1173,7 @@ are applied consistently to both the <em>left</em> and <em>right</em> DataFrames
 <td><p>ERWERB U. BETRIEB VON SCHWIMMDOCKS. GEDOCKT WU…</p></td>
 <td><p>DOCKBAU INVENTAR KASSA BANKGUTH SWENTINE DOCK …</p></td>
 <td><p>1876.0</p></td>
+<td><p>1876-08-03</p></td>
 </tr>
 <tr class="row-odd"><td><p>3</p></td>
 <td><p>0bab236590</p></td>
@@ -1161,6 +1183,7 @@ are applied consistently to both the <em>left</em> and <em>right</em> DataFrames
 <td><p>ERBAUUNG, ERWERBUNG, PACHTUNG U. BETRIEB VON B…</p></td>
 <td><p></p></td>
 <td><p>1912.0</p></td>
+<td><p>1912-04-15</p></td>
 </tr>
 <tr class="row-even"><td><p>4</p></td>
 <td><p>1090024903</p></td>
@@ -1170,6 +1193,7 @@ are applied consistently to both the <em>left</em> and <em>right</em> DataFrames
 <td><p>ÜBERNAHME U. FORTBETRIEB DES FABRIKATIONS- U. …</p></td>
 <td><p></p></td>
 <td><p>1909.0</p></td>
+<td><p>1909-04-24</p></td>
 </tr>
 </tbody>
 </table>
@@ -1271,6 +1295,7 @@ can run:</p>
 <th class="head"><p>purpose</p></th>
 <th class="head"><p>bs_text</p></th>
 <th class="head"><p>found_year</p></th>
+<th class="head"><p>found_date_modified</p></th>
 </tr>
 </thead>
 <tbody>
@@ -1282,6 +1307,7 @@ can run:</p>
 <td><p>ÜBERNAHME UND FORTBETRIEB DER DER FIRMA GEBR. …</p></td>
 <td><p></p></td>
 <td><p>1899.0</p></td>
+<td><p>1899-09-18</p></td>
 </tr>
 </tbody>
 </table>
@@ -1313,6 +1339,7 @@ can run:</p>
 <th class="head"><p>purpose</p></th>
 <th class="head"><p>bs_text</p></th>
 <th class="head"><p>found_year</p></th>
+<th class="head"><p>found_date_modified</p></th>
 </tr>
 </thead>
 <tbody>
@@ -1324,6 +1351,7 @@ can run:</p>
 <td><p>ÜBERNAHME UND FORTBETRIEB DER DER FIRMA GEBR. …</p></td>
 <td><p>GRUNDST CKE U GEB UDE MASCHINEN U UTENSILIEN F…</p></td>
 <td><p>1899.0</p></td>
+<td><p>1899-09-18</p></td>
 </tr>
 </tbody>
 </table>
@@ -1372,23 +1400,23 @@ Note that since validation is not implemented yet, you can set
 <tbody>
 <tr class="row-even"><td><p>0</p></td>
 <td><p>0</p></td>
-<td><p>13</p></td>
+<td><p>204</p></td>
 </tr>
 <tr class="row-odd"><td><p>1</p></td>
 <td><p>1</p></td>
-<td><p>75</p></td>
+<td><p>3</p></td>
 </tr>
 <tr class="row-even"><td><p>2</p></td>
 <td><p>2</p></td>
-<td><p>16</p></td>
+<td><p>89</p></td>
 </tr>
 <tr class="row-odd"><td><p>3</p></td>
 <td><p>3</p></td>
-<td><p>111</p></td>
+<td><p>257</p></td>
 </tr>
 <tr class="row-even"><td><p>4</p></td>
 <td><p>4</p></td>
-<td><p>207</p></td>
+<td><p>222</p></td>
 </tr>
 </tbody>
 </table>
@@ -1422,51 +1450,12 @@ Note that since validation is not implemented yet, you can set
 <th class="head"><p>purpose</p></th>
 <th class="head"><p>bs_text</p></th>
 <th class="head"><p>found_year</p></th>
+<th class="head"><p>found_date_modified</p></th>
 <th class="head"><p>index_original</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p>0</p></td>
-<td><p>008fbe2454</p></td>
-<td><p>BETRAG IN RÜCKZAHLBAR VERSTÄRKTE</p></td>
-<td><p>RÜCKZAHLBAR</p></td>
-<td><p>ELEKTRISCHE STRASSENBAHNEN, KLEIN- UND PFERDEB…</p></td>
-<td><p></p></td>
-<td><p>BAHNH FE U GRUNDST CKE BAHNBAU U H LEITUNG MOT…</p></td>
-<td><p>NaN</p></td>
-<td><p>0</p></td>
-</tr>
-<tr class="row-odd"><td><p>1</p></td>
-<td><p>00ce66e5a8</p></td>
-<td><p>AKTIENGESELLSCHAFT FÜR LINIIR-APPARATE, PATENT…</p></td>
-<td><p>LEIPZIG</p></td>
-<td><p>METALL-INDUSTRIE.</p></td>
-<td><p>ERWERB, AUSBEUTUNG UND SONSTIGE VERWERTUNG DER…</p></td>
-<td><p>PATENTE BETRIEBSMASCHINEN INVENTAR UTENSIL WAR…</p></td>
-<td><p>1899.0</p></td>
-<td><p>2</p></td>
-</tr>
-<tr class="row-even"><td><p>2</p></td>
-<td><p>00d74f0e0b</p></td>
-<td><p>DEUTSCHE RÜCK- U. MITVERSICHERUNGS-GESELLSCHAF…</p></td>
-<td><p>BERLIN</p></td>
-<td><p>VERSICHERUNGS-GESELLSCHAFTEN ALLER BRANCHEN.</p></td>
-<td><p></p></td>
-<td><p>AKTIENWECHSEL M EFFEKTEN M HYP DARLEHEN M INVE…</p></td>
-<td><p>1885.0</p></td>
-<td><p>3</p></td>
-</tr>
-<tr class="row-odd"><td><p>3</p></td>
-<td><p>0118303343</p></td>
-<td><p>CUXHAVENER GAS-ACTIEN-GESELLSCHAFT IN CUXHAVEN.</p></td>
-<td><p>CUXHAVEN</p></td>
-<td><p>GASANSTALTEN UND GASGLÜHLICHT-FABRIKEN.</p></td>
-<td><p></p></td>
-<td><p>ANLAGEKONTO M GRUNDST CK M WOANHAUS M KAUTION …</p></td>
-<td><p>1884.0</p></td>
-<td><p>5</p></td>
-</tr>
-<tr class="row-even"><td><p>4</p></td>
 <td><p>022f81a1cb</p></td>
 <td><p>BERLINER KRONEN-BRAUEREI ACTIENGESELLSCHAFT IN…</p></td>
 <td><p>BERLIN</p></td>
@@ -1474,7 +1463,52 @@ Note that since validation is not implemented yet, you can set
 <td><p>BIERBRAUEREIBETRIEB. ABSATZ CA. 45 676 HL. KAP…</p></td>
 <td><p>GRUNDST CKE U MIETSH USER M BRAUEREIGEB UDE M …</p></td>
 <td><p>1891.0</p></td>
+<td><p>1891-08-03</p></td>
 <td><p>7</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>029832df3c</p></td>
+<td><p>KUR-U. WASSERHEILANSTALT ZU GODESBERG AKTIEN-G…</p></td>
+<td><p>GODESBERG</p></td>
+<td><p>BÄDER, QUELLEN-PRODUKTE, WASCH-ANSTALTEN ETC.</p></td>
+<td><p></p></td>
+<td><p>IMMOBILIEN MOBILIEN BANKGUTHABEN KASSA PASSIVA…</p></td>
+<td><p>1900.0</p></td>
+<td><p>1900-08-03</p></td>
+<td><p>10</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>0325788dc4</p></td>
+<td><p>METALL ZIEHEFEF AKT.-GES. IN CÖLN-EHRENFELD.</p></td>
+<td><p>CÖLN-EHRENFELD</p></td>
+<td><p>METALL-INDUSTRIE.</p></td>
+<td><p>ERWERB U. WEITERBETRIEB DER VON DER FIRMA EUGEN</p></td>
+<td><p>WURDE ENTGEGEN DEN GESETZL BESTIMMUNGEN NOCH N…</p></td>
+<td><p>1906.0</p></td>
+<td><p>1906-11-29</p></td>
+<td><p>11</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>03d559a18b</p></td>
+<td><p>MEMELER KLEINBAHN-AKT.-GES. IN MEMEL.</p></td>
+<td><p>MEMEL</p></td>
+<td><p>ELEKTRISCHE STRASSENBAHNEN, KLEIN- UND PFERDEB…</p></td>
+<td><p>BAU U. DER BETRIEB FOLGENDER KLEINBAHNLINIEN: …</p></td>
+<td><p></p></td>
+<td><p>1904.0</p></td>
+<td><p>1904-04-15</p></td>
+<td><p>15</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>04d4f1304a</p></td>
+<td><p>ACTIEN-BIERBRAUEREI MEISSNER FELSENKELLER IN M…</p></td>
+<td><p>MEISSEN</p></td>
+<td><p>BRAUEREIEN.</p></td>
+<td><p>BIERBRAUEREIBETRIEB. SPECIFIKATION DES BESITZT…</p></td>
+<td><p>IMMOBILIEN MASCHINEN GEF SSE PFERDE WAGEN U GE…</p></td>
+<td><p>1885.0</p></td>
+<td><p>1885-08-03</p></td>
+<td><p>16</p></td>
 </tr>
 </tbody>
 </table>
@@ -1508,51 +1542,34 @@ Note that since validation is not implemented yet, you can set
 <th class="head"><p>purpose</p></th>
 <th class="head"><p>bs_text</p></th>
 <th class="head"><p>found_year</p></th>
+<th class="head"><p>found_date_modified</p></th>
 <th class="head"><p>index_original</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>13</p></td>
-<td><p>2eece3dd52</p></td>
-<td><p>BETRAG IN RÜCKZAHLBAR VERSTÄRKTE</p></td>
-<td><p>RÜCKZAHLBAR</p></td>
-<td><p>ELEKTRISCHE STRASSENBAHNEN, KLEIN- UND PFERDEB…</p></td>
-<td><p></p></td>
-<td><p>BAHNH FE U GRUNDST CKE BAHNBAU OBERIRDISCHE LE…</p></td>
-<td><p>NaN</p></td>
-<td><p>34</p></td>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>127292ac62</p></td>
+<td><p>KUR- U. WASSERHEILANSTALT GODESBERG AKTIEN-GES…</p></td>
+<td><p>GODESBERG</p></td>
+<td><p>BÄDER, QUELLEN-PRODUKTE, WASCH-ANSTALTEN ETC.</p></td>
+<td><p>BETRIEB EINER KUR- U. WASSÉRHEILANSTALT.</p></td>
+<td><p>IMMOBIL MOBIL BANKGUTH DEPOSITENKASSE KASSA EF…</p></td>
+<td><p>1900.0</p></td>
+<td><p>1900-02-28</p></td>
+<td><p>13</p></td>
 </tr>
-<tr class="row-odd"><td><p>16</p></td>
-<td><p>3a50b36f26</p></td>
-<td><p>DEUTSCHE RÜCK- U. MITVERSICHERUNGS-GESELLSCHAF…</p></td>
-<td><p>BERLIN</p></td>
-<td><p>VERSICHERUNGS-GESELLSCHAFTEN ALLER BRANCHEN.</p></td>
-<td><p></p></td>
-<td><p>AKTIENWECHSEL M EFFEKTEN M HYPOTHEKENDARLEHEN …</p></td>
-<td><p>1885.0</p></td>
-<td><p>46</p></td>
-</tr>
-<tr class="row-even"><td><p>75</p></td>
-<td><p>6ed393b0a9</p></td>
-<td><p>A.-G. F. LINIIR-APPARATE, PATENT GROSSE IN LEI…</p></td>
-<td><p>LEIPZIG</p></td>
+<tr class="row-odd"><td><p>89</p></td>
+<td><p>7c118c147f</p></td>
+<td><p>METALL-ZIEHEREI AKT.-GES. IN CÖLN-KHRENFELD.</p></td>
+<td><p>CÖLN-KHRENFELD</p></td>
 <td><p>METALL-INDUSTRIE.</p></td>
-<td><p>ERWERB, AUSBEUTUNG UND SONST. VERWERTUNG DER V…</p></td>
-<td><p>PATENTE BETRIEBSMASCHINEN INVENTAR UTENSIL WAR…</p></td>
-<td><p>1899.0</p></td>
-<td><p>141</p></td>
+<td><p>ERWERB U. WEITERBETRIEB DER VON DER FIRMA EUGEN</p></td>
+<td><p>AKTIVA GRUNDST CK GEB UDE MASCH R WERKZEUG FUH…</p></td>
+<td><p>1906.0</p></td>
+<td><p>1906-11-29</p></td>
+<td><p>174</p></td>
 </tr>
-<tr class="row-odd"><td><p>111</p></td>
-<td><p>832a174691</p></td>
-<td><p>CUXHAVENER GAS-ACTIEN-GESELLSCHAFT IN CUXHAVEN</p></td>
-<td><p>CUXHAVEN</p></td>
-<td><p>GAS-GESELLSCHAFTEN.</p></td>
-<td><p>BETRIEB EINES GASWERKES, SOWIE VERWERTUNG DER …</p></td>
-<td><p></p></td>
-<td><p>1884.0</p></td>
-<td><p>196</p></td>
-</tr>
-<tr class="row-even"><td><p>207</p></td>
+<tr class="row-even"><td><p>204</p></td>
 <td><p>c2b13c295b</p></td>
 <td><p>BERLINER KRONEN-BRAUEREI ACTIENGESELLSCHAFT IN…</p></td>
 <td><p>BERLIN</p></td>
@@ -1560,7 +1577,30 @@ Note that since validation is not implemented yet, you can set
 <td><p>BIERBRAUEREIBETRIEB. BIERABSATZ 1895/96–1897/9…</p></td>
 <td><p></p></td>
 <td><p>1891.0</p></td>
+<td><p>1891-08-03</p></td>
 <td><p>417</p></td>
+</tr>
+<tr class="row-odd"><td><p>222</p></td>
+<td><p>cab76e9bfa</p></td>
+<td><p>ACTIEN-BIERBRAUEREI MEISSNER FELSENKELLER IN M…</p></td>
+<td><p>MEISSEN</p></td>
+<td><p>BRAUEREIEN.</p></td>
+<td><p>BIERBRAUEREIBETRIEB. SPECIFIKATION DES BESITZT…</p></td>
+<td><p>IMMOBILIEN MASCHINEN GEF SSE PFERDE WAGEN U GE…</p></td>
+<td><p>1885.0</p></td>
+<td><p>1885-08-03</p></td>
+<td><p>450</p></td>
+</tr>
+<tr class="row-even"><td><p>257</p></td>
+<td><p>dbe2526e6d</p></td>
+<td><p>MEMELER KLEINBAHN-AKT.-GES. IN MEMEL.</p></td>
+<td><p>MEMEL</p></td>
+<td><p>ELEKTRISCHE STRASSENBAHNEN, KLEIN- UND PFERDEB…</p></td>
+<td><p>BAU U. DER BETRIEB FOLGENDER KLEINBAHNLINIEN: …</p></td>
+<td><p></p></td>
+<td><p>1904.0</p></td>
+<td><p>1904-04-15</p></td>
+<td><p>520</p></td>
 </tr>
 </tbody>
 </table>

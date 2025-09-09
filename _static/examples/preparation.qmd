@@ -167,6 +167,13 @@ Set up the `similarity_map`. Note that the columns as `city`, `industry`, and `p
 
 ```{python}
 from neer_match.similarity_map import SimilarityMap
+from neer_match_utilities.custom_similarities import CustomSimilarities
+
+# Load custom similarities dedicated to missing values from the utilities package
+
+CustomSimilarities()
+
+# Define similarity_map
 
 similarity_map = {
     "company_name" : [
@@ -182,35 +189,39 @@ similarity_map = {
     "city" : [
         "levenshtein",
         "jaro_winkler",
-        # "notmissing"
+        "notmissing",
     ],
     "industry" : [
         "levenshtein",
         "jaro_winkler",
-        # "notmissing"
+        "notmissing",
     ],
     "purpose" : [
         "levenshtein",
         "jaro_winkler",
-        # "notmissing",
         "token_sort_ratio",
         "token_set_ratio",
         "partial_token_set_ratio",
         "partial_token_sort_ratio",
+        "notmissing",
     ],
     "bs_text" : [
         "levenshtein",
         "jaro_winkler",
-        # "notmissing",
         "token_sort_ratio",
         "token_set_ratio",
         "partial_token_set_ratio",
         "partial_token_sort_ratio",
+        "notmissing",
     ],
     "found_year" : [
-        # "notzero",
-        "discrete"
+        "discrete",
+        "notzero"
     ],
+    "found_date_modified" : [
+        "discrete",
+        "notmissing",
+    ]
 }
 
 smap = SimilarityMap(similarity_map)

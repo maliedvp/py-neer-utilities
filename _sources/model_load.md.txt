@@ -14,11 +14,16 @@ import pandas as pd
 from neer_match_utilities.model import Model
 from neer_match_utilities.prepare import Prepare, similarity_map_to_dict
 from pathlib import Path
+from neer_match_utilities.custom_similarities import CustomSimilarities
 
 # Load files
 
 left = pd.read_csv('left.csv')
 right = pd.read_csv('right.csv')
+
+# Load custom similarity functions
+
+CustomSimilarities()
 
 # Load model
 
@@ -60,7 +65,7 @@ Now we can make suggestions:
 # Make suggestions for the first observation in left
 
 suggestions = loaded_model.suggest(
-    left[:1], 
+    left[:2], 
     right, 
     count=10, 
     verbose=0
@@ -82,47 +87,57 @@ suggestions
     }
 </style>
 
-|     | left | right | prediction |
-|-----|------|-------|------------|
-| 0   | 0    | 0     | 0.473703   |
-| 411 | 0    | 411   | 0.381956   |
-| 675 | 0    | 675   | 0.362005   |
-| 256 | 0    | 256   | 0.347396   |
-| 497 | 0    | 497   | 0.345034   |
-| 439 | 0    | 439   | 0.341827   |
-| 132 | 0    | 132   | 0.323066   |
-| 529 | 0    | 529   | 0.322083   |
-| 181 | 0    | 181   | 0.319886   |
-| 633 | 0    | 633   | 0.319725   |
+|      | left | right | prediction |
+|------|------|-------|------------|
+| 0    | 0    | 0     | 0.059657   |
+| 263  | 0    | 263   | 0.002876   |
+| 530  | 0    | 530   | 0.001645   |
+| 602  | 0    | 602   | 0.000593   |
+| 336  | 0    | 336   | 0.000448   |
+| 633  | 0    | 633   | 0.000424   |
+| 381  | 0    | 381   | 0.000343   |
+| 436  | 0    | 436   | 0.000311   |
+| 169  | 0    | 169   | 0.000300   |
+| 517  | 0    | 517   | 0.000240   |
+| 693  | 1    | 1     | 0.999256   |
+| 861  | 1    | 169   | 0.313228   |
+| 971  | 1    | 279   | 0.027856   |
+| 937  | 1    | 245   | 0.024864   |
+| 1198 | 1    | 506   | 0.015210   |
+| 936  | 1    | 244   | 0.006719   |
+| 899  | 1    | 207   | 0.003680   |
+| 1030 | 1    | 338   | 0.003023   |
+| 738  | 1    | 46    | 0.002617   |
+| 1299 | 1    | 607   | 0.002036   |
 
 </div>
 
 Based on this output, we can assess whether the suggestion is correct.
 
 ``` python
-left.iloc[0]
+left.iloc[1]
 ```
 
-    company_id                                             1e87fc75b4
-    company_name    GLÜCKAUF-, ACTIEN-GESELLSCHAFT FÜR BRAUNKOHLEN...
-    city                                                    LICHTENAU
-    industry                     BERGWERKE, HÜTTEN- UND SALINENWESEN.
-    purpose         ABBAU VON BRAUNKOHLENLAGERN U. BRIKETTFABRIKAT...
-    bs_text         GRUNDST CKE M GRUBENWERT M SCHACHTANLAGEN M GE...
-    found_year                                                 1871.0
-    Name: 0, dtype: object
+    company_id                                                    810c9c3435
+    company_name             DEUTSCH-OESTERREICHISCHE MANNESMANNRÖHREN-WERKE
+    city                                                              BERLIN
+    industry                            BERGWERKE, HÜTTEN- UND SALINENWESEN.
+    purpose                BETRIEB DER MANNESMANNRÖHREN-WALZWERKE IN REMS...
+    bs_text                GENERALDIREKTION D SSELDORF MOBILIAR U UTENSIL...
+    found_year                                                        1890.0
+    found_date_modified                                           1890-07-16
+    Name: 1, dtype: object
 
 ``` python
-right.iloc[
-    suggestions.loc[0, 'right']
-]
+right.iloc[1]
 ```
 
-    company_id                                             0008e07878
-    company_name    „GLÜCKAUF-', ACT.-GES. FÜR BRAUNKOHLEN-VERWERT...
-    city                                                             
-    industry                                                NACHTRAG.
-    purpose         ABBAU VON BRAUNKOHLENLAGERN U. BRIKETTFABRIKAT...
-    bs_text         GRUNDST CKE M GRUBENWERT M SCHACHTANLAGEN M GE...
-    found_year                                                 1871.0
-    Name: 0, dtype: object
+    company_id                                                    8bf51ba8a0
+    company_name            DEUTSCH-OESTERREICHISCHE MANNESMANNRÖHREN-WERKE.
+    city                                                              BERLIN
+    industry                            BERGWERKE, HÜTTEN- UND SALINENWESEN.
+    purpose                BETRIEB DER MANNESMANNRÖHREN-WALZWERKE IN REMS...
+    bs_text                GENERALDIREKTION GRUNDST CKSKONTO M MOBILIEN U...
+    found_year                                                        1890.0
+    found_date_modified                                           1890-07-16
+    Name: 1, dtype: object

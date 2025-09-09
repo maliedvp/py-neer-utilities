@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.prepare &mdash; Neer Match Utilities 1.0.11-beta documentation</title>
+  <title>neer_match_utilities.prepare &mdash; Neer Match Utilities 1.0.18-beta documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/extra.css?v=503a7970" />
@@ -15,7 +15,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=2adfa69b"></script>
+      <script src="../../_static/documentation_options.js?v=94af8357"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -160,6 +160,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../training.html#neer_match_utilities.training.Training.performance_statistics_export"><code class="docutils literal notranslate"><span class="pre">Training.performance_statistics_export()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../training.html#neer_match_utilities.training.alpha_balanced"><code class="docutils literal notranslate"><span class="pre">alpha_balanced()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../training.html#neer_match_utilities.training.combined_loss"><code class="docutils literal notranslate"><span class="pre">combined_loss()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../training.html#neer_match_utilities.training.focal_loss"><code class="docutils literal notranslate"><span class="pre">focal_loss()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../training.html#neer_match_utilities.training.soft_f1_loss"><code class="docutils literal notranslate"><span class="pre">soft_f1_loss()</span></code></a></li>
@@ -196,7 +197,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for neer_match_utilities.prepare</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderedDict</span>
@@ -206,8 +209,9 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">string</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">neer_match.similarity_map</span><span class="w"> </span><span class="kn">import</span> <span class="n">available_similarities</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="c1"># from neer_match.similarity_map import available_similarities</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Literal</span>
 
 
 <div class="viewcode-block" id="Prepare">
@@ -281,13 +285,13 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Removes stop words and non-alphabetic tokens from text.</span>
 
-<span class="sd">        Attributes:</span>
-<span class="sd">        -----------</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
 <span class="sd">        text : str</span>
 <span class="sd">            The input text to process.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">        --------</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
 <span class="sd">        str</span>
 <span class="sd">            A space-separated string of unique lemmas after tokenization, lemmatization,</span>
 <span class="sd">            and duplicate removal.</span>
@@ -474,6 +478,279 @@
 
 
 
+<span class="k">class</span><span class="w"> </span><span class="nc">Commonness</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">variable_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">df_left</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">df_right</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">df_left_full</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">df_right_full</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">commonness_source</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="s2">&quot;both&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;left&quot;</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">scoring</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;relative&quot;</span><span class="p">,</span> <span class="s2">&quot;minmax&quot;</span><span class="p">,</span> <span class="s2">&quot;log&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;minmax&quot;</span><span class="p">,</span>
+        <span class="n">scale</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;quantile&quot;</span><span class="p">,</span> <span class="s2">&quot;percentile&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;quantile&quot;</span><span class="p">,</span>  <span class="c1"># quantile: 0..1, percentile: 0..100</span>
+        <span class="n">fill_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">preprocess</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a Commonness helper and extend available similarity functions.</span>
+
+<span class="sd">        This initializer stores references to the input DataFrames, configuration</span>
+<span class="sd">        for how to compute &quot;commonness&quot; scores, and (safely) monkey-patches</span>
+<span class="sd">        `neer_match.similarity_map.available_similarities` (and the bound reference</span>
+<span class="sd">        inside `neer_match.similarity_encoding`) to add a custom similarity</span>
+<span class="sd">        function named `&quot;commonness_score&quot;`.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        variable_list : list[str]</span>
+<span class="sd">            Names of columns for which commonness scores should be computed and</span>
+<span class="sd">            appended to `df_left` and `df_right` (as `&lt;col&gt;_commonness`).</span>
+<span class="sd">        df_left : pandas.DataFrame</span>
+<span class="sd">            Left DataFrame whose selected columns will receive commonness scores.</span>
+<span class="sd">        df_right : pandas.DataFrame</span>
+<span class="sd">            Right DataFrame whose selected columns will receive commonness scores.</span>
+<span class="sd">        df_left_full : pandas.DataFrame</span>
+<span class="sd">            Full left DataFrame used as a source for frequency estimation when</span>
+<span class="sd">            `commonness_source` is `&quot;left&quot;` or `&quot;both&quot;`.</span>
+<span class="sd">        df_right_full : pandas.DataFrame</span>
+<span class="sd">            Full right DataFrame used as a source for frequency estimation when</span>
+<span class="sd">            `commonness_source` is `&quot;right&quot;` or `&quot;both&quot;`.</span>
+<span class="sd">        commonness_source : {&quot;left&quot;,&quot;right&quot;,&quot;both&quot;}, optional</span>
+<span class="sd">            Which corpus to use for computing frequencies: the left full dataset,</span>
+<span class="sd">            the right full dataset, or the concatenation of both. Default is &quot;left&quot;.</span>
+<span class="sd">        scoring : {&quot;relative&quot;,&quot;minmax&quot;,&quot;log&quot;}, optional</span>
+<span class="sd">            Strategy to convert raw value counts to a [0,1] commonness score:</span>
+<span class="sd">            - &quot;relative&quot;: count / total (rare values near 0);</span>
+<span class="sd">            - &quot;minmax&quot;: (count - min)/(max - min) with guard for equal counts;</span>
+<span class="sd">            - &quot;log&quot;: log1p(count)/log1p(max_count).</span>
+<span class="sd">            Default is &quot;minmax&quot;.</span>
+<span class="sd">        scale : {&quot;quantile&quot;,&quot;percentile&quot;}, optional</span>
+<span class="sd">            Reserved for future scaling behavior; currently unused. Default &quot;quantile&quot;.</span>
+<span class="sd">        fill_value : float, optional</span>
+<span class="sd">            Value used when a category in `df_left`/`df_right` is not present in</span>
+<span class="sd">            the chosen frequency source. Default is 0.0.</span>
+<span class="sd">        preprocess : bool, optional</span>
+<span class="sd">            If True, string values are normalized (strip &amp; lowercase) before</span>
+<span class="sd">            counting and mapping. Default is False.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - This method patches `available_similarities()` at runtime to include</span>
+<span class="sd">          `&quot;commonness_score&quot;`. The original function is preserved once in the</span>
+<span class="sd">          module under `_original_available_similarities` to avoid stacked wrappers.</span>
+<span class="sd">        - Patching the bound name inside `similarity_encoding` ensures components</span>
+<span class="sd">          that imported the symbol earlier also see the extension.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">variable_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">variable_list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df_left</span> <span class="o">=</span> <span class="n">df_left</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df_right</span> <span class="o">=</span> <span class="n">df_right</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df_left_full</span> <span class="o">=</span> <span class="n">df_left_full</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df_right_full</span> <span class="o">=</span> <span class="n">df_right_full</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commonness_source</span> <span class="o">=</span> <span class="n">commonness_source</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scoring</span> <span class="o">=</span> <span class="n">scoring</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="n">scale</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fill_value</span> <span class="o">=</span> <span class="n">fill_value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">preprocess</span> <span class="o">=</span> <span class="n">preprocess</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">commonness_source</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="s2">&quot;both&quot;</span><span class="p">}:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Argument `commonness_source` must be one of {&#39;left&#39;,&#39;right&#39;,&#39;both&#39;}.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># ---- Extend neer_match.similarity_map.available_similarities safely ----</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">neer_match</span><span class="w"> </span><span class="kn">import</span> <span class="n">similarity_map</span> <span class="k">as</span> <span class="n">_sim</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">neer_match</span><span class="w"> </span><span class="kn">import</span> <span class="n">similarity_encoding</span> <span class="k">as</span> <span class="n">_enc</span>
+
+        <span class="c1"># store original once</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">_sim</span><span class="p">,</span> <span class="s2">&quot;_original_available_similarities&quot;</span><span class="p">):</span>
+            <span class="n">_sim</span><span class="o">.</span><span class="n">_original_available_similarities</span> <span class="o">=</span> <span class="n">_sim</span><span class="o">.</span><span class="n">available_similarities</span>
+        <span class="n">orig</span> <span class="o">=</span> <span class="n">_sim</span><span class="o">.</span><span class="n">_original_available_similarities</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_extended_available</span><span class="p">():</span>
+            <span class="n">sims</span> <span class="o">=</span> <span class="n">orig</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">sims</span><span class="p">[</span><span class="s2">&quot;commonness_score&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">commonness_score</span>
+            <span class="k">return</span> <span class="n">sims</span>
+
+        <span class="c1"># patch the module attribute</span>
+        <span class="n">_sim</span><span class="o">.</span><span class="n">available_similarities</span> <span class="o">=</span> <span class="n">_extended_available</span>
+        <span class="c1"># patch the *bound name* inside similarity_encoding, too</span>
+        <span class="n">_enc</span><span class="o">.</span><span class="n">available_similarities</span> <span class="o">=</span> <span class="n">_extended_available</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_prep_series</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">preprocess</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Normalize a Series for robust frequency counting and mapping.</span>
+
+<span class="sd">        Drops missing values and, if requested, normalizes textual content by</span>
+<span class="sd">        stripping surrounding whitespace and lowercasing.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        s : pandas.Series</span>
+<span class="sd">            Input Series to clean.</span>
+<span class="sd">        preprocess : bool</span>
+<span class="sd">            If True, cast to string, strip, and lowercase values.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pandas.Series</span>
+<span class="sd">            Cleaned Series (with NA removed; optionally normalized).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Drop NA; optionally normalize for robust matching</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">preprocess</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">s</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_frequency_score</span><span class="p">(</span><span class="n">series</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">scoring</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;minmax&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert value frequencies into a [0,1] commonness score mapping.</span>
+
+<span class="sd">        Counts unique values in `series` and transforms raw counts into scores</span>
+<span class="sd">        according to the chosen `scoring` strategy.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        series : pandas.Series</span>
+<span class="sd">            Input data used to compute value frequencies.</span>
+<span class="sd">        scoring : {&quot;relative&quot;,&quot;minmax&quot;,&quot;log&quot;}, optional</span>
+<span class="sd">            Scoring strategy:</span>
+<span class="sd">            - &quot;relative&quot;: score = count / total_count</span>
+<span class="sd">            - &quot;minmax&quot;:  score = (count - min_count) / (max_count - min_count)</span>
+<span class="sd">                         (returns 1.0 for all values if max_count == min_count)</span>
+<span class="sd">            - &quot;log&quot;:     score = log1p(count) / log1p(max_count)</span>
+<span class="sd">            Default is &quot;minmax&quot;.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+<span class="sd">            Mapping `{value: score}` with scores in [0,1].</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - Returns an empty dict if `series` has no non-NA values.</span>
+<span class="sd">        - For &quot;minmax&quot; with equal counts, all values receive 1.0 to avoid</span>
+<span class="sd">          division by zero and to indicate no variation in frequency.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vc</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>           <span class="c1"># index: value, values: counts</span>
+        <span class="k">if</span> <span class="n">vc</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="n">scoring</span> <span class="o">==</span> <span class="s2">&quot;relative&quot;</span><span class="p">:</span>
+            <span class="n">scores</span> <span class="o">=</span> <span class="n">vc</span> <span class="o">/</span> <span class="n">vc</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>          <span class="c1"># harshest on singletons</span>
+        <span class="k">elif</span> <span class="n">scoring</span> <span class="o">==</span> <span class="s2">&quot;minmax&quot;</span><span class="p">:</span>
+            <span class="n">cmin</span><span class="p">,</span> <span class="n">cmax</span> <span class="o">=</span> <span class="n">vc</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">vc</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">cmax</span> <span class="o">==</span> <span class="n">cmin</span><span class="p">:</span>                <span class="c1"># all counts equal</span>
+                <span class="n">scores</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">scores</span> <span class="o">=</span> <span class="p">(</span><span class="n">vc</span> <span class="o">-</span> <span class="n">cmin</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">cmax</span> <span class="o">-</span> <span class="n">cmin</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">scoring</span> <span class="o">==</span> <span class="s2">&quot;log&quot;</span><span class="p">:</span>
+            <span class="n">cmax</span> <span class="o">=</span> <span class="n">vc</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">cmax</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">scores</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">vc</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">cmax</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;scoring must be one of {&#39;relative&#39;,&#39;minmax&#39;,&#39;log&#39;}&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">scores</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute and append commonness scores for configured variables.</span>
+
+<span class="sd">        For each variable in `variable_list`, this method:</span>
+<span class="sd">        1) builds the frequency source per `commonness_source`,</span>
+<span class="sd">        2) computes a `{value: score}` mapping via `_frequency_score`,</span>
+<span class="sd">        3) maps scores to `df_left[v]` and `df_right[v]`, producing</span>
+<span class="sd">           `&lt;v&gt;_commonness` columns in both frames.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple[pandas.DataFrame, pandas.DataFrame]</span>
+<span class="sd">            The augmented left and right DataFrames with added</span>
+<span class="sd">            `&lt;variable&gt;_commonness` columns.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - Unseen values (not present in the chosen frequency source) are filled</span>
+<span class="sd">          with `fill_value`.</span>
+<span class="sd">        - If `preprocess=True`, normalization (strip/lower) is applied both</span>
+<span class="sd">          when computing frequencies and when mapping, to ensure consistency.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">variable_list</span><span class="p">:</span>
+            <span class="c1"># Build source pool for frequency ranks</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">commonness_source</span> <span class="o">==</span> <span class="s2">&quot;left&quot;</span><span class="p">:</span>
+                <span class="n">source</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_left_full</span><span class="p">[</span><span class="n">v</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">commonness_source</span> <span class="o">==</span> <span class="s2">&quot;right&quot;</span><span class="p">:</span>
+                <span class="n">source</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_right_full</span><span class="p">[</span><span class="n">v</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># both</span>
+                <span class="n">source</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">df_left_full</span><span class="p">[</span><span class="n">v</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_right_full</span><span class="p">[</span><span class="n">v</span><span class="p">]],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+            <span class="n">source</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prep_series</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">preprocess</span><span class="p">)</span>
+
+            <span class="c1"># Build mapping dict {value: quantile/percentile rank}</span>
+            <span class="n">mapping</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_frequency_score</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scoring</span><span class="p">)</span>
+
+            <span class="c1"># Map to both frames (prep their columns the same way for matching)</span>
+            <span class="n">left_col</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prep_series</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df_left</span><span class="p">[</span><span class="n">v</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">preprocess</span><span class="p">)</span>
+            <span class="n">right_col</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prep_series</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df_right</span><span class="p">[</span><span class="n">v</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">preprocess</span><span class="p">)</span>
+
+            <span class="c1"># To preserve original values but map by normalized view:</span>
+            <span class="c1"># create temporary normalized columns for mapping, then drop</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">df_left</span><span class="p">[</span><span class="n">v</span> <span class="o">+</span> <span class="s2">&quot;_commonness&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">left_col</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">mapping</span><span class="p">)</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df_left</span><span class="o">.</span><span class="n">index</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fill_value</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">df_right</span><span class="p">[</span><span class="n">v</span> <span class="o">+</span> <span class="s2">&quot;_commonness&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">right_col</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">mapping</span><span class="p">)</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df_right</span><span class="o">.</span><span class="n">index</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fill_value</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_left</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_right</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">commonness_score</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Commonness-aware similarity in [0,1] favoring rare-and-equal matches.</span>
+
+<span class="sd">        The score rewards both *closeness* and *rareness*, defined on inputs</span>
+<span class="sd">        `x, y ∈ [0,1]` (interpreted as commonness scores). Identical rare values</span>
+<span class="sd">        receive high score; identical common values receive low score.</span>
+
+<span class="sd">        Formally:</span>
+<span class="sd">            diff = |x - y|</span>
+<span class="sd">            mean = (x + y)/2</span>
+<span class="sd">            score = (1 - diff) * (1 - mean)</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : float</span>
+<span class="sd">            Commonness score of the left item, expected in [0,1].</span>
+<span class="sd">        y : float</span>
+<span class="sd">            Commonness score of the right item, expected in [0,1].</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Similarity value in [0,1].</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        - x = y = 0    → score = 1.0  (rare &amp; equal)</span>
+<span class="sd">        - x = y = 1    → score = 0.0  (common &amp; equal)</span>
+<span class="sd">        - x = 0, y = 1 → score = 0.0  (maximally different)</span>
+<span class="sd">        - x = y = 0.5  → score = 0.5</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">mean</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="c1"># closeness = 1 - diff</span>
+        <span class="c1"># rarity factor = 1 - mean  (rare=1, common=0)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">diff</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">mean</span><span class="p">)</span>
+
+
 <div class="viewcode-block" id="similarity_map_to_dict">
 <a class="viewcode-back" href="../../prepare.html#neer_match_utilities.prepare.similarity_map_to_dict">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">similarity_map_to_dict</span><span class="p">(</span><span class="n">items</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
@@ -521,65 +798,68 @@
     <span class="n">id_right</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Generates synthetic mismatches for a share of observations in `right`. Returns:</span>
-<span class="sd">      - All original rows from `right` (unchanged),</span>
-<span class="sd">      - Plus new synthetic mismatches (with new UUID4 IDs if id_right is specified), for a random subset</span>
-<span class="sd">        of original rows of size = floor(sample_share * len(right)).</span>
-<span class="sd">        Drops any synthetic row whose data‐portion duplicates an original `right` row</span>
-<span class="sd">        or duplicates another synthetic row.</span>
+<span class="sd">    Generate synthetic mismatches for a subset of rows in ``right``.</span>
 
-<span class="sd">    STRING‐columns in `columns_change`:</span>
-<span class="sd">      - require str_similarity = normalized_similarity(orig, candidate) within [min_str_sim, max_str_sim].</span>
-<span class="sd">      - if no candidate qualifies, perturb orig until similarity is in that range.</span>
-
-<span class="sd">    NUMERIC‐columns in `columns_change`:</span>
-<span class="sd">      - require percentage difference │orig - candidate│/│orig│ within [min_pct_diff, max_pct_diff].</span>
-<span class="sd">        (If orig == 0, any candidate ≠ 0 counts as pct_diff = 1.0.)</span>
-<span class="sd">      - if no candidate qualifies, perturb orig until percentage difference is in that range,</span>
-<span class="sd">        by taking orig * (1 ± min_pct_diff) or (1 ± max_pct_diff).</span>
-
-<span class="sd">    keep_missing: if True, any NaN or &quot;&quot; in the original `right` row’s columns_change is preserved (no change).</span>
-<span class="sd">    nan_share/empty_share: after generating all synthetics and deduplicating,</span>
-<span class="sd">      inject NaN or &quot;&quot; into columns_change at the given probabilities.</span>
+<span class="sd">    The output contains all original rows plus additional synthetic rows created by</span>
+<span class="sd">    modifying selected columns. Synthetic rows are deduplicated against the original</span>
+<span class="sd">    data and against each other.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    right : pd.DataFrame</span>
-<span class="sd">        The DataFrame containing the “true” observations.</span>
-<span class="sd">    id_right : str or None</span>
-<span class="sd">        Column name of the unique ID in `right`. If None, no ID column is created for synthetic rows.</span>
+<span class="sd">    right : pandas.DataFrame</span>
+<span class="sd">        The DataFrame containing the original (true) observations.</span>
 <span class="sd">    columns_fix : list of str</span>
-<span class="sd">        Columns whose values remain unchanged (copied directly from the original row).</span>
+<span class="sd">        Column names whose values remain unchanged (copied from the original row).</span>
 <span class="sd">    columns_change : list of str</span>
-<span class="sd">        Columns whose values are modified to create mismatches.</span>
+<span class="sd">        Column names whose values are modified to create mismatches.</span>
 <span class="sd">    str_metric : str</span>
-<span class="sd">        Name of the string‐similarity metric (key in available_similarities()).</span>
-<span class="sd">    str_similarity_range : tuple (min_str_sim, max_str_sim)</span>
-<span class="sd">        Range of allowed normalized_similarity (0–1). Candidate strings must satisfy</span>
-<span class="sd">        min_str_sim ≤ similarity(orig, candidate) ≤ max_str_sim.</span>
-<span class="sd">    pct_diff_range : tuple (min_pct_diff, max_pct_diff)</span>
-<span class="sd">        For numeric columns: percentage difference │orig - candidate│/│orig│ must lie in [min_pct_diff, max_pct_diff].</span>
-<span class="sd">        (pct_diff_range values are between 0.0 and 1.0.)</span>
+<span class="sd">        Name of the string-similarity metric (key in ``available_similarities()``).</span>
+<span class="sd">    str_similarity_range : tuple of (float, float)</span>
+<span class="sd">        Allowed range ``(min_str_sim, max_str_sim)`` for normalized string similarity</span>
+<span class="sd">        of STRING columns in ``columns_change``. Candidates must satisfy</span>
+<span class="sd">        ``min_str_sim &lt;= similarity(orig, candidate) &lt;= max_str_sim``.</span>
+<span class="sd">    pct_diff_range : tuple of (float, float)</span>
+<span class="sd">        Allowed range ``(min_pct_diff, max_pct_diff)`` for percentage difference of</span>
+<span class="sd">        NUMERIC columns in ``columns_change``: ``abs(orig - candidate) / abs(orig)``.</span>
+<span class="sd">        If ``orig == 0``, any ``candidate != 0`` is treated as percentage difference 1.0.</span>
 <span class="sd">    n_cols : int</span>
-<span class="sd">        How many of the columns_change to modify per synthetic row. If n_cols &lt; len(columns_change),</span>
-<span class="sd">        pick that many at random; if n_cols &gt; len(columns_change), warn and modify all.</span>
-<span class="sd">    n_mismatches : int</span>
-<span class="sd">        How many synthetic mismatches to generate per each selected original `right` row.</span>
-<span class="sd">    keep_missing : bool</span>
-<span class="sd">        If True, any NaN or &quot;&quot; in the original row’s columns_change is preserved (no change).</span>
-<span class="sd">    nan_share : float in [0,1]</span>
-<span class="sd">        After deduplication, each synthetic cell in columns_change has probability nan_share → NaN.</span>
-<span class="sd">    empty_share : float in [0,1]</span>
-<span class="sd">        After deduplication, each synthetic cell in columns_change has probability empty_share → &quot;&quot;.</span>
-<span class="sd">        (Applied after nan_share.)</span>
-<span class="sd">    sample_share : float in [0,1], default=1.0</span>
-<span class="sd">        Proportion of original `right` rows to select at random for synthetics.</span>
-<span class="sd">        If 1.0, all rows. If 0.5, floor(0.5 * n_rows) are chosen.</span>
+<span class="sd">        Number of columns from ``columns_change`` to modify per synthetic row.</span>
+<span class="sd">        If ``n_cols &lt; len(columns_change)``, pick that many at random. If</span>
+<span class="sd">        ``n_cols &gt; len(columns_change)``, all columns in ``columns_change`` are modified.</span>
+<span class="sd">    n_mismatches : int, default=1</span>
+<span class="sd">        Number of synthetic mismatches to generate per selected original row.</span>
+<span class="sd">    keep_missing : bool, default=True</span>
+<span class="sd">        If True, preserve ``NaN`` or empty-string values in ``columns_change`` of the</span>
+<span class="sd">        original row (no change applied to those cells).</span>
+<span class="sd">    nan_share : float, default=0.0</span>
+<span class="sd">        After deduplication, probability to inject ``NaN`` into each synthetic cell of</span>
+<span class="sd">        ``columns_change``.</span>
+<span class="sd">    empty_share : float, default=0.0</span>
+<span class="sd">        After deduplication, probability to inject ``&quot;&quot;`` into each synthetic cell of</span>
+<span class="sd">        ``columns_change``. Applied after ``nan_share``.</span>
+<span class="sd">    sample_share : float, default=1.0</span>
+<span class="sd">        Proportion in ``[0, 1]`` of original rows in ``right`` to select at random</span>
+<span class="sd">        for synthetic generation. For example, ``0.5`` selects ``floor(0.5 * n_rows)``.</span>
+<span class="sd">    id_right : str or None, default=None</span>
+<span class="sd">        Name of a unique-ID column in ``right``. If provided, synthetic rows receive</span>
+<span class="sd">        new UUID4 IDs in this column. If None, no ID column is created or modified.</span>
+
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    pd.DataFrame</span>
-<span class="sd">        Expanded DataFrame with original + synthetic rows.</span>
+<span class="sd">    pandas.DataFrame</span>
+<span class="sd">        Expanded DataFrame with the original rows plus the synthetic mismatch rows.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - STRING columns in ``columns_change`` must meet the configured string-similarity</span>
+<span class="sd">      range. If no candidate qualifies, the original string is perturbed until the</span>
+<span class="sd">      similarity lies within the requested bounds.</span>
+<span class="sd">    - NUMERIC columns in ``columns_change`` must meet the configured percentage</span>
+<span class="sd">      difference range. If no candidate qualifies, the value is perturbed toward</span>
+<span class="sd">      the boundary (e.g., ``orig * (1 ± min_pct_diff)`` or ``orig * (1 ± max_pct_diff)``).</span>
+<span class="sd">    - After generating synthetics, any synthetic row whose modified data portion</span>
+<span class="sd">      exactly matches an original row (or another synthetic row) is dropped.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Validate shares and ranges</span>

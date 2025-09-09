@@ -16,7 +16,11 @@ import pandas as pd
 from neer_match_utilities.model import Model
 from neer_match_utilities.prepare import Prepare, similarity_map_to_dict
 from pathlib import Path
+from neer_match_utilities.custom_similarities import CustomSimilarities
 
+# Load custom similarity functions
+
+CustomSimilarities()
 
 # Load model
 
@@ -83,7 +87,7 @@ id_generator = GenerateID(
     panel_var='panel_id',
     time_var='side',
     model=loaded_model,
-    prediction_threshold=0.45,
+    prediction_threshold=0.5,
     subgroups=[],
     relation='m:m',
 )
@@ -109,7 +113,7 @@ df = df.sort_values(['panel_id', 'side', 'company_id']).reset_index(drop=True)
 
 # Prepare selection to be viewed
 
-selected_ids = ['1e87fc75b4', '0008e07878']
+selected_ids = ['22ac99ae20', 'e9823a3073']
 columns_to_show = [
     'panel_id',
     'company_id',

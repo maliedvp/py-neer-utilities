@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Training &mdash; Neer Match Utilities 1.0.11-beta documentation</title>
+  <title>Training &mdash; Neer Match Utilities 1.0.18-beta documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
@@ -16,9 +16,11 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=2adfa69b"></script>
+      <script src="_static/documentation_options.js?v=94af8357"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
       <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -163,6 +165,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.training.Training.performance_statistics_export"><code class="docutils literal notranslate"><span class="pre">Training.performance_statistics_export()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.training.alpha_balanced"><code class="docutils literal notranslate"><span class="pre">alpha_balanced()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.training.combined_loss"><code class="docutils literal notranslate"><span class="pre">combined_loss()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.training.focal_loss"><code class="docutils literal notranslate"><span class="pre">focal_loss()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.training.soft_f1_loss"><code class="docutils literal notranslate"><span class="pre">soft_f1_loss()</span></code></a></li>
@@ -290,87 +293,100 @@ None</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="neer_match_utilities.training.combined_loss">
-<span class="sig-prename descclassname"><span class="pre">neer_match_utilities.training.</span></span><span class="sig-name descname"><span class="pre">combined_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weight_f1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-07</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/training.html#combined_loss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.training.combined_loss" title="Link to this definition"></a></dt>
-<dd><p>Combined Loss: weighted sum of Soft F1 Loss and Focal Loss for imbalanced binary classification.</p>
-<p>This loss blends the advantages of a differentiable F1-based objective (which balances
-precision and recall) with the sample‐focusing property of Focal Loss (which down‐weights
-easy examples). By tuning <cite>weight_f1</cite>, you can interpolate between solely optimizing
-for F1 score (when <cite>weight_f1=1.0</cite>) and solely focusing on hard examples via focal loss
-(when <cite>weight_f1=0.0</cite>).</p>
+<dt class="sig sig-object py" id="neer_match_utilities.training.alpha_balanced">
+<span class="sig-prename descclassname"><span class="pre">neer_match_utilities.training.</span></span><span class="sig-name descname"><span class="pre">alpha_balanced</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mismatch_share</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/training.html#alpha_balanced"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.training.alpha_balanced" title="Link to this definition"></a></dt>
+<dd><p>Compute α so that α*N_pos = (1-α)*N_neg.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>weight_f1</strong> (<em>float</em><em>, </em><em>optional</em><em>, </em><em>default=0.5</em>) – Mixing coefficient ∈ [0, 1].
-- <cite>weight_f1=1.0</cite>: optimize only Soft F1 Loss.
-- <cite>weight_f1=0.0</cite>: optimize only Focal Loss.
-- Intermediate values blend the two objectives proportionally.</p></li>
-<li><p><strong>epsilon</strong> (<em>float</em><em>, </em><em>optional</em><em>, </em><em>default=1e-7</em>) – Small stabilizer for Soft F1 calculation. Must be &gt; 0.</p></li>
-<li><p><strong>alpha</strong> (<em>float</em><em>, </em><em>optional</em><em>, </em><em>default=0.25</em>) – Balancing factor for Focal Loss, weighting the positive (minority) class.
-Must lie in [0, 1].</p></li>
-<li><p><strong>gamma</strong> (<em>float</em><em>, </em><em>optional</em><em>, </em><em>default=2.0</em>) – Focusing parameter for Focal Loss.
-- <cite>gamma=0</cite> → reduces to weighted BCE.
-- Larger <cite>gamma</cite> emphasizes harder (misclassified) examples.</p></li>
+<li><p><strong>left</strong> (<em>pandas.DataFrame</em>)</p></li>
+<li><p><strong>right</strong> (<em>pandas.DataFrame</em>)</p></li>
+<li><p><strong>matches</strong> (<em>pandas.DataFrame</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><p><strong>loss</strong> –</p>
-<p>A function <cite>loss(y_true, y_pred)</cite> that computes:</p>
-<blockquote>
-<div><blockquote>
-<div><p>weight_f1 * SoftF1(y_true, y_pred; ε)</p>
-</div></blockquote>
-<ul class="simple">
-<li><p>(1 − weight_f1) * FocalLoss(y_true, y_pred; α, γ)</p></li>
+<dd class="field-even"><p>α in [0,1] for focal loss (positive-class weight).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="neer_match_utilities.training.combined_loss">
+<span class="sig-prename descclassname"><span class="pre">neer_match_utilities.training.</span></span><span class="sig-name descname"><span class="pre">combined_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weight_f1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-07</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.99</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/training.html#combined_loss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.training.combined_loss" title="Link to this definition"></a></dt>
+<dd><p>Combined loss: weighted sum of Soft F1 loss and Focal Loss for imbalanced binary classification.</p>
+<p>This loss blends the advantages of a differentiable F1-based objective (which balances
+precision and recall) with the sample-focusing property of Focal Loss (which down-weights
+easy examples). By tuning <code class="docutils literal notranslate"><span class="pre">weight_f1</span></code>, you can interpolate between solely optimizing
+for F1 score (when <code class="docutils literal notranslate"><span class="pre">weight_f1</span> <span class="pre">=</span> <span class="pre">1.0</span></code>) and solely focusing on hard examples via focal loss
+(when <code class="docutils literal notranslate"><span class="pre">weight_f1</span> <span class="pre">=</span> <span class="pre">0.0</span></code>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>weight_f1</strong> (<em>float</em><em>, </em><em>default=0.5</em>) – Mixing coefficient in <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1]</span></code>.
+- <code class="docutils literal notranslate"><span class="pre">weight_f1</span> <span class="pre">=</span> <span class="pre">1.0</span></code>: optimize only Soft F1 loss.
+- <code class="docutils literal notranslate"><span class="pre">weight_f1</span> <span class="pre">=</span> <span class="pre">0.0</span></code>: optimize only Focal Loss.
+- Intermediate values blend the two objectives proportionally.</p></li>
+<li><p><strong>epsilon</strong> (<em>float</em><em>, </em><em>default=1e-7</em>) – Small stabilizer for Soft F1 calculation. Must be <code class="docutils literal notranslate"><span class="pre">&gt;</span> <span class="pre">0</span></code>.</p></li>
+<li><p><strong>alpha</strong> (<em>float</em><em>, </em><em>default=0.25</em>) – Balancing factor for Focal Loss, weighting the positive (minority) class.
+Must lie in <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1]</span></code>.</p></li>
+<li><p><strong>gamma</strong> (<em>float</em><em>, </em><em>default=2.0</em>) – Focusing parameter for Focal Loss.
+- <code class="docutils literal notranslate"><span class="pre">gamma</span> <span class="pre">=</span> <span class="pre">0</span></code> reduces to weighted BCE.
+- Larger <code class="docutils literal notranslate"><span class="pre">gamma</span></code> emphasizes harder (misclassified) examples.</p></li>
 </ul>
-</div></blockquote>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>A function <code class="docutils literal notranslate"><span class="pre">loss(y_true,</span> <span class="pre">y_pred)</span></code> that computes</p>
+<div class="math notranslate nohighlight">
+\[\text{CombinedLoss}
+= \text{weight\_f1} \cdot \text{SoftF1}(y, \hat{y};\,\varepsilon)
+  + (1 - \text{weight\_f1}) \cdot \text{FocalLoss}(y, \hat{y};\,\alpha, \gamma).\]</div>
 <p>Minimizing this combined loss encourages both a high F1 score
-and focus on hard‐to‐classify samples.</p>
+and focus on hard-to-classify samples.</p>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>callable</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If <cite>weight_f1</cite> is not in [0, 1], or if <cite>epsilon</cite> ≤ 0, or if <cite>alpha</cite> is not
-    in [0, 1], or if <cite>gamma</cite> &lt; 0.</p>
+<dd class="field-even"><p><strong>ValueError</strong> – If <code class="docutils literal notranslate"><span class="pre">weight_f1</span></code> is not in <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1]</span></code>, or if <code class="docutils literal notranslate"><span class="pre">epsilon</span> <span class="pre">&lt;=</span> <span class="pre">0</span></code>, or if <code class="docutils literal notranslate"><span class="pre">alpha</span></code> is not
+    in <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1]</span></code>, or if <code class="docutils literal notranslate"><span class="pre">gamma</span> <span class="pre">&lt;</span> <span class="pre">0</span></code>.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<ul class="simple">
-<li><p><strong>Soft F1 Loss</strong> (1 − F1) is differentiable and promotes balanced precision/recall.</p></li>
-<li><p><strong>Focal Loss</strong> down‐weights well‐classified examples to focus learning on difficult cases.</p></li>
-<li><p>Adjust <cite>weight_f1</cite> to prioritize either overall F1 (higher weight_f1) or hard‐example mining (lower weight_f1).</p></li>
+<ul>
+<li><p><strong>Soft F1 loss</strong>: <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">-</span> <span class="pre">\text{SoftF1}</span></code>, where</p>
+<div class="math notranslate nohighlight">
+\[\text{SoftF1} = \frac{2\,TP + \varepsilon}{2\,TP + FP + FN + \varepsilon}.\]</div>
+<p>Here <code class="docutils literal notranslate"><span class="pre">TP</span></code>, <code class="docutils literal notranslate"><span class="pre">FP</span></code>, and <code class="docutils literal notranslate"><span class="pre">FN</span></code> are <em>soft</em> counts computed from probabilities.</p>
+</li>
+<li><p><strong>Focal Loss</strong> down-weights well-classified examples to focus learning on difficult cases.</p></li>
 </ul>
 <p class="rubric">References</p>
 <ul class="simple">
 <li><p>Lin, T.-Y., Goyal, P., Girshick, R., He, K., &amp; Dollár, P. (2017).
 Focal Loss for Dense Object Detection. <em>ICCV</em>.</p></li>
-<li><p>Bénédict, G., Koops, V., Odijk D., &amp; de Rijke M. (2021). SigmoidF1: A
-Smooth F1 Score Surrogate Loss for Multilabel Classification. <em>arXiv 2108.10566</em>.</p></li>
-</ul>
-<section id="explanation-of-key-terms">
-<h2>Explanation of Key Terms<a class="headerlink" href="#explanation-of-key-terms" title="Link to this heading"></a></h2>
-<ul class="simple">
-<li><p><strong>Soft F1</strong>: (2·TP + ε) / (2·TP + FP + FN + ε), differentiable surrogate for the F1 score.</p></li>
-<li><p><strong>Focal Loss</strong>: α·(1−p_t)ᵞ·BCE(p_t), where p_t is the model’s estimated probability for the true class.</p></li>
-<li><p><strong>TP, FP, FN</strong>: soft counts over probabilities (see Soft F1 docs).</p></li>
+<li><p>Bénédict, G., Koops, V., Odijk, D., &amp; de Rijke, M. (2021).
+SigmoidF1: A Smooth F1 Score Surrogate Loss for Multilabel Classification. <em>arXiv:2108.10566</em>.</p></li>
 </ul>
 <p class="rubric">Examples</p>
-<p><a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a>python
-# create combined loss with equal weighting
-loss_fn = combined_loss(weight_f1=0.5, epsilon=1e-6, alpha=0.25, gamma=2.0)</p>
-<p>y_true = tf.constant([[1, 0, 1]], dtype=tf.float32)
-y_pred = tf.constant([[0.9, 0.2, 0.7]], dtype=tf.float32)</p>
-<p>value = loss_fn(y_true, y_pred)
-print(“Combined loss:”, value.numpy())
-<a href="#id5"><span class="problematic" id="id6">``</span></a><a href="#id7"><span class="problematic" id="id8">`</span></a></p>
-</section>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
+<span class="n">loss_fn</span> <span class="o">=</span> <span class="n">combined_loss</span><span class="p">(</span><span class="n">weight_f1</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
+
+<span class="n">y_true</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([[</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+<span class="n">value</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Combined loss:&quot;</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">numpy</span><span class="p">()))</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="neer_match_utilities.training.focal_loss">
-<span class="sig-prename descclassname"><span class="pre">neer_match_utilities.training.</span></span><span class="sig-name descname"><span class="pre">focal_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.75</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/training.html#focal_loss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.training.focal_loss" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">neer_match_utilities.training.</span></span><span class="sig-name descname"><span class="pre">focal_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.99</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/training.html#focal_loss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.training.focal_loss" title="Link to this definition"></a></dt>
 <dd><p>Focal Loss function for binary classification tasks.</p>
 <p>Focal Loss is designed to address class imbalance by assigning higher weights
 to the minority class and focusing the model’s learning on hard-to-classify examples.
@@ -416,8 +432,8 @@ by <code class="docutils literal notranslate"><span class="pre">1</span> <span c
 <p class="rubric">References</p>
 <p>Lin, T.-Y., Goyal, P., Girshick, R., He, K., &amp; Dollár, P. (2017).
 Focal Loss for Dense Object Detection. In ICCV.</p>
-<section id="id9">
-<h2>Explanation of Key Terms<a class="headerlink" href="#id9" title="Link to this heading"></a></h2>
+<section id="explanation-of-key-terms">
+<h2>Explanation of Key Terms<a class="headerlink" href="#explanation-of-key-terms" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p><strong>Positive Class (Underrepresented):</strong></p>
 <ul>
@@ -473,8 +489,8 @@ probabilities rather than thresholded predictions.</p></li>
 <li><p>Bénédict, G., Koops, V., Odijk D., &amp; de Rijke M. (2021). SigmoidF1: A
 Smooth F1 Score Surrogate Loss for Multilabel Classification. <em>arXiv 2108.10566</em>.</p></li>
 </ul>
-<section id="id10">
-<h2>Explanation of Key Terms<a class="headerlink" href="#id10" title="Link to this heading"></a></h2>
+<section id="id1">
+<h2>Explanation of Key Terms<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p><strong>True Positives (TP):</strong> Sum of predicted probabilities for actual
 positive examples.</p></li>

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Saving a Model &mdash; Neer Match Utilities 1.0.11-beta documentation</title>
+  <title>Saving a Model &mdash; Neer Match Utilities 1.0.18-beta documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
@@ -16,9 +16,11 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=2adfa69b"></script>
+      <script src="_static/documentation_options.js?v=94af8357"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
       <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -163,6 +165,7 @@
 <li class="toctree-l3"><a class="reference internal" href="training.html#neer_match_utilities.training.Training.performance_statistics_export"><code class="docutils literal notranslate"><span class="pre">Training.performance_statistics_export()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="training.html#neer_match_utilities.training.alpha_balanced"><code class="docutils literal notranslate"><span class="pre">alpha_balanced()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="training.html#neer_match_utilities.training.combined_loss"><code class="docutils literal notranslate"><span class="pre">combined_loss()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="training.html#neer_match_utilities.training.focal_loss"><code class="docutils literal notranslate"><span class="pre">focal_loss()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="training.html#neer_match_utilities.training.soft_f1_loss"><code class="docutils literal notranslate"><span class="pre">soft_f1_loss()</span></code></a></li>
@@ -204,7 +207,7 @@
 <h2>Prepare the Data<a class="headerlink" href="#prepare-the-data" title="Link to this heading"></a></h2>
 <p>This tutorial illustrates how to correctly store a <code class="docutils literal notranslate"><span class="pre">neer-match</span></code> model.
 Before getting to the part that illustrates the saving, we have to
-repreat the steps detailed in <strong>Data Preparation for Training</strong>:</p>
+repeat the steps detailed in <strong>Data Preparation for Training</strong>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
@@ -213,6 +216,7 @@ repreat the steps detailed in <strong>Data Preparation for Training</strong>:</p
 <span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.prepare</span><span class="w"> </span><span class="kn">import</span> <span class="n">Prepare</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.training</span><span class="w"> </span><span class="kn">import</span> <span class="n">Training</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.split</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_test_train</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.custom_similarities</span><span class="w"> </span><span class="kn">import</span> <span class="n">CustomSimilarities</span>
 
 <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 
@@ -230,6 +234,10 @@ repreat the steps detailed in <strong>Data Preparation for Training</strong>:</p
     <span class="n">unique_id</span><span class="o">=</span><span class="s1">&#39;company_id&#39;</span>
 <span class="p">)</span>
 
+<span class="c1"># Load custom similarities dedicated to missing values from the utilities package</span>
+
+<span class="n">CustomSimilarities</span><span class="p">()</span>
+
 <span class="c1"># Define similarity_map</span>
  
 <span class="n">similarity_map</span> <span class="o">=</span> <span class="p">{</span>
@@ -246,35 +254,39 @@ repreat the steps detailed in <strong>Data Preparation for Training</strong>:</p
     <span class="s2">&quot;city&quot;</span> <span class="p">:</span> <span class="p">[</span>
         <span class="s2">&quot;levenshtein&quot;</span><span class="p">,</span>
         <span class="s2">&quot;jaro_winkler&quot;</span><span class="p">,</span>
-        <span class="c1"># &quot;notmissing&quot;</span>
+        <span class="s2">&quot;notmissing&quot;</span><span class="p">,</span>
     <span class="p">],</span>
     <span class="s2">&quot;industry&quot;</span> <span class="p">:</span> <span class="p">[</span>
         <span class="s2">&quot;levenshtein&quot;</span><span class="p">,</span>
         <span class="s2">&quot;jaro_winkler&quot;</span><span class="p">,</span>
-        <span class="c1"># &quot;notmissing&quot;</span>
+        <span class="s2">&quot;notmissing&quot;</span><span class="p">,</span>
     <span class="p">],</span>
     <span class="s2">&quot;purpose&quot;</span> <span class="p">:</span> <span class="p">[</span>
         <span class="s2">&quot;levenshtein&quot;</span><span class="p">,</span>
         <span class="s2">&quot;jaro_winkler&quot;</span><span class="p">,</span>
-        <span class="c1"># &quot;notmissing&quot;,</span>
         <span class="s2">&quot;token_sort_ratio&quot;</span><span class="p">,</span>
         <span class="s2">&quot;token_set_ratio&quot;</span><span class="p">,</span>
         <span class="s2">&quot;partial_token_set_ratio&quot;</span><span class="p">,</span>
         <span class="s2">&quot;partial_token_sort_ratio&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;notmissing&quot;</span><span class="p">,</span>
     <span class="p">],</span>
     <span class="s2">&quot;bs_text&quot;</span> <span class="p">:</span> <span class="p">[</span>
         <span class="s2">&quot;levenshtein&quot;</span><span class="p">,</span>
         <span class="s2">&quot;jaro_winkler&quot;</span><span class="p">,</span>
-        <span class="c1"># &quot;notmissing&quot;,</span>
         <span class="s2">&quot;token_sort_ratio&quot;</span><span class="p">,</span>
         <span class="s2">&quot;token_set_ratio&quot;</span><span class="p">,</span>
         <span class="s2">&quot;partial_token_set_ratio&quot;</span><span class="p">,</span>
         <span class="s2">&quot;partial_token_sort_ratio&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;notmissing&quot;</span><span class="p">,</span>
     <span class="p">],</span>
     <span class="s2">&quot;found_year&quot;</span> <span class="p">:</span> <span class="p">[</span>
-        <span class="c1"># &quot;notzero&quot;,</span>
-        <span class="s2">&quot;discrete&quot;</span>
+        <span class="s2">&quot;discrete&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;notzero&quot;</span>
     <span class="p">],</span>
+    <span class="s2">&quot;found_date_modified&quot;</span> <span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;discrete&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;notmissing&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
 <span class="p">}</span>
 
 <span class="n">smap</span> <span class="o">=</span> <span class="n">SimilarityMap</span><span class="p">(</span><span class="n">similarity_map</span><span class="p">)</span>
@@ -316,7 +328,7 @@ repreat the steps detailed in <strong>Data Preparation for Training</strong>:</p
     <span class="n">left</span> <span class="o">=</span> <span class="n">left</span><span class="p">,</span>
     <span class="n">right</span> <span class="o">=</span> <span class="n">right</span><span class="p">,</span>
     <span class="n">matches</span> <span class="o">=</span> <span class="n">matches</span><span class="p">,</span>
-    <span class="n">test_ratio</span> <span class="o">=</span> <span class="mf">.5</span><span class="p">,</span>
+    <span class="n">test_ratio</span> <span class="o">=</span> <span class="mf">.7</span><span class="p">,</span>
     <span class="n">validation_ratio</span> <span class="o">=</span> <span class="mf">.0</span>
 <span class="p">)</span>
 </pre></div>
@@ -325,15 +337,67 @@ repreat the steps detailed in <strong>Data Preparation for Training</strong>:</p
 <section id="train-the-model">
 <h2>Train the Model<a class="headerlink" href="#train-the-model" title="Link to this heading"></a></h2>
 <p>Once the data is in the correct structure, training the model follows.
-Note that this example utilizes the custom <code class="docutils literal notranslate"><span class="pre">focal_loss</span></code> function. This
-loss function is designed to address class imbalance by assigning higher
-weights to the minority class and focusing the model’s learning on
-hard-to-classify examples. By reducing the loss contribution from
-well-classified examples, it is particularly effective for imbalanced
-datasets. Its design is based on ideas presented in <a class="reference external" href="https://ieeexplore.ieee.org/document/8237586">Lin et
-al. (2017)</a>.</p>
+Note that this example utilizes the custom <code class="docutils literal notranslate"><span class="pre">combined_loss</span></code> function.
+This loss function is designed to address class imbalance by assigning
+higher weights to the minority class and focusing the model’s learning
+on hard-to-classify examples, while simultaneously aligning optimization
+with the F1 score to balance precision and recall. By reducing the loss
+contribution from well-classified examples, it is particularly effective
+for imbalanced datasets. Its design is based on ideas presented in <a class="reference external" href="https://ieeexplore.ieee.org/document/8237586">Lin
+et al. (2017)</a> as well as
+<a class="reference external" href="https://arxiv.org/pdf/2108.10566">Bénédict et al. (2021)</a>.</p>
+<p>In detail, the <code class="docutils literal notranslate"><span class="pre">combined_loss</span></code> is defined as</p>
+<div class="math notranslate nohighlight">
+\[
+\text{CombinedLoss}(y,\hat y)
+= w_{\mathrm{F1}}\bigl(1-\text{SoftF1}(y,\hat y;\,\varepsilon)\bigr)
+\;+\;
+(1-w_{\mathrm{F1}})\,\text{FL}(y,\hat y;\,\alpha,\gamma),
+\]</div>
+<p>where (y {0,1}) are true labels and (y ) are predicted probabilities.</p>
+<p>The soft F1 is</p>
+<div class="math notranslate nohighlight">
+\[
+\text{SoftF1}
+= \frac{2\,TP + \varepsilon}{2\,TP + FP + FN + \varepsilon},
+\]</div>
+<p>with (TP, FP, FN) computed as <strong>soft counts</strong> (sums over probabilities)
+and (&gt; 0) for numerical stability.</p>
+<p>The binary focal loss is</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\text{FL}(y,\hat y;\alpha,\gamma)
+= -\,\alpha_t\,(1-p_t)^\gamma \,\log(p_t),
+\qquad
+p_t =
+\begin{cases}
+\hat y, &amp; y=1,\\
+1-\hat y, &amp; y=0,
+\end{cases}
+\qquad
+\alpha_t =
+\begin{cases}
+\alpha, &amp; y=1,\\
+1-\alpha, &amp; y=0.
+\end{cases}
+\end{split}\]</div>
+<p>To balance the <em>total</em> weight of positives and negatives in the loss,
+pick <span class="math notranslate nohighlight">\(\alpha\)</span> such that the summed positive weight equals the summed
+negative weight:</p>
+<div class="math notranslate nohighlight">
+\[
+\alpha \cdot N_{+} \;=\; (1-\alpha)\cdot N_{-}
+\;\;\Longrightarrow\;\;
+\boxed{\alpha = \frac{N_{-}}{N_{+} + N_{-}}},
+\]</div>
+<p>with</p>
+<div class="math notranslate nohighlight">
+\[
+N_{+} = \mathrm{len}(\text{matches}), \qquad
+N_{-} = \mathrm{len}(\text{left}) \times \mathrm{len}(\text{right}) - \mathrm{len}(\text{matches}).
+\]</div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">neer_match.matching_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">DLMatchingModel</span><span class="p">,</span> <span class="n">NSMatchingModel</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.training</span><span class="w"> </span><span class="kn">import</span> <span class="n">focal_loss</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.training</span><span class="w"> </span><span class="kn">import</span> <span class="n">combined_loss</span><span class="p">,</span> <span class="n">alpha_balanced</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
@@ -341,31 +405,49 @@ al. (2017)</a>.</p>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">DLMatchingModel</span><span class="p">(</span>
     <span class="n">similarity_map</span><span class="o">=</span><span class="n">smap</span><span class="p">,</span>
-    <span class="n">initial_feature_width_scales</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
-    <span class="n">feature_depths</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
-    <span class="n">initial_record_width_scale</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">initial_feature_width_scales</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="n">feature_depths</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="n">initial_record_width_scale</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
     <span class="n">record_depth</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
 <span class="p">)</span>
 
-
 <span class="c1"># Compile the model</span>
 
-<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
-    <span class="n">loss</span> <span class="o">=</span> <span class="n">focal_loss</span><span class="p">(</span>
-        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> 
-        <span class="n">gamma</span><span class="o">=</span><span class="mi">10</span>
-    <span class="p">),</span>
-    <span class="n">optimizer</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
+<span class="c1">## Calculate the alpha parameter given the dimensions of the training data</span>
+<span class="n">mismatch_share</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+<span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha_balanced</span><span class="p">(</span><span class="n">left_train</span><span class="p">,</span> <span class="n">right_train</span><span class="p">,</span> <span class="n">matches_train</span><span class="p">,</span> <span class="n">mismatch_share</span><span class="p">)</span>  <span class="c1"># ≈ N_neg / (N_pos + N_neg)</span>
+
+<span class="c1">## Use expontantial decay for the learning rate</span>
+
+<span class="n">initial_lr</span> <span class="o">=</span> <span class="mf">1e-4</span>
+<span class="n">lr_schedule</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">schedules</span><span class="o">.</span><span class="n">ExponentialDecay</span><span class="p">(</span>
+    <span class="n">initial_learning_rate</span><span class="o">=</span><span class="n">initial_lr</span><span class="p">,</span>
+    <span class="n">decay_steps</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
+    <span class="n">decay_rate</span><span class="o">=</span><span class="mf">0.96</span><span class="p">,</span>
+    <span class="n">staircase</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">)</span>
 
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">combined_loss</span><span class="p">(</span>
+        <span class="n">weight_f1</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> 
+        <span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-07</span><span class="p">,</span> 
+        <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> 
+        <span class="n">gamma</span><span class="o">=</span><span class="mf">0.5</span>
+    <span class="p">),</span>
+    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span>
+        <span class="n">learning_rate</span><span class="o">=</span><span class="n">lr_schedule</span><span class="p">,</span> 
+        <span class="n">clipnorm</span><span class="o">=</span><span class="mf">.5</span>
+    <span class="p">)</span>
+<span class="p">)</span>
 
 <span class="c1"># Fit the model</span>
 
 <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
     <span class="n">left_train</span><span class="p">,</span> <span class="n">right_train</span><span class="p">,</span> <span class="n">matches_train</span><span class="p">,</span>
-    <span class="n">epochs</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
-    <span class="n">batch_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-    <span class="n">mismatch_share</span><span class="o">=</span><span class="mf">.5</span><span class="p">,</span>
+    <span class="n">epochs</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">batch_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+    <span class="n">mismatch_share</span><span class="o">=</span><span class="n">mismatch_share</span><span class="p">,</span>
     <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
