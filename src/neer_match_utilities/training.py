@@ -438,8 +438,12 @@ def alpha_balanced(left, right, matches, mismatch_share:float=1.0) -> float:
         α in [0,1] for focal loss (positive-class weight).
     """
     N_pos   = len(matches)
+    N_neg   = len(left)*len(right)-len(matches)
+
+    alpha   = (mismatch_share * N_neg) / (mismatch_share * N_neg + N_pos)
+
     N_total = len(left) * len(right)
     if N_total <= 0:
         raise ValueError("Total number of pairs is zero.")
-    N_neg = (N_total - N_pos) * mismatch_share
-    return N_neg / N_total
+
+    return alpha
