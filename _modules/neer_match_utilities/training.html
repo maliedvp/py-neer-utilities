@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.training &mdash; Neer Match Utilities 1.0.18-beta documentation</title>
+  <title>neer_match_utilities.training &mdash; Neer Match Utilities 1.0.21-beta documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/extra.css?v=503a7970" />
@@ -15,7 +15,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=94af8357"></script>
+      <script src="../../_static/documentation_options.js?v=1a10efc9"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -160,6 +160,15 @@
 <li class="toctree-l3"><a class="reference internal" href="../../training.html#neer_match_utilities.training.Training.performance_statistics_export"><code class="docutils literal notranslate"><span class="pre">Training.performance_statistics_export()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../training.html#neer_match_utilities.training.TrainingPipe"><code class="docutils literal notranslate"><span class="pre">TrainingPipe</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../training.html#neer_match_utilities.training.TrainingPipe.WarmupCosine"><code class="docutils literal notranslate"><span class="pre">TrainingPipe.WarmupCosine</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../training.html#neer_match_utilities.training.TrainingPipe.WarmupCosine.__init__"><code class="docutils literal notranslate"><span class="pre">TrainingPipe.WarmupCosine.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../training.html#neer_match_utilities.training.TrainingPipe.WarmupCosine.from_config"><code class="docutils literal notranslate"><span class="pre">TrainingPipe.WarmupCosine.from_config()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../training.html#neer_match_utilities.training.TrainingPipe.__init__"><code class="docutils literal notranslate"><span class="pre">TrainingPipe.__init__()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../training.html#neer_match_utilities.training.alpha_balanced"><code class="docutils literal notranslate"><span class="pre">alpha_balanced()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../training.html#neer_match_utilities.training.combined_loss"><code class="docutils literal notranslate"><span class="pre">combined_loss()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../training.html#neer_match_utilities.training.focal_loss"><code class="docutils literal notranslate"><span class="pre">focal_loss()</span></code></a></li>
@@ -197,7 +206,13 @@
            <div itemprop="articleBody">
              
   <h1>Source code for neer_match_utilities.training</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">SuperClass</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">SuperClass</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">neer_match.similarity_map</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimilarityMap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neer_match.matching_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">DLMatchingModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">EpochEndSaver</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -207,6 +222,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow.keras.backend</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">K</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 
 
 <div class="viewcode-block" id="Training">
@@ -438,14 +454,22 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Parameter `alpha` must be in the range [0, 1].&quot;</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">loss</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
-        <span class="c1"># Compute the binary cross-entropy</span>
-        <span class="n">bce</span> <span class="o">=</span> <span class="n">K</span><span class="o">.</span><span class="n">binary_crossentropy</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+        <span class="c1"># numerical safety</span>
+        <span class="n">eps</span> <span class="o">=</span> <span class="n">K</span><span class="o">.</span><span class="n">epsilon</span><span class="p">()</span>
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">K</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">eps</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">eps</span><span class="p">)</span>
 
-        <span class="c1"># Compute p_t, the probability of the true class</span>
-        <span class="n">p_t</span> <span class="o">=</span> <span class="n">y_true</span> <span class="o">*</span> <span class="n">y_pred</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">y_true</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">)</span>
+        <span class="c1"># per-example alpha: alpha for positive, (1-alpha) for negative</span>
+        <span class="n">alpha_t</span> <span class="o">=</span> <span class="n">y_true</span> <span class="o">*</span> <span class="n">alpha</span> <span class="o">+</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">y_true</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span>
 
-        <span class="c1"># Apply focal loss scaling</span>
-        <span class="k">return</span> <span class="n">K</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">alpha</span> <span class="o">*</span> <span class="n">K</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">p_t</span><span class="p">,</span> <span class="n">gamma</span><span class="p">)</span> <span class="o">*</span> <span class="n">bce</span><span class="p">)</span>
+        <span class="c1"># p_t is the prob of the true class</span>
+        <span class="n">p_t</span> <span class="o">=</span> <span class="n">y_true</span> <span class="o">*</span> <span class="n">y_pred</span> <span class="o">+</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">y_true</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">)</span>
+
+        <span class="c1"># BCE equals -log(p_t) when reduced per-example</span>
+        <span class="n">bce</span> <span class="o">=</span> <span class="o">-</span><span class="n">K</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">p_t</span><span class="p">)</span>
+
+        <span class="c1"># focal modulation and weighting</span>
+        <span class="n">fl</span> <span class="o">=</span> <span class="n">alpha_t</span> <span class="o">*</span> <span class="n">K</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">p_t</span><span class="p">,</span> <span class="n">gamma</span><span class="p">)</span> <span class="o">*</span> <span class="n">bce</span>
+        <span class="k">return</span> <span class="n">K</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">fl</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">loss</span></div>
 
@@ -645,7 +669,7 @@
 
 <div class="viewcode-block" id="alpha_balanced">
 <a class="viewcode-back" href="../../training.html#neer_match_utilities.training.alpha_balanced">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">alpha_balanced</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">matches</span><span class="p">,</span> <span class="n">mismatch_share</span><span class="p">:</span><span class="nb">float</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">alpha_balanced</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">matches</span><span class="p">,</span> <span class="n">mismatch_share</span><span class="p">:</span><span class="nb">float</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">max_alpha</span><span class="p">:</span><span class="nb">float</span><span class="o">=</span><span class="mf">.95</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute α so that α*N_pos = (1-α)*N_neg.</span>
 
@@ -660,11 +684,427 @@
 <span class="sd">        α in [0,1] for focal loss (positive-class weight).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">N_pos</span>   <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span>
+    <span class="n">N_neg</span>   <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">left</span><span class="p">)</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">right</span><span class="p">)</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span>
+
+    <span class="n">alpha</span>   <span class="o">=</span> <span class="p">(</span><span class="n">mismatch_share</span> <span class="o">*</span> <span class="n">N_neg</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">mismatch_share</span> <span class="o">*</span> <span class="n">N_neg</span> <span class="o">+</span> <span class="n">N_pos</span><span class="p">)</span>
+
+    <span class="n">alpha</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">max_alpha</span><span class="p">)</span>
+
     <span class="n">N_total</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">left</span><span class="p">)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">N_total</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Total number of pairs is zero.&quot;</span><span class="p">)</span>
-    <span class="n">N_neg</span> <span class="o">=</span> <span class="p">(</span><span class="n">N_total</span> <span class="o">-</span> <span class="n">N_pos</span><span class="p">)</span> <span class="o">*</span> <span class="n">mismatch_share</span>
-    <span class="k">return</span> <span class="n">N_neg</span> <span class="o">/</span> <span class="n">N_total</span></div>
+
+    <span class="k">return</span> <span class="n">alpha</span></div>
+
+
+
+<div class="viewcode-block" id="TrainingPipe">
+<a class="viewcode-back" href="../../training.html#neer_match_utilities.training.TrainingPipe">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TrainingPipe</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Orchestrates the full training and evaluation process of a deep learning</span>
+<span class="sd">    record-linkage model using a user-supplied similarity map and preprocessed data.</span>
+
+<span class="sd">    The class handles both training phases (soft-F1 pretraining and focal-loss fine-tuning),</span>
+<span class="sd">    dynamic learning-rate scheduling, and automatic weight-decay adaptation. It also exports</span>
+<span class="sd">    checkpoints, final models, and evaluation statistics for reproducibility.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    model_name : str</span>
+<span class="sd">        Name assigned to the trained model. A corresponding subdirectory is created</span>
+<span class="sd">        under the project directory to store checkpoints and exports.</span>
+
+<span class="sd">    test_ratio : float</span>
+<span class="sd">        Proportion of data reserved for testing, used for logging and performance tracking.</span>
+
+<span class="sd">    epochs_1 : int</span>
+<span class="sd">        Number of training epochs during the first phase (soft-F1 pretraining).</span>
+
+<span class="sd">    mismatch_share_1 : float</span>
+<span class="sd">        Fraction of all possible negative (non-matching) pairs used during Round 1 training.</span>
+
+<span class="sd">    epochs_2 : int</span>
+<span class="sd">        Number of training epochs during the second phase (focal-loss fine-tuning).</span>
+
+<span class="sd">    mismatch_share_2 : float</span>
+<span class="sd">        Fraction of all possible negative pairs used during Round 2 training.</span>
+
+<span class="sd">    no_tm_pbatch : int</span>
+<span class="sd">        Target number of positive (matching) pairs per batch. Used to adapt batch size</span>
+<span class="sd">        dynamically via the `required_batch_size` heuristic.</span>
+
+<span class="sd">    gamma : float</span>
+<span class="sd">        Focusing parameter of the focal loss (applies in Round 2).</span>
+<span class="sd">        Larger values emphasize hard-to-classify examples.</span>
+
+<span class="sd">    max_alpha : float</span>
+<span class="sd">        Maximum weighting factor for the positive class in the focal loss.</span>
+<span class="sd">        Prevents instability for extremely imbalanced datasets.</span>
+
+<span class="sd">    training_data : tuple or dict</span>
+<span class="sd">        Preprocessed training data in one of the following formats:</span>
+<span class="sd">        - Tuple: (left_train, right_train, matches_train)</span>
+<span class="sd">        - Dict: {&quot;left&quot;: left_train, &quot;right&quot;: right_train, &quot;matches&quot;: matches_train}</span>
+
+<span class="sd">        Each element must be a `pandas.DataFrame` containing an `id_unique` column.</span>
+
+<span class="sd">    testing_data : tuple or dict</span>
+<span class="sd">        Preprocessed testing data in one of the following formats:</span>
+<span class="sd">        - Tuple: (left_test, right_test, matches_test)</span>
+<span class="sd">        - Dict: {&quot;left&quot;: left_test, &quot;right&quot;: right_test, &quot;matches&quot;: matches_test}</span>
+
+<span class="sd">        Each element must be a `pandas.DataFrame` containing an `id_unique` column.</span>
+
+<span class="sd">    similarity_map : dict</span>
+<span class="sd">        User-defined similarity configuration mapping variable names to similarity measures.</span>
+<span class="sd">        Must follow the format accepted by `SimilarityMap`.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    None</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">    ------</span>
+<span class="sd">    - The pipeline assumes that the data have already been preprocessed, formatted, and tokenized.</span>
+<span class="sd">    - Round 1 (soft-F1 phase) initializes the model and emphasizes balanced learning across classes.</span>
+<span class="sd">    - Round 2 (focal-loss phase) refines the model to focus on hard-to-classify examples.</span>
+<span class="sd">    - Dynamic heuristics are used to automatically infer:</span>
+<span class="sd">        * Batch size (via expected positive density)</span>
+<span class="sd">        * Peak learning rate (scaled with batch size, positives per batch, and parameter count)</span>
+<span class="sd">        * Weight decay (adjusted based on model size and learning rate)</span>
+<span class="sd">    - Model checkpoints, histories, and evaluation reports are stored in subdirectories named</span>
+<span class="sd">      after the provided `model_name`.</span>
+<span class="sd">    - The final model, similarity map, and performance metrics are exported to disk using the</span>
+<span class="sd">      `Training.performance_statistics_export` method for reproducibility.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># ---------- Built-in helpers ----------</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">required_batch_size</span><span class="p">(</span><span class="n">num_matches</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                            <span class="n">num_left</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                            <span class="n">num_right</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                            <span class="n">mismatch_share</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                            <span class="n">desired_pos_per_batch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+                            <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-12</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+        <span class="n">total_mismatches</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">num_left</span> <span class="o">*</span> <span class="n">num_right</span> <span class="o">-</span> <span class="n">num_matches</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">sampled_negatives</span> <span class="o">=</span> <span class="n">mismatch_share</span> <span class="o">*</span> <span class="n">total_mismatches</span>
+        <span class="n">denom</span> <span class="o">=</span> <span class="n">num_matches</span> <span class="o">+</span> <span class="n">sampled_negatives</span>
+        <span class="k">if</span> <span class="n">denom</span> <span class="o">&lt;=</span> <span class="n">eps</span> <span class="ow">or</span> <span class="n">num_matches</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">desired_pos_per_batch</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="mf">0.0</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">num_matches</span> <span class="o">/</span> <span class="n">denom</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="n">eps</span><span class="p">)</span>
+        <span class="n">batch_size</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">desired_pos_per_batch</span> <span class="o">/</span> <span class="n">q</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">batch_size</span> <span class="o">*</span> <span class="n">q</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">count_trainable_params</span><span class="p">(</span><span class="n">keras_model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">num_elements</span><span class="p">()</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">keras_model</span><span class="o">.</span><span class="n">trainable_variables</span><span class="p">))</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">suggest_peak_lr_adamw</span><span class="p">(</span><span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                              <span class="n">positives_per_batch</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                              <span class="n">param_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                              <span class="n">base_batch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span>
+                              <span class="n">base_lr</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="p">,</span>
+                              <span class="n">min_lr</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">3e-4</span><span class="p">,</span>
+                              <span class="n">max_lr</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">3e-3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="n">lr</span> <span class="o">=</span> <span class="n">base_lr</span> <span class="o">*</span> <span class="p">(</span><span class="n">batch_size</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">base_batch</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">positives_per_batch</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">positives_per_batch</span><span class="p">,</span> <span class="mf">16.0</span><span class="p">),</span> <span class="mf">1.0</span><span class="p">)</span>
+            <span class="n">shrink</span> <span class="o">=</span> <span class="mf">0.6</span> <span class="o">+</span> <span class="mf">0.4</span> <span class="o">*</span> <span class="p">((</span><span class="n">x</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">15.0</span><span class="p">)</span>  <span class="c1"># in [0.6, 1.0]</span>
+            <span class="n">lr</span> <span class="o">*=</span> <span class="n">shrink</span>
+        <span class="k">if</span> <span class="n">param_count</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">scale</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">param_count</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">-</span> <span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mi">10_000_000</span><span class="p">)</span>
+            <span class="n">lr</span> <span class="o">*=</span> <span class="p">(</span><span class="mf">0.8</span> <span class="o">**</span> <span class="nb">max</span><span class="p">(</span><span class="n">scale</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">lr</span><span class="p">,</span> <span class="n">max_lr</span><span class="p">),</span> <span class="n">min_lr</span><span class="p">))</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_suggest_weight_decay_adamw</span><span class="p">(</span><span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                    <span class="n">param_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                    <span class="n">learning_rate</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                                    <span class="n">base_batch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span>
+                                    <span class="n">base_params</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10_000_000</span><span class="p">,</span>
+                                    <span class="n">base_lr</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="p">,</span>
+                                    <span class="n">base_wd</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">5e-4</span><span class="p">,</span>
+                                    <span class="n">wd_min</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-5</span><span class="p">,</span>
+                                    <span class="n">wd_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">5e-3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="n">batch_scale</span> <span class="o">=</span> <span class="n">base_batch</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">batch_size</span><span class="p">)</span>
+        <span class="n">batch_scale</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">batch_scale</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span> <span class="mf">2.0</span><span class="p">)</span>
+        <span class="n">param_scale</span> <span class="o">=</span> <span class="p">(</span><span class="n">base_params</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">param_count</span><span class="p">))</span> <span class="o">**</span> <span class="mf">0.2</span>
+        <span class="n">param_scale</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">param_scale</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span> <span class="mf">2.0</span><span class="p">)</span>
+        <span class="n">lr_scale</span> <span class="o">=</span> <span class="p">(</span><span class="n">learning_rate</span> <span class="o">/</span> <span class="n">base_lr</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
+        <span class="n">lr_scale</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">lr_scale</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span> <span class="mf">2.0</span><span class="p">)</span>
+        <span class="n">wd</span> <span class="o">=</span> <span class="n">base_wd</span> <span class="o">*</span> <span class="n">batch_scale</span> <span class="o">*</span> <span class="n">param_scale</span> <span class="o">*</span> <span class="n">lr_scale</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">wd</span><span class="p">,</span> <span class="n">wd_max</span><span class="p">),</span> <span class="n">wd_min</span><span class="p">))</span>
+
+    <span class="c1"># ---------- Inner: WarmupCosine schedule ----------</span>
+<div class="viewcode-block" id="TrainingPipe.WarmupCosine">
+<a class="viewcode-back" href="../../training.html#neer_match_utilities.training.TrainingPipe.WarmupCosine">[docs]</a>
+    <span class="nd">@tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">register_keras_serializable</span><span class="p">(</span><span class="n">package</span><span class="o">=</span><span class="s2">&quot;custom&quot;</span><span class="p">)</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">WarmupCosine</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">schedules</span><span class="o">.</span><span class="n">LearningRateSchedule</span><span class="p">):</span>
+<div class="viewcode-block" id="TrainingPipe.WarmupCosine.__init__">
+<a class="viewcode-back" href="../../training.html#neer_match_utilities.training.TrainingPipe.WarmupCosine.__init__">[docs]</a>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">peak_lr</span><span class="p">,</span> <span class="n">warmup_steps</span><span class="p">,</span> <span class="n">total_steps</span><span class="p">,</span> <span class="n">min_lr_ratio</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">peak_lr</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">peak_lr</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">warmup_steps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">warmup_steps</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">total_steps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">total_steps</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">min_lr_ratio</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">min_lr_ratio</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span></div>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+            <span class="n">step</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+            <span class="n">peak</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">peak_lr</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+            <span class="n">warm_steps</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">warmup_steps</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+            <span class="n">tot_steps</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">total_steps</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+            <span class="n">min_ratio</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_lr_ratio</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+            <span class="n">warm</span> <span class="o">=</span> <span class="n">peak</span> <span class="o">*</span> <span class="p">(</span><span class="n">step</span> <span class="o">/</span> <span class="n">tf</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">warm_steps</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
+            <span class="n">cos</span> <span class="o">=</span> <span class="n">peak</span> <span class="o">*</span> <span class="p">(</span>
+                <span class="n">min_ratio</span>
+                <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">min_ratio</span><span class="p">)</span>
+                <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">tf</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">step</span> <span class="o">-</span> <span class="n">warm_steps</span><span class="p">)</span> <span class="o">/</span>
+                                <span class="n">tf</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">tot_steps</span> <span class="o">-</span> <span class="n">warm_steps</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)))</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">step</span> <span class="o">&lt;</span> <span class="n">warm_steps</span><span class="p">,</span> <span class="n">warm</span><span class="p">,</span> <span class="n">cos</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;peak_lr&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">peak_lr</span><span class="p">,</span>
+                <span class="s2">&quot;warmup_steps&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">warmup_steps</span><span class="p">,</span>
+                <span class="s2">&quot;total_steps&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_steps</span><span class="p">,</span>
+                <span class="s2">&quot;min_lr_ratio&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_lr_ratio</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="p">}</span>
+
+<div class="viewcode-block" id="TrainingPipe.WarmupCosine.from_config">
+<a class="viewcode-back" href="../../training.html#neer_match_utilities.training.TrainingPipe.WarmupCosine.from_config">[docs]</a>
+        <span class="nd">@classmethod</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">from_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">config</span><span class="p">)</span></div>
+</div>
+
+
+    <span class="c1"># ---------- Pipeline ----------</span>
+<div class="viewcode-block" id="TrainingPipe.__init__">
+<a class="viewcode-back" href="../../training.html#neer_match_utilities.training.TrainingPipe.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">epochs_1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">mismatch_share_1</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">epochs_2</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">mismatch_share_2</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">no_tm_pbatch</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">max_alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">training_data</span><span class="p">,</span>   <span class="c1"># (left_train, right_train, matches_train) OR dict with keys</span>
+        <span class="n">testing_data</span><span class="p">,</span>    <span class="c1"># (left_test, right_test, matches_test)   OR dict with keys</span>
+        <span class="n">similarity_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+        <span class="n">initial_feature_width_scales</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="n">feature_depths</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="n">initial_record_width_scale</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="n">record_depth</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="n">similarity_map</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;similarity_map is required and must not be None.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">similarity_map</span> <span class="o">=</span> <span class="n">similarity_map</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">=</span> <span class="n">model_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_feature_width_scales</span> <span class="o">=</span> <span class="n">initial_feature_width_scales</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feature_depths</span> <span class="o">=</span> <span class="n">feature_depths</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_record_width_scale</span> <span class="o">=</span> <span class="n">initial_record_width_scale</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">record_depth</span> <span class="o">=</span> <span class="n">record_depth</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epochs_1</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">epochs_1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mismatch_share_1</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">mismatch_share_1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epochs_2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">epochs_2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mismatch_share_2</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">mismatch_share_2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">no_tm_pbatch</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">no_tm_pbatch</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">gamma</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_alpha</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">max_alpha</span><span class="p">)</span>
+
+        <span class="c1"># Unpack user-supplied data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matches_train</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unpack_split</span><span class="p">(</span><span class="n">training_data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">left_test</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_test</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matches_test</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unpack_split</span><span class="p">(</span><span class="n">testing_data</span><span class="p">)</span>
+
+        <span class="c1"># Basic sanity checks</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">df</span> <span class="ow">in</span> <span class="p">[(</span><span class="s2">&quot;left_train&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;right_train&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">),</span>
+                         <span class="p">(</span><span class="s2">&quot;left_test&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">left_test</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;right_test&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_test</span><span class="p">)]:</span>
+            <span class="k">if</span> <span class="s2">&quot;id_unique&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must include column &#39;id_unique&#39;.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">:</span> <span class="n">DLMatchingModel</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Minimal Training helper for exporting stats at the end</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">training_util</span> <span class="o">=</span> <span class="n">Training</span><span class="p">(</span>
+            <span class="n">similarity_map</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">similarity_map</span><span class="p">,</span>
+            <span class="n">df_left</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">,</span> <span class="n">df_right</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">,</span>
+            <span class="n">id_left</span><span class="o">=</span><span class="s2">&quot;id_unique&quot;</span><span class="p">,</span> <span class="n">id_right</span><span class="o">=</span><span class="s2">&quot;id_unique&quot;</span>
+        <span class="p">)</span></div>
+
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_unpack_split</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">obj</span><span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">],</span> <span class="n">obj</span><span class="p">[</span><span class="s2">&quot;right&quot;</span><span class="p">],</span> <span class="n">obj</span><span class="p">[</span><span class="s2">&quot;matches&quot;</span><span class="p">]</span>
+        <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">matches</span> <span class="o">=</span> <span class="n">obj</span>
+        <span class="k">return</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">matches</span>
+
+    <span class="c1"># ---------- Public entry point ----------</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Build model with provided similarity map</span>
+        <span class="n">smap</span> <span class="o">=</span> <span class="n">SimilarityMap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">similarity_map</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">DLMatchingModel</span><span class="p">(</span>
+            <span class="n">similarity_map</span><span class="o">=</span><span class="n">smap</span><span class="p">,</span> 
+            <span class="n">initial_feature_width_scales</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_feature_width_scales</span><span class="p">,</span>
+            <span class="n">feature_depths</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_depths</span><span class="p">,</span>
+            <span class="n">initial_record_width_scale</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_record_width_scale</span><span class="p">,</span>
+            <span class="n">record_depth</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">record_depth</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Warmup pass to initialize shapes/BN, etc.</span>
+        <span class="n">bsz_warm</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">required_batch_size</span><span class="p">(</span>
+            <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matches_train</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mismatch_share_1</span><span class="p">,</span> <span class="n">desired_pos_per_batch</span><span class="o">=</span><span class="mi">16</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matches_train</span><span class="p">,</span>
+            <span class="n">epochs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">bsz_warm</span><span class="p">,</span> <span class="n">mismatch_share</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Count params</span>
+        <span class="n">P</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">count_trainable_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+
+        <span class="c1"># Round 1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_round1</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
+
+        <span class="c1"># Round 2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_round2</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
+
+        <span class="c1"># Save, evaluate, export</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_finalize_and_report</span><span class="p">()</span>
+
+    <span class="c1"># ---------- Rounds ----------</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_round1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+        <span class="n">batch_size</span><span class="p">,</span> <span class="n">expected_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">required_batch_size</span><span class="p">(</span>
+            <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matches_train</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mismatch_share_1</span><span class="p">,</span> <span class="n">desired_pos_per_batch</span><span class="o">=</span><span class="mi">16</span>
+        <span class="p">)</span>
+        <span class="n">peak_lr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">suggest_peak_lr_adamw</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">expected_pos</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
+
+        <span class="n">no_obs_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mismatch_share_1</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matches_train</span><span class="p">))</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matches_train</span><span class="p">)</span>
+        <span class="n">steps_per_epoch_1</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">no_obs_1</span> <span class="o">/</span> <span class="n">batch_size</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="n">total_steps_1</span> <span class="o">=</span> <span class="n">steps_per_epoch_1</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">epochs_1</span>
+        <span class="n">warmup_steps_1</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">0.1</span> <span class="o">*</span> <span class="n">total_steps_1</span><span class="p">)</span>
+
+        <span class="n">lr_sched_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">WarmupCosine</span><span class="p">(</span><span class="n">peak_lr</span><span class="p">,</span> <span class="n">warmup_steps_1</span><span class="p">,</span> <span class="n">total_steps_1</span><span class="p">,</span> <span class="n">min_lr_ratio</span><span class="o">=</span><span class="mf">0.001</span><span class="p">)</span>
+        <span class="n">wd_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_suggest_weight_decay_adamw</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">peak_lr</span><span class="p">)</span>
+        <span class="n">opt_1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">AdamW</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">lr_sched_1</span><span class="p">,</span> <span class="n">weight_decay</span><span class="o">=</span><span class="n">wd_1</span><span class="p">,</span> <span class="n">clipnorm</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">soft_f1_loss</span><span class="p">(),</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">opt_1</span><span class="p">)</span>
+
+        <span class="n">saver</span> <span class="o">=</span> <span class="n">EpochEndSaver</span><span class="p">(</span><span class="n">base_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">)</span>
+        <span class="n">history</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matches_train</span><span class="p">,</span>
+            <span class="n">epochs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">epochs_1</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+            <span class="n">mismatch_share</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mismatch_share_1</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">saver</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="n">df_epoch</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">history</span><span class="o">.</span><span class="n">history</span><span class="p">)</span>
+        <span class="n">df_epoch</span><span class="p">[</span><span class="s2">&quot;epoch&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">history</span><span class="o">.</span><span class="n">epoch</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">&quot;checkpoints&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">df_epoch</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">&quot;checkpoints&quot;</span> <span class="o">/</span> <span class="s2">&quot;epoch_overview.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">best_row</span> <span class="o">=</span> <span class="n">df_epoch</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_epoch</span><span class="p">[</span><span class="s2">&quot;f1&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">idxmax</span><span class="p">()]</span>
+        <span class="n">best_epoch</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">best_row</span><span class="p">[</span><span class="s2">&quot;epoch&quot;</span><span class="p">])</span>
+        <span class="n">best_epoch_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">best_epoch</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="c1"># Load best R1 model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">&quot;checkpoints&quot;</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;epoch_</span><span class="si">{</span><span class="n">best_epoch_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[R1] best epoch:&quot;</span><span class="p">,</span> <span class="n">best_epoch</span><span class="p">,</span> <span class="s2">&quot;path:&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">&quot;checkpoints_round1&quot;</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;epoch_</span><span class="si">{</span><span class="n">best_epoch_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Sanity-evaluate the loaded model before Round 2 training</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">soft_f1_loss</span><span class="p">(),</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">Adam</span><span class="p">())</span>  <span class="c1"># dummy opt</span>
+        <span class="n">eval_probe</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matches_train</span><span class="p">,</span>
+                                         <span class="n">mismatch_share</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mismatch_share_1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[R1-&gt;R2] probe metrics after load:&quot;</span><span class="p">,</span> <span class="n">eval_probe</span><span class="p">)</span>
+
+        <span class="c1"># Preserve Round 1 checkpoints</span>
+        <span class="n">old_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">&quot;checkpoints&quot;</span>
+        <span class="n">new_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">&quot;checkpoints_round1&quot;</span>
+        <span class="k">if</span> <span class="n">old_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">old_path</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">new_path</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_round2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+        <span class="c1"># alpha bounded by your alpha_balanced (expects max_alpha argument in your implementation)</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha_balanced</span><span class="p">(</span>
+            <span class="n">left</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">,</span> <span class="n">matches</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">matches_train</span><span class="p">,</span>
+            <span class="n">mismatch_share</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mismatch_share_2</span><span class="p">,</span> <span class="n">max_alpha</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_alpha</span>
+        <span class="p">)</span>
+
+        <span class="n">batch_size</span><span class="p">,</span> <span class="n">expected_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">required_batch_size</span><span class="p">(</span>
+            <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matches_train</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mismatch_share_2</span><span class="p">,</span> <span class="n">desired_pos_per_batch</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">no_tm_pbatch</span>
+        <span class="p">)</span>
+        <span class="n">no_obs_2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mismatch_share_2</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matches_train</span><span class="p">))</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matches_train</span><span class="p">)</span>
+        <span class="n">steps_per_epoch_2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">no_obs_2</span> <span class="o">/</span> <span class="n">batch_size</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="n">total_steps_2</span> <span class="o">=</span> <span class="n">steps_per_epoch_2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">epochs_2</span>
+        <span class="n">warmup_steps_2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">0.1</span> <span class="o">*</span> <span class="n">total_steps_2</span><span class="p">)</span>
+
+        <span class="n">peak_lr_2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">suggest_peak_lr_adamw</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">expected_pos</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
+        <span class="n">peak_lr_2</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">peak_lr_2</span><span class="p">,</span> <span class="mf">1e-4</span><span class="p">)</span>  <span class="c1"># your cap</span>
+
+        <span class="n">lr_sched_2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">WarmupCosine</span><span class="p">(</span><span class="n">peak_lr_2</span><span class="p">,</span> <span class="n">warmup_steps_2</span><span class="p">,</span> <span class="n">total_steps_2</span><span class="p">,</span> <span class="n">min_lr_ratio</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="n">wd_2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_suggest_weight_decay_adamw</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">peak_lr_2</span><span class="p">)</span>
+        <span class="n">opt_2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">AdamW</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">lr_sched_2</span><span class="p">,</span> <span class="n">weight_decay</span><span class="o">=</span><span class="n">wd_2</span><span class="p">,</span> <span class="n">clipnorm</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">focal_loss</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">gamma</span><span class="p">),</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">opt_2</span><span class="p">)</span>
+
+        <span class="n">saver</span> <span class="o">=</span> <span class="n">EpochEndSaver</span><span class="p">(</span><span class="n">base_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">)</span>
+        <span class="n">history</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matches_train</span><span class="p">,</span>
+            <span class="n">epochs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">epochs_2</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+            <span class="n">mismatch_share</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mismatch_share_2</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">saver</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="n">df_epoch</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">history</span><span class="o">.</span><span class="n">history</span><span class="p">)</span>
+        <span class="n">df_epoch</span><span class="p">[</span><span class="s2">&quot;epoch&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">history</span><span class="o">.</span><span class="n">epoch</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">&quot;checkpoints&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">df_epoch</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">&quot;checkpoints&quot;</span> <span class="o">/</span> <span class="s2">&quot;epoch_overview.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">best_row</span> <span class="o">=</span> <span class="n">df_epoch</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_epoch</span><span class="p">[</span><span class="s2">&quot;f1&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">idxmax</span><span class="p">()]</span>
+        <span class="n">best_epoch</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">best_row</span><span class="p">[</span><span class="s2">&quot;epoch&quot;</span><span class="p">])</span>
+        <span class="n">best_epoch_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">best_epoch</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">&quot;checkpoints&quot;</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;epoch_</span><span class="si">{</span><span class="n">best_epoch_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[R2] best epoch:&quot;</span><span class="p">,</span> <span class="n">best_epoch</span><span class="p">,</span> <span class="s2">&quot;path:&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">&quot;checkpoints&quot;</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;epoch_</span><span class="si">{</span><span class="n">best_epoch_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Re-compile for export/eval</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">focal_loss</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">gamma</span><span class="p">),</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">opt_2</span><span class="p">)</span>
+
+    <span class="c1"># ---------- Save / evaluate ----------</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_finalize_and_report</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">training_util</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+        <span class="c1"># Save the final bundle</span>
+        <span class="n">Model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">target_directory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">)</span>
+
+        <span class="c1"># Evaluate on supplied splits</span>
+        <span class="n">perf_train</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matches_train</span><span class="p">,</span> <span class="n">mismatch_share</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">perf_test</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left_test</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_test</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matches_test</span><span class="p">,</span> <span class="n">mismatch_share</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+
+        <span class="c1"># Export stats</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">training_util</span><span class="o">.</span><span class="n">performance_statistics_export</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span> <span class="n">target_directory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span><span class="p">,</span>
+            <span class="n">evaluation_train</span><span class="o">=</span><span class="n">perf_train</span><span class="p">,</span> <span class="n">evaluation_test</span><span class="o">=</span><span class="n">perf_test</span>
+        <span class="p">)</span></div>
 
 </pre></div>
 
