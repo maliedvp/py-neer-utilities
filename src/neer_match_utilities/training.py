@@ -225,14 +225,22 @@ def focal_loss(alpha=0.99, gamma=1.5):
         raise ValueError("Parameter `alpha` must be in the range [0, 1].")
 
     def loss(y_true, y_pred):
-        # Compute the binary cross-entropy
-        bce = K.binary_crossentropy(y_true, y_pred)
+        # numerical safety
+        eps = K.epsilon()
+        y_pred = K.clip(y_pred, eps, 1.0 - eps)
 
-        # Compute p_t, the probability of the true class
-        p_t = y_true * y_pred + (1 - y_true) * (1 - y_pred)
+        # per-example alpha: alpha for positive, (1-alpha) for negative
+        alpha_t = y_true * alpha + (1.0 - y_true) * (1.0 - alpha)
 
-        # Apply focal loss scaling
-        return K.mean(alpha * K.pow(1 - p_t, gamma) * bce)
+        # p_t is the prob of the true class
+        p_t = y_true * y_pred + (1.0 - y_true) * (1.0 - y_pred)
+
+        # BCE equals -log(p_t) when reduced per-example
+        bce = -K.log(p_t)
+
+        # focal modulation and weighting
+        fl = alpha_t * K.pow(1.0 - p_t, gamma) * bce
+        return K.mean(fl)
 
     return loss
 
@@ -423,7 +431,7 @@ def combined_loss(
 
     return loss
 
-def alpha_balanced(left, right, matches, mismatch_share:float=1.0) -> float:
+def alpha_balanced(left, right, matches, mismatch_share:float=1.0, max_alpha:float=.95) -> float:
     """
     Compute α so that α*N_pos = (1-α)*N_neg.
 
@@ -441,6 +449,8 @@ def alpha_balanced(left, right, matches, mismatch_share:float=1.0) -> float:
     N_neg   = len(left)*len(right)-len(matches)
 
     alpha   = (mismatch_share * N_neg) / (mismatch_share * N_neg + N_pos)
+
+    alpha = min(alpha, max_alpha)
 
     N_total = len(left) * len(right)
     if N_total <= 0:
