@@ -513,18 +513,26 @@ class TrainingPipe:
         - Tuple: (left_train, right_train, matches_train)
         - Dict: {"left": left_train, "right": right_train, "matches": matches_train}
 
-        Each element must be a `pandas.DataFrame` containing an `id_unique` column.
-
     testing_data : tuple or dict
         Preprocessed testing data in one of the following formats:
         - Tuple: (left_test, right_test, matches_test)
         - Dict: {"left": left_test, "right": right_test, "matches": matches_test}
 
-        Each element must be a `pandas.DataFrame` containing an `id_unique` column.
-
     similarity_map : dict
         User-defined similarity configuration mapping variable names to similarity measures.
         Must follow the format accepted by `SimilarityMap`.
+    
+    id_left_col : str, optional
+        Name of the unique identifier column in the left DataFrames
+        (`left_train` and `left_test`).
+        The ID column is used internally to index entities and to align
+        training labels. Defaults to `"id_unique"`.
+
+    id_right_col : str, optional
+        Name of the unique identifier column in the right DataFrames
+        (`right_train` and `right_test`).
+        The ID column is used internally to index entities and to align
+        training labels. Defaults to `"id_unique"`.
 
     Returns:
     --------
@@ -662,6 +670,8 @@ class TrainingPipe:
         feature_depths: int = 2,
         initial_record_width_scale: int = 10,
         record_depth: int = 4,
+        id_left_col: str = "id_unique",
+        id_right_col: str = "id_unique",
     ):
         if similarity_map is None:
             raise ValueError("similarity_map is required and must not be None.")
@@ -680,15 +690,22 @@ class TrainingPipe:
         self.gamma = float(gamma)
         self.max_alpha = float(max_alpha)
 
+        self.id_left_col = id_left_col
+        self.id_right_col = id_right_col
+
         # Unpack user-supplied data
         self.left_train, self.right_train, self.matches_train = self._unpack_split(training_data)
         self.left_test, self.right_test, self.matches_test = self._unpack_split(testing_data)
 
         # Basic sanity checks
-        for name, df in [("left_train", self.left_train), ("right_train", self.right_train),
-                         ("left_test", self.left_test), ("right_test", self.right_test)]:
-            if "id_unique" not in df.columns:
-                raise ValueError(f"{name} must include column 'id_unique'.")
+        for name, df, col in [
+            ("left_train", self.left_train, self.id_left_col),
+            ("right_train", self.right_train, self.id_right_col),
+            ("left_test", self.left_test, self.id_left_col),
+            ("right_test", self.right_test, self.id_right_col),
+        ]:
+            if col not in df.columns:
+                raise ValueError(f"{name} must include column '{col}'.")
 
         self.base_dir = Path.cwd()
         self.model: DLMatchingModel | None = None
@@ -696,8 +713,10 @@ class TrainingPipe:
         # Minimal Training helper for exporting stats at the end
         self.training_util = Training(
             similarity_map=self.similarity_map,
-            df_left=self.left_train, df_right=self.right_train,
-            id_left="id_unique", id_right="id_unique"
+            df_left=self.left_train,
+            df_right=self.right_train,
+            id_left=self.id_left_col,
+            id_right=self.id_right_col,
         )
 
     @staticmethod
