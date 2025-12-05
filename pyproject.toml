@@ -32,7 +32,9 @@ dependencies = [
     "tensorflow>=2.18.0",
     "neer-match>=0.7.38",
     "dill>=0.3.8",
-    "spacy>=3.8.7"
+    "spacy>=3.8.7",
+    "pydot>=4.0.1",
+    "graphviz>=0.21"
 ]
 
 [project.urls]

@@ -534,6 +534,11 @@ class TrainingPipe:
         The ID column is used internally to index entities and to align
         training labels. Defaults to `"id_unique"`.
 
+    save_architecture: bool, optional
+        Whether to save the model architecture in an image alongside weights when exporting.
+        Requires binaries of of graphviz to be installed. Otherwise, the code breaks.
+        Defaults to `False`.
+
     Returns:
     --------
     None
@@ -672,6 +677,7 @@ class TrainingPipe:
         record_depth: int = 4,
         id_left_col: str = "id_unique",
         id_right_col: str = "id_unique",
+        save_architecture: bool = False,
     ):
         if similarity_map is None:
             raise ValueError("similarity_map is required and must not be None.")
@@ -692,6 +698,8 @@ class TrainingPipe:
 
         self.id_left_col = id_left_col
         self.id_right_col = id_right_col
+
+        self.save_architecture = save_architecture
 
         # Unpack user-supplied data
         self.left_train, self.right_train, self.matches_train = self._unpack_split(training_data)
@@ -867,7 +875,7 @@ class TrainingPipe:
         assert self.model is not None and self.training_util is not None
 
         # Save the final bundle
-        Model.save(model=self.model, target_directory=self.base_dir, name=self.model_name)
+        Model.save(model=self.model, target_directory=self.base_dir, name=self.model_name, save_architecture=self.save_architecture)
 
         # Evaluate on supplied splits
         perf_train = self.model.evaluate(self.left_train, self.right_train, self.matches_train, mismatch_share=1.0)

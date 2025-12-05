@@ -3,6 +3,10 @@ import pickle
 from neer_match.matching_model import DLMatchingModel, NSMatchingModel
 from neer_match.similarity_map import SimilarityMap
 import tensorflow as tf
+from tensorflow.keras import layers as _layers
+from graphviz import Digraph
+from typing import Dict, List
+
 import typing
 import shutil
 import sys
@@ -25,6 +29,7 @@ class Model:
         model: typing.Union["DLMatchingModel", "NSMatchingModel"],
         target_directory: Path,
         name: str,
+        save_architecture: bool = False,
     ) -> None:
         """
         Save the model to a specified directory.
@@ -107,6 +112,29 @@ class Model:
                     pickle.dump(optimizer_config, f)
         else:
             raise ValueError("The model must be an instance of DLMatchingModel or NSMatchingModel")
+        
+        # --- Optionally save architecture diagram ---
+        if save_architecture:
+            try:
+                # Decide which Keras model to visualize in the standard plot
+                if isinstance(model, DLMatchingModel):
+                    base_model = model
+                elif isinstance(model, NSMatchingModel):
+                    base_model = model.record_pair_network
+                else:
+                    base_model = None
+
+                # High-level field + record network diagram (DLMatchingModel only)
+                if isinstance(model, DLMatchingModel):
+                    field_sizes, record_sizes = _extract_two_stage_arch(model)
+                    _draw_highlevel_architecture(
+                        field_sizes,
+                        record_sizes,
+                        out_path=target_directory / "architecture.png",
+                    )
+
+            except Exception as e:
+                print(f"Warning: could not save architecture diagram: {e}")
 
         print(f"Model successfully saved to {target_directory}")
 
@@ -190,6 +218,221 @@ class Model:
             raise ValueError("Invalid model directory: neither DLMatchingModel nor NSMatchingModel was detected.")
 
         return model
+
+
+def _extract_two_stage_arch(dl_model: "DLMatchingModel"):
+    """
+    Extract architecture of field networks and record-pair network.
+
+    Returns
+    -------
+    field_sizes : dict[str, list[int]]
+        {field_name: [in_dim, h1, ..., out_dim]} for each field network.
+        The key is a human-readable label like "current_name ~ alternative_name".
+    record_sizes : list[int]
+        [in_dim, h1, ..., out_dim] for the record-pair network.
+    """
+    # Work on inner RecordPairNetwork if present
+    base = getattr(dl_model, "record_pair_network", dl_model)
+
+    field_sizes: Dict[str, List[int]] = {}
+
+    # ------------------------------------------------------------------
+    # Field networks: list of FieldPairNetwork + association keys
+    # ------------------------------------------------------------------
+    nets = getattr(base, "field_networks", None)
+    sim_map = getattr(base, "similarity_map", None)
+
+    if nets is not None and sim_map is not None:
+        # Association keys, e.g. "current_name~alternative_name", "lat~lat_noise"
+        assoc_keys = list(sim_map.instructions.keys())
+
+        # Zip in order: one field net per association
+        for key, net in zip(assoc_keys, nets):
+            # Build a nice label using "~" as in your original similarity map
+            parts = [p.strip() for p in key.split("~")]
+            if len(parts) == 1:
+                label = parts[0]
+            else:
+                label = f"{parts[0]} ~ {parts[1]}"
+
+            sizes: List[int] = []
+
+            # Input dimension: FieldPairNetwork.size if available
+            in_dim = getattr(net, "size", None)
+            if in_dim is not None:
+                sizes.append(int(in_dim))
+
+            # Hidden + output units: from net.field_layers if present,
+            # otherwise from the Keras layers directly
+            field_layers = getattr(net, "field_layers", None)
+            if field_layers is None:
+                field_layers = [
+                    lyr for lyr in getattr(net, "layers", [])
+                    if isinstance(lyr, _layers.Dense)
+                ]
+
+            for lyr in field_layers:
+                if isinstance(lyr, _layers.Dense):
+                    sizes.append(int(lyr.units))
+
+            if sizes:
+                field_sizes[label] = sizes
+
+    # ------------------------------------------------------------------
+    # Fallback: approximate from similarity_map + hyperparams
+    # ------------------------------------------------------------------
+    if not field_sizes and sim_map is not None:
+        assoc_keys = list(sim_map.instructions.keys())
+        assoc_sizes = sim_map.association_sizes()
+
+        init_scale = getattr(base, "initial_feature_width_scales", None)
+        depth = getattr(base, "feature_depths", None)
+
+        for key, in_dim in zip(assoc_keys, assoc_sizes):
+            parts = [p.strip() for p in key.split("~")]
+            if len(parts) == 1:
+                label = parts[0]
+            else:
+                label = f"{parts[0]} ~ {parts[1]}"
+
+            sizes = [int(in_dim)]
+            if init_scale is not None and depth is not None:
+                width = int(in_dim * init_scale)
+                for _ in range(int(depth)):
+                    sizes.append(width)
+            sizes.append(1)  # scalar field prediction
+            field_sizes[label] = sizes
+
+    # ------------------------------------------------------------------
+    # Record-pair (record) network
+    # ------------------------------------------------------------------
+    record_sizes: List[int] = []
+
+    rec_layers = getattr(base, "record_layers", None)
+    if rec_layers:
+        first_dense = next(
+            (lyr for lyr in rec_layers if isinstance(lyr, _layers.Dense)),
+            None,
+        )
+        if first_dense is not None:
+            in_dim = int(first_dense.kernel.shape[0])
+            record_sizes.append(in_dim)
+
+        for lyr in rec_layers:
+            if isinstance(lyr, _layers.Dense):
+                record_sizes.append(int(lyr.units))
+
+    return field_sizes, record_sizes
+
+
+def _draw_highlevel_architecture(field_sizes: Dict[str, List[int]],
+                                 record_sizes: List[int],
+                                 out_path: Path):
+    """
+    Draw a high-level two-stage architecture diagram using graphviz.
+    """
+
+    g = Digraph("DLMatchingModel", format="png")
+    g.attr(
+        rankdir="TB",
+        fontsize="12",
+        labelloc="t",
+        label="DLMatchingModel",
+        fontname="Helvetica-Bold",
+    )
+
+    # ----------------------------
+    # Field Networks cluster
+    # ----------------------------
+    with g.subgraph(name="cluster_fields") as c:
+        c.attr(
+            label="Field Networks",
+            style="rounded",
+            color="black",
+            labelloc="t",
+            fontsize="12",
+            fontname="Helvetica",
+        )
+
+        field_pred_nodes = []
+
+        for i, (field, sizes) in enumerate(field_sizes.items()):
+            # Field network node (pink)
+            net_label = f"Field Network\n({field})\\n" + " → ".join(str(s) for s in sizes)
+            net_node = f"field_{i}_net"
+            c.node(
+                net_node,
+                label=net_label,
+                shape="box",
+                style="rounded,filled",
+                fillcolor="#f4cccc",      # light pink
+                fontname="Helvetica",
+                fontsize="10",
+            )
+
+            # Field prediction node (yellow)
+            pred_label = f"Field\nPrediction"
+            pred_node = f"field_{i}_pred"
+            c.node(
+                pred_node,
+                label=pred_label,
+                shape="box",
+                style="rounded,filled",
+                fillcolor="#fff2cc",      # light yellow
+                fontname="Helvetica",
+                fontsize="10",
+            )
+
+            # Edge: field network -> field prediction
+            c.edge(net_node, pred_node)
+
+            field_pred_nodes.append(pred_node)
+
+    # ----------------------------
+    # Record Network
+    # ----------------------------
+    if record_sizes:
+        rec_label = "Record Network\\n" + " → ".join(str(s) for s in record_sizes)
+    else:
+        rec_label = "Record Network"
+
+    g.node(
+        "record_net",
+        rec_label,
+        shape="box",
+        style="rounded,filled",
+        fillcolor="#f4cccc",
+        fontname="Helvetica",
+        fontsize="11",
+    )
+
+    # ----------------------------
+    # Record Prediction
+    # ----------------------------
+    g.node(
+        "record_pred",
+        "Record\nPrediction",
+        shape="box",
+        style="rounded,filled",
+        fillcolor="#fff2cc",
+        fontname="Helvetica",
+        fontsize="11",
+    )
+
+    # ----------------------------
+    # Arrows from all field predictions to record net
+    # ----------------------------
+    for pn in field_pred_nodes:
+        g.edge(pn, "record_net")
+
+    g.edge("record_net", "record_pred")
+
+    # ----------------------------
+    # Render
+    # ----------------------------
+    out_stem = out_path.with_suffix("")  # Graphviz appends .png
+    g.render(filename=str(out_stem), format="png", cleanup=True)
 
 
 class EpochEndSaver(tf.keras.callbacks.Callback):
