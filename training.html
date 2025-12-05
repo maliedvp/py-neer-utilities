@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Training &mdash; Neer Match Utilities 1.0.21-beta documentation</title>
+  <title>Training &mdash; Neer Match Utilities 1.0.23-beta documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=1a10efc9"></script>
+      <script src="_static/documentation_options.js?v=ffe4c0bc"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
@@ -303,7 +303,7 @@ None</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="neer_match_utilities.training.TrainingPipe">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">neer_match_utilities.training.</span></span><span class="sig-name descname"><span class="pre">TrainingPipe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mismatch_share_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs_2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mismatch_share_2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_tm_pbatch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">testing_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">similarity_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_feature_width_scales</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_depths</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_record_width_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">record_depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/training.html#TrainingPipe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.training.TrainingPipe" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">neer_match_utilities.training.</span></span><span class="sig-name descname"><span class="pre">TrainingPipe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mismatch_share_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs_2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mismatch_share_2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_tm_pbatch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">testing_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">similarity_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_feature_width_scales</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_depths</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_record_width_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">record_depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_left_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'id_unique'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_right_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'id_unique'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_architecture</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/training.html#TrainingPipe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.training.TrainingPipe" title="Link to this definition"></a></dt>
 <dd><p>Orchestrates the full training and evaluation process of a deep learning
 record-linkage model using a user-supplied similarity map and preprocessed data.</p>
 <p>The class handles both training phases (soft-F1 pretraining and focal-loss fine-tuning),
@@ -311,7 +311,7 @@ dynamic learning-rate scheduling, and automatic weight-decay adaptation. It also
 checkpoints, final models, and evaluation statistics for reproducibility.</p>
 <section id="id1">
 <h2>Parameters:<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
-<dl>
+<dl class="simple">
 <dt>model_name<span class="classifier">str</span></dt><dd><p>Name assigned to the trained model. A corresponding subdirectory is created
 under the project directory to store checkpoints and exports.</p>
 </dd>
@@ -337,15 +337,27 @@ Prevents instability for extremely imbalanced datasets.</p>
 <dt>training_data<span class="classifier">tuple or dict</span></dt><dd><p>Preprocessed training data in one of the following formats:
 - Tuple: (left_train, right_train, matches_train)
 - Dict: {“left”: left_train, “right”: right_train, “matches”: matches_train}</p>
-<p>Each element must be a <cite>pandas.DataFrame</cite> containing an <cite>id_unique</cite> column.</p>
 </dd>
 <dt>testing_data<span class="classifier">tuple or dict</span></dt><dd><p>Preprocessed testing data in one of the following formats:
 - Tuple: (left_test, right_test, matches_test)
 - Dict: {“left”: left_test, “right”: right_test, “matches”: matches_test}</p>
-<p>Each element must be a <cite>pandas.DataFrame</cite> containing an <cite>id_unique</cite> column.</p>
 </dd>
 <dt>similarity_map<span class="classifier">dict</span></dt><dd><p>User-defined similarity configuration mapping variable names to similarity measures.
 Must follow the format accepted by <cite>SimilarityMap</cite>.</p>
+</dd>
+<dt>id_left_col<span class="classifier">str, optional</span></dt><dd><p>Name of the unique identifier column in the left DataFrames
+(<cite>left_train</cite> and <cite>left_test</cite>).
+The ID column is used internally to index entities and to align
+training labels. Defaults to <cite>“id_unique”</cite>.</p>
+</dd>
+<dt>id_right_col<span class="classifier">str, optional</span></dt><dd><p>Name of the unique identifier column in the right DataFrames
+(<cite>right_train</cite> and <cite>right_test</cite>).
+The ID column is used internally to index entities and to align
+training labels. Defaults to <cite>“id_unique”</cite>.</p>
+</dd>
+<dt>save_architecture: bool, optional</dt><dd><p>Whether to save the model architecture in an image alongside weights when exporting.
+Requires binaries of of graphviz to be installed. Otherwise, the code breaks.
+Defaults to <cite>False</cite>.</p>
 </dd>
 </dl>
 </section>
@@ -399,7 +411,7 @@ after the provided <cite>model_name</cite>.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="neer_match_utilities.training.TrainingPipe.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mismatch_share_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs_2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mismatch_share_2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_tm_pbatch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">testing_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">similarity_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_feature_width_scales</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_depths</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_record_width_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">record_depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/training.html#TrainingPipe.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.training.TrainingPipe.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mismatch_share_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs_2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mismatch_share_2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_tm_pbatch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">testing_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">similarity_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_feature_width_scales</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_depths</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_record_width_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">record_depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_left_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'id_unique'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_right_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'id_unique'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_architecture</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/training.html#TrainingPipe.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.training.TrainingPipe.__init__" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>

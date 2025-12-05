@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.training &mdash; Neer Match Utilities 1.0.21-beta documentation</title>
+  <title>neer_match_utilities.training &mdash; Neer Match Utilities 1.0.23-beta documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/extra.css?v=503a7970" />
@@ -15,7 +15,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=1a10efc9"></script>
+      <script src="../../_static/documentation_options.js?v=ffe4c0bc"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -747,18 +747,31 @@
 <span class="sd">        - Tuple: (left_train, right_train, matches_train)</span>
 <span class="sd">        - Dict: {&quot;left&quot;: left_train, &quot;right&quot;: right_train, &quot;matches&quot;: matches_train}</span>
 
-<span class="sd">        Each element must be a `pandas.DataFrame` containing an `id_unique` column.</span>
-
 <span class="sd">    testing_data : tuple or dict</span>
 <span class="sd">        Preprocessed testing data in one of the following formats:</span>
 <span class="sd">        - Tuple: (left_test, right_test, matches_test)</span>
 <span class="sd">        - Dict: {&quot;left&quot;: left_test, &quot;right&quot;: right_test, &quot;matches&quot;: matches_test}</span>
 
-<span class="sd">        Each element must be a `pandas.DataFrame` containing an `id_unique` column.</span>
-
 <span class="sd">    similarity_map : dict</span>
 <span class="sd">        User-defined similarity configuration mapping variable names to similarity measures.</span>
 <span class="sd">        Must follow the format accepted by `SimilarityMap`.</span>
+<span class="sd">    </span>
+<span class="sd">    id_left_col : str, optional</span>
+<span class="sd">        Name of the unique identifier column in the left DataFrames</span>
+<span class="sd">        (`left_train` and `left_test`).</span>
+<span class="sd">        The ID column is used internally to index entities and to align</span>
+<span class="sd">        training labels. Defaults to `&quot;id_unique&quot;`.</span>
+
+<span class="sd">    id_right_col : str, optional</span>
+<span class="sd">        Name of the unique identifier column in the right DataFrames</span>
+<span class="sd">        (`right_train` and `right_test`).</span>
+<span class="sd">        The ID column is used internally to index entities and to align</span>
+<span class="sd">        training labels. Defaults to `&quot;id_unique&quot;`.</span>
+
+<span class="sd">    save_architecture: bool, optional</span>
+<span class="sd">        Whether to save the model architecture in an image alongside weights when exporting.</span>
+<span class="sd">        Requires binaries of of graphviz to be installed. Otherwise, the code breaks.</span>
+<span class="sd">        Defaults to `False`.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">    --------</span>
@@ -907,6 +920,9 @@
         <span class="n">feature_depths</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
         <span class="n">initial_record_width_scale</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
         <span class="n">record_depth</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="n">id_left_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;id_unique&quot;</span><span class="p">,</span>
+        <span class="n">id_right_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;id_unique&quot;</span><span class="p">,</span>
+        <span class="n">save_architecture</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="k">if</span> <span class="n">similarity_map</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;similarity_map is required and must not be None.&quot;</span><span class="p">)</span>
@@ -925,15 +941,24 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">gamma</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_alpha</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">max_alpha</span><span class="p">)</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">id_left_col</span> <span class="o">=</span> <span class="n">id_left_col</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id_right_col</span> <span class="o">=</span> <span class="n">id_right_col</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_architecture</span> <span class="o">=</span> <span class="n">save_architecture</span>
+
         <span class="c1"># Unpack user-supplied data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matches_train</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unpack_split</span><span class="p">(</span><span class="n">training_data</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">left_test</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_test</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matches_test</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unpack_split</span><span class="p">(</span><span class="n">testing_data</span><span class="p">)</span>
 
         <span class="c1"># Basic sanity checks</span>
-        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">df</span> <span class="ow">in</span> <span class="p">[(</span><span class="s2">&quot;left_train&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;right_train&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">),</span>
-                         <span class="p">(</span><span class="s2">&quot;left_test&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">left_test</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;right_test&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_test</span><span class="p">)]:</span>
-            <span class="k">if</span> <span class="s2">&quot;id_unique&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must include column &#39;id_unique&#39;.&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="p">(</span><span class="s2">&quot;left_train&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_left_col</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;right_train&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_right_col</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;left_test&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">left_test</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_left_col</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;right_test&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_test</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_right_col</span><span class="p">),</span>
+        <span class="p">]:</span>
+            <span class="k">if</span> <span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must include column &#39;</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">:</span> <span class="n">DLMatchingModel</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
@@ -941,8 +966,10 @@
         <span class="c1"># Minimal Training helper for exporting stats at the end</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">training_util</span> <span class="o">=</span> <span class="n">Training</span><span class="p">(</span>
             <span class="n">similarity_map</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">similarity_map</span><span class="p">,</span>
-            <span class="n">df_left</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">,</span> <span class="n">df_right</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">,</span>
-            <span class="n">id_left</span><span class="o">=</span><span class="s2">&quot;id_unique&quot;</span><span class="p">,</span> <span class="n">id_right</span><span class="o">=</span><span class="s2">&quot;id_unique&quot;</span>
+            <span class="n">df_left</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">,</span>
+            <span class="n">df_right</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">,</span>
+            <span class="n">id_left</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id_left_col</span><span class="p">,</span>
+            <span class="n">id_right</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id_right_col</span><span class="p">,</span>
         <span class="p">)</span></div>
 
 
@@ -1094,7 +1121,7 @@
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">training_util</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
         <span class="c1"># Save the final bundle</span>
-        <span class="n">Model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">target_directory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">)</span>
+        <span class="n">Model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">target_directory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span> <span class="n">save_architecture</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">save_architecture</span><span class="p">)</span>
 
         <span class="c1"># Evaluate on supplied splits</span>
         <span class="n">perf_train</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matches_train</span><span class="p">,</span> <span class="n">mismatch_share</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>

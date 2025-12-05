@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.model &mdash; Neer Match Utilities 1.0.21-beta documentation</title>
+  <title>neer_match_utilities.model &mdash; Neer Match Utilities 1.0.23-beta documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/extra.css?v=503a7970" />
@@ -15,7 +15,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=1a10efc9"></script>
+      <script src="../../_static/documentation_options.js?v=ffe4c0bc"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -211,6 +211,10 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">neer_match.matching_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">DLMatchingModel</span><span class="p">,</span> <span class="n">NSMatchingModel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">neer_match.similarity_map</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimilarityMap</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tensorflow.keras</span><span class="w"> </span><span class="kn">import</span> <span class="n">layers</span> <span class="k">as</span> <span class="n">_layers</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">graphviz</span><span class="w"> </span><span class="kn">import</span> <span class="n">Digraph</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">typing</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
@@ -237,6 +241,7 @@
         <span class="n">model</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="s2">&quot;DLMatchingModel&quot;</span><span class="p">,</span> <span class="s2">&quot;NSMatchingModel&quot;</span><span class="p">],</span>
         <span class="n">target_directory</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">save_architecture</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save the model to a specified directory.</span>
@@ -319,6 +324,29 @@
                     <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">optimizer_config</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The model must be an instance of DLMatchingModel or NSMatchingModel&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># --- Optionally save architecture diagram ---</span>
+        <span class="k">if</span> <span class="n">save_architecture</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Decide which Keras model to visualize in the standard plot</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">DLMatchingModel</span><span class="p">):</span>
+                    <span class="n">base_model</span> <span class="o">=</span> <span class="n">model</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">NSMatchingModel</span><span class="p">):</span>
+                    <span class="n">base_model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">record_pair_network</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">base_model</span> <span class="o">=</span> <span class="kc">None</span>
+
+                <span class="c1"># High-level field + record network diagram (DLMatchingModel only)</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">DLMatchingModel</span><span class="p">):</span>
+                    <span class="n">field_sizes</span><span class="p">,</span> <span class="n">record_sizes</span> <span class="o">=</span> <span class="n">_extract_two_stage_arch</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+                    <span class="n">_draw_highlevel_architecture</span><span class="p">(</span>
+                        <span class="n">field_sizes</span><span class="p">,</span>
+                        <span class="n">record_sizes</span><span class="p">,</span>
+                        <span class="n">out_path</span><span class="o">=</span><span class="n">target_directory</span> <span class="o">/</span> <span class="s2">&quot;architecture.png&quot;</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Warning: could not save architecture diagram: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model successfully saved to </span><span class="si">{</span><span class="n">target_directory</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
@@ -407,6 +435,221 @@
         <span class="k">return</span> <span class="n">model</span></div>
 </div>
 
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_extract_two_stage_arch</span><span class="p">(</span><span class="n">dl_model</span><span class="p">:</span> <span class="s2">&quot;DLMatchingModel&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extract architecture of field networks and record-pair network.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    field_sizes : dict[str, list[int]]</span>
+<span class="sd">        {field_name: [in_dim, h1, ..., out_dim]} for each field network.</span>
+<span class="sd">        The key is a human-readable label like &quot;current_name ~ alternative_name&quot;.</span>
+<span class="sd">    record_sizes : list[int]</span>
+<span class="sd">        [in_dim, h1, ..., out_dim] for the record-pair network.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Work on inner RecordPairNetwork if present</span>
+    <span class="n">base</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">dl_model</span><span class="p">,</span> <span class="s2">&quot;record_pair_network&quot;</span><span class="p">,</span> <span class="n">dl_model</span><span class="p">)</span>
+
+    <span class="n">field_sizes</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># ------------------------------------------------------------------</span>
+    <span class="c1"># Field networks: list of FieldPairNetwork + association keys</span>
+    <span class="c1"># ------------------------------------------------------------------</span>
+    <span class="n">nets</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="s2">&quot;field_networks&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">sim_map</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="s2">&quot;similarity_map&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">nets</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">sim_map</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Association keys, e.g. &quot;current_name~alternative_name&quot;, &quot;lat~lat_noise&quot;</span>
+        <span class="n">assoc_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">sim_map</span><span class="o">.</span><span class="n">instructions</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+        <span class="c1"># Zip in order: one field net per association</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">net</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">assoc_keys</span><span class="p">,</span> <span class="n">nets</span><span class="p">):</span>
+            <span class="c1"># Build a nice label using &quot;~&quot; as in your original similarity map</span>
+            <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">)]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">label</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">label</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> ~ </span><span class="si">{</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+
+            <span class="n">sizes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="c1"># Input dimension: FieldPairNetwork.size if available</span>
+            <span class="n">in_dim</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="s2">&quot;size&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">in_dim</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">sizes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">in_dim</span><span class="p">))</span>
+
+            <span class="c1"># Hidden + output units: from net.field_layers if present,</span>
+            <span class="c1"># otherwise from the Keras layers directly</span>
+            <span class="n">field_layers</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="s2">&quot;field_layers&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">field_layers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">field_layers</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">lyr</span> <span class="k">for</span> <span class="n">lyr</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="s2">&quot;layers&quot;</span><span class="p">,</span> <span class="p">[])</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lyr</span><span class="p">,</span> <span class="n">_layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">)</span>
+                <span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">lyr</span> <span class="ow">in</span> <span class="n">field_layers</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lyr</span><span class="p">,</span> <span class="n">_layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">):</span>
+                    <span class="n">sizes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">lyr</span><span class="o">.</span><span class="n">units</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="n">sizes</span><span class="p">:</span>
+                <span class="n">field_sizes</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="n">sizes</span>
+
+    <span class="c1"># ------------------------------------------------------------------</span>
+    <span class="c1"># Fallback: approximate from similarity_map + hyperparams</span>
+    <span class="c1"># ------------------------------------------------------------------</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">field_sizes</span> <span class="ow">and</span> <span class="n">sim_map</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">assoc_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">sim_map</span><span class="o">.</span><span class="n">instructions</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">assoc_sizes</span> <span class="o">=</span> <span class="n">sim_map</span><span class="o">.</span><span class="n">association_sizes</span><span class="p">()</span>
+
+        <span class="n">init_scale</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="s2">&quot;initial_feature_width_scales&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">depth</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="s2">&quot;feature_depths&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">in_dim</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">assoc_keys</span><span class="p">,</span> <span class="n">assoc_sizes</span><span class="p">):</span>
+            <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">)]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">label</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">label</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> ~ </span><span class="si">{</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+
+            <span class="n">sizes</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">in_dim</span><span class="p">)]</span>
+            <span class="k">if</span> <span class="n">init_scale</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">depth</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">width</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">in_dim</span> <span class="o">*</span> <span class="n">init_scale</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">depth</span><span class="p">)):</span>
+                    <span class="n">sizes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">width</span><span class="p">)</span>
+            <span class="n">sizes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># scalar field prediction</span>
+            <span class="n">field_sizes</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="n">sizes</span>
+
+    <span class="c1"># ------------------------------------------------------------------</span>
+    <span class="c1"># Record-pair (record) network</span>
+    <span class="c1"># ------------------------------------------------------------------</span>
+    <span class="n">record_sizes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">rec_layers</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="s2">&quot;record_layers&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">rec_layers</span><span class="p">:</span>
+        <span class="n">first_dense</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">lyr</span> <span class="k">for</span> <span class="n">lyr</span> <span class="ow">in</span> <span class="n">rec_layers</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lyr</span><span class="p">,</span> <span class="n">_layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">)),</span>
+            <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">first_dense</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">in_dim</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">first_dense</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">record_sizes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">in_dim</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">lyr</span> <span class="ow">in</span> <span class="n">rec_layers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lyr</span><span class="p">,</span> <span class="n">_layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">):</span>
+                <span class="n">record_sizes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">lyr</span><span class="o">.</span><span class="n">units</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">field_sizes</span><span class="p">,</span> <span class="n">record_sizes</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_draw_highlevel_architecture</span><span class="p">(</span><span class="n">field_sizes</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span>
+                                 <span class="n">record_sizes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+                                 <span class="n">out_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Draw a high-level two-stage architecture diagram using graphviz.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">g</span> <span class="o">=</span> <span class="n">Digraph</span><span class="p">(</span><span class="s2">&quot;DLMatchingModel&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;png&quot;</span><span class="p">)</span>
+    <span class="n">g</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span>
+        <span class="n">rankdir</span><span class="o">=</span><span class="s2">&quot;TB&quot;</span><span class="p">,</span>
+        <span class="n">fontsize</span><span class="o">=</span><span class="s2">&quot;12&quot;</span><span class="p">,</span>
+        <span class="n">labelloc</span><span class="o">=</span><span class="s2">&quot;t&quot;</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="s2">&quot;DLMatchingModel&quot;</span><span class="p">,</span>
+        <span class="n">fontname</span><span class="o">=</span><span class="s2">&quot;Helvetica-Bold&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># ----------------------------</span>
+    <span class="c1"># Field Networks cluster</span>
+    <span class="c1"># ----------------------------</span>
+    <span class="k">with</span> <span class="n">g</span><span class="o">.</span><span class="n">subgraph</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;cluster_fields&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">c</span><span class="p">:</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span>
+            <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Field Networks&quot;</span><span class="p">,</span>
+            <span class="n">style</span><span class="o">=</span><span class="s2">&quot;rounded&quot;</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+            <span class="n">labelloc</span><span class="o">=</span><span class="s2">&quot;t&quot;</span><span class="p">,</span>
+            <span class="n">fontsize</span><span class="o">=</span><span class="s2">&quot;12&quot;</span><span class="p">,</span>
+            <span class="n">fontname</span><span class="o">=</span><span class="s2">&quot;Helvetica&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">field_pred_nodes</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">sizes</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">field_sizes</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+            <span class="c1"># Field network node (pink)</span>
+            <span class="n">net_label</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Field Network</span><span class="se">\n</span><span class="s2">(</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2">)</span><span class="se">\\</span><span class="s2">n&quot;</span> <span class="o">+</span> <span class="s2">&quot; → &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sizes</span><span class="p">)</span>
+            <span class="n">net_node</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;field_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">_net&quot;</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">node</span><span class="p">(</span>
+                <span class="n">net_node</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="n">net_label</span><span class="p">,</span>
+                <span class="n">shape</span><span class="o">=</span><span class="s2">&quot;box&quot;</span><span class="p">,</span>
+                <span class="n">style</span><span class="o">=</span><span class="s2">&quot;rounded,filled&quot;</span><span class="p">,</span>
+                <span class="n">fillcolor</span><span class="o">=</span><span class="s2">&quot;#f4cccc&quot;</span><span class="p">,</span>      <span class="c1"># light pink</span>
+                <span class="n">fontname</span><span class="o">=</span><span class="s2">&quot;Helvetica&quot;</span><span class="p">,</span>
+                <span class="n">fontsize</span><span class="o">=</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Field prediction node (yellow)</span>
+            <span class="n">pred_label</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Field</span><span class="se">\n</span><span class="s2">Prediction&quot;</span>
+            <span class="n">pred_node</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;field_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">_pred&quot;</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">node</span><span class="p">(</span>
+                <span class="n">pred_node</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="n">pred_label</span><span class="p">,</span>
+                <span class="n">shape</span><span class="o">=</span><span class="s2">&quot;box&quot;</span><span class="p">,</span>
+                <span class="n">style</span><span class="o">=</span><span class="s2">&quot;rounded,filled&quot;</span><span class="p">,</span>
+                <span class="n">fillcolor</span><span class="o">=</span><span class="s2">&quot;#fff2cc&quot;</span><span class="p">,</span>      <span class="c1"># light yellow</span>
+                <span class="n">fontname</span><span class="o">=</span><span class="s2">&quot;Helvetica&quot;</span><span class="p">,</span>
+                <span class="n">fontsize</span><span class="o">=</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Edge: field network -&gt; field prediction</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="n">net_node</span><span class="p">,</span> <span class="n">pred_node</span><span class="p">)</span>
+
+            <span class="n">field_pred_nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pred_node</span><span class="p">)</span>
+
+    <span class="c1"># ----------------------------</span>
+    <span class="c1"># Record Network</span>
+    <span class="c1"># ----------------------------</span>
+    <span class="k">if</span> <span class="n">record_sizes</span><span class="p">:</span>
+        <span class="n">rec_label</span> <span class="o">=</span> <span class="s2">&quot;Record Network</span><span class="se">\\</span><span class="s2">n&quot;</span> <span class="o">+</span> <span class="s2">&quot; → &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">record_sizes</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">rec_label</span> <span class="o">=</span> <span class="s2">&quot;Record Network&quot;</span>
+
+    <span class="n">g</span><span class="o">.</span><span class="n">node</span><span class="p">(</span>
+        <span class="s2">&quot;record_net&quot;</span><span class="p">,</span>
+        <span class="n">rec_label</span><span class="p">,</span>
+        <span class="n">shape</span><span class="o">=</span><span class="s2">&quot;box&quot;</span><span class="p">,</span>
+        <span class="n">style</span><span class="o">=</span><span class="s2">&quot;rounded,filled&quot;</span><span class="p">,</span>
+        <span class="n">fillcolor</span><span class="o">=</span><span class="s2">&quot;#f4cccc&quot;</span><span class="p">,</span>
+        <span class="n">fontname</span><span class="o">=</span><span class="s2">&quot;Helvetica&quot;</span><span class="p">,</span>
+        <span class="n">fontsize</span><span class="o">=</span><span class="s2">&quot;11&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># ----------------------------</span>
+    <span class="c1"># Record Prediction</span>
+    <span class="c1"># ----------------------------</span>
+    <span class="n">g</span><span class="o">.</span><span class="n">node</span><span class="p">(</span>
+        <span class="s2">&quot;record_pred&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Record</span><span class="se">\n</span><span class="s2">Prediction&quot;</span><span class="p">,</span>
+        <span class="n">shape</span><span class="o">=</span><span class="s2">&quot;box&quot;</span><span class="p">,</span>
+        <span class="n">style</span><span class="o">=</span><span class="s2">&quot;rounded,filled&quot;</span><span class="p">,</span>
+        <span class="n">fillcolor</span><span class="o">=</span><span class="s2">&quot;#fff2cc&quot;</span><span class="p">,</span>
+        <span class="n">fontname</span><span class="o">=</span><span class="s2">&quot;Helvetica&quot;</span><span class="p">,</span>
+        <span class="n">fontsize</span><span class="o">=</span><span class="s2">&quot;11&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># ----------------------------</span>
+    <span class="c1"># Arrows from all field predictions to record net</span>
+    <span class="c1"># ----------------------------</span>
+    <span class="k">for</span> <span class="n">pn</span> <span class="ow">in</span> <span class="n">field_pred_nodes</span><span class="p">:</span>
+        <span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="n">pn</span><span class="p">,</span> <span class="s2">&quot;record_net&quot;</span><span class="p">)</span>
+
+    <span class="n">g</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s2">&quot;record_net&quot;</span><span class="p">,</span> <span class="s2">&quot;record_pred&quot;</span><span class="p">)</span>
+
+    <span class="c1"># ----------------------------</span>
+    <span class="c1"># Render</span>
+    <span class="c1"># ----------------------------</span>
+    <span class="n">out_stem</span> <span class="o">=</span> <span class="n">out_path</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>  <span class="c1"># Graphviz appends .png</span>
+    <span class="n">g</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">out_stem</span><span class="p">),</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;png&quot;</span><span class="p">,</span> <span class="n">cleanup</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="EpochEndSaver">
