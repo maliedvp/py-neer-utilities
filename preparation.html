@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Data Preparation for Training &mdash; Neer Match Utilities 1.0.23-beta documentation</title>
+  <title>Data Preparation for Training &mdash; Neer Match Utilities 1.0.24-beta documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=ffe4c0bc"></script>
+      <script src="_static/documentation_options.js?v=95cb23f8"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
@@ -26,7 +26,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Saving a Model" href="model_save.html" />
+    <link rel="next" title="Training and Saving a Model" href="model_save.html" />
     <link rel="prev" title="Installation" href="install.html" /> 
 </head>
 
@@ -79,7 +79,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#splitting-data">Splitting data</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="model_save.html">Saving a Model</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="model_save.html">Training and Saving a Model</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="model_save.html#prepare-the-data">Prepare the Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="model_save.html#train-the-model">Train the Model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="model_save.html#export-the-model">Export the Model</a></li>
@@ -1409,23 +1409,23 @@ Note that since validation is not implemented yet, you can set
 <tbody>
 <tr class="row-even"><td><p>0</p></td>
 <td><p>0</p></td>
-<td><p>204</p></td>
+<td><p>16</p></td>
 </tr>
 <tr class="row-odd"><td><p>1</p></td>
 <td><p>1</p></td>
-<td><p>3</p></td>
+<td><p>80</p></td>
 </tr>
 <tr class="row-even"><td><p>2</p></td>
 <td><p>2</p></td>
-<td><p>89</p></td>
+<td><p>10</p></td>
 </tr>
 <tr class="row-odd"><td><p>3</p></td>
 <td><p>3</p></td>
-<td><p>257</p></td>
+<td><p>216</p></td>
 </tr>
 <tr class="row-even"><td><p>4</p></td>
 <td><p>4</p></td>
-<td><p>222</p></td>
+<td><p>298</p></td>
 </tr>
 </tbody>
 </table>
@@ -1465,6 +1465,39 @@ Note that since validation is not implemented yet, you can set
 </thead>
 <tbody>
 <tr class="row-even"><td><p>0</p></td>
+<td><p>008fbe2454</p></td>
+<td><p>BETRAG IN RÜCKZAHLBAR VERSTÄRKTE</p></td>
+<td><p>RÜCKZAHLBAR</p></td>
+<td><p>ELEKTRISCHE STRASSENBAHNEN, KLEIN- UND PFERDEB…</p></td>
+<td><p></p></td>
+<td><p>BAHNH FE U GRUNDST CKE BAHNBAU U H LEITUNG MOT…</p></td>
+<td><p>NaN</p></td>
+<td><p></p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>01077b1f46</p></td>
+<td><p>GEBRÜDER ZSCHILLE TUCHFABRIK</p></td>
+<td><p>GROSSENHAIN</p></td>
+<td><p>TEXTIL-INDUSTRIE.</p></td>
+<td><p>ÜBERNAHME UND FORTBETRIEB DER DER FIRMA GEBR. …</p></td>
+<td><p></p></td>
+<td><p>1899.0</p></td>
+<td><p>1899-09-18</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>01a224579a</p></td>
+<td><p>*MASCHINEN- UND WERKZEUGFABRIK AKTIENGESELLSCHAFT</p></td>
+<td><p>KÖTHEN</p></td>
+<td><p>MASCHINEN- UND ARMATUREN-FABRIKEN, EISENGIESSE…</p></td>
+<td><p>ÜBERNAHME UND FORTFÜHRUNG DER UNTER DER FIRMA …</p></td>
+<td><p></p></td>
+<td><p>1897.0</p></td>
+<td><p>1897-12-17</p></td>
+<td><p>6</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
 <td><p>022f81a1cb</p></td>
 <td><p>BERLINER KRONEN-BRAUEREI ACTIENGESELLSCHAFT IN…</p></td>
 <td><p>BERLIN</p></td>
@@ -1475,49 +1508,16 @@ Note that since validation is not implemented yet, you can set
 <td><p>1891-08-03</p></td>
 <td><p>7</p></td>
 </tr>
-<tr class="row-odd"><td><p>1</p></td>
-<td><p>029832df3c</p></td>
-<td><p>KUR-U. WASSERHEILANSTALT ZU GODESBERG AKTIEN-G…</p></td>
-<td><p>GODESBERG</p></td>
-<td><p>BÄDER, QUELLEN-PRODUKTE, WASCH-ANSTALTEN ETC.</p></td>
-<td><p></p></td>
-<td><p>IMMOBILIEN MOBILIEN BANKGUTHABEN KASSA PASSIVA…</p></td>
-<td><p>1900.0</p></td>
-<td><p>1900-08-03</p></td>
-<td><p>10</p></td>
-</tr>
-<tr class="row-even"><td><p>2</p></td>
-<td><p>0325788dc4</p></td>
-<td><p>METALL ZIEHEFEF AKT.-GES. IN CÖLN-EHRENFELD.</p></td>
-<td><p>CÖLN-EHRENFELD</p></td>
-<td><p>METALL-INDUSTRIE.</p></td>
-<td><p>ERWERB U. WEITERBETRIEB DER VON DER FIRMA EUGEN</p></td>
-<td><p>WURDE ENTGEGEN DEN GESETZL BESTIMMUNGEN NOCH N…</p></td>
-<td><p>1906.0</p></td>
-<td><p>1906-11-29</p></td>
-<td><p>11</p></td>
-</tr>
-<tr class="row-odd"><td><p>3</p></td>
-<td><p>03d559a18b</p></td>
-<td><p>MEMELER KLEINBAHN-AKT.-GES. IN MEMEL.</p></td>
-<td><p>MEMEL</p></td>
-<td><p>ELEKTRISCHE STRASSENBAHNEN, KLEIN- UND PFERDEB…</p></td>
-<td><p>BAU U. DER BETRIEB FOLGENDER KLEINBAHNLINIEN: …</p></td>
-<td><p></p></td>
-<td><p>1904.0</p></td>
-<td><p>1904-04-15</p></td>
-<td><p>15</p></td>
-</tr>
 <tr class="row-even"><td><p>4</p></td>
-<td><p>04d4f1304a</p></td>
-<td><p>ACTIEN-BIERBRAUEREI MEISSNER FELSENKELLER IN M…</p></td>
-<td><p>MEISSEN</p></td>
-<td><p>BRAUEREIEN.</p></td>
-<td><p>BIERBRAUEREIBETRIEB. SPECIFIKATION DES BESITZT…</p></td>
-<td><p>IMMOBILIEN MASCHINEN GEF SSE PFERDE WAGEN U GE…</p></td>
-<td><p>1885.0</p></td>
-<td><p>1885-08-03</p></td>
-<td><p>16</p></td>
+<td><p>02875aab9c</p></td>
+<td><p>ACT.-GES. TONWERKE WÜBBENHORST IN DELMENHORST.</p></td>
+<td><p>DELMENHORST</p></td>
+<td><p>INDUSTRIE DER STEINE UND ERDEN.</p></td>
+<td><p>ERWERB U. BETRIEB VON ZIEGELEIEN U. TONWARENFA…</p></td>
+<td><p>AKTIVA GRUNDST CKE GEB UDE ANSCHLUSSGLEIS MASC…</p></td>
+<td><p>1911.0</p></td>
+<td><p>1911-11-16</p></td>
+<td><p>9</p></td>
 </tr>
 </tbody>
 </table>
@@ -1556,29 +1556,40 @@ Note that since validation is not implemented yet, you can set
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>3</p></td>
-<td><p>127292ac62</p></td>
-<td><p>KUR- U. WASSERHEILANSTALT GODESBERG AKTIEN-GES…</p></td>
-<td><p>GODESBERG</p></td>
-<td><p>BÄDER, QUELLEN-PRODUKTE, WASCH-ANSTALTEN ETC.</p></td>
-<td><p>BETRIEB EINER KUR- U. WASSÉRHEILANSTALT.</p></td>
-<td><p>IMMOBIL MOBIL BANKGUTH DEPOSITENKASSE KASSA EF…</p></td>
-<td><p>1900.0</p></td>
-<td><p>1900-02-28</p></td>
-<td><p>13</p></td>
+<tr class="row-even"><td><p>10</p></td>
+<td><p>16729a8d6a</p></td>
+<td><p>MASCHINEN- UND WERKZEUGFABRIK AKTIENGESELLSCHAFT</p></td>
+<td><p>CÖTHEN</p></td>
+<td><p>MASCHINEN- UND ARMATUREN-FABRIKEN, EISENGIESSE…</p></td>
+<td><p>ÜBERNAHME UND FORTFÜHRUNG DER UNTER DER FIRMA …</p></td>
+<td><p>GRUNDST CK M GEB UDE M MASCHINEN U UTENSILIEN M</p></td>
+<td><p>1897.0</p></td>
+<td><p>1897-12-17</p></td>
+<td><p>16</p></td>
 </tr>
-<tr class="row-odd"><td><p>89</p></td>
-<td><p>7c118c147f</p></td>
-<td><p>METALL-ZIEHEREI AKT.-GES. IN CÖLN-KHRENFELD.</p></td>
-<td><p>CÖLN-KHRENFELD</p></td>
-<td><p>METALL-INDUSTRIE.</p></td>
-<td><p>ERWERB U. WEITERBETRIEB DER VON DER FIRMA EUGEN</p></td>
-<td><p>AKTIVA GRUNDST CK GEB UDE MASCH R WERKZEUG FUH…</p></td>
-<td><p>1906.0</p></td>
-<td><p>1906-11-29</p></td>
-<td><p>174</p></td>
+<tr class="row-odd"><td><p>16</p></td>
+<td><p>2eece3dd52</p></td>
+<td><p>BETRAG IN RÜCKZAHLBAR VERSTÄRKTE</p></td>
+<td><p>RÜCKZAHLBAR</p></td>
+<td><p>ELEKTRISCHE STRASSENBAHNEN, KLEIN- UND PFERDEB…</p></td>
+<td><p></p></td>
+<td><p>BAHNH FE U GRUNDST CKE BAHNBAU OBERIRDISCHE LE…</p></td>
+<td><p>NaN</p></td>
+<td><p></p></td>
+<td><p>34</p></td>
 </tr>
-<tr class="row-even"><td><p>204</p></td>
+<tr class="row-even"><td><p>80</p></td>
+<td><p>721ce62f33</p></td>
+<td><p>GEBRÜDER ZSCHILLE TUCHFABRIK AKTIENGESELLSCHAF…</p></td>
+<td><p>GROSSENHAIN</p></td>
+<td><p>TEXTIL-INDUSTRIE.</p></td>
+<td><p>ÜBERNAHME UND FORTBETRIEB DER DER FIRMA GEBR. …</p></td>
+<td><p>GRUNDST CKE U GEB UDE MASCHINEN U UTENSILIEN F…</p></td>
+<td><p>1899.0</p></td>
+<td><p>1899-09-18</p></td>
+<td><p>149</p></td>
+</tr>
+<tr class="row-odd"><td><p>216</p></td>
 <td><p>c2b13c295b</p></td>
 <td><p>BERLINER KRONEN-BRAUEREI ACTIENGESELLSCHAFT IN…</p></td>
 <td><p>BERLIN</p></td>
@@ -1589,27 +1600,16 @@ Note that since validation is not implemented yet, you can set
 <td><p>1891-08-03</p></td>
 <td><p>417</p></td>
 </tr>
-<tr class="row-odd"><td><p>222</p></td>
-<td><p>cab76e9bfa</p></td>
-<td><p>ACTIEN-BIERBRAUEREI MEISSNER FELSENKELLER IN M…</p></td>
-<td><p>MEISSEN</p></td>
-<td><p>BRAUEREIEN.</p></td>
-<td><p>BIERBRAUEREIBETRIEB. SPECIFIKATION DES BESITZT…</p></td>
-<td><p>IMMOBILIEN MASCHINEN GEF SSE PFERDE WAGEN U GE…</p></td>
-<td><p>1885.0</p></td>
-<td><p>1885-08-03</p></td>
-<td><p>450</p></td>
-</tr>
-<tr class="row-even"><td><p>257</p></td>
-<td><p>dbe2526e6d</p></td>
-<td><p>MEMELER KLEINBAHN-AKT.-GES. IN MEMEL.</p></td>
-<td><p>MEMEL</p></td>
-<td><p>ELEKTRISCHE STRASSENBAHNEN, KLEIN- UND PFERDEB…</p></td>
-<td><p>BAU U. DER BETRIEB FOLGENDER KLEINBAHNLINIEN: …</p></td>
+<tr class="row-even"><td><p>298</p></td>
+<td><p>eaa6910702</p></td>
+<td><p>*ACT.-GES. TONWERKE WÜBBENHORST IN DELMENHORST.</p></td>
+<td><p>DELMENHORST</p></td>
+<td><p>INDUSTRIE DER STEINE UND ERDEN.</p></td>
+<td><p>ERWERB U. BETRIEB VON ZIEGELEIEN U. TONWARENFA…</p></td>
 <td><p></p></td>
-<td><p>1904.0</p></td>
-<td><p>1904-04-15</p></td>
-<td><p>520</p></td>
+<td><p>1911.0</p></td>
+<td><p>1911-11-16</p></td>
+<td><p>583</p></td>
 </tr>
 </tbody>
 </table>
@@ -1622,7 +1622,7 @@ Note that since validation is not implemented yet, you can set
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="install.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="model_save.html" class="btn btn-neutral float-right" title="Saving a Model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="model_save.html" class="btn btn-neutral float-right" title="Training and Saving a Model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

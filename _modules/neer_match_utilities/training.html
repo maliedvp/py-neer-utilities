@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.training &mdash; Neer Match Utilities 1.0.23-beta documentation</title>
+  <title>neer_match_utilities.training &mdash; Neer Match Utilities 1.0.24-beta documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/extra.css?v=503a7970" />
@@ -15,7 +15,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=ffe4c0bc"></script>
+      <script src="../../_static/documentation_options.js?v=95cb23f8"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -74,7 +74,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../preparation.html#splitting-data">Splitting data</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../model_save.html">Saving a Model</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../model_save.html">Training and Saving a Model</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../model_save.html#prepare-the-data">Prepare the Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../model_save.html#train-the-model">Train the Model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../model_save.html#export-the-model">Export the Model</a></li>
@@ -715,33 +715,6 @@
 <span class="sd">        Name assigned to the trained model. A corresponding subdirectory is created</span>
 <span class="sd">        under the project directory to store checkpoints and exports.</span>
 
-<span class="sd">    test_ratio : float</span>
-<span class="sd">        Proportion of data reserved for testing, used for logging and performance tracking.</span>
-
-<span class="sd">    epochs_1 : int</span>
-<span class="sd">        Number of training epochs during the first phase (soft-F1 pretraining).</span>
-
-<span class="sd">    mismatch_share_1 : float</span>
-<span class="sd">        Fraction of all possible negative (non-matching) pairs used during Round 1 training.</span>
-
-<span class="sd">    epochs_2 : int</span>
-<span class="sd">        Number of training epochs during the second phase (focal-loss fine-tuning).</span>
-
-<span class="sd">    mismatch_share_2 : float</span>
-<span class="sd">        Fraction of all possible negative pairs used during Round 2 training.</span>
-
-<span class="sd">    no_tm_pbatch : int</span>
-<span class="sd">        Target number of positive (matching) pairs per batch. Used to adapt batch size</span>
-<span class="sd">        dynamically via the `required_batch_size` heuristic.</span>
-
-<span class="sd">    gamma : float</span>
-<span class="sd">        Focusing parameter of the focal loss (applies in Round 2).</span>
-<span class="sd">        Larger values emphasize hard-to-classify examples.</span>
-
-<span class="sd">    max_alpha : float</span>
-<span class="sd">        Maximum weighting factor for the positive class in the focal loss.</span>
-<span class="sd">        Prevents instability for extremely imbalanced datasets.</span>
-
 <span class="sd">    training_data : tuple or dict</span>
 <span class="sd">        Preprocessed training data in one of the following formats:</span>
 <span class="sd">        - Tuple: (left_train, right_train, matches_train)</span>
@@ -755,7 +728,7 @@
 <span class="sd">    similarity_map : dict</span>
 <span class="sd">        User-defined similarity configuration mapping variable names to similarity measures.</span>
 <span class="sd">        Must follow the format accepted by `SimilarityMap`.</span>
-<span class="sd">    </span>
+
 <span class="sd">    id_left_col : str, optional</span>
 <span class="sd">        Name of the unique identifier column in the left DataFrames</span>
 <span class="sd">        (`left_train` and `left_test`).</span>
@@ -768,10 +741,48 @@
 <span class="sd">        The ID column is used internally to index entities and to align</span>
 <span class="sd">        training labels. Defaults to `&quot;id_unique&quot;`.</span>
 
+<span class="sd">    no_tm_pbatch : int</span>
+<span class="sd">        Target number of positive (matching) pairs per batch. Used to adapt batch size</span>
+<span class="sd">        dynamically via the `required_batch_size` heuristic.</span>
+
 <span class="sd">    save_architecture: bool, optional</span>
 <span class="sd">        Whether to save the model architecture in an image alongside weights when exporting.</span>
 <span class="sd">        Requires binaries of of graphviz to be installed. Otherwise, the code breaks.</span>
 <span class="sd">        Defaults to `False`.</span>
+
+<span class="sd">    stage_1 : bool, optional</span>
+<span class="sd">        Whether to run the first training stage (soft-F1 pretraining).  </span>
+<span class="sd">        If False, the arguments `epochs_1` and `mismatch_share_1` are not required</span>
+<span class="sd">        and will be ignored.</span>
+
+<span class="sd">    stage_2 : bool, optional</span>
+<span class="sd">        Whether to run the second training stage (focal-loss fine-tuning).  </span>
+<span class="sd">        If False, the arguments `epochs_2`, `mismatch_share_2`, `no_tm_pbatch`,</span>
+<span class="sd">        `gamma`, and `max_alpha` are not required and will be ignored.</span>
+
+<span class="sd">    epochs_1 : int, optional</span>
+<span class="sd">        Number of training epochs during the first phase (soft-F1 pretraining).</span>
+<span class="sd">        Required only when `stage_1=True`.</span>
+
+<span class="sd">    mismatch_share_1 : float, optional</span>
+<span class="sd">        Fraction of all possible negative (non-matching) pairs used during Round 1.</span>
+<span class="sd">        Required only when `stage_1=True`.</span>
+
+<span class="sd">    epochs_2 : int, optional</span>
+<span class="sd">        Number of training epochs during the second phase (focal-loss fine-tuning).</span>
+<span class="sd">        Required only when `stage_2=True`.</span>
+
+<span class="sd">    mismatch_share_2 : float, optional</span>
+<span class="sd">        Fraction of sampled negative pairs used during Round 2.</span>
+<span class="sd">        Required only when `stage_2=True`.</span>
+
+<span class="sd">    gamma : float, optional</span>
+<span class="sd">        Focusing parameter of the focal loss (Round 2).  </span>
+<span class="sd">        Required only when `stage_2=True`.</span>
+
+<span class="sd">    max_alpha : float, optional</span>
+<span class="sd">        Maximum weighting factor of the positive class for focal loss (Round 2).  </span>
+<span class="sd">        Required only when `stage_2=True`.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">    --------</span>
@@ -790,6 +801,12 @@
 <span class="sd">      after the provided `model_name`.</span>
 <span class="sd">    - The final model, similarity map, and performance metrics are exported to disk using the</span>
 <span class="sd">      `Training.performance_statistics_export` method for reproducibility.</span>
+<span class="sd">    - Each training stage can be enabled or disabled independently through</span>
+<span class="sd">    the `stage_1` and `stage_2` flags.</span>
+<span class="sd">    - If a stage is disabled, its hyperparameters are not required and will</span>
+<span class="sd">    be ignored.</span>
+<span class="sd">    - When only one stage is active, the warm-up pass automatically adapts</span>
+<span class="sd">    to the active stage&#39;s mismatch sampling configuration.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># ---------- Built-in helpers ----------</span>
@@ -906,23 +923,26 @@
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">epochs_1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">mismatch_share_1</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">epochs_2</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">mismatch_share_2</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">no_tm_pbatch</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">max_alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">training_data</span><span class="p">,</span>   <span class="c1"># (left_train, right_train, matches_train) OR dict with keys</span>
         <span class="n">testing_data</span><span class="p">,</span>    <span class="c1"># (left_test, right_test, matches_test)   OR dict with keys</span>
         <span class="n">similarity_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
         <span class="n">initial_feature_width_scales</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
         <span class="n">feature_depths</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
         <span class="n">initial_record_width_scale</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
         <span class="n">record_depth</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
         <span class="n">id_left_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;id_unique&quot;</span><span class="p">,</span>
         <span class="n">id_right_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;id_unique&quot;</span><span class="p">,</span>
+        <span class="n">no_tm_pbatch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">save_architecture</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">stage_1</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">stage_2</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">epochs_1</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">mismatch_share_1</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">epochs_2</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">mismatch_share_2</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">max_alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="k">if</span> <span class="n">similarity_map</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;similarity_map is required and must not be None.&quot;</span><span class="p">)</span>
@@ -933,13 +953,65 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">feature_depths</span> <span class="o">=</span> <span class="n">feature_depths</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">initial_record_width_scale</span> <span class="o">=</span> <span class="n">initial_record_width_scale</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">record_depth</span> <span class="o">=</span> <span class="n">record_depth</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">epochs_1</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">epochs_1</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mismatch_share_1</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">mismatch_share_1</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">epochs_2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">epochs_2</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mismatch_share_2</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">mismatch_share_2</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">no_tm_pbatch</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">no_tm_pbatch</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">gamma</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">max_alpha</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">max_alpha</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">stage_1</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">stage_1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stage_2</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">stage_2</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage_1</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage_2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;At least one of stage_1 or stage_2 must be True.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># ---- Stage 1 hyperparameters ----</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage_1</span><span class="p">:</span>
+            <span class="n">missing_stage1</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">name</span><span class="p">:</span> <span class="n">val</span>
+                <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="p">[</span>
+                    <span class="p">(</span><span class="s2">&quot;epochs_1&quot;</span><span class="p">,</span> <span class="n">epochs_1</span><span class="p">),</span>
+                    <span class="p">(</span><span class="s2">&quot;mismatch_share_1&quot;</span><span class="p">,</span> <span class="n">mismatch_share_1</span><span class="p">),</span>
+                    <span class="p">(</span><span class="s2">&quot;no_tm_pbatch&quot;</span><span class="p">,</span> <span class="n">no_tm_pbatch</span><span class="p">),</span>  <span class="c1"># NEW</span>
+                <span class="p">]</span>
+                <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="n">missing_stage1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;The following arguments must be provided when stage_1=True: &quot;</span>
+                    <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">missing_stage1</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+                <span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">epochs_1</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">epochs_1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mismatch_share_1</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">mismatch_share_1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">no_tm_pbatch</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">no_tm_pbatch</span><span class="p">)</span>
+
+        <span class="c1"># ---- Stage 2 hyperparameters ----</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage_2</span><span class="p">:</span>
+            <span class="n">missing</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">name</span><span class="p">:</span> <span class="n">val</span>
+                <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="p">[</span>
+                    <span class="p">(</span><span class="s2">&quot;epochs_2&quot;</span><span class="p">,</span> <span class="n">epochs_2</span><span class="p">),</span>
+                    <span class="p">(</span><span class="s2">&quot;mismatch_share_2&quot;</span><span class="p">,</span> <span class="n">mismatch_share_2</span><span class="p">),</span>
+                    <span class="p">(</span><span class="s2">&quot;no_tm_pbatch&quot;</span><span class="p">,</span> <span class="n">no_tm_pbatch</span><span class="p">),</span>
+                    <span class="p">(</span><span class="s2">&quot;gamma&quot;</span><span class="p">,</span> <span class="n">gamma</span><span class="p">),</span>
+                    <span class="p">(</span><span class="s2">&quot;max_alpha&quot;</span><span class="p">,</span> <span class="n">max_alpha</span><span class="p">),</span>
+                <span class="p">]</span>
+                <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
+                <span class="n">missing_keys</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">missing</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;The following arguments must be provided when stage_2=True: </span><span class="si">{</span><span class="n">missing_keys</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">epochs_2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">epochs_2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mismatch_share_2</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">mismatch_share_2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">no_tm_pbatch</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">no_tm_pbatch</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">gamma</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_alpha</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">max_alpha</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># dummy values; not used when stage_2=False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">epochs_2</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mismatch_share_2</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">no_tm_pbatch</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_alpha</span> <span class="o">=</span> <span class="mf">0.0</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">id_left_col</span> <span class="o">=</span> <span class="n">id_left_col</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">id_right_col</span> <span class="o">=</span> <span class="n">id_right_col</span>
@@ -993,24 +1065,39 @@
         <span class="p">)</span>
 
         <span class="c1"># Warmup pass to initialize shapes/BN, etc.</span>
+        <span class="c1"># Use mismatch_share_1 if stage_1 is active, otherwise fall back to stage_2.</span>
+        <span class="n">warmup_mismatch_share</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mismatch_share_1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage_1</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">mismatch_share_2</span>
+        <span class="p">)</span>
+
         <span class="n">bsz_warm</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">required_batch_size</span><span class="p">(</span>
-            <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matches_train</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">),</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">mismatch_share_1</span><span class="p">,</span> <span class="n">desired_pos_per_batch</span><span class="o">=</span><span class="mi">16</span>
+            <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matches_train</span><span class="p">),</span>
+            <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">),</span>
+            <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">),</span>
+            <span class="n">warmup_mismatch_share</span><span class="p">,</span>
+            <span class="n">desired_pos_per_batch</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matches_train</span><span class="p">,</span>
-            <span class="n">epochs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">bsz_warm</span><span class="p">,</span> <span class="n">mismatch_share</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">matches_train</span><span class="p">,</span>
+            <span class="n">epochs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">batch_size</span><span class="o">=</span><span class="n">bsz_warm</span><span class="p">,</span>
+            <span class="n">mismatch_share</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+            <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="c1"># Count params</span>
         <span class="n">P</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">count_trainable_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
 
-        <span class="c1"># Round 1</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_round1</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
+        <span class="c1"># Round 1 (optional)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage_1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_round1</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
 
-        <span class="c1"># Round 2</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_round2</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
+        <span class="c1"># Round 2 (optional)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage_2</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_round2</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
 
         <span class="c1"># Save, evaluate, export</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_finalize_and_report</span><span class="p">()</span>
@@ -1064,7 +1151,7 @@
 
         <span class="c1"># Preserve Round 1 checkpoints</span>
         <span class="n">old_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">&quot;checkpoints&quot;</span>
-        <span class="n">new_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">&quot;checkpoints_round1&quot;</span>
+        <span class="n">new_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">&quot;checkpoints_stage_1&quot;</span>
         <span class="k">if</span> <span class="n">old_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
             <span class="n">old_path</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">new_path</span><span class="p">)</span>
 
@@ -1115,6 +1202,14 @@
 
         <span class="c1"># Re-compile for export/eval</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">focal_loss</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">gamma</span><span class="p">),</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">opt_2</span><span class="p">)</span>
+
+        <span class="c1"># Re-name checkpoints folder</span>
+        <span class="n">old_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">&quot;checkpoints&quot;</span>
+        <span class="n">new_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">&quot;checkpoints_stage_2&quot;</span>
+        <span class="k">if</span> <span class="n">old_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">new_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">new_path</span><span class="p">)</span>  <span class="c1"># optional: only needed if rerunning</span>
+            <span class="n">old_path</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">new_path</span><span class="p">)</span>
 
     <span class="c1"># ---------- Save / evaluate ----------</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_finalize_and_report</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
