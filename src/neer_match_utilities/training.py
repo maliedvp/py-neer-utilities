@@ -481,33 +481,6 @@ class TrainingPipe:
         Name assigned to the trained model. A corresponding subdirectory is created
         under the project directory to store checkpoints and exports.
 
-    test_ratio : float
-        Proportion of data reserved for testing, used for logging and performance tracking.
-
-    epochs_1 : int
-        Number of training epochs during the first phase (soft-F1 pretraining).
-
-    mismatch_share_1 : float
-        Fraction of all possible negative (non-matching) pairs used during Round 1 training.
-
-    epochs_2 : int
-        Number of training epochs during the second phase (focal-loss fine-tuning).
-
-    mismatch_share_2 : float
-        Fraction of all possible negative pairs used during Round 2 training.
-
-    no_tm_pbatch : int
-        Target number of positive (matching) pairs per batch. Used to adapt batch size
-        dynamically via the `required_batch_size` heuristic.
-
-    gamma : float
-        Focusing parameter of the focal loss (applies in Round 2).
-        Larger values emphasize hard-to-classify examples.
-
-    max_alpha : float
-        Maximum weighting factor for the positive class in the focal loss.
-        Prevents instability for extremely imbalanced datasets.
-
     training_data : tuple or dict
         Preprocessed training data in one of the following formats:
         - Tuple: (left_train, right_train, matches_train)
@@ -521,7 +494,7 @@ class TrainingPipe:
     similarity_map : dict
         User-defined similarity configuration mapping variable names to similarity measures.
         Must follow the format accepted by `SimilarityMap`.
-    
+
     id_left_col : str, optional
         Name of the unique identifier column in the left DataFrames
         (`left_train` and `left_test`).
@@ -534,10 +507,48 @@ class TrainingPipe:
         The ID column is used internally to index entities and to align
         training labels. Defaults to `"id_unique"`.
 
+    no_tm_pbatch : int
+        Target number of positive (matching) pairs per batch. Used to adapt batch size
+        dynamically via the `required_batch_size` heuristic.
+
     save_architecture: bool, optional
         Whether to save the model architecture in an image alongside weights when exporting.
         Requires binaries of of graphviz to be installed. Otherwise, the code breaks.
         Defaults to `False`.
+
+    stage_1 : bool, optional
+        Whether to run the first training stage (soft-F1 pretraining).  
+        If False, the arguments `epochs_1` and `mismatch_share_1` are not required
+        and will be ignored.
+
+    stage_2 : bool, optional
+        Whether to run the second training stage (focal-loss fine-tuning).  
+        If False, the arguments `epochs_2`, `mismatch_share_2`, `no_tm_pbatch`,
+        `gamma`, and `max_alpha` are not required and will be ignored.
+
+    epochs_1 : int, optional
+        Number of training epochs during the first phase (soft-F1 pretraining).
+        Required only when `stage_1=True`.
+
+    mismatch_share_1 : float, optional
+        Fraction of all possible negative (non-matching) pairs used during Round 1.
+        Required only when `stage_1=True`.
+
+    epochs_2 : int, optional
+        Number of training epochs during the second phase (focal-loss fine-tuning).
+        Required only when `stage_2=True`.
+
+    mismatch_share_2 : float, optional
+        Fraction of sampled negative pairs used during Round 2.
+        Required only when `stage_2=True`.
+
+    gamma : float, optional
+        Focusing parameter of the focal loss (Round 2).  
+        Required only when `stage_2=True`.
+
+    max_alpha : float, optional
+        Maximum weighting factor of the positive class for focal loss (Round 2).  
+        Required only when `stage_2=True`.
 
     Returns:
     --------
@@ -556,6 +567,12 @@ class TrainingPipe:
       after the provided `model_name`.
     - The final model, similarity map, and performance metrics are exported to disk using the
       `Training.performance_statistics_export` method for reproducibility.
+    - Each training stage can be enabled or disabled independently through
+    the `stage_1` and `stage_2` flags.
+    - If a stage is disabled, its hyperparameters are not required and will
+    be ignored.
+    - When only one stage is active, the warm-up pass automatically adapts
+    to the active stage's mismatch sampling configuration.
     """
 
     # ---------- Built-in helpers ----------
@@ -661,23 +678,26 @@ class TrainingPipe:
     def __init__(
         self,
         model_name: str,
-        epochs_1: int,
-        mismatch_share_1: float,
-        epochs_2: int,
-        mismatch_share_2: float,
-        no_tm_pbatch: int,
-        gamma: float,
-        max_alpha: float,
         training_data,   # (left_train, right_train, matches_train) OR dict with keys
         testing_data,    # (left_test, right_test, matches_test)   OR dict with keys
         similarity_map: dict,
+        *,
         initial_feature_width_scales: int = 10,
         feature_depths: int = 2,
         initial_record_width_scale: int = 10,
         record_depth: int = 4,
         id_left_col: str = "id_unique",
         id_right_col: str = "id_unique",
+        no_tm_pbatch: int | None = None,
         save_architecture: bool = False,
+        stage_1: bool = True,
+        stage_2: bool = True,
+        epochs_1: int | None = None,
+        mismatch_share_1: float | None = None,
+        epochs_2: int | None = None,
+        mismatch_share_2: float | None = None,
+        gamma: float | None = None,
+        max_alpha: float | None = None,
     ):
         if similarity_map is None:
             raise ValueError("similarity_map is required and must not be None.")
@@ -688,13 +708,65 @@ class TrainingPipe:
         self.feature_depths = feature_depths
         self.initial_record_width_scale = initial_record_width_scale
         self.record_depth = record_depth
-        self.epochs_1 = int(epochs_1)
-        self.mismatch_share_1 = float(mismatch_share_1)
-        self.epochs_2 = int(epochs_2)
-        self.mismatch_share_2 = float(mismatch_share_2)
-        self.no_tm_pbatch = int(no_tm_pbatch)
-        self.gamma = float(gamma)
-        self.max_alpha = float(max_alpha)
+
+        self.stage_1 = bool(stage_1)
+        self.stage_2 = bool(stage_2)
+
+        if not self.stage_1 and not self.stage_2:
+            raise ValueError("At least one of stage_1 or stage_2 must be True.")
+
+        # ---- Stage 1 hyperparameters ----
+        if self.stage_1:
+            missing_stage1 = {
+                name: val
+                for name, val in [
+                    ("epochs_1", epochs_1),
+                    ("mismatch_share_1", mismatch_share_1),
+                    ("no_tm_pbatch", no_tm_pbatch),  # NEW
+                ]
+                if val is None
+            }
+            if missing_stage1:
+                raise ValueError(
+                    "The following arguments must be provided when stage_1=True: "
+                    + ", ".join(missing_stage1.keys())
+                )
+
+            self.epochs_1 = int(epochs_1)
+            self.mismatch_share_1 = float(mismatch_share_1)
+            self.no_tm_pbatch = int(no_tm_pbatch)
+
+        # ---- Stage 2 hyperparameters ----
+        if self.stage_2:
+            missing = {
+                name: val
+                for name, val in [
+                    ("epochs_2", epochs_2),
+                    ("mismatch_share_2", mismatch_share_2),
+                    ("no_tm_pbatch", no_tm_pbatch),
+                    ("gamma", gamma),
+                    ("max_alpha", max_alpha),
+                ]
+                if val is None
+            }
+            if missing:
+                missing_keys = ", ".join(missing.keys())
+                raise ValueError(
+                    f"The following arguments must be provided when stage_2=True: {missing_keys}."
+                )
+
+            self.epochs_2 = int(epochs_2)
+            self.mismatch_share_2 = float(mismatch_share_2)
+            self.no_tm_pbatch = int(no_tm_pbatch)
+            self.gamma = float(gamma)
+            self.max_alpha = float(max_alpha)
+        else:
+            # dummy values; not used when stage_2=False
+            self.epochs_2 = 0
+            self.mismatch_share_2 = 0.0
+            self.no_tm_pbatch = 0
+            self.gamma = 0.0
+            self.max_alpha = 0.0
 
         self.id_left_col = id_left_col
         self.id_right_col = id_right_col
@@ -747,24 +819,39 @@ class TrainingPipe:
         )
 
         # Warmup pass to initialize shapes/BN, etc.
+        # Use mismatch_share_1 if stage_1 is active, otherwise fall back to stage_2.
+        warmup_mismatch_share = (
+            self.mismatch_share_1 if self.stage_1 else self.mismatch_share_2
+        )
+
         bsz_warm, _ = self.required_batch_size(
-            len(self.matches_train), len(self.left_train), len(self.right_train),
-            self.mismatch_share_1, desired_pos_per_batch=16
+            len(self.matches_train),
+            len(self.left_train),
+            len(self.right_train),
+            warmup_mismatch_share,
+            desired_pos_per_batch=16,
         )
         self.model.compile()
         self.model.fit(
-            self.left_train, self.right_train, self.matches_train,
-            epochs=1, batch_size=bsz_warm, mismatch_share=0.05, shuffle=True
+            self.left_train,
+            self.right_train,
+            self.matches_train,
+            epochs=1,
+            batch_size=bsz_warm,
+            mismatch_share=0.05,
+            shuffle=True,
         )
 
         # Count params
         P = self.count_trainable_params(self.model)
 
-        # Round 1
-        self._round1(P)
+        # Round 1 (optional)
+        if self.stage_1:
+            self._round1(P)
 
-        # Round 2
-        self._round2(P)
+        # Round 2 (optional)
+        if self.stage_2:
+            self._round2(P)
 
         # Save, evaluate, export
         self._finalize_and_report()
@@ -818,7 +905,7 @@ class TrainingPipe:
 
         # Preserve Round 1 checkpoints
         old_path = self.base_dir / self.model_name / "checkpoints"
-        new_path = self.base_dir / self.model_name / "checkpoints_round1"
+        new_path = self.base_dir / self.model_name / "checkpoints_stage_1"
         if old_path.exists():
             old_path.rename(new_path)
 
@@ -869,6 +956,14 @@ class TrainingPipe:
 
         # Re-compile for export/eval
         self.model.compile(loss=focal_loss(alpha=alpha, gamma=self.gamma), optimizer=opt_2)
+
+        # Re-name checkpoints folder
+        old_path = self.base_dir / self.model_name / "checkpoints"
+        new_path = self.base_dir / self.model_name / "checkpoints_stage_2"
+        if old_path.exists():
+            if new_path.exists():
+                shutil.rmtree(new_path)  # optional: only needed if rerunning
+            old_path.rename(new_path)
 
     # ---------- Save / evaluate ----------
     def _finalize_and_report(self):
