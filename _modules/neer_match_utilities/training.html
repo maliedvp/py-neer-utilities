@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.training &mdash; Neer Match Utilities 1.0.25-beta documentation</title>
+  <title>neer_match_utilities.training &mdash; Neer Match Utilities 1.0.26-beta documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/extra.css?v=503a7970" />
@@ -15,7 +15,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=0a89b762"></script>
+      <script src="../../_static/documentation_options.js?v=703f0c8d"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -768,6 +768,23 @@
 <span class="sd">        Fraction of all possible negative (non-matching) pairs used during Round 1.</span>
 <span class="sd">        Required only when `stage_1=True`.</span>
 
+<span class="sd">    stage1_loss : str or callable, optional</span>
+<span class="sd">        Loss function used during Stage 1 (pretraining).  </span>
+<span class="sd">        By default, this is ``soft_f1_loss()``, reproducing the original NeerMatch</span>
+<span class="sd">        behavior.  </span>
+
+<span class="sd">        The argument accepts either:</span>
+
+<span class="sd">        - A **string** specifying a built-in or predefined loss:</span>
+<span class="sd">            * ``&quot;soft_f1&quot;`` — use the standard soft-F1 loss (default)</span>
+<span class="sd">            * ``&quot;binary_crossentropy&quot;`` — use wrapped binary crossentropy</span>
+<span class="sd">            (internally adapted for NeerMatch’s evaluation loop)</span>
+
+<span class="sd">        - A **callable loss function**, allowing full customization:</span>
+<span class="sd">            * ``soft_f1_loss()`` — explicit soft-F1 loss</span>
+<span class="sd">            * ``focal_loss(alpha=0.25, gamma=2.0)`` — focal loss with parameters</span>
+<span class="sd">            * Any user-defined loss function of signature ``loss(y_true, y_pred)``</span>
+
 <span class="sd">    epochs_2 : int, optional</span>
 <span class="sd">        Number of training epochs during the second phase (focal-loss fine-tuning).</span>
 <span class="sd">        Required only when `stage_2=True`.</span>
@@ -939,6 +956,7 @@
         <span class="n">stage_2</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">epochs_1</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">mismatch_share_1</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">stage1_loss</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">callable</span> <span class="o">=</span> <span class="n">soft_f1_loss</span><span class="p">(),</span>
         <span class="n">epochs_2</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">mismatch_share_2</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -980,6 +998,11 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">epochs_1</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">epochs_1</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mismatch_share_1</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">mismatch_share_1</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">no_tm_pbatch</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">no_tm_pbatch</span><span class="p">)</span>
+
+        <span class="c1"># ---- Stage 1 loss configuration ----</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">stage1_loss</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">callable</span><span class="p">(</span><span class="n">stage1_loss</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;stage1_loss must be a loss name (str) or a callable.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stage1_loss</span> <span class="o">=</span> <span class="n">stage1_loss</span>
 
         <span class="c1"># ---- Stage 2 hyperparameters ----</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage_2</span><span class="p">:</span>
@@ -1121,7 +1144,8 @@
         <span class="n">wd_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_suggest_weight_decay_adamw</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">peak_lr</span><span class="p">)</span>
         <span class="n">opt_1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">AdamW</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">lr_sched_1</span><span class="p">,</span> <span class="n">weight_decay</span><span class="o">=</span><span class="n">wd_1</span><span class="p">,</span> <span class="n">clipnorm</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">soft_f1_loss</span><span class="p">(),</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">opt_1</span><span class="p">)</span>
+        <span class="n">loss_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_stage1_loss</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">loss_1</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">opt_1</span><span class="p">)</span>
 
         <span class="n">saver</span> <span class="o">=</span> <span class="n">EpochEndSaver</span><span class="p">(</span><span class="n">base_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">)</span>
         <span class="n">history</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
@@ -1144,9 +1168,15 @@
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[R1] best epoch:&quot;</span><span class="p">,</span> <span class="n">best_epoch</span><span class="p">,</span> <span class="s2">&quot;path:&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">&quot;checkpoints_round1&quot;</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;epoch_</span><span class="si">{</span><span class="n">best_epoch_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="c1"># Sanity-evaluate the loaded model before Round 2 training</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">soft_f1_loss</span><span class="p">(),</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">Adam</span><span class="p">())</span>  <span class="c1"># dummy opt</span>
-        <span class="n">eval_probe</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matches_train</span><span class="p">,</span>
-                                         <span class="n">mismatch_share</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mismatch_share_1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">probe_loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_stage1_loss</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">probe_loss</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">Adam</span><span class="p">())</span>  <span class="c1"># dummy opt</span>
+        <span class="n">eval_probe</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">matches_train</span><span class="p">,</span>
+            <span class="n">mismatch_share</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mismatch_share_1</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[R1-&gt;R2] probe metrics after load:&quot;</span><span class="p">,</span> <span class="n">eval_probe</span><span class="p">)</span>
 
         <span class="c1"># Preserve Round 1 checkpoints</span>
@@ -1154,6 +1184,40 @@
         <span class="n">new_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">&quot;checkpoints_stage_1&quot;</span>
         <span class="k">if</span> <span class="n">old_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
             <span class="n">old_path</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">new_path</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_stage1_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resolve the configured Stage 1 loss into a *callable* loss function.</span>
+
+<span class="sd">        - If self.stage1_loss is &quot;soft_f1&quot;: return soft_f1_loss()</span>
+<span class="sd">        (this preserves the original behavior)</span>
+<span class="sd">        - If self.stage1_loss is &quot;binary_crossentropy&quot;: return a wrapped BCE</span>
+<span class="sd">        that reshapes labels/preds to be compatible with NeerMatch&#39;s evaluate loop.</span>
+<span class="sd">        - If self.stage1_loss is a callable (e.g. soft_f1_loss(), focal_loss(...)):</span>
+<span class="sd">        return it as-is.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Case 1: user passed a ready-made callable, e.g. soft_f1_loss() or focal_loss(...)</span>
+        <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stage1_loss</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage1_loss</span>
+
+        <span class="c1"># Case 2: string selector</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage1_loss</span> <span class="o">==</span> <span class="s2">&quot;soft_f1&quot;</span><span class="p">:</span>
+            <span class="c1"># Default behavior: identical to original code</span>
+            <span class="k">return</span> <span class="n">soft_f1_loss</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage1_loss</span> <span class="o">==</span> <span class="s2">&quot;binary_crossentropy&quot;</span><span class="p">:</span>
+            <span class="c1"># Wrap BCE to be robust to whatever shapes NeerMatch passes in</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">bce_wrapped</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+                <span class="n">y_true</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+                <span class="n">y_pred</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+                <span class="c1"># Flatten to 1D so shapes always match</span>
+                <span class="n">y_true</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,))</span>
+                <span class="n">y_pred</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,))</span>
+                <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">losses</span><span class="o">.</span><span class="n">binary_crossentropy</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">bce_wrapped</span>
+
+        <span class="c1"># You can add more named options here if you like</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown stage1_loss string: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stage1_loss</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_round2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
