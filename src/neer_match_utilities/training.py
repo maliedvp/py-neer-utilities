@@ -534,6 +534,23 @@ class TrainingPipe:
         Fraction of all possible negative (non-matching) pairs used during Round 1.
         Required only when `stage_1=True`.
 
+    stage1_loss : str or callable, optional
+        Loss function used during Stage 1 (pretraining).  
+        By default, this is ``soft_f1_loss()``, reproducing the original NeerMatch
+        behavior.  
+
+        The argument accepts either:
+
+        - A **string** specifying a built-in or predefined loss:
+            * ``"soft_f1"`` — use the standard soft-F1 loss (default)
+            * ``"binary_crossentropy"`` — use wrapped binary crossentropy
+            (internally adapted for NeerMatch’s evaluation loop)
+
+        - A **callable loss function**, allowing full customization:
+            * ``soft_f1_loss()`` — explicit soft-F1 loss
+            * ``focal_loss(alpha=0.25, gamma=2.0)`` — focal loss with parameters
+            * Any user-defined loss function of signature ``loss(y_true, y_pred)``
+
     epochs_2 : int, optional
         Number of training epochs during the second phase (focal-loss fine-tuning).
         Required only when `stage_2=True`.
@@ -694,6 +711,7 @@ class TrainingPipe:
         stage_2: bool = True,
         epochs_1: int | None = None,
         mismatch_share_1: float | None = None,
+        stage1_loss: str | callable = soft_f1_loss(),
         epochs_2: int | None = None,
         mismatch_share_2: float | None = None,
         gamma: float | None = None,
@@ -735,6 +753,11 @@ class TrainingPipe:
             self.epochs_1 = int(epochs_1)
             self.mismatch_share_1 = float(mismatch_share_1)
             self.no_tm_pbatch = int(no_tm_pbatch)
+
+        # ---- Stage 1 loss configuration ----
+        if not (isinstance(stage1_loss, str) or callable(stage1_loss)):
+            raise ValueError("stage1_loss must be a loss name (str) or a callable.")
+        self.stage1_loss = stage1_loss
 
         # ---- Stage 2 hyperparameters ----
         if self.stage_2:
@@ -875,7 +898,8 @@ class TrainingPipe:
         wd_1 = self._suggest_weight_decay_adamw(batch_size, P, peak_lr)
         opt_1 = tf.keras.optimizers.AdamW(learning_rate=lr_sched_1, weight_decay=wd_1, clipnorm=1.0)
 
-        self.model.compile(loss=soft_f1_loss(), optimizer=opt_1)
+        loss_1 = self._get_stage1_loss()
+        self.model.compile(loss=loss_1, optimizer=opt_1)
 
         saver = EpochEndSaver(base_dir=self.base_dir, model_name=self.model_name)
         history = self.model.fit(
@@ -898,9 +922,15 @@ class TrainingPipe:
         print("[R1] best epoch:", best_epoch, "path:", self.base_dir / self.model_name / "checkpoints_round1" / f"epoch_{best_epoch_str}")
 
         # Sanity-evaluate the loaded model before Round 2 training
-        self.model.compile(loss=soft_f1_loss(), optimizer=tf.keras.optimizers.Adam())  # dummy opt
-        eval_probe = self.model.evaluate(self.left_train, self.right_train, self.matches_train,
-                                         mismatch_share=self.mismatch_share_1, verbose=0)
+        probe_loss = self._get_stage1_loss()
+        self.model.compile(loss=probe_loss, optimizer=tf.keras.optimizers.Adam())  # dummy opt
+        eval_probe = self.model.evaluate(
+            self.left_train,
+            self.right_train,
+            self.matches_train,
+            mismatch_share=self.mismatch_share_1,
+            verbose=0,
+        )
         print("[R1->R2] probe metrics after load:", eval_probe)
 
         # Preserve Round 1 checkpoints
@@ -908,6 +938,40 @@ class TrainingPipe:
         new_path = self.base_dir / self.model_name / "checkpoints_stage_1"
         if old_path.exists():
             old_path.rename(new_path)
+
+    def _get_stage1_loss(self):
+        """
+        Resolve the configured Stage 1 loss into a *callable* loss function.
+
+        - If self.stage1_loss is "soft_f1": return soft_f1_loss()
+        (this preserves the original behavior)
+        - If self.stage1_loss is "binary_crossentropy": return a wrapped BCE
+        that reshapes labels/preds to be compatible with NeerMatch's evaluate loop.
+        - If self.stage1_loss is a callable (e.g. soft_f1_loss(), focal_loss(...)):
+        return it as-is.
+        """
+        # Case 1: user passed a ready-made callable, e.g. soft_f1_loss() or focal_loss(...)
+        if callable(self.stage1_loss):
+            return self.stage1_loss
+
+        # Case 2: string selector
+        if self.stage1_loss == "soft_f1":
+            # Default behavior: identical to original code
+            return soft_f1_loss()
+
+        if self.stage1_loss == "binary_crossentropy":
+            # Wrap BCE to be robust to whatever shapes NeerMatch passes in
+            def bce_wrapped(y_true, y_pred):
+                y_true = tf.cast(y_true, tf.float32)
+                y_pred = tf.cast(y_pred, tf.float32)
+                # Flatten to 1D so shapes always match
+                y_true = tf.reshape(y_true, (-1,))
+                y_pred = tf.reshape(y_pred, (-1,))
+                return tf.keras.losses.binary_crossentropy(y_true, y_pred)
+            return bce_wrapped
+
+        # You can add more named options here if you like
+        raise ValueError(f"Unknown stage1_loss string: {self.stage1_loss}")
 
     def _round2(self, P: int):
         assert self.model is not None
