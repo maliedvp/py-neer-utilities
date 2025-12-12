@@ -1,5 +1,5 @@
 # Define the package version
-__version__ = "1.0.26-beta"
+__version__ = "1.1.0-beta"
 
 
 # Import public classes and functions
@@ -10,3 +10,6 @@ from .training import Training
 from .split import split_test_train, SplitError
 from .model import Model
 from .custom_similarities import CustomSimilarities
+from .baseline_io import ModelBaseline
+from .baseline_models import LogitMatchingModel, ProbitMatchingModel, GradientBoostingModel
+from .similarity_features import SimilarityFeatures 

@@ -34,7 +34,9 @@ dependencies = [
     "dill>=0.3.8",
     "spacy>=3.8.7",
     "pydot>=4.0.1",
-    "graphviz>=0.21"
+    "graphviz>=0.21",
+    "statsmodels>=0.14.6",
+    "scikit-learn>=1.8.0"
 ]
 
 [project.urls]

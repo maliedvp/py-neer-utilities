@@ -3,6 +3,7 @@ from .base import SuperClass
 
 from neer_match.similarity_map import SimilarityMap
 from neer_match.matching_model import DLMatchingModel
+from neer_match_utilities.baseline_io import ModelBaseline
 from neer_match_utilities.model import Model, EpochEndSaver
 
 import pandas as pd
@@ -15,6 +16,8 @@ import numpy as np
 import tensorflow.keras.backend as K
 import tensorflow as tf
 import math
+import pickle
+
 
 
 class Training(SuperClass):
@@ -122,49 +125,67 @@ class Training(SuperClass):
 
         return df
 
-    def performance_statistics_export(self, model, model_name: str, target_directory: Path, evaluation_train: dict = {}, evaluation_test: dict = {}):
+    def performance_statistics_export(
+        self,
+        model,
+        model_name: str,
+        target_directory: Path,
+        evaluation_train: dict | None = None,
+        evaluation_test: dict | None = None,
+        export_model: bool = False,
+    ):
         """
-        Exports the trained model, similarity map, and evaluation metrics to the specified directory.
+        Exports performance metrics + similarity map (as before).
+        Optionally also saves the model:
+          - DL/NS via Model.save
+          - baseline via ModelBaseline.save
 
-        Parameters:
-        -----------
-        model : Model object
-            The trained model to export.
-        model_name : str
-            Name of the model to use as the export directory name.
-        target_directory : Path
-            The target directory where the model will be exported.
-        evaluation_train : dict, optional
-            Performance metrics for the training dataset (default is {}).
-        evaluation_test : dict, optional
-            Performance metrics for the test dataset (default is {}).
-
-        Returns:
-        --------
-        None
-
-        Notes:
-        ------
-        - The method creates a subdirectory named after `model_name` inside `target_directory`.
-        - If `evaluation_train` and `evaluation_test` are provided, their metrics are saved as a CSV file.
-        - Similarity maps are serialized using `dill` and saved in the export directory.
+        Default behavior remains unchanged because export_model defaults to False.
         """
 
         # Construct the full path for the model directory
-        model_dir = target_directory / model_name
+        model_dir = Path(target_directory) / model_name
+        model_dir.mkdir(parents=True, exist_ok=True)
 
-        # Ensure the directory exists
-        if not model_dir.exists():
-            os.mkdir(model_dir)
-            print(f"Directory {model_dir} created for model export.")
-        else:
-            print(f"Directory {model_dir} already exists. Files will be written into it.")
-
-        # Generate performance metrics and save
-        if evaluation_test and evaluation_train:
+        # -----------------------------
+        # 1) Save performance metrics
+        # -----------------------------
+        if evaluation_test is not None and evaluation_train is not None:
             df_evaluate = self.evaluate_dataframe(evaluation_test, evaluation_train)
-            df_evaluate.to_csv(model_dir / 'performance.csv', index=False)
+            df_evaluate.to_csv(model_dir / "performance.csv", index=False)
             print(f"Performance metrics saved to {model_dir / 'performance.csv'}")
+
+        # -----------------------------
+        # 2) Save similarity map (same behavior as before)
+        # -----------------------------
+        # store exactly what was used to build SimilarityMap
+        # (usually a dict mapping field -> [metrics])
+        with open(model_dir / "similarity_map.dill", "wb") as f:
+            dill.dump(self.similarity_map, f)
+        print(f"Similarity map saved to {model_dir / 'similarity_map.dill'}")
+
+        # -----------------------------
+        # 3) Optionally export model
+        # -----------------------------
+        if not export_model:
+            return
+
+        # If it's a statsmodels baseline (Logit/Probit): has .result
+        # If it's sklearn baseline (GB): saved via ModelBaseline too
+        is_baseline = (
+            hasattr(model, "result")
+            or model.__class__.__name__ in {"GradientBoostingModel"}
+        )
+
+        if is_baseline:
+            ModelBaseline.save(model=model, target_directory=target_directory, name=model_name)
+            print(f"Baseline model saved to {Path(target_directory) / model_name / 'model'}")
+            return
+
+        # Fall back to existing DL/NS saver
+        # (This preserves old behavior unless you set export_model=True.)
+        Model.save(model=model, target_directory=target_directory, name=model_name)
+        print(f"DL/NS model saved to {Path(target_directory) / model_name / 'model'}")
 
 
 def focal_loss(alpha=0.99, gamma=1.5):
