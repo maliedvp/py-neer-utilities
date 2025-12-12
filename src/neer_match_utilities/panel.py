@@ -354,7 +354,7 @@ class GenerateID:
         time_var: str, 
         model, 
         similarity_map: Union[dict, "SimilarityMap", None] = None, 
-        prediction_threshold: float = 0.9, 
+        prediction_threshold: float | None = 0.9,
         subgroups: List[str] = None,
         relation: str = 'm:m'
     ):
@@ -390,23 +390,37 @@ class GenerateID:
         self.time_var = time_var
         self.subgroups = subgroups
         self.model = model
+    
         # Use the provided similarity_map, or if not provided, take the model's own similarity_map.
-        self.similarity_map = similarity_map if similarity_map is not None else model.similarity_map
-        self.prediction_threshold = prediction_threshold
+        self.similarity_map = similarity_map if similarity_map is not None else getattr(model, "similarity_map", None)
+    
+        # Resolve default prediction_threshold if None
+        if prediction_threshold is None:
+            bt = getattr(model, "best_threshold_", None)
+            if bt is not None:
+                self.prediction_threshold = float(bt)
+            else:
+                self.prediction_threshold = 0.9 if isinstance(self.similarity_map, SimilarityMap) else 0.5
+        else:
+            self.prediction_threshold = float(prediction_threshold)
+        
         self.relation = relation
 
-        # Extract the top-level field keys from the similarity map.
-        if isinstance(self.similarity_map, dict):
+        # Determine which columns to keep in df_panel
+        if self.similarity_map is None:
+            field_keys = []
+        elif isinstance(self.similarity_map, dict):
             field_keys = list(self.similarity_map.keys())
         elif hasattr(self.similarity_map, "instructions"):
             field_keys = list(self.similarity_map.instructions.keys())
         else:
             field_keys = []
+
+        keep_cols = set(field_keys) | set(subgroups) | {time_var}
         
-        # Ensure df_panel only includes columns corresponding to these field keys, subgroups, or the time variable.
-        self.df_panel = df_panel[
-            [col for col in df_panel.columns if col in field_keys or col in subgroups or col == time_var]
-        ]
+        # Keep only those columns that actually exist (avoids KeyError)
+        keep_cols = [c for c in df_panel.columns if c in keep_cols]
+        self.df_panel = df_panel[keep_cols].copy()
 
     def group_by_subgroups(self):
         """
@@ -486,6 +500,12 @@ class GenerateID:
             df = df.reset_index(drop=False)
 
         return df
+    
+    def _call_suggest(self, left, right, count=1):
+        try:
+            return self.model.suggest(left, right, count=count, verbose=0)
+        except TypeError:
+            return self.model.suggest(left, right, count=count)
 
     def generate_suggestions(self, df_slice: pd.DataFrame) -> Tuple[pd.DataFrame, List[int]]:
         """
@@ -513,7 +533,7 @@ class GenerateID:
             left = df_slice[df_slice[self.time_var] == period].reset_index(drop=False)
             right = df_slice[df_slice[self.time_var] == periods[idx + 1]].reset_index(drop=False)
 
-            suggestions = self.model.suggest(left, right, count=1)
+            suggestions = self._call_suggest(left, right, count=1)
             suggestions = suggestions[suggestions['prediction'] >= self.prediction_threshold]
 
             suggestions = self.relations_left_right(

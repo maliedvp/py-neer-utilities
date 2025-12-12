@@ -3,8 +3,10 @@ from dataclasses import dataclass, field
 import numpy as np
 import pandas as pd
 from neer_match import similarity_map as _sim
+from neer_match.similarity_map import SimilarityMap
 from neer_match_utilities.custom_similarities import CustomSimilarities
 CustomSimilarities()  # monkey-patch once, globally
+from neer_match_utilities.similarity_features import SimilarityFeatures
 import statsmodels.api as sm
 from statsmodels.tools.sm_exceptions import ConvergenceWarning
 from sklearn.ensemble import GradientBoostingClassifier
@@ -23,8 +25,103 @@ warnings.filterwarnings("ignore", category=ConvergenceWarning)
 np.seterr(over='ignore', divide='ignore', invalid='ignore')
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 
+class SuggestMixin:
+    """
+    Adds a NeerMatch-like .suggest(left, right, count, verbose) API to baseline models.
+    Requires:
+      - self.predict_proba(df_pairs) implemented
+      - self.similarity_map set to a SimilarityMap (or dict) describing features to compute
+    """
+
+    similarity_map: SimilarityMap | dict | None = None  # dynamically attached by loader
+
+    def suggest(
+        self,
+        left: pd.DataFrame,
+        right: pd.DataFrame,
+        *,
+        count: int = 10,
+        verbose: int = 0,
+        left_id_col: str | None = None,
+        right_id_col: str | None = None,
+    ) -> pd.DataFrame:
+        """
+        Return top-k candidate matches per left record (like neer_match DL models).
+
+        Output columns:
+          - left: integer row index into `left` (0..len(left)-1)
+          - right: integer row index into `right` (0..len(right)-1)
+          - prediction: match probability
+        """
+        if self.similarity_map is None:
+            raise ValueError(
+                "Baseline model has no similarity_map attached. "
+                "Load it via ModelBaseline.load(...) or pass similarity_map when saving."
+            )
+
+        # normalize similarity map to SimilarityMap object
+        smap = self.similarity_map
+        if isinstance(smap, dict):
+            smap = SimilarityMap(smap)
+        elif not isinstance(smap, SimilarityMap):
+            raise TypeError("similarity_map must be a dict or SimilarityMap")
+
+        # We want neer_match-like indices: 0..n-1
+        left_tmp = left.reset_index(drop=True).copy()
+        right_tmp = right.reset_index(drop=True).copy()
+
+        # pick ID cols (internal)
+        # If user provides real IDs, keep them; otherwise use row index ids.
+        if left_id_col is None:
+            left_tmp["_row_id"] = np.arange(len(left_tmp), dtype=int)
+            left_id_col = "_row_id"
+        if right_id_col is None:
+            right_tmp["_row_id"] = np.arange(len(right_tmp), dtype=int)
+            right_id_col = "_row_id"
+
+        feats = SimilarityFeatures(similarity_map=smap)
+
+        empty_matches = pd.DataFrame({"left": [], "right": []})
+
+        df_pairs = feats.pairwise_similarity_dataframe(
+            left=left_tmp,
+            right=right_tmp,
+            matches=empty_matches,
+            left_id_col=left_id_col,
+            right_id_col=right_id_col,
+            match_col="match",
+            matches_id_left="left",
+            matches_id_right="right",
+            matches_are_indices=False,
+        )
+
+        proba = self.predict_proba(df_pairs)
+        df_pairs["prediction"] = proba
+
+        # Identify the output ID columns produced by SimilarityFeatures
+        # It may suffix _left/_right if names collide.
+        if left_id_col == right_id_col:
+            out_left = f"{left_id_col}_left"
+            out_right = f"{right_id_col}_right"
+        else:
+            out_left = left_id_col
+            out_right = right_id_col
+
+        out = df_pairs[[out_left, out_right, "prediction"]].rename(
+            columns={out_left: "left", out_right: "right"}
+        )
+
+        # Top-k per left
+        out = out.sort_values(["left", "prediction"], ascending=[True, False])
+        out = out.groupby("left", as_index=False).head(count).reset_index(drop=True)
+
+        if verbose:
+            print(f"[baseline.suggest] left={len(left_tmp)} right={len(right_tmp)} pairs={len(df_pairs)}")
+
+        return out
+
 @dataclass
-class LogitMatchingModel:
+class LogitMatchingModel(SuggestMixin):
     """
     Logistic regression baseline on similarity features using statsmodels.
 
@@ -163,7 +260,7 @@ class LogitMatchingModel:
     
 
 @dataclass
-class ProbitMatchingModel:
+class ProbitMatchingModel(SuggestMixin):
     """
     Probit regression baseline on similarity features using statsmodels.
 
@@ -286,7 +383,7 @@ class ProbitMatchingModel:
         return self.result.summary()
 
 @dataclass
-class GradientBoostingModel:
+class GradientBoostingModel(SuggestMixin):
     """
     Gradient boosting baseline on similarity features using scikit-learn.
 
