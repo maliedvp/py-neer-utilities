@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.training &mdash; Neer Match Utilities 1.0.26-beta documentation</title>
+  <title>neer_match_utilities.training &mdash; Neer Match Utilities 1.1.0-beta documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/extra.css?v=503a7970" />
@@ -15,7 +15,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=703f0c8d"></script>
+      <script src="../../_static/documentation_options.js?v=431b0def"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -211,6 +211,7 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">neer_match.similarity_map</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimilarityMap</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">neer_match.matching_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">DLMatchingModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.baseline_io</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelBaseline</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">EpochEndSaver</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
@@ -223,6 +224,8 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow.keras.backend</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">K</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+
 
 
 <div class="viewcode-block" id="Training">
@@ -340,49 +343,67 @@
 
 <div class="viewcode-block" id="Training.performance_statistics_export">
 <a class="viewcode-back" href="../../training.html#neer_match_utilities.training.Training.performance_statistics_export">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">performance_statistics_export</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">target_directory</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">evaluation_train</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">evaluation_test</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">performance_statistics_export</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">model</span><span class="p">,</span>
+        <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">target_directory</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+        <span class="n">evaluation_train</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">evaluation_test</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">export_model</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Exports the trained model, similarity map, and evaluation metrics to the specified directory.</span>
+<span class="sd">        Exports performance metrics + similarity map (as before).</span>
+<span class="sd">        Optionally also saves the model:</span>
+<span class="sd">          - DL/NS via Model.save</span>
+<span class="sd">          - baseline via ModelBaseline.save</span>
 
-<span class="sd">        Parameters:</span>
-<span class="sd">        -----------</span>
-<span class="sd">        model : Model object</span>
-<span class="sd">            The trained model to export.</span>
-<span class="sd">        model_name : str</span>
-<span class="sd">            Name of the model to use as the export directory name.</span>
-<span class="sd">        target_directory : Path</span>
-<span class="sd">            The target directory where the model will be exported.</span>
-<span class="sd">        evaluation_train : dict, optional</span>
-<span class="sd">            Performance metrics for the training dataset (default is {}).</span>
-<span class="sd">        evaluation_test : dict, optional</span>
-<span class="sd">            Performance metrics for the test dataset (default is {}).</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">        --------</span>
-<span class="sd">        None</span>
-
-<span class="sd">        Notes:</span>
-<span class="sd">        ------</span>
-<span class="sd">        - The method creates a subdirectory named after `model_name` inside `target_directory`.</span>
-<span class="sd">        - If `evaluation_train` and `evaluation_test` are provided, their metrics are saved as a CSV file.</span>
-<span class="sd">        - Similarity maps are serialized using `dill` and saved in the export directory.</span>
+<span class="sd">        Default behavior remains unchanged because export_model defaults to False.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Construct the full path for the model directory</span>
-        <span class="n">model_dir</span> <span class="o">=</span> <span class="n">target_directory</span> <span class="o">/</span> <span class="n">model_name</span>
+        <span class="n">model_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">target_directory</span><span class="p">)</span> <span class="o">/</span> <span class="n">model_name</span>
+        <span class="n">model_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="c1"># Ensure the directory exists</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">model_dir</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">model_dir</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Directory </span><span class="si">{</span><span class="n">model_dir</span><span class="si">}</span><span class="s2"> created for model export.&quot;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Directory </span><span class="si">{</span><span class="n">model_dir</span><span class="si">}</span><span class="s2"> already exists. Files will be written into it.&quot;</span><span class="p">)</span>
-
-        <span class="c1"># Generate performance metrics and save</span>
-        <span class="k">if</span> <span class="n">evaluation_test</span> <span class="ow">and</span> <span class="n">evaluation_train</span><span class="p">:</span>
+        <span class="c1"># -----------------------------</span>
+        <span class="c1"># 1) Save performance metrics</span>
+        <span class="c1"># -----------------------------</span>
+        <span class="k">if</span> <span class="n">evaluation_test</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">evaluation_train</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">df_evaluate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_dataframe</span><span class="p">(</span><span class="n">evaluation_test</span><span class="p">,</span> <span class="n">evaluation_train</span><span class="p">)</span>
-            <span class="n">df_evaluate</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">model_dir</span> <span class="o">/</span> <span class="s1">&#39;performance.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Performance metrics saved to </span><span class="si">{</span><span class="n">model_dir</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;performance.csv&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+            <span class="n">df_evaluate</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">model_dir</span> <span class="o">/</span> <span class="s2">&quot;performance.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Performance metrics saved to </span><span class="si">{</span><span class="n">model_dir</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;performance.csv&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># -----------------------------</span>
+        <span class="c1"># 2) Save similarity map (same behavior as before)</span>
+        <span class="c1"># -----------------------------</span>
+        <span class="c1"># store exactly what was used to build SimilarityMap</span>
+        <span class="c1"># (usually a dict mapping field -&gt; [metrics])</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">model_dir</span> <span class="o">/</span> <span class="s2">&quot;similarity_map.dill&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">dill</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">similarity_map</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Similarity map saved to </span><span class="si">{</span><span class="n">model_dir</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;similarity_map.dill&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># -----------------------------</span>
+        <span class="c1"># 3) Optionally export model</span>
+        <span class="c1"># -----------------------------</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">export_model</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="c1"># If it&#39;s a statsmodels baseline (Logit/Probit): has .result</span>
+        <span class="c1"># If it&#39;s sklearn baseline (GB): saved via ModelBaseline too</span>
+        <span class="n">is_baseline</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;result&quot;</span><span class="p">)</span>
+            <span class="ow">or</span> <span class="n">model</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;GradientBoostingModel&quot;</span><span class="p">}</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">is_baseline</span><span class="p">:</span>
+            <span class="n">ModelBaseline</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">target_directory</span><span class="o">=</span><span class="n">target_directory</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">model_name</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Baseline model saved to </span><span class="si">{</span><span class="n">Path</span><span class="p">(</span><span class="n">target_directory</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">model_name</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;model&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="c1"># Fall back to existing DL/NS saver</span>
+        <span class="c1"># (This preserves old behavior unless you set export_model=True.)</span>
+        <span class="n">Model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">target_directory</span><span class="o">=</span><span class="n">target_directory</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">model_name</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;DL/NS model saved to </span><span class="si">{</span><span class="n">Path</span><span class="p">(</span><span class="n">target_directory</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">model_name</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;model&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 </div>
 
 

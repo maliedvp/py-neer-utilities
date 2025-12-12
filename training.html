@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Training &mdash; Neer Match Utilities 1.0.26-beta documentation</title>
+  <title>Training &mdash; Neer Match Utilities 1.1.0-beta documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=703f0c8d"></script>
+      <script src="_static/documentation_options.js?v=431b0def"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
@@ -266,36 +266,16 @@ of matching pairs in the left and right DataFrames.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="neer_match_utilities.training.Training.performance_statistics_export">
-<span class="sig-name descname"><span class="pre">performance_statistics_export</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evaluation_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evaluation_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/training.html#Training.performance_statistics_export"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.training.Training.performance_statistics_export" title="Link to this definition"></a></dt>
-<dd><p>Exports the trained model, similarity map, and evaluation metrics to the specified directory.</p>
-<section id="parameters">
-<h3>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading"></a></h3>
-<dl class="simple">
-<dt>model<span class="classifier">Model object</span></dt><dd><p>The trained model to export.</p>
-</dd>
-<dt>model_name<span class="classifier">str</span></dt><dd><p>Name of the model to use as the export directory name.</p>
-</dd>
-<dt>target_directory<span class="classifier">Path</span></dt><dd><p>The target directory where the model will be exported.</p>
-</dd>
-<dt>evaluation_train<span class="classifier">dict, optional</span></dt><dd><p>Performance metrics for the training dataset (default is {}).</p>
-</dd>
-<dt>evaluation_test<span class="classifier">dict, optional</span></dt><dd><p>Performance metrics for the test dataset (default is {}).</p>
-</dd>
-</dl>
-</section>
-<section id="returns">
-<h3>Returns:<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
-<p>:
-None</p>
-</section>
-<section id="notes">
-<h3>Notes:<a class="headerlink" href="#notes" title="Link to this heading"></a></h3>
-<ul class="simple">
-<li><p>The method creates a subdirectory named after <cite>model_name</cite> inside <cite>target_directory</cite>.</p></li>
-<li><p>If <cite>evaluation_train</cite> and <cite>evaluation_test</cite> are provided, their metrics are saved as a CSV file.</p></li>
-<li><p>Similarity maps are serialized using <cite>dill</cite> and saved in the export directory.</p></li>
+<span class="sig-name descname"><span class="pre">performance_statistics_export</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evaluation_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evaluation_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/training.html#Training.performance_statistics_export"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.training.Training.performance_statistics_export" title="Link to this definition"></a></dt>
+<dd><p>Exports performance metrics + similarity map (as before).
+Optionally also saves the model:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>DL/NS via Model.save</p></li>
+<li><p>baseline via ModelBaseline.save</p></li>
 </ul>
-</section>
+</div></blockquote>
+<p>Default behavior remains unchanged because export_model defaults to False.</p>
 </dd></dl>
 
 </section>
@@ -309,8 +289,8 @@ record-linkage model using a user-supplied similarity map and preprocessed data.
 <p>The class handles both training phases (soft-F1 pretraining and focal-loss fine-tuning),
 dynamic learning-rate scheduling, and automatic weight-decay adaptation. It also exports
 checkpoints, final models, and evaluation statistics for reproducibility.</p>
-<section id="id1">
-<h2>Parameters:<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<section id="parameters">
+<h2>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
 <dl>
 <dt>model_name<span class="classifier">str</span></dt><dd><p>Name assigned to the trained model. A corresponding subdirectory is created
 under the project directory to store checkpoints and exports.</p>
@@ -396,12 +376,12 @@ Required only when <cite>stage_2=True</cite>.</p>
 </dd>
 </dl>
 </section>
-<section id="id2">
-<h2>Returns:<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<section id="returns">
+<h2>Returns:<a class="headerlink" href="#returns" title="Link to this heading"></a></h2>
 <p>None</p>
 </section>
-<section id="id3">
-<h2>Notes:<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<section id="notes">
+<h2>Notes:<a class="headerlink" href="#notes" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>The pipeline assumes that the data have already been preprocessed, formatted, and tokenized.</p></li>
 <li><p>Round 1 (soft-F1 phase) initializes the model and emphasizes balanced learning across classes.</p></li>
@@ -655,8 +635,8 @@ probabilities rather than thresholded predictions.</p></li>
 <li><p>Bénédict, G., Koops, V., Odijk D., &amp; de Rijke M. (2021). SigmoidF1: A
 Smooth F1 Score Surrogate Loss for Multilabel Classification. <em>arXiv 2108.10566</em>.</p></li>
 </ul>
-<section id="id4">
-<h2>Explanation of Key Terms<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<section id="id1">
+<h2>Explanation of Key Terms<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p><strong>True Positives (TP):</strong> Sum of predicted probabilities for actual
 positive examples.</p></li>
