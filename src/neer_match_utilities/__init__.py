@@ -1,5 +1,5 @@
 # Define the package version
-__version__ = "1.1.0-beta"
+__version__ = "1.1.1-beta"
 
 
 # Import public classes and functions
@@ -12,4 +12,5 @@ from .model import Model
 from .custom_similarities import CustomSimilarities
 from .baseline_io import ModelBaseline
 from .baseline_models import LogitMatchingModel, ProbitMatchingModel, GradientBoostingModel
-from .similarity_features import SimilarityFeatures 
+from .similarity_features import SimilarityFeatures
+from .baseline_training import BaselineTrainingPipe
