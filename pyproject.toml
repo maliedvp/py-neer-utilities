@@ -36,7 +36,8 @@ dependencies = [
     "pydot>=4.0.1",
     "graphviz>=0.21",
     "statsmodels>=0.14.6",
-    "scikit-learn>=1.8.0"
+    "scikit-learn>=1.8.0",
+    "tqdm>=4.67.1"
 ]
 
 [project.urls]
