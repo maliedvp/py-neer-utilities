@@ -187,12 +187,28 @@ class LogitMatchingModel(SuggestMixin):
             # Try unpenalized MLE first
             self.result = model.fit(disp=0)
         except np.linalg.LinAlgError:
-            # If Hessian is singular (separation / collinearity), fall back to ridge-penalized logit
-            self.result = model.fit_regularized(
-                alpha=1e-4,   # small L2 penalty; adjust if needed
-                L1_wt=0.0,    # 0 → pure L2 (ridge)
-                maxiter=1000,
-            )
+            # If Hessian is singular (separation / collinearity), try progressively stronger regularization
+            for alpha in [1e-3, 1e-2, 1e-1, 1.0, 10.0]:
+                try:
+                    self.result = model.fit_regularized(
+                        alpha=alpha,
+                        L1_wt=0.0,    # 0 → pure L2 (ridge)
+                        maxiter=1000,
+                        disp=0
+                    )
+                    if self.result is not None:
+                        print(f"[LogitMatchingModel] Used regularization alpha={alpha} due to singular matrix")
+                        break
+                except (np.linalg.LinAlgError, ValueError):
+                    continue
+            else:
+                raise RuntimeError(
+                    "Could not fit logit model even with strong regularization. Possible causes:\n"
+                    "  - Perfect separation: One or more features perfectly predict matches\n"
+                    "  - Multicollinearity: Features are linear combinations of each other\n"
+                    "Try: (1) More aggressive feature selection, (2) Remove problematic features, "
+                    "(3) Increase training data size"
+                )
 
         return self
 
@@ -312,11 +328,30 @@ class ProbitMatchingModel(SuggestMixin):
 
         # 4. Probit with ridge regularization (helps with separation)
         model = sm.Probit(y, X_sm)
-        self.result = model.fit_regularized(
-            alpha=1e-4,   # small L2 penalty; can tweak (e.g. 1e-3, 1e-2)
-            L1_wt=0.0,    # 0 → pure L2 (ridge)
-            maxiter=1000,
-        )
+
+        # Try progressively stronger regularization until fitting succeeds
+        for alpha in [1e-4, 1e-3, 1e-2, 1e-1, 1.0, 10.0]:
+            try:
+                self.result = model.fit_regularized(
+                    alpha=alpha,
+                    L1_wt=0.0,    # 0 → pure L2 (ridge)
+                    maxiter=1000,
+                    disp=0
+                )
+                if self.result is not None:
+                    if alpha > 1e-4:  # Only print if we needed stronger regularization
+                        print(f"[ProbitMatchingModel] Used regularization alpha={alpha} due to singular matrix")
+                    break
+            except (np.linalg.LinAlgError, ValueError):
+                continue
+        else:
+            raise RuntimeError(
+                "Could not fit probit model even with strong regularization. Possible causes:\n"
+                "  - Perfect separation: One or more features perfectly predict matches\n"
+                "  - Multicollinearity: Features are linear combinations of each other\n"
+                "Try: (1) More aggressive feature selection, (2) Remove problematic features, "
+                "(3) Increase training data size"
+            )
 
         return self
 
