@@ -6,9 +6,9 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Panel &mdash; Neer Match Utilities 1.1.0-beta documentation</title>
+  <title>Panel &mdash; Neer Match Utilities 1.1.6-beta documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
       <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css" />
 
@@ -16,9 +16,9 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=431b0def"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/documentation_options.js?v=b6767a31"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
       <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -212,7 +212,7 @@
 <span id="panel"></span><h1>Panel<a class="headerlink" href="#module-neer_match_utilities.panel" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="neer_match_utilities.panel.GenerateID">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">neer_match_utilities.panel.</span></span><span class="sig-name descname"><span class="pre">GenerateID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_panel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">panel_var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">similarity_map</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prediction_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subgroups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'m:m'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/panel.html#GenerateID"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.panel.GenerateID" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">neer_match_utilities.panel.</span></span><span class="sig-name descname"><span class="pre">GenerateID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_panel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">panel_var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">similarity_map</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prediction_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subgroups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'m:m'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/panel.html#GenerateID"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.panel.GenerateID" title="Link to this definition"></a></dt>
 <dd><p>A class to generate and harmonize unique IDs across time periods for panel data.</p>
 <dl class="py method">
 <dt class="sig sig-object py">
@@ -381,7 +381,7 @@ Options:
 
 <dl class="py class">
 <dt class="sig sig-object py" id="neer_match_utilities.panel.SetupData">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">neer_match_utilities.panel.</span></span><span class="sig-name descname"><span class="pre">SetupData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matches</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/panel.html#SetupData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.panel.SetupData" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">neer_match_utilities.panel.</span></span><span class="sig-name descname"><span class="pre">SetupData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matches</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/panel.html#SetupData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.panel.SetupData" title="Link to this definition"></a></dt>
 <dd><p>A class for processing and preparing data with overlapping matches and panel relationships.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="neer_match_utilities.panel.SetupData.matches">
@@ -489,7 +489,7 @@ and finally sorts the left and right DataFrames according to the unique identifi
 
 <dl class="py method">
 <dt class="sig sig-object py" id="neer_match_utilities.panel.SetupData.drop_repetitions">
-<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">drop_repetitions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/panel.html#SetupData.drop_repetitions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.panel.SetupData.drop_repetitions" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">drop_repetitions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/panel.html#SetupData.drop_repetitions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.panel.SetupData.drop_repetitions" title="Link to this definition"></a></dt>
 <dd><p>Remove duplicate pairs in the DataFrame irrespective of the order of elements.</p>
 <p>This function treats each pair in the ‘left’ and ‘right’ columns as unordered.
 It creates a temporary column ‘sorted_pair’ that contains a sorted tuple of the
