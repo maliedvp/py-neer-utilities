@@ -145,7 +145,7 @@ class FeatureSelector:
         Column names in matches_df identifying left/right entity IDs.
     match_col : str, default='match'
         Name of the binary match indicator column (1=match, 0=non-match).
-    matches_are_indices : bool, default=False
+    matches_are_indices : bool, default=True
         If True, treat match IDs as integer row indices. If False, treat as entity IDs.
     method : str, default='elastic_net'
         Feature selection method. Currently only 'elastic_net' is supported.
@@ -215,7 +215,7 @@ class FeatureSelector:
         matches_id_left: str = "left",
         matches_id_right: str = "right",
         match_col: str = "match",
-        matches_are_indices: bool = False,
+        matches_are_indices: bool = True,
         # selection configuration
         method: str = "elastic_net",  # currently only elastic_net
         scoring: str = "average_precision",  # "f1" | "roc_auc" | "average_precision" | "neg_log_loss"
