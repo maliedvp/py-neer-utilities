@@ -172,6 +172,11 @@ class SimilarityFeatures:
         else:
             # Old behavior: matches[left/right] are in the same ID space
             # as out_left_id / out_right_id
+
+            # Ensure dtype compatibility before merging
+            matches_tmp[matches_id_left] = matches_tmp[matches_id_left].astype(df_pairs[out_left_id].dtype)
+            matches_tmp[matches_id_right] = matches_tmp[matches_id_right].astype(df_pairs[out_right_id].dtype)
+
             df_pairs = df_pairs.merge(
                 matches_tmp,
                 left_on=[out_left_id, out_right_id],
