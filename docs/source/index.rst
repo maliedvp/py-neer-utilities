@@ -19,6 +19,7 @@
    :caption: Examples
    :hidden:
 
+   basic_training_pipeline.md
    preparation.md
    model_save.md
    model_load.md
