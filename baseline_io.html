@@ -1,0 +1,363 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Baseline IO &mdash; Neer Match Utilities 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
+      <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css" />
+
+  
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8d563738"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+      <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Panel" href="panel.html" />
+    <link rel="prev" title="Baseline Training" href="baseline_training.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Neer Match Utilities
+              <img src="_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#pipy">PiPy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#from-source">From Source</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="basic_training_pipeline.html">A Minimal Training Pipeline</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="basic_training_pipeline.html#loading-the-data">Loading the Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_training_pipeline.html#defining-features-and-similarity-concepts">Defining Features and Similarity Concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_training_pipeline.html#harmonizing-the-data">Harmonizing the data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="basic_training_pipeline.html#left-and-right">Left and Right</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="basic_training_pipeline.html#re-structuring-the-matches-dataframe">Re-Structuring the <code class="docutils literal notranslate"><span class="pre">Matches</span></code> dataframe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_training_pipeline.html#splitting-data">Splitting Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_training_pipeline.html#training-and-exporting-the-model">Training and Exporting the Model</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="id_generation.html">Creating a Common Identifier (ID)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="id_generation.html#between-two-sources">Between Two Sources</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="id_generation.html#load-data-model">1. Load Data &amp; Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="id_generation.html#harmonize-format">2. Harmonize Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="id_generation.html#generate-a-common-id">3. Generate a Common ID</a></li>
+<li class="toctree-l3"><a class="reference internal" href="id_generation.html#merge-results">4. Merge Results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="id_generation.html#repeated-cross-sections-panel-id">Repeated Cross-Sections (Panel ID)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="alternative_models.html">Alternative Classification Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="alternative_models.html#baseline-models">Baseline Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="alternative_models.html#logit-model">Logit Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="alternative_models.html#probit-model">Probit Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="alternative_models.html#gradient-boosting-model">Gradient Boosting Model</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="alternative_models.html#deep-learning-model-ann">Deep Learning Model (ANN)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="alternative_models.html#key-parameters-explained">Key Parameters Explained</a></li>
+<li class="toctree-l3"><a class="reference internal" href="alternative_models.html#single-stage-training">Single-Stage Training</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="alternative_models.html#model-comparison">Model Comparison</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="additional_functionalities.html">Additional Functionalities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="additional_functionalities.html#name-commonness">Name Commonness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="additional_functionalities.html#stop-word-removal-with-spacy">Stop Word Removal with spaCy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="additional_functionalities.html#feature-selection">Feature Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="additional_functionalities.html#handling-many-to-many-matches">Handling Many-to-Many Matches</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="additional_functionalities.html#loading-the-data">Loading the Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="additional_functionalities.html#inspecting-the-data">Inspecting the Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="additional_functionalities.html#simulating-a-many-to-many-relationship">Simulating a Many-to-Many Relationship</a></li>
+<li class="toctree-l3"><a class="reference internal" href="additional_functionalities.html#understanding-the-matching-issue">Understanding the Matching Issue</a></li>
+<li class="toctree-l3"><a class="reference internal" href="additional_functionalities.html#correcting-the-relationships">Correcting the Relationships</a></li>
+<li class="toctree-l3"><a class="reference internal" href="additional_functionalities.html#verifying-the-adjustments">6. Verifying the Adjustments</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="base.html">Base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="model.html#neer_match_utilities.model.EpochEndSaver"><code class="docutils literal notranslate"><span class="pre">EpochEndSaver</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="model.html#neer_match_utilities.model.EpochEndSaver.__init__"><code class="docutils literal notranslate"><span class="pre">EpochEndSaver.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#neer_match_utilities.model.EpochEndSaver.on_epoch_end"><code class="docutils literal notranslate"><span class="pre">EpochEndSaver.on_epoch_end()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="model.html#neer_match_utilities.model.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="model.html#neer_match_utilities.model.Model.load"><code class="docutils literal notranslate"><span class="pre">Model.load()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#neer_match_utilities.model.Model.save"><code class="docutils literal notranslate"><span class="pre">Model.save()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="baseline_models.html">Baseline Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.GradientBoostingModel"><code class="docutils literal notranslate"><span class="pre">GradientBoostingModel</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.GradientBoostingModel.__init__"><code class="docutils literal notranslate"><span class="pre">GradientBoostingModel.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.GradientBoostingModel.best_threshold"><code class="docutils literal notranslate"><span class="pre">GradientBoostingModel.best_threshold()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.GradientBoostingModel.evaluate"><code class="docutils literal notranslate"><span class="pre">GradientBoostingModel.evaluate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.GradientBoostingModel.fit"><code class="docutils literal notranslate"><span class="pre">GradientBoostingModel.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.GradientBoostingModel.predict_proba"><code class="docutils literal notranslate"><span class="pre">GradientBoostingModel.predict_proba()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.GradientBoostingModel.summary"><code class="docutils literal notranslate"><span class="pre">GradientBoostingModel.summary()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.LogitMatchingModel"><code class="docutils literal notranslate"><span class="pre">LogitMatchingModel</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.LogitMatchingModel.__init__"><code class="docutils literal notranslate"><span class="pre">LogitMatchingModel.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.LogitMatchingModel.fit"><code class="docutils literal notranslate"><span class="pre">LogitMatchingModel.fit()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.ProbitMatchingModel"><code class="docutils literal notranslate"><span class="pre">ProbitMatchingModel</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.ProbitMatchingModel.__init__"><code class="docutils literal notranslate"><span class="pre">ProbitMatchingModel.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.ProbitMatchingModel.fit"><code class="docutils literal notranslate"><span class="pre">ProbitMatchingModel.fit()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.SuggestMixin"><code class="docutils literal notranslate"><span class="pre">SuggestMixin</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.SuggestMixin.suggest"><code class="docutils literal notranslate"><span class="pre">SuggestMixin.suggest()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="baseline_training.html">Baseline Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="baseline_training.html#neer_match_utilities.baseline_training.BaselineTrainingPipe"><code class="docutils literal notranslate"><span class="pre">BaselineTrainingPipe</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="baseline_training.html#neer_match_utilities.baseline_training.BaselineTrainingPipe.__init__"><code class="docutils literal notranslate"><span class="pre">BaselineTrainingPipe.__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Baseline IO</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.baseline_io.ModelBaseline"><code class="docutils literal notranslate"><span class="pre">ModelBaseline</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.baseline_io.ModelBaseline.save"><code class="docutils literal notranslate"><span class="pre">ModelBaseline.save()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="panel.html">Panel</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="panel.html#neer_match_utilities.panel.GenerateID"><code class="docutils literal notranslate"><span class="pre">GenerateID</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="panel.html#neer_match_utilities.panel.GenerateID.__init__"><code class="docutils literal notranslate"><span class="pre">GenerateID.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="panel.html#neer_match_utilities.panel.GenerateID.assign_ids"><code class="docutils literal notranslate"><span class="pre">GenerateID.assign_ids()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="panel.html#neer_match_utilities.panel.GenerateID.execute"><code class="docutils literal notranslate"><span class="pre">GenerateID.execute()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="panel.html#neer_match_utilities.panel.GenerateID.generate_suggestions"><code class="docutils literal notranslate"><span class="pre">GenerateID.generate_suggestions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="panel.html#neer_match_utilities.panel.GenerateID.group_by_subgroups"><code class="docutils literal notranslate"><span class="pre">GenerateID.group_by_subgroups()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="panel.html#neer_match_utilities.panel.GenerateID.harmonize_ids"><code class="docutils literal notranslate"><span class="pre">GenerateID.harmonize_ids()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="panel.html#neer_match_utilities.panel.GenerateID.relations_left_right"><code class="docutils literal notranslate"><span class="pre">GenerateID.relations_left_right()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="panel.html#neer_match_utilities.panel.SetupData"><code class="docutils literal notranslate"><span class="pre">SetupData</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="panel.html#neer_match_utilities.panel.SetupData.matches"><code class="docutils literal notranslate"><span class="pre">SetupData.matches</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="panel.html#neer_match_utilities.panel.SetupData.__init__"><code class="docutils literal notranslate"><span class="pre">SetupData.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="panel.html#neer_match_utilities.panel.SetupData.adjust_overlap"><code class="docutils literal notranslate"><span class="pre">SetupData.adjust_overlap()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="panel.html#neer_match_utilities.panel.SetupData.create_connected_groups"><code class="docutils literal notranslate"><span class="pre">SetupData.create_connected_groups()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="panel.html#neer_match_utilities.panel.SetupData.data_preparation_panel"><code class="docutils literal notranslate"><span class="pre">SetupData.data_preparation_panel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="panel.html#neer_match_utilities.panel.SetupData.drop_repetitions"><code class="docutils literal notranslate"><span class="pre">SetupData.drop_repetitions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="panel.html#neer_match_utilities.panel.SetupData.panel_preparation"><code class="docutils literal notranslate"><span class="pre">SetupData.panel_preparation()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="prepare.html">Prepare</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.Prepare"><code class="docutils literal notranslate"><span class="pre">Prepare</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.Prepare.__init__"><code class="docutils literal notranslate"><span class="pre">Prepare.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.Prepare.do_remove_stop_words"><code class="docutils literal notranslate"><span class="pre">Prepare.do_remove_stop_words()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.Prepare.format"><code class="docutils literal notranslate"><span class="pre">Prepare.format()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.similarity_map_to_dict"><code class="docutils literal notranslate"><span class="pre">similarity_map_to_dict()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.synth_mismatches"><code class="docutils literal notranslate"><span class="pre">synth_mismatches()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="split.html">Split</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="split.html#neer_match_utilities.split.SplitError"><code class="docutils literal notranslate"><span class="pre">SplitError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="split.html#neer_match_utilities.split.split_test_train"><code class="docutils literal notranslate"><span class="pre">split_test_train()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="training.html">Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="training.html#neer_match_utilities.training.Training"><code class="docutils literal notranslate"><span class="pre">Training</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="training.html#neer_match_utilities.training.Training.evaluate_dataframe"><code class="docutils literal notranslate"><span class="pre">Training.evaluate_dataframe()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="training.html#neer_match_utilities.training.Training.matches_reorder"><code class="docutils literal notranslate"><span class="pre">Training.matches_reorder()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="training.html#neer_match_utilities.training.Training.performance_statistics_export"><code class="docutils literal notranslate"><span class="pre">Training.performance_statistics_export()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="training.html#neer_match_utilities.training.TrainingPipe"><code class="docutils literal notranslate"><span class="pre">TrainingPipe</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="training.html#neer_match_utilities.training.TrainingPipe.WarmupCosine"><code class="docutils literal notranslate"><span class="pre">TrainingPipe.WarmupCosine</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="training.html#neer_match_utilities.training.TrainingPipe.WarmupCosine.__init__"><code class="docutils literal notranslate"><span class="pre">TrainingPipe.WarmupCosine.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="training.html#neer_match_utilities.training.TrainingPipe.WarmupCosine.from_config"><code class="docutils literal notranslate"><span class="pre">TrainingPipe.WarmupCosine.from_config()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="training.html#neer_match_utilities.training.TrainingPipe.__init__"><code class="docutils literal notranslate"><span class="pre">TrainingPipe.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="training.html#neer_match_utilities.training.alpha_balanced"><code class="docutils literal notranslate"><span class="pre">alpha_balanced()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="training.html#neer_match_utilities.training.combined_loss"><code class="docutils literal notranslate"><span class="pre">combined_loss()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="training.html#neer_match_utilities.training.focal_loss"><code class="docutils literal notranslate"><span class="pre">focal_loss()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="training.html#neer_match_utilities.training.soft_f1_loss"><code class="docutils literal notranslate"><span class="pre">soft_f1_loss()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="feature_selection.html">Feature Selection</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult"><code class="docutils literal notranslate"><span class="pre">FeatureSelectionResult</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult.updated_similarity_map"><code class="docutils literal notranslate"><span class="pre">FeatureSelectionResult.updated_similarity_map</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult.selected_feature_columns"><code class="docutils literal notranslate"><span class="pre">FeatureSelectionResult.selected_feature_columns</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult.selected_pairs"><code class="docutils literal notranslate"><span class="pre">FeatureSelectionResult.selected_pairs</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult.coef_by_feature"><code class="docutils literal notranslate"><span class="pre">FeatureSelectionResult.coef_by_feature</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult.meta"><code class="docutils literal notranslate"><span class="pre">FeatureSelectionResult.meta</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult.__init__"><code class="docutils literal notranslate"><span class="pre">FeatureSelectionResult.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="feature_selection.html#neer_match_utilities.feature_selection.FeatureSelector"><code class="docutils literal notranslate"><span class="pre">FeatureSelector</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="feature_selection.html#neer_match_utilities.feature_selection.FeatureSelector.similarity_map"><code class="docutils literal notranslate"><span class="pre">FeatureSelector.similarity_map</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="feature_selection.html#neer_match_utilities.feature_selection.FeatureSelector.__init__"><code class="docutils literal notranslate"><span class="pre">FeatureSelector.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="feature_selection.html#neer_match_utilities.feature_selection.FeatureSelector.execute"><code class="docutils literal notranslate"><span class="pre">FeatureSelector.execute()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="feature_selection.html#neer_match_utilities.feature_selection.tqdm_joblib"><code class="docutils literal notranslate"><span class="pre">tqdm_joblib()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="similarity_features.html">Similarity Features</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.__init__"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.pairwise_similarity_dataframe"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.pairwise_similarity_dataframe()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.subsample_non_matches"><code class="docutils literal notranslate"><span class="pre">subsample_non_matches()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.to_X_y"><code class="docutils literal notranslate"><span class="pre">to_X_y()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="custom_similarities.html">Custom Similarities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="custom_similarities.html#neer_match_utilities.custom_similarities.CustomSimilarities"><code class="docutils literal notranslate"><span class="pre">CustomSimilarities</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="custom_similarities.html#neer_match_utilities.custom_similarities.CustomSimilarities.__init__"><code class="docutils literal notranslate"><span class="pre">CustomSimilarities.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="custom_similarities.html#neer_match_utilities.custom_similarities.CustomSimilarities.notmissing"><code class="docutils literal notranslate"><span class="pre">CustomSimilarities.notmissing()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="custom_similarities.html#neer_match_utilities.custom_similarities.CustomSimilarities.notzero"><code class="docutils literal notranslate"><span class="pre">CustomSimilarities.notzero()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="LICENSE.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Neer Match Utilities</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Baseline IO</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/baseline_io.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-neer_match_utilities.baseline_io">
+<span id="baseline-io"></span><h1>Baseline IO<a class="headerlink" href="#module-neer_match_utilities.baseline_io" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="neer_match_utilities.baseline_io.ModelBaseline">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">neer_match_utilities.baseline_io.</span></span><span class="sig-name descname"><span class="pre">ModelBaseline</span></span><a class="reference internal" href="_modules/neer_match_utilities/baseline_io.html#ModelBaseline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.baseline_io.ModelBaseline" title="Link to this definition"></a></dt>
+<dd><p>Save/load utilities for non-DL baseline models:
+- LogitMatchingModel
+- ProbitMatchingModel
+- GradientBoostingModel</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="neer_match_utilities.baseline_io.ModelBaseline.save">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">similarity_map</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/baseline_io.html#ModelBaseline.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.baseline_io.ModelBaseline.save" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>similarity_map</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimilarityMap</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Pass either a SimilarityMap instance OR the underlying dict (instructions).
+This is stored so that <cite>ModelBaseline.load(…)</cite> can return a model with
+<cite>loaded_model.similarity_map</cite> just like the DL models.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="baseline_training.html" class="btn btn-neutral float-left" title="Baseline Training" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="panel.html" class="btn btn-neutral float-right" title="Panel" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Pantelis Karapanagiotis, Marius Liebald.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

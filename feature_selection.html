@@ -1,0 +1,574 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Feature Selection &mdash; Neer Match Utilities 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
+      <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css" />
+
+  
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8d563738"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+      <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Similarity Features" href="similarity_features.html" />
+    <link rel="prev" title="Training" href="training.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Neer Match Utilities
+              <img src="_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#pipy">PiPy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#from-source">From Source</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="basic_training_pipeline.html">A Minimal Training Pipeline</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="basic_training_pipeline.html#loading-the-data">Loading the Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_training_pipeline.html#defining-features-and-similarity-concepts">Defining Features and Similarity Concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_training_pipeline.html#harmonizing-the-data">Harmonizing the data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="basic_training_pipeline.html#left-and-right">Left and Right</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="basic_training_pipeline.html#re-structuring-the-matches-dataframe">Re-Structuring the <code class="docutils literal notranslate"><span class="pre">Matches</span></code> dataframe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_training_pipeline.html#splitting-data">Splitting Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_training_pipeline.html#training-and-exporting-the-model">Training and Exporting the Model</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="id_generation.html">Creating a Common Identifier (ID)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="id_generation.html#between-two-sources">Between Two Sources</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="id_generation.html#load-data-model">1. Load Data &amp; Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="id_generation.html#harmonize-format">2. Harmonize Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="id_generation.html#generate-a-common-id">3. Generate a Common ID</a></li>
+<li class="toctree-l3"><a class="reference internal" href="id_generation.html#merge-results">4. Merge Results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="id_generation.html#repeated-cross-sections-panel-id">Repeated Cross-Sections (Panel ID)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="alternative_models.html">Alternative Classification Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="alternative_models.html#baseline-models">Baseline Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="alternative_models.html#logit-model">Logit Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="alternative_models.html#probit-model">Probit Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="alternative_models.html#gradient-boosting-model">Gradient Boosting Model</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="alternative_models.html#deep-learning-model-ann">Deep Learning Model (ANN)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="alternative_models.html#key-parameters-explained">Key Parameters Explained</a></li>
+<li class="toctree-l3"><a class="reference internal" href="alternative_models.html#single-stage-training">Single-Stage Training</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="alternative_models.html#model-comparison">Model Comparison</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="additional_functionalities.html">Additional Functionalities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="additional_functionalities.html#name-commonness">Name Commonness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="additional_functionalities.html#stop-word-removal-with-spacy">Stop Word Removal with spaCy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="additional_functionalities.html#feature-selection">Feature Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="additional_functionalities.html#handling-many-to-many-matches">Handling Many-to-Many Matches</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="additional_functionalities.html#loading-the-data">Loading the Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="additional_functionalities.html#inspecting-the-data">Inspecting the Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="additional_functionalities.html#simulating-a-many-to-many-relationship">Simulating a Many-to-Many Relationship</a></li>
+<li class="toctree-l3"><a class="reference internal" href="additional_functionalities.html#understanding-the-matching-issue">Understanding the Matching Issue</a></li>
+<li class="toctree-l3"><a class="reference internal" href="additional_functionalities.html#correcting-the-relationships">Correcting the Relationships</a></li>
+<li class="toctree-l3"><a class="reference internal" href="additional_functionalities.html#verifying-the-adjustments">6. Verifying the Adjustments</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="base.html">Base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="model.html#neer_match_utilities.model.EpochEndSaver"><code class="docutils literal notranslate"><span class="pre">EpochEndSaver</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="model.html#neer_match_utilities.model.EpochEndSaver.__init__"><code class="docutils literal notranslate"><span class="pre">EpochEndSaver.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#neer_match_utilities.model.EpochEndSaver.on_epoch_end"><code class="docutils literal notranslate"><span class="pre">EpochEndSaver.on_epoch_end()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="model.html#neer_match_utilities.model.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="model.html#neer_match_utilities.model.Model.load"><code class="docutils literal notranslate"><span class="pre">Model.load()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#neer_match_utilities.model.Model.save"><code class="docutils literal notranslate"><span class="pre">Model.save()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="baseline_models.html">Baseline Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.GradientBoostingModel"><code class="docutils literal notranslate"><span class="pre">GradientBoostingModel</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.GradientBoostingModel.__init__"><code class="docutils literal notranslate"><span class="pre">GradientBoostingModel.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.GradientBoostingModel.best_threshold"><code class="docutils literal notranslate"><span class="pre">GradientBoostingModel.best_threshold()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.GradientBoostingModel.evaluate"><code class="docutils literal notranslate"><span class="pre">GradientBoostingModel.evaluate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.GradientBoostingModel.fit"><code class="docutils literal notranslate"><span class="pre">GradientBoostingModel.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.GradientBoostingModel.predict_proba"><code class="docutils literal notranslate"><span class="pre">GradientBoostingModel.predict_proba()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.GradientBoostingModel.summary"><code class="docutils literal notranslate"><span class="pre">GradientBoostingModel.summary()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.LogitMatchingModel"><code class="docutils literal notranslate"><span class="pre">LogitMatchingModel</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.LogitMatchingModel.__init__"><code class="docutils literal notranslate"><span class="pre">LogitMatchingModel.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.LogitMatchingModel.fit"><code class="docutils literal notranslate"><span class="pre">LogitMatchingModel.fit()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.ProbitMatchingModel"><code class="docutils literal notranslate"><span class="pre">ProbitMatchingModel</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.ProbitMatchingModel.__init__"><code class="docutils literal notranslate"><span class="pre">ProbitMatchingModel.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.ProbitMatchingModel.fit"><code class="docutils literal notranslate"><span class="pre">ProbitMatchingModel.fit()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.SuggestMixin"><code class="docutils literal notranslate"><span class="pre">SuggestMixin</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.SuggestMixin.suggest"><code class="docutils literal notranslate"><span class="pre">SuggestMixin.suggest()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="baseline_training.html">Baseline Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="baseline_training.html#neer_match_utilities.baseline_training.BaselineTrainingPipe"><code class="docutils literal notranslate"><span class="pre">BaselineTrainingPipe</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="baseline_training.html#neer_match_utilities.baseline_training.BaselineTrainingPipe.__init__"><code class="docutils literal notranslate"><span class="pre">BaselineTrainingPipe.__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="baseline_io.html">Baseline IO</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="baseline_io.html#neer_match_utilities.baseline_io.ModelBaseline"><code class="docutils literal notranslate"><span class="pre">ModelBaseline</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="baseline_io.html#neer_match_utilities.baseline_io.ModelBaseline.save"><code class="docutils literal notranslate"><span class="pre">ModelBaseline.save()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="panel.html">Panel</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="panel.html#neer_match_utilities.panel.GenerateID"><code class="docutils literal notranslate"><span class="pre">GenerateID</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="panel.html#neer_match_utilities.panel.GenerateID.__init__"><code class="docutils literal notranslate"><span class="pre">GenerateID.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="panel.html#neer_match_utilities.panel.GenerateID.assign_ids"><code class="docutils literal notranslate"><span class="pre">GenerateID.assign_ids()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="panel.html#neer_match_utilities.panel.GenerateID.execute"><code class="docutils literal notranslate"><span class="pre">GenerateID.execute()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="panel.html#neer_match_utilities.panel.GenerateID.generate_suggestions"><code class="docutils literal notranslate"><span class="pre">GenerateID.generate_suggestions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="panel.html#neer_match_utilities.panel.GenerateID.group_by_subgroups"><code class="docutils literal notranslate"><span class="pre">GenerateID.group_by_subgroups()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="panel.html#neer_match_utilities.panel.GenerateID.harmonize_ids"><code class="docutils literal notranslate"><span class="pre">GenerateID.harmonize_ids()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="panel.html#neer_match_utilities.panel.GenerateID.relations_left_right"><code class="docutils literal notranslate"><span class="pre">GenerateID.relations_left_right()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="panel.html#neer_match_utilities.panel.SetupData"><code class="docutils literal notranslate"><span class="pre">SetupData</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="panel.html#neer_match_utilities.panel.SetupData.matches"><code class="docutils literal notranslate"><span class="pre">SetupData.matches</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="panel.html#neer_match_utilities.panel.SetupData.__init__"><code class="docutils literal notranslate"><span class="pre">SetupData.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="panel.html#neer_match_utilities.panel.SetupData.adjust_overlap"><code class="docutils literal notranslate"><span class="pre">SetupData.adjust_overlap()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="panel.html#neer_match_utilities.panel.SetupData.create_connected_groups"><code class="docutils literal notranslate"><span class="pre">SetupData.create_connected_groups()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="panel.html#neer_match_utilities.panel.SetupData.data_preparation_panel"><code class="docutils literal notranslate"><span class="pre">SetupData.data_preparation_panel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="panel.html#neer_match_utilities.panel.SetupData.drop_repetitions"><code class="docutils literal notranslate"><span class="pre">SetupData.drop_repetitions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="panel.html#neer_match_utilities.panel.SetupData.panel_preparation"><code class="docutils literal notranslate"><span class="pre">SetupData.panel_preparation()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="prepare.html">Prepare</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.Prepare"><code class="docutils literal notranslate"><span class="pre">Prepare</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.Prepare.__init__"><code class="docutils literal notranslate"><span class="pre">Prepare.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.Prepare.do_remove_stop_words"><code class="docutils literal notranslate"><span class="pre">Prepare.do_remove_stop_words()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.Prepare.format"><code class="docutils literal notranslate"><span class="pre">Prepare.format()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.similarity_map_to_dict"><code class="docutils literal notranslate"><span class="pre">similarity_map_to_dict()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.synth_mismatches"><code class="docutils literal notranslate"><span class="pre">synth_mismatches()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="split.html">Split</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="split.html#neer_match_utilities.split.SplitError"><code class="docutils literal notranslate"><span class="pre">SplitError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="split.html#neer_match_utilities.split.split_test_train"><code class="docutils literal notranslate"><span class="pre">split_test_train()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="training.html">Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="training.html#neer_match_utilities.training.Training"><code class="docutils literal notranslate"><span class="pre">Training</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="training.html#neer_match_utilities.training.Training.evaluate_dataframe"><code class="docutils literal notranslate"><span class="pre">Training.evaluate_dataframe()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="training.html#neer_match_utilities.training.Training.matches_reorder"><code class="docutils literal notranslate"><span class="pre">Training.matches_reorder()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="training.html#neer_match_utilities.training.Training.performance_statistics_export"><code class="docutils literal notranslate"><span class="pre">Training.performance_statistics_export()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="training.html#neer_match_utilities.training.TrainingPipe"><code class="docutils literal notranslate"><span class="pre">TrainingPipe</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="training.html#neer_match_utilities.training.TrainingPipe.WarmupCosine"><code class="docutils literal notranslate"><span class="pre">TrainingPipe.WarmupCosine</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="training.html#neer_match_utilities.training.TrainingPipe.WarmupCosine.__init__"><code class="docutils literal notranslate"><span class="pre">TrainingPipe.WarmupCosine.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="training.html#neer_match_utilities.training.TrainingPipe.WarmupCosine.from_config"><code class="docutils literal notranslate"><span class="pre">TrainingPipe.WarmupCosine.from_config()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="training.html#neer_match_utilities.training.TrainingPipe.__init__"><code class="docutils literal notranslate"><span class="pre">TrainingPipe.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="training.html#neer_match_utilities.training.alpha_balanced"><code class="docutils literal notranslate"><span class="pre">alpha_balanced()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="training.html#neer_match_utilities.training.combined_loss"><code class="docutils literal notranslate"><span class="pre">combined_loss()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="training.html#neer_match_utilities.training.focal_loss"><code class="docutils literal notranslate"><span class="pre">focal_loss()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="training.html#neer_match_utilities.training.soft_f1_loss"><code class="docutils literal notranslate"><span class="pre">soft_f1_loss()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Feature Selection</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.feature_selection.FeatureSelectionResult"><code class="docutils literal notranslate"><span class="pre">FeatureSelectionResult</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.feature_selection.FeatureSelectionResult.updated_similarity_map"><code class="docutils literal notranslate"><span class="pre">FeatureSelectionResult.updated_similarity_map</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.feature_selection.FeatureSelectionResult.selected_feature_columns"><code class="docutils literal notranslate"><span class="pre">FeatureSelectionResult.selected_feature_columns</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.feature_selection.FeatureSelectionResult.selected_pairs"><code class="docutils literal notranslate"><span class="pre">FeatureSelectionResult.selected_pairs</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.feature_selection.FeatureSelectionResult.coef_by_feature"><code class="docutils literal notranslate"><span class="pre">FeatureSelectionResult.coef_by_feature</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.feature_selection.FeatureSelectionResult.meta"><code class="docutils literal notranslate"><span class="pre">FeatureSelectionResult.meta</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.feature_selection.FeatureSelectionResult.__init__"><code class="docutils literal notranslate"><span class="pre">FeatureSelectionResult.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.feature_selection.FeatureSelector"><code class="docutils literal notranslate"><span class="pre">FeatureSelector</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.feature_selection.FeatureSelector.similarity_map"><code class="docutils literal notranslate"><span class="pre">FeatureSelector.similarity_map</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.feature_selection.FeatureSelector.__init__"><code class="docutils literal notranslate"><span class="pre">FeatureSelector.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.feature_selection.FeatureSelector.execute"><code class="docutils literal notranslate"><span class="pre">FeatureSelector.execute()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.feature_selection.tqdm_joblib"><code class="docutils literal notranslate"><span class="pre">tqdm_joblib()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="similarity_features.html">Similarity Features</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.__init__"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.pairwise_similarity_dataframe"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.pairwise_similarity_dataframe()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.subsample_non_matches"><code class="docutils literal notranslate"><span class="pre">subsample_non_matches()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.to_X_y"><code class="docutils literal notranslate"><span class="pre">to_X_y()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="custom_similarities.html">Custom Similarities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="custom_similarities.html#neer_match_utilities.custom_similarities.CustomSimilarities"><code class="docutils literal notranslate"><span class="pre">CustomSimilarities</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="custom_similarities.html#neer_match_utilities.custom_similarities.CustomSimilarities.__init__"><code class="docutils literal notranslate"><span class="pre">CustomSimilarities.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="custom_similarities.html#neer_match_utilities.custom_similarities.CustomSimilarities.notmissing"><code class="docutils literal notranslate"><span class="pre">CustomSimilarities.notmissing()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="custom_similarities.html#neer_match_utilities.custom_similarities.CustomSimilarities.notzero"><code class="docutils literal notranslate"><span class="pre">CustomSimilarities.notzero()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="LICENSE.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Neer Match Utilities</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Feature Selection</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/feature_selection.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-neer_match_utilities.feature_selection">
+<span id="feature-selection"></span><h1>Feature Selection<a class="headerlink" href="#module-neer_match_utilities.feature_selection" title="Link to this heading"></a></h1>
+<p>Feature selection utilities for similarity-based entity matching.</p>
+<p>This module provides tools for selecting the most informative similarity features
+from a potentially large set of candidates. It implements a two-stage feature
+selection process:</p>
+<ol class="arabic simple">
+<li><p><strong>Correlation-based filtering</strong>: Removes highly correlated features, keeping
+the one most correlated with the target variable.</p></li>
+<li><p><strong>Elastic net regularization</strong>: Uses penalized logistic regression to identify
+features that contribute unique predictive information.</p></li>
+</ol>
+<p>The feature selector is designed to handle extreme class imbalance, which is
+common in entity matching tasks where true matches are rare.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="neer_match_utilities.feature_selection.FeatureSelectionResult">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">neer_match_utilities.feature_selection.</span></span><span class="sig-name descname"><span class="pre">FeatureSelectionResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">updated_similarity_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected_feature_columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected_pairs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coef_by_feature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/feature_selection.html#FeatureSelectionResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.feature_selection.FeatureSelectionResult" title="Link to this definition"></a></dt>
+<dd><p>Result object returned by FeatureSelector.execute().</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neer_match_utilities.feature_selection.FeatureSelectionResult.updated_similarity_map">
+<span class="sig-name descname"><span class="pre">updated_similarity_map</span></span><a class="headerlink" href="#neer_match_utilities.feature_selection.FeatureSelectionResult.updated_similarity_map" title="Link to this definition"></a></dt>
+<dd><p>Reduced similarity map containing only selected features.
+Keys are variable names, values are lists of similarity concept names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, List[str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neer_match_utilities.feature_selection.FeatureSelectionResult.selected_feature_columns">
+<span class="sig-name descname"><span class="pre">selected_feature_columns</span></span><a class="headerlink" href="#neer_match_utilities.feature_selection.FeatureSelectionResult.selected_feature_columns" title="Link to this definition"></a></dt>
+<dd><p>Names of selected feature columns in the format ‘col_{var}_{var}_{similarity}’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neer_match_utilities.feature_selection.FeatureSelectionResult.selected_pairs">
+<span class="sig-name descname"><span class="pre">selected_pairs</span></span><a class="headerlink" href="#neer_match_utilities.feature_selection.FeatureSelectionResult.selected_pairs" title="Link to this definition"></a></dt>
+<dd><p>List of (variable, similarity_concept) tuples that were selected.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[Tuple[str, str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neer_match_utilities.feature_selection.FeatureSelectionResult.coef_by_feature">
+<span class="sig-name descname"><span class="pre">coef_by_feature</span></span><a class="headerlink" href="#neer_match_utilities.feature_selection.FeatureSelectionResult.coef_by_feature" title="Link to this definition"></a></dt>
+<dd><p>Coefficients from the final elastic net model, sorted by absolute value.
+Useful for understanding feature importance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.Series</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neer_match_utilities.feature_selection.FeatureSelectionResult.meta">
+<span class="sig-name descname"><span class="pre">meta</span></span><a class="headerlink" href="#neer_match_utilities.feature_selection.FeatureSelectionResult.meta" title="Link to this definition"></a></dt>
+<dd><p>Metadata about the selection process, including:
+- method: Feature selection method used
+- scoring: Scoring metric used for cross-validation
+- cv: Number of cross-validation folds
+- n_features_in: Number of input features
+- n_features_selected: Number of features selected
+- did_fallback: Whether fallback to original map occurred</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neer_match_utilities.feature_selection.FeatureSelectionResult.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">updated_similarity_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected_feature_columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected_pairs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coef_by_feature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neer_match_utilities.feature_selection.FeatureSelectionResult.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="neer_match_utilities.feature_selection.FeatureSelector">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">neer_match_utilities.feature_selection.</span></span><span class="sig-name descname"><span class="pre">FeatureSelector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">similarity_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training_data</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_left_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'id'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_right_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'id'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches_id_left</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'left'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches_id_right</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'right'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">match_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'match'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches_are_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'elastic_net'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scoring</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'average_precision'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l1_ratios</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.8,</span> <span class="pre">0.9,</span> <span class="pre">1.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Cs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'balanced'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">42</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_coef_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_correlation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">always_keep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preferred_separators</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('__',</span> <span class="pre">'|',</span> <span class="pre">':',</span> <span class="pre">'-',</span> <span class="pre">'_')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/feature_selection.html#FeatureSelector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.feature_selection.FeatureSelector" title="Link to this definition"></a></dt>
+<dd><p>Supervised feature selector for similarity-based entity matching.</p>
+<p>This class implements a two-stage feature selection process optimized for
+entity matching tasks with extreme class imbalance:</p>
+<dl class="simple">
+<dt><strong>Stage 1: Correlation-based filtering</strong> (optional)</dt><dd><p>Removes redundant features by identifying groups of highly correlated
+features and keeping only the one most correlated with the target.</p>
+</dd>
+<dt><strong>Stage 2: Elastic net regularization</strong></dt><dd><p>Uses penalized logistic regression with L1/L2 penalties to identify
+features that contribute unique predictive information. Cross-validation
+is used to select optimal regularization parameters.</p>
+</dd>
+</dl>
+<p>The selector returns an updated similarity map containing only the features
+that passed both selection stages.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>similarity_map</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>List</em><em>[</em><em>str</em><em>]</em><em>] or </em><em>SimilarityMap</em>) – Mapping from variable names to lists of similarity concepts.
+Example: {‘name’: [‘jaro_winkler’, ‘levenshtein’], ‘address’: [‘cosine’]}</p></li>
+<li><p><strong>training_data</strong> (<em>Tuple</em><em>[</em><em>pd.DataFrame</em><em>, </em><em>pd.DataFrame</em><em>, </em><em>pd.DataFrame</em><em>]</em>) – Three-tuple of (left_df, right_df, matches_df) used for feature selection.</p></li>
+<li><p><strong>id_left_col</strong> (<em>str</em><em>, </em><em>default='id'</em>) – Column names containing entity IDs in left and right dataframes.</p></li>
+<li><p><strong>id_right_col</strong> (<em>str</em><em>, </em><em>default='id'</em>) – Column names containing entity IDs in left and right dataframes.</p></li>
+<li><p><strong>matches_id_left</strong> (<em>str</em><em>, </em><em>default='left'</em><em>, </em><em>'right'</em>) – Column names in matches_df identifying left/right entity IDs.</p></li>
+<li><p><strong>matches_id_right</strong> (<em>str</em><em>, </em><em>default='left'</em><em>, </em><em>'right'</em>) – Column names in matches_df identifying left/right entity IDs.</p></li>
+<li><p><strong>match_col</strong> (<em>str</em><em>, </em><em>default='match'</em>) – Name of the binary match indicator column (1=match, 0=non-match).</p></li>
+<li><p><strong>matches_are_indices</strong> (<em>bool</em><em>, </em><em>default=True</em>) – If True, treat match IDs as integer row indices. If False, treat as entity IDs.</p></li>
+<li><p><strong>method</strong> (<em>str</em><em>, </em><em>default='elastic_net'</em>) – Feature selection method. Currently only ‘elastic_net’ is supported.</p></li>
+<li><p><strong>scoring</strong> (<em>str</em><em>, </em><em>default='average_precision'</em>) – Scoring metric for cross-validation. Options: ‘f1’, ‘roc_auc’,
+‘average_precision’, ‘neg_log_loss’. For imbalanced data, ‘average_precision’
+is recommended.</p></li>
+<li><p><strong>cv</strong> (<em>int</em><em>, </em><em>default=5</em>) – Number of cross-validation folds.</p></li>
+<li><p><strong>l1_ratios</strong> (<em>tuple</em><em>, </em><em>default=</em><em>(</em><em>0.8</em><em>, </em><em>0.9</em><em>, </em><em>1.0</em><em>)</em>) – L1 penalty ratios to try. 1.0 = pure Lasso, 0.0 = pure Ridge.</p></li>
+<li><p><strong>Cs</strong> (<em>int</em><em> or </em><em>Iterable</em><em>[</em><em>float</em><em>]</em><em>, </em><em>default=20</em>) – Regularization strengths to try. If int, generates <cite>Cs</cite> values
+logarithmically spaced from 0.01 to 1000. Higher C = less regularization.</p></li>
+<li><p><strong>class_weight</strong> (<em>str</em><em> or </em><em>None</em><em>, </em><em>default='balanced'</em>) – Class weighting strategy. ‘balanced’ adjusts weights inversely proportional
+to class frequencies, recommended for imbalanced data.</p></li>
+<li><p><strong>max_iter</strong> (<em>int</em><em>, </em><em>default=5000</em>) – Maximum iterations for elastic net solver.</p></li>
+<li><p><strong>random_state</strong> (<em>int</em><em>, </em><em>default=42</em>) – Random seed for reproducibility.</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em><em>, </em><em>default=-1</em>) – Number of parallel jobs. -1 uses all available processors.</p></li>
+<li><p><strong>min_coef_threshold</strong> (<em>float</em><em>, </em><em>default=0.0</em>) – Minimum absolute coefficient value for feature retention. Features with
+abs(coef) &lt; threshold are dropped. Set to 0.0 to keep all non-zero features.</p></li>
+<li><p><strong>max_correlation</strong> (<em>float</em><em> or </em><em>None</em><em>, </em><em>default=None</em>) – Correlation threshold for Stage 1 filtering. Features with pairwise
+correlation &gt; threshold are candidates for removal. Example: 0.95.
+If None, Stage 1 is skipped.</p></li>
+<li><p><strong>always_keep</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>List</em><em>[</em><em>str</em><em>]</em><em>] or </em><em>None</em><em>, </em><em>default=None</em>) – Features to always retain regardless of selection results.
+Example: {‘surname’: [‘jaro_winkler’]} always keeps surname jaro_winkler.</p></li>
+<li><p><strong>preferred_separators</strong> (<em>tuple</em><em>, </em><em>default=</em><em>(</em><em>'__'</em><em>, </em><em>'</em><em>|</em><em>'</em><em>, </em><em>':'</em><em>, </em><em>'-'</em><em>, </em><em>'_'</em><em>)</em>) – Separators to try when parsing feature names (internal use).</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neer_match_utilities.feature_selection.FeatureSelector.similarity_map">
+<span class="sig-name descname"><span class="pre">similarity_map</span></span><a class="headerlink" href="#neer_match_utilities.feature_selection.FeatureSelector.similarity_map" title="Link to this definition"></a></dt>
+<dd><p>The input similarity map.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, List[str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">left_train,</span> <span class="pre">right_train,</span> <span class="pre">matches_train</span></span></dt>
+<dd><p>Training datasets for feature selection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities</span><span class="w"> </span><span class="kn">import</span> <span class="n">FeatureSelector</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">selector</span> <span class="o">=</span> <span class="n">FeatureSelector</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">similarity_map</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;jaro_winkler&#39;</span><span class="p">,</span> <span class="s1">&#39;levenshtein&#39;</span><span class="p">,</span> <span class="s1">&#39;cosine&#39;</span><span class="p">],</span>
+<span class="gp">... </span>                    <span class="s1">&#39;address&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;jaro_winkler&#39;</span><span class="p">,</span> <span class="s1">&#39;levenshtein&#39;</span><span class="p">]},</span>
+<span class="gp">... </span>    <span class="n">training_data</span><span class="o">=</span><span class="p">(</span><span class="n">left_df</span><span class="p">,</span> <span class="n">right_df</span><span class="p">,</span> <span class="n">matches_df</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="n">max_correlation</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">min_coef_threshold</span><span class="o">=</span><span class="mf">0.01</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">updated_similarity_map</span><span class="p">)</span>
+<span class="go">{&#39;name&#39;: [&#39;jaro_winkler&#39;], &#39;address&#39;: [&#39;levenshtein&#39;]}</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="neer_match_utilities.feature_selection.FeatureSelector.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">similarity_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training_data</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_left_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'id'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_right_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'id'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches_id_left</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'left'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches_id_right</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'right'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">match_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'match'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches_are_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'elastic_net'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scoring</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'average_precision'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l1_ratios</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.8,</span> <span class="pre">0.9,</span> <span class="pre">1.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Cs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'balanced'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">42</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_coef_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_correlation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">always_keep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preferred_separators</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('__',</span> <span class="pre">'|',</span> <span class="pre">':',</span> <span class="pre">'-',</span> <span class="pre">'_')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/feature_selection.html#FeatureSelector.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.feature_selection.FeatureSelector.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neer_match_utilities.feature_selection.FeatureSelector.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/feature_selection.html#FeatureSelector.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.feature_selection.FeatureSelector.execute" title="Link to this definition"></a></dt>
+<dd><p>Execute the two-stage feature selection process.</p>
+<p>This method performs:
+1. Builds pairwise similarity features from training data
+2. Cleans data (removes constant columns, handles missing values)
+3. <strong>Stage 1</strong> (optional): Correlation-based filtering
+4. Scales features for regularization
+5. <strong>Stage 2</strong>: Elastic net cross-validation and feature selection
+6. Applies coefficient thresholding (if configured)
+7. Converts selected features back to similarity map format</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Object containing the updated similarity map, selected features,
+coefficients, and metadata about the selection process.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#neer_match_utilities.feature_selection.FeatureSelectionResult" title="neer_match_utilities.feature_selection.FeatureSelectionResult">FeatureSelectionResult</a></p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the method is not ‘elastic_net’, or if no usable features remain
+    after cleaning or correlation filtering, or if there are too few
+    positive examples for cross-validation.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The method prints detailed diagnostic information during execution:
+- Top feature correlations
+- Features dropped in Stage 1 (correlation filtering)
+- Cross-validation progress and best parameters
+- Features dropped in Stage 2 (elastic net)
+- Top coefficients by absolute value
+- Final summary statistics</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Selected </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">selected_feature_columns</span><span class="p">)</span><span class="si">}</span><span class="s2"> features&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Updated similarity map: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">updated_similarity_map</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="neer_match_utilities.feature_selection.tqdm_joblib">
+<span class="sig-prename descclassname"><span class="pre">neer_match_utilities.feature_selection.</span></span><span class="sig-name descname"><span class="pre">tqdm_joblib</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tqdm_object</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/feature_selection.html#tqdm_joblib"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.feature_selection.tqdm_joblib" title="Link to this definition"></a></dt>
+<dd><p>Context manager to integrate tqdm progress bars with joblib parallel execution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>tqdm_object</strong> (<em>tqdm.tqdm</em><em> or </em><em>None</em>) – Progress bar object to update during parallel execution.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="training.html" class="btn btn-neutral float-left" title="Training" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="similarity_features.html" class="btn btn-neutral float-right" title="Similarity Features" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Pantelis Karapanagiotis, Marius Liebald.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
