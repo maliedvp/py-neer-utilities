@@ -28,9 +28,11 @@ warnings.filterwarnings("ignore", category=RuntimeWarning)
 class SuggestMixin:
     """
     Adds a NeerMatch-like .suggest(left, right, count, verbose) API to baseline models.
+
     Requires:
-      - self.predict_proba(df_pairs) implemented
-      - self.similarity_map set to a SimilarityMap (or dict) describing features to compute
+
+    - self.predict_proba(df_pairs) implemented
+    - self.similarity_map set to a SimilarityMap (or dict) describing features to compute
     """
 
     similarity_map: SimilarityMap | dict | None = None  # dynamically attached by loader
@@ -154,7 +156,7 @@ class LogitMatchingModel(SuggestMixin):
             (Possibly subsampled) DataFrame produced by AlternativeModels.
         match_col : str, default "match"
             Name of the binary target column.
-        feature_prefix : str, default "col_"
+        feature_prefix : str, default "col\_"
             Prefix of feature columns (similarity features).
         """
         if match_col not in df.columns:
@@ -303,7 +305,7 @@ class ProbitMatchingModel(SuggestMixin):
             (Possibly subsampled) DataFrame produced by AlternativeModels.
         match_col : str, default "match"
             Name of the binary target column.
-        feature_prefix : str, default "col_"
+        feature_prefix : str, default "col\_"
             Prefix of feature columns (similarity features).
         """
         if match_col not in df.columns:
@@ -455,7 +457,7 @@ class GradientBoostingModel(SuggestMixin):
         match_col: str = "match",
         feature_prefix: str = "col_",
         use_class_weight: bool = False,
-    ) -> "GradientBoostingMatchingModel":
+    ) -> "GradientBoostingModel":
         """
         Fit gradient boosting on a pairwise similarity DataFrame.
 
@@ -465,7 +467,7 @@ class GradientBoostingModel(SuggestMixin):
             (Possibly subsampled) DataFrame produced by AlternativeModels.
         match_col : str, default "match"
             Name of the binary target column.
-        feature_prefix : str, default "col_"
+        feature_prefix : str, default "col\_"
             Prefix of feature columns (similarity features).
         use_class_weight : bool, default False
             If True, uses inverse-frequency sample weights to upweight matches.
@@ -510,7 +512,7 @@ class GradientBoostingModel(SuggestMixin):
 
     def _check_fitted(self):
         if not hasattr(self.model, "estimators_"):
-            raise RuntimeError("GradientBoostingMatchingModel is not fitted yet. Call `fit()` first.")
+            raise RuntimeError("GradientBoostingModel is not fitted yet. Call `fit()` first.")
 
     def predict_proba(
         self,
@@ -617,7 +619,7 @@ class GradientBoostingModel(SuggestMixin):
             Validation DataFrame produced by AlternativeModels.pairwise_similarity_dataframe().
         match_col : str, default "match"
             Target column.
-        feature_prefix : str, default "col_"
+        feature_prefix : str, default "col\_"
             Feature column prefix.
         metric : {"mcc","f1"}, default "mcc"
             Metric to maximize.

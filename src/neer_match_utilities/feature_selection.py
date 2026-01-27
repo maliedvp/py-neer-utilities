@@ -171,7 +171,7 @@ class FeatureSelector:
         Number of parallel jobs. -1 uses all available processors.
     min_coef_threshold : float, default=0.0
         Minimum absolute coefficient value for feature retention. Features with
-        |coef| < threshold are dropped. Set to 0.0 to keep all non-zero features.
+        abs(coef) < threshold are dropped. Set to 0.0 to keep all non-zero features.
     max_correlation : float or None, default=None
         Correlation threshold for Stage 1 filtering. Features with pairwise
         correlation > threshold are candidates for removal. Example: 0.95.

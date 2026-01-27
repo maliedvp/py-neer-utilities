@@ -135,10 +135,12 @@ class Training(SuperClass):
         export_model: bool = False,
     ):
         """
-        Exports performance metrics + similarity map (as before).
-        Optionally also saves the model:
-          - DL/NS via Model.save
-          - baseline via ModelBaseline.save
+        Exports performance metrics and similarity map.
+
+        Optionally saves the model:
+
+        - DL/NS via Model.save
+        - baseline via ModelBaseline.save
 
         Default behavior remains unchanged because export_model defaults to False.
         """
@@ -563,14 +565,10 @@ class TrainingPipe:
         The argument accepts either:
 
         - A **string** specifying a built-in or predefined loss:
-            * ``"soft_f1"`` — use the standard soft-F1 loss (default)
-            * ``"binary_crossentropy"`` — use wrapped binary crossentropy
-            (internally adapted for NeerMatch’s evaluation loop)
-
+          ``"soft_f1"`` (default) or ``"binary_crossentropy"``
         - A **callable loss function**, allowing full customization:
-            * ``soft_f1_loss()`` — explicit soft-F1 loss
-            * ``focal_loss(alpha=0.25, gamma=2.0)`` — focal loss with parameters
-            * Any user-defined loss function of signature ``loss(y_true, y_pred)``
+          ``soft_f1_loss()``, ``focal_loss(alpha=0.25, gamma=2.0)``,
+          or any user-defined loss function of signature ``loss(y_true, y_pred)``
 
     epochs_2 : int, optional
         Number of training epochs during the second phase (focal-loss fine-tuning).
@@ -592,25 +590,22 @@ class TrainingPipe:
     --------
     None
 
-    Notes:
-    ------
+    Notes
+    -----
     - The pipeline assumes that the data have already been preprocessed, formatted, and tokenized.
     - Round 1 (soft-F1 phase) initializes the model and emphasizes balanced learning across classes.
     - Round 2 (focal-loss phase) refines the model to focus on hard-to-classify examples.
-    - Dynamic heuristics are used to automatically infer:
-        * Batch size (via expected positive density)
-        * Peak learning rate (scaled with batch size, positives per batch, and parameter count)
-        * Weight decay (adjusted based on model size and learning rate)
+    - Dynamic heuristics are used to automatically infer batch size, peak learning rate,
+      and weight decay.
     - Model checkpoints, histories, and evaluation reports are stored in subdirectories named
-      after the provided `model_name`.
+      after the provided ``model_name``.
     - The final model, similarity map, and performance metrics are exported to disk using the
-      `Training.performance_statistics_export` method for reproducibility.
+      ``Training.performance_statistics_export`` method for reproducibility.
     - Each training stage can be enabled or disabled independently through
-    the `stage_1` and `stage_2` flags.
-    - If a stage is disabled, its hyperparameters are not required and will
-    be ignored.
+      the ``stage_1`` and ``stage_2`` flags.
+    - If a stage is disabled, its hyperparameters are not required and will be ignored.
     - When only one stage is active, the warm-up pass automatically adapts
-    to the active stage's mismatch sampling configuration.
+      to the active stage's mismatch sampling configuration.
     """
 
     # ---------- Built-in helpers ----------

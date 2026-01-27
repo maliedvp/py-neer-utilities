@@ -1,5 +1,5 @@
 # Define the package version
-__version__ = "1.1.7-beta"
+__version__ = "1.0.0"
 
 
 # Import public classes and functions
