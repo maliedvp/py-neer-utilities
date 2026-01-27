@@ -20,11 +20,10 @@
    :hidden:
 
    basic_training_pipeline.md
-   preparation.md
-   model_save.md
-   model_load.md
    id_generation.md
-
+   alternative_models.md
+   additional_functionalities.md
+   
 .. Documentation
 .. =============
 
@@ -35,10 +34,16 @@
 
    base
    model
+   baseline_models
+   baseline_training
+   baseline_io
    panel
    prepare
    split
    training
+   feature_selection
+   similarity_features
+   custom_similarities
 
 .. License
 .. =======

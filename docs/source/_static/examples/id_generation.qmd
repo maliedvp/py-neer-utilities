@@ -11,20 +11,20 @@ execute:
 Use the *demonstration_model* to generate a common ID for observations from the *left* and *right* DataFrames. To do so, we first have to load both the model and the data into memory.
 
 ```{python}
-import pandas as pd
-
-from neer_match_utilities.model import Model
-from neer_match_utilities.prepare import Prepare, similarity_map_to_dict
-from pathlib import Path
+from neer_match_utilities.prepare import Prepare
 from neer_match_utilities.custom_similarities import CustomSimilarities
+from neer_match_utilities.baseline_io import ModelBaseline
+
+import pandas as pd
+from pathlib import Path
 
 # Load custom similarity functions
 
 CustomSimilarities()
 
-# Load model
+# Load model (and the similarity map used during training)
 
-loaded_model = Model.load(
+loaded_model = ModelBaseline.load(
     'demonstration_model'
 )
 
@@ -36,18 +36,20 @@ right = pd.read_csv('right.csv')
 
 ### 2. Harmonize Format
 
-After loading the model and data, it is crucial to ensure that the formatting applied to the data remains consistent with the preprocessing used during model training. The `Prepare` class is employed here to harmonize the left and right DataFrames. Notice that the `similarity_map is automatically loaded with the model, so there is no need to redefine it.
+After loading the model and data, ensure that the data formatting remains consistent with the preprocessing used during training. The `Prepare` class harmonizes the left and right DataFrames. Note that the `similarity_map` is automatically loaded with the model, so there is no need to redefine it.
 
 ```{python}
+from neer_match_utilities.prepare import Prepare
+
 prepare = Prepare(
-    similarity_map=similarity_map_to_dict(loaded_model.similarity_map), 
+    similarity_map=loaded_model.similarity_map, 
     df_left=left, 
     df_right=right, 
     id_left='company_id', 
     id_right='company_id',
-    spacy_pipeline='de_core_news_sm',
-    additional_stop_words=[]
 )
+
+# Get formatted and harmonized datasets
 
 left, right = prepare.format(
     fill_numeric_na=False,
@@ -55,15 +57,21 @@ left, right = prepare.format(
     fill_string_na=True, 
     capitalize=True,
     lower_case=False,
-    remove_stop_words=False,
 )
 ```
 
 ### 3. Generate a Common ID
 
-The `generate_ID` method from the `Panel` class is designed to generate a common identifier across multiple repeated cross sections. In our case, creating an ID for observations in the *left* and *right* datasets can be seen as a special case with two periods. Importantly, the `relation` parameter enables the method to handle various types of relationships between the observations in left and right (`1:1`, `1:m`, `m:1`, and `m:m`). Additionally, the `panel_var` parameter specifies the name of the variable that will store these common identifiers. The `time_var` parameter indicates the different cross sections (this could be *year* for annual data, for instance). In our example, to generate an ID for the *left* and *right* DataFrames, we first create a new column (labeled *side*) to distinguish the two sources. Then, we stack the two DataFrames vertically into a single DataFrame named *df*. 
+The `GenerateID` class creates a common identifier across multiple repeated cross sections. Creating an ID for observations in the *left* and *right* datasets can be seen as a special case with two periods.
 
-Importantly, the subgroups parameter allows you to implement a blocking strategy. Variables listed under this parameter restrict the ID generation process to comparing observations only within each subgroup. This can drastically minimize the required computation time because, by default, every observation in one cross section is compared to all observations in the comparison cross section. In our example, we could, for instance, create a new column that lists the first letter of each company entry, and include this newly created variable in the list of the subgroups parameter.
+Key parameters:
+
+- `relation`: Specifies the relationship type between observations (`1:1`, `1:m`, `m:1`, or `m:m`)
+- `panel_var`: Name of the variable that stores the common identifiers
+- `time_var`: Indicates the different cross sections (e.g., *year* for annual data)
+- `subgroups`: Implements a blocking strategy by restricting comparisons to observations within each subgroup, which can significantly reduce computation time
+
+To generate an ID for the *left* and *right* DataFrames, we first create a column (*side*) to distinguish the two sources, then stack the DataFrames vertically.
 
 ```{python}
 from neer_match_utilities.panel import GenerateID
@@ -98,7 +106,7 @@ result = id_generator.execute()
 result.head()
 ```
 
-The `generate_ID` method from the `Panel` class is designed to generate a common identifier across multiple repeated cross sections. In our case, creating an ID for observations in the left and right datasets can be seen as a special case with two periods. Importantly, the `relation` parameter enables the method to handle various types of relationships between the observations in left and right (such as `1:1`, `1:m`, `m:1`, and `m:m`). Additionally, the `panel_var` parameter specifies the name of the variable that will store these common identifiers.
+### 4. Merge Results
 
 ```{python}
 df = pd.merge(
@@ -120,7 +128,6 @@ columns_to_show = [
     'side',
     'company_name',
     'city',
-    'purpose',
 ]
 
 df_selection= df[df['company_id'].isin(selected_ids)][columns_to_show]
@@ -130,4 +137,4 @@ df_selection
 
 ## Repeated Cross-Sections (Panel ID)
 
-The method demonstrated above can be generalized to generate common identifiers across multiple repeated cross sections, not just the two in our example above (*left* and *right*). The same underlying logic applies regardless of the number of cross sections (i.e., periods), ensuring a consistent and unified ID generation process across your entire dataset.
+The approach demonstrated above generalizes to multiple repeated cross sections, not just the two sources (*left* and *right*) shown here. The same logic applies regardless of the number of cross sections (i.e., periods), enabling consistent ID generation across your entire dataset.

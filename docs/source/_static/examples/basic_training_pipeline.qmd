@@ -31,13 +31,25 @@ import pandas as pd
 matches = pd.read_csv('matches.csv')
 left = pd.read_csv('left.csv')
 right = pd.read_csv('right.csv')
-
-matches.head()
-left.head()
-right.head()
-
-print(right)
 ```
+
+Preview of the matches data:
+```{python}
+matches.head()
+```
+
+Preview of the left dataset:
+
+```{python}
+left.head()
+```
+
+Preview of the right dataset:
+
+```{python}
+right.head()
+```
+
 
 ## Defining Features and Similarity Concepts
 
@@ -74,7 +86,7 @@ smap = SimilarityMap(similarity_map)
 
 ### Left and Right
 
-Next, data formatting can be harmonized using the `Prepare` class. This class offers flexible arguments for operations such as capitalizing strings, converting values to numeric types, and filling missing values. Additionally, a spaCy pipeline and custom stop words can be specified to remove noise from string variables (see [additional functionalities](additional_functionalities.html)). All operations are applied consistently to both the *left* and *right* DataFrames.
+Next, data formatting can be harmonized using the `Prepare` class. This class offers flexible arguments for operations such as capitalizing strings, converting values to numeric types, and filling missing values. Additionally, a spaCy pipeline and custom stop words can be specified to remove noise from string variables (see [additional functionalities](additional_functionalities.md)). All operations are applied consistently to both the *left* and *right* DataFrames.
 
 ```{python}
 
@@ -152,14 +164,9 @@ left_train, right_train, matches_train, left_validation, right_validation, match
 )
 ```
 
-```{python}
-matches_train.head()
-```
-
 ## Training and Exporting the Model
 
-For this tutorial, we use a simple Logit model. Using other models (ANN, Probit, or GradientBoost) is just as easy and follows a similar syntax.
-
+For this tutorial, we use a simple Logit model. Other models (ANN, Probit, or GradientBoost) follow a similar syntax and are covered in [alternative models](alternative_models.md).
 
 ```{python}
 from neer_match_utilities.baseline_training import BaselineTrainingPipe

@@ -10,21 +10,20 @@
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
 <!-- badges: end -->
 
-The framework `neermatch` provides a set of tools for entity matching
-based on deep learning, symbolic learning, and a hybrid approach
-combining both deep and symbolic learning. It is designed to support
-easy set-up, training, and inference of entity matching models. The
-package provides automated fuzzy logic reasoning (by refutation)
-functionality that can be used to examine the significance of particular
-associations between fields in an entity matching task.
+`neermatch` is a framework for entity matching that supports deep
+learning, symbolic learning, and hybrid approaches, using neural
+networks, gradient boosting, logit, or probit as classifiers. It is
+tailored to the needs of economic historians and quantitative
+economists, but generalizes to any domain requiring entity matching.
 
 The `neermatch` framework encompasses three packages:
 
 1.  `py-neer-match`: The `Python` implementation of the basic
-    functionalities. [Learn more](https://py-neer-match.pikappa.eu)
+    functionalities (ANNs only). [Learn
+    more](https://py-neer-match.pikappa.eu)
 2.  `py-neer-utilities`: A `Python` package that provides additional
-    functionalities to streamline and support the entity matching
-    workflow. ([this
+    models and functionalities to streamline and support the entity
+    matching workflow. ([this
     project](https://www.marius-liebald.com/py-neer-utilities/index.html))
 3.  `r-neer-match`: The `R` implementation of the basic functionalites.
     [Learn more](https://github.com/pi-kappa-devel/r-neer-match)
@@ -49,6 +48,10 @@ of the GitHub repository.
 [Marius Liebald](https://www.marius-liebald.de) (maintainer)
 
 [Pantelis Karapanagiotis](https://www.pikappa.eu) (contributor)
+
+[Erik
+Hellberg](https://www.uu.se/en/research/uppsala-history-of-inequality-and-labor-lab/members/erik-hellberg)
+(contributor)
 
 # Installation
 
