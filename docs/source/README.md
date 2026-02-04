@@ -74,14 +74,6 @@ The package is distributed under the <a href="LICENSE.html">MIT license</a>.
 <div id="refs" class="references csl-bib-body hanging-indent"
 entry-spacing="0">
 
-<div id="ref-benedict2022sigmoidf1smoothf1score" class="csl-entry">
-
-Bénédict, Gabriel, Vincent Koops, Daan Odijk, and Maarten de Rijke.
-2022. “sigmoidF1: A Smooth F1 Score Surrogate Loss for Multilabel
-Classification.” <https://arxiv.org/abs/2108.10566>.
-
-</div>
-
 <div id="ref-gram2022" class="csl-entry">
 
 Gram, Dennis, Pantelis Karapanagiotis, Marius Liebald, and Uwe Walz.
@@ -121,6 +113,14 @@ Lin, Tsung-Yi, Priya Goyal, Ross Girshick, Kaiming He, and Piotr Dollár.
 2017. “Focal Loss for Dense Object Detection.” In *Proceedings of the
 IEEE International Conference on Computer Vision (ICCV)*, 2980–88. IEEE.
 <https://doi.org/10.1109/ICCV.2017.324>.
+
+</div>
+
+<div id="ref-lipton2014optimal" class="csl-entry">
+
+Lipton, Zachary C., Charles Elkan, and Balakrishnan Naryanaswamy. 2014.
+“Optimal Thresholding of Classifiers to Maximize F1 Measure.” In *ECML
+PKDD 2014*.
 
 </div>
 

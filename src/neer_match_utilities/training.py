@@ -312,8 +312,8 @@ def soft_f1_loss(epsilon: float = 1e-7):
 
     References
     ----------
-    - Bénédict, G., Koops, V., Odijk D., & de Rijke M. (2021). SigmoidF1: A 
-      Smooth F1 Score Surrogate Loss for Multilabel Classification. *arXiv 2108.10566*.
+    - Lipton, Z. C., Elkan, C., & Naryanaswamy, B. (2014). Optimal Thresholding
+      of Classifiers to Maximize F1 Measure. *ECML PKDD 2014*.
 
     Explanation of Key Terms
     ------------------------
@@ -424,8 +424,8 @@ def combined_loss(
     ----------
     - Lin, T.-Y., Goyal, P., Girshick, R., He, K., & Dollár, P. (2017).
       Focal Loss for Dense Object Detection. *ICCV*.
-    - Bénédict, G., Koops, V., Odijk, D., & de Rijke, M. (2021).
-      SigmoidF1: A Smooth F1 Score Surrogate Loss for Multilabel Classification. *arXiv:2108.10566*.
+    - Lipton, Z. C., Elkan, C., & Naryanaswamy, B. (2014). Optimal Thresholding
+      of Classifiers to Maximize F1 Measure. *ECML PKDD 2014*.
 
     Examples
     --------
