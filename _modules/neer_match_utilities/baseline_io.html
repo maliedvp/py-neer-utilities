@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.baseline_io &mdash; Neer Match Utilities 1.0.1 documentation</title>
+  <title>neer_match_utilities.baseline_io &mdash; Neer Match Utilities 1.0.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/extra.css?v=503a7970" />
@@ -15,7 +15,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=292eb321"></script>
+      <script src="../../_static/documentation_options.js?v=1ed6394b"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -145,6 +145,13 @@
 <li class="toctree-l3"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.ProbitMatchingModel.fit"><code class="docutils literal notranslate"><span class="pre">ProbitMatchingModel.fit()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin"><code class="docutils literal notranslate"><span class="pre">StatsmodelsInferenceMixin</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.capture_inference"><code class="docutils literal notranslate"><span class="pre">StatsmodelsInferenceMixin.capture_inference()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.coefficients"><code class="docutils literal notranslate"><span class="pre">StatsmodelsInferenceMixin.coefficients()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.predict_proba"><code class="docutils literal notranslate"><span class="pre">StatsmodelsInferenceMixin.predict_proba()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.summary"><code class="docutils literal notranslate"><span class="pre">StatsmodelsInferenceMixin.summary()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.SuggestMixin"><code class="docutils literal notranslate"><span class="pre">SuggestMixin</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.SuggestMixin.suggest"><code class="docutils literal notranslate"><span class="pre">SuggestMixin.suggest()</span></code></a></li>
 </ul>
@@ -160,6 +167,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../baseline_io.html">Baseline IO</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../baseline_io.html#neer_match_utilities.baseline_io.ModelBaseline"><code class="docutils literal notranslate"><span class="pre">ModelBaseline</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../baseline_io.html#neer_match_utilities.baseline_io.ModelBaseline.load"><code class="docutils literal notranslate"><span class="pre">ModelBaseline.load()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../baseline_io.html#neer_match_utilities.baseline_io.ModelBaseline.save"><code class="docutils literal notranslate"><span class="pre">ModelBaseline.save()</span></code></a></li>
 </ul>
 </li>
@@ -195,6 +203,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../prepare.html#neer_match_utilities.prepare.Prepare.format"><code class="docutils literal notranslate"><span class="pre">Prepare.format()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../prepare.html#neer_match_utilities.prepare.available_similarities"><code class="docutils literal notranslate"><span class="pre">available_similarities()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../prepare.html#neer_match_utilities.prepare.similarity_map_to_dict"><code class="docutils literal notranslate"><span class="pre">similarity_map_to_dict()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../prepare.html#neer_match_utilities.prepare.synth_mismatches"><code class="docutils literal notranslate"><span class="pre">synth_mismatches()</span></code></a></li>
 </ul>
@@ -299,6 +308,9 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">neer_match.similarity_map</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimilarityMap</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">dill</span>
@@ -308,6 +320,33 @@
     <span class="n">ProbitMatchingModel</span><span class="p">,</span>
     <span class="n">GradientBoostingModel</span><span class="p">,</span>
 <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_coef_table_to_payload</span><span class="p">(</span><span class="n">coef_table</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reduce the regression table to plain Python types.</span>
+
+<span class="sd">    Storing lists rather than a pickled DataFrame keeps ``meta.pkl`` readable across</span>
+<span class="sd">    pandas versions, which a pickled pandas object is not.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">coef_table</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;names&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">coef_table</span><span class="o">.</span><span class="n">index</span><span class="p">],</span>
+        <span class="s2">&quot;columns&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">coef_table</span><span class="o">.</span><span class="n">columns</span><span class="p">],</span>
+        <span class="s2">&quot;values&quot;</span><span class="p">:</span> <span class="n">coef_table</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+    <span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_coef_table_from_payload</span><span class="p">(</span><span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rebuild the regression table written by :func:`_coef_table_to_payload`.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">payload</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;values&quot;</span><span class="p">],</span>
+        <span class="n">index</span><span class="o">=</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;names&quot;</span><span class="p">],</span>
+        <span class="n">columns</span><span class="o">=</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;columns&quot;</span><span class="p">],</span>
+    <span class="p">)</span>
 
 
 <div class="viewcode-block" id="ModelBaseline">
@@ -328,6 +367,7 @@
         <span class="n">target_directory</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">similarity_map</span><span class="p">:</span> <span class="n">SimilarityMap</span> <span class="o">|</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">remove_data</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
@@ -336,6 +376,29 @@
 <span class="sd">            Pass either a SimilarityMap instance OR the underlying dict (instructions).</span>
 <span class="sd">            This is stored so that `ModelBaseline.load(...)` can return a model with</span>
 <span class="sd">            `loaded_model.similarity_map` just like the DL models.</span>
+<span class="sd">        remove_data:</span>
+<span class="sd">            Only relevant for the statsmodels baselines (Logit/Probit). A statsmodels</span>
+<span class="sd">            ``Results`` object keeps a reference to its ``Model``, and hence to the full</span>
+<span class="sd">            ``endog``/``exog`` arrays. Since the design matrix here is the entire</span>
+<span class="sd">            left x right cross join, pickling it verbatim costs roughly 1.9 KB per training</span>
+<span class="sd">            pair -- tens of gigabytes on realistic data -- in order to persist a coefficient</span>
+<span class="sd">            vector of a few hundred bytes.</span>
+
+<span class="sd">            When True (default), the regression table is rendered and stored in ``meta.pkl``</span>
+<span class="sd">            first, and the result is then pickled without its data. The artifact becomes a</span>
+<span class="sd">            few hundred KB regardless of dataset size; ``predict_proba``, ``evaluate``,</span>
+<span class="sd">            ``suggest`` and ``summary`` all keep working on the reloaded model. What is lost</span>
+<span class="sd">            is the ability to recompute data-dependent quantities (residuals, influence</span>
+<span class="sd">            measures) from the archive.</span>
+
+<span class="sd">            Set to False to reproduce the old behavior and pickle the data along with</span>
+<span class="sd">            the model.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        With ``remove_data=True`` statsmodels strips the arrays from the *in-memory* result</span>
+<span class="sd">        as well, so the passed-in ``model`` loses its residuals and influence measures too.</span>
+<span class="sd">        Its coefficients, predictions and summary are unaffected.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">target_directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">target_directory</span><span class="p">)</span> <span class="o">/</span> <span class="n">name</span> <span class="o">/</span> <span class="s2">&quot;model&quot;</span>
         <span class="n">target_directory</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -352,15 +415,38 @@
 
         <span class="c1"># --- statsmodels models (Logit/Probit) ---</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;result&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">model</span><span class="o">.</span><span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">model</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">target_directory</span> <span class="o">/</span> <span class="s2">&quot;statsmodels_result.pkl&quot;</span><span class="p">))</span>
+            <span class="c1"># Extract coefficients and the regression table into plain types while the data is</span>
+            <span class="c1"># still attached. These make meta.pkl self-sufficient: a reloaded model can predict</span>
+            <span class="c1"># and report its summary from them alone, even if the statsmodels pickle below</span>
+            <span class="c1"># turns out to be unreadable under a different pandas.</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;capture_inference&quot;</span><span class="p">):</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">capture_inference</span><span class="p">()</span>
 
+            <span class="n">model</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">save</span><span class="p">(</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">target_directory</span> <span class="o">/</span> <span class="s2">&quot;statsmodels_result.pkl&quot;</span><span class="p">),</span>
+                <span class="n">remove_data</span><span class="o">=</span><span class="n">remove_data</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="n">params</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;params_&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
             <span class="n">meta</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="s2">&quot;model_type&quot;</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><span class="n">model</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
                 <span class="s2">&quot;feature_cols&quot;</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;feature_cols&quot;</span><span class="p">,</span> <span class="p">[]),</span>
                 <span class="s2">&quot;similarity_map&quot;</span><span class="p">:</span> <span class="n">sim_map_dict</span><span class="p">,</span>
+                <span class="s2">&quot;data_removed&quot;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">(</span><span class="n">remove_data</span><span class="p">),</span>
+                <span class="s2">&quot;summary_text&quot;</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;summary_text_&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                <span class="s2">&quot;coef_table&quot;</span><span class="p">:</span> <span class="n">_coef_table_to_payload</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;coef_table_&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)),</span>
+                <span class="c1"># Plain floats and strings -- deliberately not pandas, so that the archive</span>
+                <span class="c1"># stays readable across pandas versions.</span>
+                <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">params</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">params</span><span class="p">],</span>
+                <span class="s2">&quot;param_names&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;param_names_&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">[])</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">,</span>
             <span class="p">}</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">target_directory</span> <span class="o">/</span> <span class="s2">&quot;meta.pkl&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+
+            <span class="c1"># Human-readable copy, so the regression table is legible without Python.</span>
+            <span class="n">summary_text</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;summary_text_&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">summary_text</span><span class="p">:</span>
+                <span class="p">(</span><span class="n">target_directory</span> <span class="o">/</span> <span class="s2">&quot;summary.txt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">summary_text</span><span class="p">)</span>
 
             <span class="k">return</span>
 
@@ -384,8 +470,18 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported baseline model type: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">model</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="ModelBaseline.load">
+<a class="viewcode-back" href="../../baseline_io.html#neer_match_utilities.baseline_io.ModelBaseline.load">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="n">model_directory</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load a baseline model.</span>
+
+<span class="sd">        Reads both layouts: models saved with the training data embedded in the statsmodels</span>
+<span class="sd">        result (the original behavior), and models saved without it. In the latter case the</span>
+<span class="sd">        regression table is restored from ``meta.pkl`` so that ``summary()`` and</span>
+<span class="sd">        ``coefficients()`` keep working.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">base_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">model_directory</span><span class="p">)</span>          <span class="c1"># .../default_model</span>
         <span class="n">model_dir</span> <span class="o">=</span> <span class="n">base_dir</span> <span class="o">/</span> <span class="s2">&quot;model&quot;</span>            <span class="c1"># .../default_model/model</span>
 
@@ -407,11 +503,46 @@
         <span class="n">sim_map_obj</span> <span class="o">=</span> <span class="n">SimilarityMap</span><span class="p">(</span><span class="n">sim_map_dict</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sim_map_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="n">model_type</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;LogitMatchingModel&quot;</span><span class="p">,</span> <span class="s2">&quot;ProbitMatchingModel&quot;</span><span class="p">}:</span>
-            <span class="n">res</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">model_dir</span> <span class="o">/</span> <span class="s2">&quot;statsmodels_result.pkl&quot;</span><span class="p">))</span>   <span class="c1"># &lt;-- FIX</span>
             <span class="n">model</span> <span class="o">=</span> <span class="n">LogitMatchingModel</span><span class="p">()</span> <span class="k">if</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;LogitMatchingModel&quot;</span> <span class="k">else</span> <span class="n">ProbitMatchingModel</span><span class="p">()</span>
-            <span class="n">model</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">res</span>
             <span class="n">model</span><span class="o">.</span><span class="n">feature_cols</span> <span class="o">=</span> <span class="n">feature_cols</span>
             <span class="n">model</span><span class="o">.</span><span class="n">similarity_map</span> <span class="o">=</span> <span class="n">sim_map_obj</span>
+
+            <span class="c1"># Absent for archives written before these were stored; there the statsmodels</span>
+            <span class="c1"># result is the only source and `summary()` renders from it directly.</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">summary_text_</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;summary_text&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">coef_table_</span> <span class="o">=</span> <span class="n">_coef_table_from_payload</span><span class="p">(</span><span class="n">meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;coef_table&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+
+            <span class="n">params</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;params&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">names</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;param_names&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">names</span><span class="p">:</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">params_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">param_names_</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">names</span><span class="p">]</span>
+
+            <span class="c1"># Prefer the statsmodels result when it can be read, so behavior is identical to</span>
+            <span class="c1"># before. A pandas pickled under one version is not guaranteed to load under</span>
+            <span class="c1"># another, so failure here is expected rather than exceptional.</span>
+            <span class="n">result_path</span> <span class="o">=</span> <span class="n">model_dir</span> <span class="o">/</span> <span class="s2">&quot;statsmodels_result.pkl&quot;</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">result_path</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">params_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Could not read &#39;</span><span class="si">{</span><span class="n">result_path</span><span class="si">}</span><span class="s2">&#39; (</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">), and &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">model_dir</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;meta.pkl&#39;</span><span class="si">}</span><span class="s2">&#39; holds no coefficients to fall back on.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                        <span class="s2">&quot;This archive was written before the coefficients were stored &quot;</span>
+                        <span class="s2">&quot;separately, so the pickled statsmodels result -- which embeds pandas &quot;</span>
+                        <span class="s2">&quot;objects -- is the only copy of them. It can only be opened by a pandas &quot;</span>
+                        <span class="s2">&quot;version compatible with the one that wrote it.&quot;</span>
+                    <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Could not read &#39;</span><span class="si">{</span><span class="n">result_path</span><span class="si">}</span><span class="s2">&#39; (</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">). &quot;</span>
+                    <span class="s2">&quot;Falling back to the coefficients stored in meta.pkl; predictions and &quot;</span>
+                    <span class="s2">&quot;summary are unaffected.&quot;</span><span class="p">,</span>
+                    <span class="ne">RuntimeWarning</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
+
             <span class="k">return</span> <span class="n">model</span>
 
         <span class="k">if</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;GradientBoostingModel&quot;</span><span class="p">:</span>
@@ -425,6 +556,7 @@
             <span class="k">return</span> <span class="n">model</span>
 
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown baseline model type: </span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+</div>
 
 </pre></div>
 

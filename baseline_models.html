@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Baseline Models &mdash; Neer Match Utilities 1.0.1 documentation</title>
+  <title>Baseline Models &mdash; Neer Match Utilities 1.0.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=292eb321"></script>
+      <script src="_static/documentation_options.js?v=1ed6394b"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -148,6 +148,13 @@
 <li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.baseline_models.ProbitMatchingModel.fit"><code class="docutils literal notranslate"><span class="pre">ProbitMatchingModel.fit()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin"><code class="docutils literal notranslate"><span class="pre">StatsmodelsInferenceMixin</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.capture_inference"><code class="docutils literal notranslate"><span class="pre">StatsmodelsInferenceMixin.capture_inference()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.coefficients"><code class="docutils literal notranslate"><span class="pre">StatsmodelsInferenceMixin.coefficients()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.predict_proba"><code class="docutils literal notranslate"><span class="pre">StatsmodelsInferenceMixin.predict_proba()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.summary"><code class="docutils literal notranslate"><span class="pre">StatsmodelsInferenceMixin.summary()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.baseline_models.SuggestMixin"><code class="docutils literal notranslate"><span class="pre">SuggestMixin</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.baseline_models.SuggestMixin.suggest"><code class="docutils literal notranslate"><span class="pre">SuggestMixin.suggest()</span></code></a></li>
 </ul>
@@ -163,6 +170,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="baseline_io.html">Baseline IO</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="baseline_io.html#neer_match_utilities.baseline_io.ModelBaseline"><code class="docutils literal notranslate"><span class="pre">ModelBaseline</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="baseline_io.html#neer_match_utilities.baseline_io.ModelBaseline.load"><code class="docutils literal notranslate"><span class="pre">ModelBaseline.load()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="baseline_io.html#neer_match_utilities.baseline_io.ModelBaseline.save"><code class="docutils literal notranslate"><span class="pre">ModelBaseline.save()</span></code></a></li>
 </ul>
 </li>
@@ -198,6 +206,7 @@
 <li class="toctree-l3"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.Prepare.format"><code class="docutils literal notranslate"><span class="pre">Prepare.format()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.available_similarities"><code class="docutils literal notranslate"><span class="pre">available_similarities()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.similarity_map_to_dict"><code class="docutils literal notranslate"><span class="pre">similarity_map_to_dict()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.synth_mismatches"><code class="docutils literal notranslate"><span class="pre">synth_mismatches()</span></code></a></li>
 </ul>
@@ -326,11 +335,11 @@ produced by <cite>AlternativeModels</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>df_val</strong> (<em>pd.DataFrame</em>) – Validation DataFrame produced by AlternativeModels.pairwise_similarity_dataframe().</p></li>
-<li><p><strong>match_col</strong> (<em>str</em><em>, </em><em>default &quot;match&quot;</em>) – Target column.</p></li>
-<li><p><strong>feature_prefix</strong> (<em>str</em><em>, </em><em>default &quot;col_&quot;</em>) – Feature column prefix.</p></li>
-<li><p><strong>metric</strong> (<em>{&quot;mcc&quot;</em><em>,</em><em>&quot;f1&quot;}</em><em>, </em><em>default &quot;mcc&quot;</em>) – Metric to maximize.</p></li>
-<li><p><strong>thresholds</strong> (<em>np.ndarray</em><em> or </em><em>None</em>) – Threshold grid. If None, uses np.linspace(0.01, 0.99, 99).</p></li>
+<li><p><strong>df_val</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Validation DataFrame produced by AlternativeModels.pairwise_similarity_dataframe().</p></li>
+<li><p><strong>match_col</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Target column.</p></li>
+<li><p><strong>feature_prefix</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Feature column prefix.</p></li>
+<li><p><strong>metric</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Metric to maximize.</p></li>
+<li><p><strong>thresholds</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Threshold grid. If None, uses np.linspace(0.01, 0.99, 99).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -369,10 +378,10 @@ produced by <cite>AlternativeModels</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – (Possibly subsampled) DataFrame produced by AlternativeModels.</p></li>
-<li><p><strong>match_col</strong> (<em>str</em><em>, </em><em>default &quot;match&quot;</em>) – Name of the binary target column.</p></li>
-<li><p><strong>feature_prefix</strong> (<em>str</em><em>, </em><em>default &quot;col_&quot;</em>) – Prefix of feature columns (similarity features).</p></li>
-<li><p><strong>use_class_weight</strong> (<em>bool</em><em>, </em><em>default False</em>) – If True, uses inverse-frequency sample weights to upweight matches.
+<li><p><strong>df</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – (Possibly subsampled) DataFrame produced by AlternativeModels.</p></li>
+<li><p><strong>match_col</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Name of the binary target column.</p></li>
+<li><p><strong>feature_prefix</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Prefix of feature columns (similarity features).</p></li>
+<li><p><strong>use_class_weight</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – If True, uses inverse-frequency sample weights to upweight matches.
 Useful if you fit on a very imbalanced dataset.</p></li>
 </ul>
 </dd>
@@ -400,13 +409,13 @@ Useful if you fit on a very imbalanced dataset.</p></li>
 <dd><p>Return a simple “summary” as a DataFrame of feature importances.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>top_k</strong> (<em>int</em><em>, </em><em>default 20</em>) – Number of most important features to return.</p>
+<dd class="field-odd"><p><strong>top_k</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of most important features to return.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Columns: feature, importance</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pd.DataFrame</p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -435,9 +444,9 @@ using statsmodels’ Logit on top of the similarity features produced by
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – (Possibly subsampled) DataFrame produced by AlternativeModels.</p></li>
-<li><p><strong>match_col</strong> (<em>str</em><em>, </em><em>default &quot;match&quot;</em>) – Name of the binary target column.</p></li>
-<li><p><strong>feature_prefix</strong> (<em>str</em><em>, </em><em>default &quot;col_&quot;</em>) – Prefix of feature columns (similarity features).</p></li>
+<li><p><strong>df</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – (Possibly subsampled) DataFrame produced by AlternativeModels.</p></li>
+<li><p><strong>match_col</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Name of the binary target column.</p></li>
+<li><p><strong>feature_prefix</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Prefix of feature columns (similarity features).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -465,15 +474,82 @@ using statsmodels’ Logit on top of the similarity features produced by
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – (Possibly subsampled) DataFrame produced by AlternativeModels.</p></li>
-<li><p><strong>match_col</strong> (<em>str</em><em>, </em><em>default &quot;match&quot;</em>) – Name of the binary target column.</p></li>
-<li><p><strong>feature_prefix</strong> (<em>str</em><em>, </em><em>default &quot;col_&quot;</em>) – Prefix of feature columns (similarity features).</p></li>
+<li><p><strong>df</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – (Possibly subsampled) DataFrame produced by AlternativeModels.</p></li>
+<li><p><strong>match_col</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Name of the binary target column.</p></li>
+<li><p><strong>feature_prefix</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Prefix of feature columns (similarity features).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#neer_match_utilities.baseline_models.ProbitMatchingModel" title="neer_match_utilities.baseline_models.ProbitMatchingModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProbitMatchingModel</span></code></a></span></p>
 </dd>
 </dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="neer_match_utilities.baseline_models.StatsmodelsInferenceMixin">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">neer_match_utilities.baseline_models.</span></span><span class="sig-name descname"><span class="pre">StatsmodelsInferenceMixin</span></span><a class="reference internal" href="_modules/neer_match_utilities/baseline_models.html#StatsmodelsInferenceMixin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin" title="Link to this definition"></a></dt>
+<dd><p>Keeps a fitted model usable without its statsmodels <code class="docutils literal notranslate"><span class="pre">Results</span></code> object.</p>
+<p>Two problems motivate this. First, a <code class="docutils literal notranslate"><span class="pre">Results</span></code> object holds a reference to its <code class="docutils literal notranslate"><span class="pre">Model</span></code>,
+and thereby to <code class="docutils literal notranslate"><span class="pre">endog</span></code> / <code class="docutils literal notranslate"><span class="pre">exog</span></code> – the full training data. Pickling it stores the entire
+design matrix, which in entity matching is the complete left x right cross join. Second, a
+pickled <code class="docutils literal notranslate"><span class="pre">Results</span></code> contains pandas objects (<code class="docutils literal notranslate"><span class="pre">params</span></code> is a Series, <code class="docutils literal notranslate"><span class="pre">normalized_cov_params</span></code>
+a DataFrame), and pandas pickles are not portable across pandas versions – an archive
+written under one version can be unreadable under another.</p>
+<p><a class="reference internal" href="#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.capture_inference" title="neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.capture_inference"><code class="xref py py-meth docutils literal notranslate"><span class="pre">capture_inference()</span></code></a> therefore extracts everything needed for later use – the
+coefficient vector, the parameter names and the regression table – into plain Python and
+numpy types. <a class="reference internal" href="baseline_io.html#neer_match_utilities.baseline_io.ModelBaseline" title="neer_match_utilities.baseline_io.ModelBaseline"><code class="xref py py-meth docutils literal notranslate"><span class="pre">neer_match_utilities.baseline_io.ModelBaseline()</span></code></a> stores those in
+<code class="docutils literal notranslate"><span class="pre">meta.pkl</span></code>, and a model reconstructed from them alone can still predict, score and report
+its summary. The statsmodels pickle is then an optional extra rather than a dependency.</p>
+<p><code class="docutils literal notranslate"><span class="pre">predict_proba</span></code> still delegates to the <code class="docutils literal notranslate"><span class="pre">Results</span></code> object whenever one is present, so
+behavior is unchanged for freshly fitted models and for archives that load cleanly. The
+pandas-free path engages only when the result is unavailable.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.capture_inference">
+<span class="sig-name descname"><span class="pre">capture_inference</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/baseline_models.html#StatsmodelsInferenceMixin.capture_inference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.capture_inference" title="Link to this definition"></a></dt>
+<dd><p>Extract the fitted model into plain types, while the training data is still attached.</p>
+<p>Stores the coefficient vector, the parameter names and the regression table. These are
+what <a class="reference internal" href="baseline_io.html#neer_match_utilities.baseline_io.ModelBaseline" title="neer_match_utilities.baseline_io.ModelBaseline"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelBaseline</span></code></a> writes to <code class="docutils literal notranslate"><span class="pre">meta.pkl</span></code>,
+and what a reloaded model falls back on when the statsmodels pickle is unavailable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.coefficients">
+<span class="sig-name descname"><span class="pre">coefficients</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/baseline_models.html#StatsmodelsInferenceMixin.coefficients"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.coefficients" title="Link to this definition"></a></dt>
+<dd><p>Coefficients, standard errors, z-statistics, p-values and confidence intervals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.predict_proba">
+<span class="sig-name descname"><span class="pre">predict_proba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'col_'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/baseline_models.html#StatsmodelsInferenceMixin.predict_proba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.predict_proba" title="Link to this definition"></a></dt>
+<dd><p>Predict match probabilities.</p>
+<p>Delegates to the statsmodels result when one is present. Otherwise applies the model’s
+link function to the linear predictor built from the stored coefficients, which gives
+the same answer without requiring the pickled result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.summary">
+<span class="sig-name descname"><span class="pre">summary</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/baseline_models.html#StatsmodelsInferenceMixin.summary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.summary" title="Link to this definition"></a></dt>
+<dd><p>The regression table.</p>
+<p>Returns the live statsmodels <code class="docutils literal notranslate"><span class="pre">Summary</span></code> while the result still carries its data, and
+the summary captured at save time once it does not.</p>
 </dd></dl>
 
 </dd></dl>

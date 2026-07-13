@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Baseline IO &mdash; Neer Match Utilities 1.0.1 documentation</title>
+  <title>Baseline IO &mdash; Neer Match Utilities 1.0.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=292eb321"></script>
+      <script src="_static/documentation_options.js?v=1ed6394b"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -148,6 +148,13 @@
 <li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.ProbitMatchingModel.fit"><code class="docutils literal notranslate"><span class="pre">ProbitMatchingModel.fit()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin"><code class="docutils literal notranslate"><span class="pre">StatsmodelsInferenceMixin</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.capture_inference"><code class="docutils literal notranslate"><span class="pre">StatsmodelsInferenceMixin.capture_inference()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.coefficients"><code class="docutils literal notranslate"><span class="pre">StatsmodelsInferenceMixin.coefficients()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.predict_proba"><code class="docutils literal notranslate"><span class="pre">StatsmodelsInferenceMixin.predict_proba()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.summary"><code class="docutils literal notranslate"><span class="pre">StatsmodelsInferenceMixin.summary()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.SuggestMixin"><code class="docutils literal notranslate"><span class="pre">SuggestMixin</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.SuggestMixin.suggest"><code class="docutils literal notranslate"><span class="pre">SuggestMixin.suggest()</span></code></a></li>
 </ul>
@@ -163,6 +170,7 @@
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Baseline IO</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.baseline_io.ModelBaseline"><code class="docutils literal notranslate"><span class="pre">ModelBaseline</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.baseline_io.ModelBaseline.load"><code class="docutils literal notranslate"><span class="pre">ModelBaseline.load()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.baseline_io.ModelBaseline.save"><code class="docutils literal notranslate"><span class="pre">ModelBaseline.save()</span></code></a></li>
 </ul>
 </li>
@@ -198,6 +206,7 @@
 <li class="toctree-l3"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.Prepare.format"><code class="docutils literal notranslate"><span class="pre">Prepare.format()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.available_similarities"><code class="docutils literal notranslate"><span class="pre">available_similarities()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.similarity_map_to_dict"><code class="docutils literal notranslate"><span class="pre">similarity_map_to_dict()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.synth_mismatches"><code class="docutils literal notranslate"><span class="pre">synth_mismatches()</span></code></a></li>
 </ul>
@@ -307,18 +316,49 @@
 - ProbitMatchingModel
 - GradientBoostingModel</p>
 <dl class="py method">
+<dt class="sig sig-object py" id="neer_match_utilities.baseline_io.ModelBaseline.load">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_directory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/baseline_io.html#ModelBaseline.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.baseline_io.ModelBaseline.load" title="Link to this definition"></a></dt>
+<dd><p>Load a baseline model.</p>
+<p>Reads both layouts: models saved with the training data embedded in the statsmodels
+result (the original behavior), and models saved without it. In the latter case the
+regression table is restored from <code class="docutils literal notranslate"><span class="pre">meta.pkl</span></code> so that <code class="docutils literal notranslate"><span class="pre">summary()</span></code> and
+<code class="docutils literal notranslate"><span class="pre">coefficients()</span></code> keep working.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="neer_match_utilities.baseline_io.ModelBaseline.save">
-<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">similarity_map</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/baseline_io.html#ModelBaseline.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.baseline_io.ModelBaseline.save" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">similarity_map</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/baseline_io.html#ModelBaseline.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.baseline_io.ModelBaseline.save" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>similarity_map</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimilarityMap</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Pass either a SimilarityMap instance OR the underlying dict (instructions).
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>similarity_map</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimilarityMap</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Pass either a SimilarityMap instance OR the underlying dict (instructions).
 This is stored so that <cite>ModelBaseline.load(…)</cite> can return a model with
-<cite>loaded_model.similarity_map</cite> just like the DL models.</p>
+<cite>loaded_model.similarity_map</cite> just like the DL models.</p></li>
+<li><p><strong>remove_data</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – <p>Only relevant for the statsmodels baselines (Logit/Probit). A statsmodels
+<code class="docutils literal notranslate"><span class="pre">Results</span></code> object keeps a reference to its <code class="docutils literal notranslate"><span class="pre">Model</span></code>, and hence to the full
+<code class="docutils literal notranslate"><span class="pre">endog</span></code>/<code class="docutils literal notranslate"><span class="pre">exog</span></code> arrays. Since the design matrix here is the entire
+left x right cross join, pickling it verbatim costs roughly 1.9 KB per training
+pair – tens of gigabytes on realistic data – in order to persist a coefficient
+vector of a few hundred bytes.</p>
+<p>When True (default), the regression table is rendered and stored in <code class="docutils literal notranslate"><span class="pre">meta.pkl</span></code>
+first, and the result is then pickled without its data. The artifact becomes a
+few hundred KB regardless of dataset size; <code class="docutils literal notranslate"><span class="pre">predict_proba</span></code>, <code class="docutils literal notranslate"><span class="pre">evaluate</span></code>,
+<code class="docutils literal notranslate"><span class="pre">suggest</span></code> and <code class="docutils literal notranslate"><span class="pre">summary</span></code> all keep working on the reloaded model. What is lost
+is the ability to recompute data-dependent quantities (residuals, influence
+measures) from the archive.</p>
+<p>Set to False to reproduce the old behavior and pickle the data along with
+the model.</p>
+</p></li>
+</ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>With <code class="docutils literal notranslate"><span class="pre">remove_data=True</span></code> statsmodels strips the arrays from the <em>in-memory</em> result
+as well, so the passed-in <code class="docutils literal notranslate"><span class="pre">model</span></code> loses its residuals and influence measures too.
+Its coefficients, predictions and summary are unaffected.</p>
 </dd></dl>
 
 </dd></dl>

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Feature Selection &mdash; Neer Match Utilities 1.0.1 documentation</title>
+  <title>Feature Selection &mdash; Neer Match Utilities 1.0.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=292eb321"></script>
+      <script src="_static/documentation_options.js?v=1ed6394b"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -148,6 +148,13 @@
 <li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.ProbitMatchingModel.fit"><code class="docutils literal notranslate"><span class="pre">ProbitMatchingModel.fit()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin"><code class="docutils literal notranslate"><span class="pre">StatsmodelsInferenceMixin</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.capture_inference"><code class="docutils literal notranslate"><span class="pre">StatsmodelsInferenceMixin.capture_inference()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.coefficients"><code class="docutils literal notranslate"><span class="pre">StatsmodelsInferenceMixin.coefficients()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.predict_proba"><code class="docutils literal notranslate"><span class="pre">StatsmodelsInferenceMixin.predict_proba()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.summary"><code class="docutils literal notranslate"><span class="pre">StatsmodelsInferenceMixin.summary()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.SuggestMixin"><code class="docutils literal notranslate"><span class="pre">SuggestMixin</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.SuggestMixin.suggest"><code class="docutils literal notranslate"><span class="pre">SuggestMixin.suggest()</span></code></a></li>
 </ul>
@@ -163,6 +170,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="baseline_io.html">Baseline IO</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="baseline_io.html#neer_match_utilities.baseline_io.ModelBaseline"><code class="docutils literal notranslate"><span class="pre">ModelBaseline</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="baseline_io.html#neer_match_utilities.baseline_io.ModelBaseline.load"><code class="docutils literal notranslate"><span class="pre">ModelBaseline.load()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="baseline_io.html#neer_match_utilities.baseline_io.ModelBaseline.save"><code class="docutils literal notranslate"><span class="pre">ModelBaseline.save()</span></code></a></li>
 </ul>
 </li>
@@ -198,6 +206,7 @@
 <li class="toctree-l3"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.Prepare.format"><code class="docutils literal notranslate"><span class="pre">Prepare.format()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.available_similarities"><code class="docutils literal notranslate"><span class="pre">available_similarities()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.similarity_map_to_dict"><code class="docutils literal notranslate"><span class="pre">similarity_map_to_dict()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.synth_mismatches"><code class="docutils literal notranslate"><span class="pre">synth_mismatches()</span></code></a></li>
 </ul>
@@ -405,36 +414,36 @@ that passed both selection stages.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>similarity_map</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>List</em><em>[</em><em>str</em><em>]</em><em>] or </em><em>SimilarityMap</em>) – Mapping from variable names to lists of similarity concepts.
+<li><p><strong>similarity_map</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]</span>) – Mapping from variable names to lists of similarity concepts.
 Example: {‘name’: [‘jaro_winkler’, ‘levenshtein’], ‘address’: [‘cosine’]}</p></li>
-<li><p><strong>training_data</strong> (<em>Tuple</em><em>[</em><em>pd.DataFrame</em><em>, </em><em>pd.DataFrame</em><em>, </em><em>pd.DataFrame</em><em>]</em>) – Three-tuple of (left_df, right_df, matches_df) used for feature selection.</p></li>
-<li><p><strong>id_left_col</strong> (<em>str</em><em>, </em><em>default='id'</em>) – Column names containing entity IDs in left and right dataframes.</p></li>
-<li><p><strong>id_right_col</strong> (<em>str</em><em>, </em><em>default='id'</em>) – Column names containing entity IDs in left and right dataframes.</p></li>
-<li><p><strong>matches_id_left</strong> (<em>str</em><em>, </em><em>default='left'</em><em>, </em><em>'right'</em>) – Column names in matches_df identifying left/right entity IDs.</p></li>
-<li><p><strong>matches_id_right</strong> (<em>str</em><em>, </em><em>default='left'</em><em>, </em><em>'right'</em>) – Column names in matches_df identifying left/right entity IDs.</p></li>
-<li><p><strong>match_col</strong> (<em>str</em><em>, </em><em>default='match'</em>) – Name of the binary match indicator column (1=match, 0=non-match).</p></li>
-<li><p><strong>matches_are_indices</strong> (<em>bool</em><em>, </em><em>default=True</em>) – If True, treat match IDs as integer row indices. If False, treat as entity IDs.</p></li>
-<li><p><strong>method</strong> (<em>str</em><em>, </em><em>default='elastic_net'</em>) – Feature selection method. Currently only ‘elastic_net’ is supported.</p></li>
-<li><p><strong>scoring</strong> (<em>str</em><em>, </em><em>default='average_precision'</em>) – Scoring metric for cross-validation. Options: ‘f1’, ‘roc_auc’,
+<li><p><strong>training_data</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>]</span>) – Three-tuple of (left_df, right_df, matches_df) used for feature selection.</p></li>
+<li><p><strong>id_left_col</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Column names containing entity IDs in left and right dataframes.</p></li>
+<li><p><strong>id_right_col</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Column names containing entity IDs in left and right dataframes.</p></li>
+<li><p><strong>matches_id_left</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Column names in matches_df identifying left/right entity IDs.</p></li>
+<li><p><strong>matches_id_right</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Column names in matches_df identifying left/right entity IDs.</p></li>
+<li><p><strong>match_col</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Name of the binary match indicator column (1=match, 0=non-match).</p></li>
+<li><p><strong>matches_are_indices</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – If True, treat match IDs as integer row indices. If False, treat as entity IDs.</p></li>
+<li><p><strong>method</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Feature selection method. Currently only ‘elastic_net’ is supported.</p></li>
+<li><p><strong>scoring</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Scoring metric for cross-validation. Options: ‘f1’, ‘roc_auc’,
 ‘average_precision’, ‘neg_log_loss’. For imbalanced data, ‘average_precision’
 is recommended.</p></li>
-<li><p><strong>cv</strong> (<em>int</em><em>, </em><em>default=5</em>) – Number of cross-validation folds.</p></li>
+<li><p><strong>cv</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of cross-validation folds.</p></li>
 <li><p><strong>l1_ratios</strong> (<em>tuple</em><em>, </em><em>default=</em><em>(</em><em>0.8</em><em>, </em><em>0.9</em><em>, </em><em>1.0</em><em>)</em>) – L1 penalty ratios to try. 1.0 = pure Lasso, 0.0 = pure Ridge.</p></li>
-<li><p><strong>Cs</strong> (<em>int</em><em> or </em><em>Iterable</em><em>[</em><em>float</em><em>]</em><em>, </em><em>default=20</em>) – Regularization strengths to try. If int, generates <cite>Cs</cite> values
+<li><p><strong>Cs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]]</span>) – Regularization strengths to try. If int, generates <cite>Cs</cite> values
 logarithmically spaced from 0.01 to 1000. Higher C = less regularization.</p></li>
-<li><p><strong>class_weight</strong> (<em>str</em><em> or </em><em>None</em><em>, </em><em>default='balanced'</em>) – Class weighting strategy. ‘balanced’ adjusts weights inversely proportional
+<li><p><strong>class_weight</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Class weighting strategy. ‘balanced’ adjusts weights inversely proportional
 to class frequencies, recommended for imbalanced data.</p></li>
-<li><p><strong>max_iter</strong> (<em>int</em><em>, </em><em>default=5000</em>) – Maximum iterations for elastic net solver.</p></li>
-<li><p><strong>random_state</strong> (<em>int</em><em>, </em><em>default=42</em>) – Random seed for reproducibility.</p></li>
-<li><p><strong>n_jobs</strong> (<em>int</em><em>, </em><em>default=-1</em>) – Number of parallel jobs. -1 uses all available processors.</p></li>
-<li><p><strong>min_coef_threshold</strong> (<em>float</em><em>, </em><em>default=0.0</em>) – Minimum absolute coefficient value for feature retention. Features with
+<li><p><strong>max_iter</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Maximum iterations for elastic net solver.</p></li>
+<li><p><strong>random_state</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Random seed for reproducibility.</p></li>
+<li><p><strong>n_jobs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of parallel jobs. -1 uses all available processors.</p></li>
+<li><p><strong>min_coef_threshold</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Minimum absolute coefficient value for feature retention. Features with
 abs(coef) &lt; threshold are dropped. Set to 0.0 to keep all non-zero features.</p></li>
-<li><p><strong>max_correlation</strong> (<em>float</em><em> or </em><em>None</em><em>, </em><em>default=None</em>) – Correlation threshold for Stage 1 filtering. Features with pairwise
+<li><p><strong>max_correlation</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span>) – Correlation threshold for Stage 1 filtering. Features with pairwise
 correlation &gt; threshold are candidates for removal. Example: 0.95.
 If None, Stage 1 is skipped.</p></li>
-<li><p><strong>always_keep</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>List</em><em>[</em><em>str</em><em>]</em><em>] or </em><em>None</em><em>, </em><em>default=None</em>) – Features to always retain regardless of selection results.
+<li><p><strong>always_keep</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]]</span>) – Features to always retain regardless of selection results.
 Example: {‘surname’: [‘jaro_winkler’]} always keeps surname jaro_winkler.</p></li>
-<li><p><strong>preferred_separators</strong> (<em>tuple</em><em>, </em><em>default=</em><em>(</em><em>'__'</em><em>, </em><em>'</em><em>|</em><em>'</em><em>, </em><em>':'</em><em>, </em><em>'-'</em><em>, </em><em>'_'</em><em>)</em>) – Separators to try when parsing feature names (internal use).</p></li>
+<li><p><strong>preferred_separators</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code>]</span>) – Separators to try when parsing feature names (internal use).</p></li>
 </ul>
 </dd>
 </dl>
@@ -497,7 +506,7 @@ Example: {‘surname’: [‘jaro_winkler’]} always keeps surname jaro_winkler
 coefficients, and metadata about the selection process.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#neer_match_utilities.feature_selection.FeatureSelectionResult" title="neer_match_utilities.feature_selection.FeatureSelectionResult">FeatureSelectionResult</a></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#neer_match_utilities.feature_selection.FeatureSelectionResult" title="neer_match_utilities.feature_selection.FeatureSelectionResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureSelectionResult</span></code></a></span></p>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>ValueError</strong> – If the method is not ‘elastic_net’, or if no usable features remain

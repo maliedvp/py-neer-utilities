@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prepare &mdash; Neer Match Utilities 1.0.1 documentation</title>
+  <title>Prepare &mdash; Neer Match Utilities 1.0.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=292eb321"></script>
+      <script src="_static/documentation_options.js?v=1ed6394b"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -148,6 +148,13 @@
 <li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.ProbitMatchingModel.fit"><code class="docutils literal notranslate"><span class="pre">ProbitMatchingModel.fit()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin"><code class="docutils literal notranslate"><span class="pre">StatsmodelsInferenceMixin</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.capture_inference"><code class="docutils literal notranslate"><span class="pre">StatsmodelsInferenceMixin.capture_inference()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.coefficients"><code class="docutils literal notranslate"><span class="pre">StatsmodelsInferenceMixin.coefficients()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.predict_proba"><code class="docutils literal notranslate"><span class="pre">StatsmodelsInferenceMixin.predict_proba()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.summary"><code class="docutils literal notranslate"><span class="pre">StatsmodelsInferenceMixin.summary()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.SuggestMixin"><code class="docutils literal notranslate"><span class="pre">SuggestMixin</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.SuggestMixin.suggest"><code class="docutils literal notranslate"><span class="pre">SuggestMixin.suggest()</span></code></a></li>
 </ul>
@@ -163,6 +170,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="baseline_io.html">Baseline IO</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="baseline_io.html#neer_match_utilities.baseline_io.ModelBaseline"><code class="docutils literal notranslate"><span class="pre">ModelBaseline</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="baseline_io.html#neer_match_utilities.baseline_io.ModelBaseline.load"><code class="docutils literal notranslate"><span class="pre">ModelBaseline.load()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="baseline_io.html#neer_match_utilities.baseline_io.ModelBaseline.save"><code class="docutils literal notranslate"><span class="pre">ModelBaseline.save()</span></code></a></li>
 </ul>
 </li>
@@ -198,6 +206,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.prepare.Prepare.format"><code class="docutils literal notranslate"><span class="pre">Prepare.format()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.prepare.available_similarities"><code class="docutils literal notranslate"><span class="pre">available_similarities()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.prepare.similarity_map_to_dict"><code class="docutils literal notranslate"><span class="pre">similarity_map_to_dict()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.prepare.synth_mismatches"><code class="docutils literal notranslate"><span class="pre">synth_mismatches()</span></code></a></li>
 </ul>
@@ -337,14 +346,14 @@ If empty, no spaCy pipeline is used. (see <a class="reference external" href="ht
 <dd><p>Removes stop words and non-alphabetic tokens from text.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – The input text to process.</p>
+<dd class="field-odd"><p><strong>text</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The input text to process.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A space-separated string of unique lemmas after tokenization, lemmatization,
 and duplicate removal.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -359,17 +368,17 @@ consistent data types between the columns of the two DataFrames.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fill_numeric_na</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, fills missing numeric values with <cite>0</cite> before conversion to numeric dtype.
+<li><p><strong>fill_numeric_na</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – If True, fills missing numeric values with <cite>0</cite> before conversion to numeric dtype.
 Default is False.</p></li>
-<li><p><strong>to_numeric</strong> (<em>list</em><em>, </em><em>optional</em>) – A list of column names to be converted to numeric dtype.
+<li><p><strong>to_numeric</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span>) – A list of column names to be converted to numeric dtype.
 Default is an empty list.</p></li>
-<li><p><strong>fill_string_na</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, fills missing string values with empty strings.
+<li><p><strong>fill_string_na</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – If True, fills missing string values with empty strings.
 Default is False.</p></li>
-<li><p><strong>capitalize</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, capitalizes string values in non-numeric columns.
+<li><p><strong>capitalize</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – If True, capitalizes string values in non-numeric columns.
 Default is False.</p></li>
-<li><p><strong>lower_case</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, uses lower-case string values in non-numeric columns.
+<li><p><strong>lower_case</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – If True, uses lower-case string values in non-numeric columns.
 Default is False.</p></li>
-<li><p><strong>remove_stop_words</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, applies stop-word removal and lemmatization to non-numeric columns using the <cite>do_remove_stop_words</cite> method.
+<li><p><strong>remove_stop_words</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – If True, applies stop-word removal and lemmatization to non-numeric columns using the <cite>do_remove_stop_words</cite> method.
 Importantly, this only works if a proper Spacy pipeline is defined when initializing the Prepare object.
 Default is False.</p></li>
 </ul>
@@ -400,6 +409,25 @@ Default is False.</p></li>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="neer_match_utilities.prepare.available_similarities">
+<span class="sig-prename descclassname"><span class="pre">neer_match_utilities.prepare.</span></span><span class="sig-name descname"><span class="pre">available_similarities</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/prepare.html#available_similarities"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.prepare.available_similarities" title="Link to this definition"></a></dt>
+<dd><p>Return the currently registered similarity functions.</p>
+<p>Resolves through <code class="xref py py-mod docutils literal notranslate"><span class="pre">neer_match.similarity_map</span></code> on every call so that
+similarities registered at runtime (e.g. by
+<a class="reference internal" href="custom_similarities.html#neer_match_utilities.custom_similarities.CustomSimilarities" title="neer_match_utilities.custom_similarities.CustomSimilarities"><code class="xref py py-class docutils literal notranslate"><span class="pre">neer_match_utilities.custom_similarities.CustomSimilarities</span></code></a> or
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Commonness</span></code>) are picked up, including the rescaling of fuzz-based
+metrics from <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">100]</span></code> to <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1]</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Mapping <code class="docutils literal notranslate"><span class="pre">{similarity_name:</span> <span class="pre">callable}</span></code>.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="neer_match_utilities.prepare.similarity_map_to_dict">
 <span class="sig-prename descclassname"><span class="pre">neer_match_utilities.prepare.</span></span><span class="sig-name descname"><span class="pre">similarity_map_to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">items</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/prepare.html#similarity_map_to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.prepare.similarity_map_to_dict" title="Link to this definition"></a></dt>
 <dd><p>Convert a list of similarity mappings into a dictionary representation.</p>
@@ -413,7 +441,7 @@ as <cite>left~right</cite>.</p>
 and values are lists of similarity functions associated with those columns.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>dict</p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -428,29 +456,29 @@ data and against each other.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>right</strong> (<em>pandas.DataFrame</em>) – The DataFrame containing the original (true) observations.</p></li>
-<li><p><strong>columns_fix</strong> (<em>list</em><em> of </em><em>str</em>) – Column names whose values remain unchanged (copied from the original row).</p></li>
-<li><p><strong>columns_change</strong> (<em>list</em><em> of </em><em>str</em>) – Column names whose values are modified to create mismatches.</p></li>
-<li><p><strong>str_metric</strong> (<em>str</em>) – Name of the string-similarity metric (key in <code class="docutils literal notranslate"><span class="pre">available_similarities()</span></code>).</p></li>
-<li><p><strong>str_similarity_range</strong> (<em>tuple</em><em> of </em><em>(</em><em>float</em><em>, </em><em>float</em><em>)</em>) – Allowed range <code class="docutils literal notranslate"><span class="pre">(min_str_sim,</span> <span class="pre">max_str_sim)</span></code> for normalized string similarity
+<li><p><strong>right</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – The DataFrame containing the original (true) observations.</p></li>
+<li><p><strong>columns_fix</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Column names whose values remain unchanged (copied from the original row).</p></li>
+<li><p><strong>columns_change</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Column names whose values are modified to create mismatches.</p></li>
+<li><p><strong>str_metric</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Name of the string-similarity metric (key in <code class="docutils literal notranslate"><span class="pre">available_similarities()</span></code>).</p></li>
+<li><p><strong>str_similarity_range</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span>) – Allowed range <code class="docutils literal notranslate"><span class="pre">(min_str_sim,</span> <span class="pre">max_str_sim)</span></code> for normalized string similarity
 of STRING columns in <code class="docutils literal notranslate"><span class="pre">columns_change</span></code>. Candidates must satisfy
 <code class="docutils literal notranslate"><span class="pre">min_str_sim</span> <span class="pre">&lt;=</span> <span class="pre">similarity(orig,</span> <span class="pre">candidate)</span> <span class="pre">&lt;=</span> <span class="pre">max_str_sim</span></code>.</p></li>
-<li><p><strong>pct_diff_range</strong> (<em>tuple</em><em> of </em><em>(</em><em>float</em><em>, </em><em>float</em><em>)</em>) – Allowed range <code class="docutils literal notranslate"><span class="pre">(min_pct_diff,</span> <span class="pre">max_pct_diff)</span></code> for percentage difference of
+<li><p><strong>pct_diff_range</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span>) – Allowed range <code class="docutils literal notranslate"><span class="pre">(min_pct_diff,</span> <span class="pre">max_pct_diff)</span></code> for percentage difference of
 NUMERIC columns in <code class="docutils literal notranslate"><span class="pre">columns_change</span></code>: <code class="docutils literal notranslate"><span class="pre">abs(orig</span> <span class="pre">-</span> <span class="pre">candidate)</span> <span class="pre">/</span> <span class="pre">abs(orig)</span></code>.
 If <code class="docutils literal notranslate"><span class="pre">orig</span> <span class="pre">==</span> <span class="pre">0</span></code>, any <code class="docutils literal notranslate"><span class="pre">candidate</span> <span class="pre">!=</span> <span class="pre">0</span></code> is treated as percentage difference 1.0.</p></li>
-<li><p><strong>n_cols</strong> (<em>int</em>) – Number of columns from <code class="docutils literal notranslate"><span class="pre">columns_change</span></code> to modify per synthetic row.
+<li><p><strong>n_cols</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of columns from <code class="docutils literal notranslate"><span class="pre">columns_change</span></code> to modify per synthetic row.
 If <code class="docutils literal notranslate"><span class="pre">n_cols</span> <span class="pre">&lt;</span> <span class="pre">len(columns_change)</span></code>, pick that many at random. If
 <code class="docutils literal notranslate"><span class="pre">n_cols</span> <span class="pre">&gt;</span> <span class="pre">len(columns_change)</span></code>, all columns in <code class="docutils literal notranslate"><span class="pre">columns_change</span></code> are modified.</p></li>
-<li><p><strong>n_mismatches</strong> (<em>int</em><em>, </em><em>default=1</em>) – Number of synthetic mismatches to generate per selected original row.</p></li>
-<li><p><strong>keep_missing</strong> (<em>bool</em><em>, </em><em>default=True</em>) – If True, preserve <code class="docutils literal notranslate"><span class="pre">NaN</span></code> or empty-string values in <code class="docutils literal notranslate"><span class="pre">columns_change</span></code> of the
+<li><p><strong>n_mismatches</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of synthetic mismatches to generate per selected original row.</p></li>
+<li><p><strong>keep_missing</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – If True, preserve <code class="docutils literal notranslate"><span class="pre">NaN</span></code> or empty-string values in <code class="docutils literal notranslate"><span class="pre">columns_change</span></code> of the
 original row (no change applied to those cells).</p></li>
-<li><p><strong>nan_share</strong> (<em>float</em><em>, </em><em>default=0.0</em>) – After deduplication, probability to inject <code class="docutils literal notranslate"><span class="pre">NaN</span></code> into each synthetic cell of
+<li><p><strong>nan_share</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – After deduplication, probability to inject <code class="docutils literal notranslate"><span class="pre">NaN</span></code> into each synthetic cell of
 <code class="docutils literal notranslate"><span class="pre">columns_change</span></code>.</p></li>
-<li><p><strong>empty_share</strong> (<em>float</em><em>, </em><em>default=0.0</em>) – After deduplication, probability to inject <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code> into each synthetic cell of
+<li><p><strong>empty_share</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – After deduplication, probability to inject <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code> into each synthetic cell of
 <code class="docutils literal notranslate"><span class="pre">columns_change</span></code>. Applied after <code class="docutils literal notranslate"><span class="pre">nan_share</span></code>.</p></li>
-<li><p><strong>sample_share</strong> (<em>float</em><em>, </em><em>default=1.0</em>) – Proportion in <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1]</span></code> of original rows in <code class="docutils literal notranslate"><span class="pre">right</span></code> to select at random
+<li><p><strong>sample_share</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Proportion in <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1]</span></code> of original rows in <code class="docutils literal notranslate"><span class="pre">right</span></code> to select at random
 for synthetic generation. For example, <code class="docutils literal notranslate"><span class="pre">0.5</span></code> selects <code class="docutils literal notranslate"><span class="pre">floor(0.5</span> <span class="pre">*</span> <span class="pre">n_rows)</span></code>.</p></li>
-<li><p><strong>id_right</strong> (<em>str</em><em> or </em><em>None</em><em>, </em><em>default=None</em>) – Name of a unique-ID column in <code class="docutils literal notranslate"><span class="pre">right</span></code>. If provided, synthetic rows receive
+<li><p><strong>id_right</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Name of a unique-ID column in <code class="docutils literal notranslate"><span class="pre">right</span></code>. If provided, synthetic rows receive
 new UUID4 IDs in this column. If None, no ID column is created or modified.</p></li>
 </ul>
 </dd>
@@ -458,7 +486,7 @@ new UUID4 IDs in this column. If None, no ID column is created or modified.</p><
 <dd class="field-even"><p>Expanded DataFrame with the original rows plus the synthetic mismatch rows.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pandas.DataFrame</p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>

@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; Neer Match Utilities 1.0.1 documentation</title>
+  <title>Index &mdash; Neer Match Utilities 1.0.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
@@ -15,7 +15,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=292eb321"></script>
+      <script src="_static/documentation_options.js?v=1ed6394b"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -145,6 +145,13 @@
 <li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.ProbitMatchingModel.fit"><code class="docutils literal notranslate"><span class="pre">ProbitMatchingModel.fit()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin"><code class="docutils literal notranslate"><span class="pre">StatsmodelsInferenceMixin</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.capture_inference"><code class="docutils literal notranslate"><span class="pre">StatsmodelsInferenceMixin.capture_inference()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.coefficients"><code class="docutils literal notranslate"><span class="pre">StatsmodelsInferenceMixin.coefficients()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.predict_proba"><code class="docutils literal notranslate"><span class="pre">StatsmodelsInferenceMixin.predict_proba()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.summary"><code class="docutils literal notranslate"><span class="pre">StatsmodelsInferenceMixin.summary()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.SuggestMixin"><code class="docutils literal notranslate"><span class="pre">SuggestMixin</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.SuggestMixin.suggest"><code class="docutils literal notranslate"><span class="pre">SuggestMixin.suggest()</span></code></a></li>
 </ul>
@@ -160,6 +167,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="baseline_io.html">Baseline IO</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="baseline_io.html#neer_match_utilities.baseline_io.ModelBaseline"><code class="docutils literal notranslate"><span class="pre">ModelBaseline</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="baseline_io.html#neer_match_utilities.baseline_io.ModelBaseline.load"><code class="docutils literal notranslate"><span class="pre">ModelBaseline.load()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="baseline_io.html#neer_match_utilities.baseline_io.ModelBaseline.save"><code class="docutils literal notranslate"><span class="pre">ModelBaseline.save()</span></code></a></li>
 </ul>
 </li>
@@ -195,6 +203,7 @@
 <li class="toctree-l3"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.Prepare.format"><code class="docutils literal notranslate"><span class="pre">Prepare.format()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.available_similarities"><code class="docutils literal notranslate"><span class="pre">available_similarities()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.similarity_map_to_dict"><code class="docutils literal notranslate"><span class="pre">similarity_map_to_dict()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.synth_mismatches"><code class="docutils literal notranslate"><span class="pre">synth_mismatches()</span></code></a></li>
 </ul>
@@ -358,11 +367,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="panel.html#neer_match_utilities.panel.SetupData.adjust_overlap">adjust_overlap() (neer_match_utilities.panel.SetupData method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="training.html#neer_match_utilities.training.alpha_balanced">alpha_balanced() (in module neer_match_utilities.training)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="panel.html#neer_match_utilities.panel.GenerateID.assign_ids">assign_ids() (neer_match_utilities.panel.GenerateID method)</a>
+</li>
+      <li><a href="prepare.html#neer_match_utilities.prepare.available_similarities">available_similarities() (in module neer_match_utilities.prepare)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -382,12 +393,16 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.capture_inference">capture_inference() (neer_match_utilities.baseline_models.StatsmodelsInferenceMixin method)</a>
+</li>
       <li><a href="feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult.coef_by_feature">coef_by_feature (neer_match_utilities.feature_selection.FeatureSelectionResult attribute)</a>
 </li>
-      <li><a href="training.html#neer_match_utilities.training.combined_loss">combined_loss() (in module neer_match_utilities.training)</a>
+      <li><a href="baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.coefficients">coefficients() (neer_match_utilities.baseline_models.StatsmodelsInferenceMixin method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="training.html#neer_match_utilities.training.combined_loss">combined_loss() (in module neer_match_utilities.training)</a>
+</li>
       <li><a href="panel.html#neer_match_utilities.panel.SetupData.create_connected_groups">create_connected_groups() (neer_match_utilities.panel.SetupData method)</a>
 </li>
       <li><a href="custom_similarities.html#neer_match_utilities.custom_similarities.CustomSimilarities">CustomSimilarities (class in neer_match_utilities.custom_similarities)</a>
@@ -482,8 +497,12 @@
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="model.html#neer_match_utilities.model.Model.load">load() (neer_match_utilities.model.Model static method)</a>
+      <li><a href="baseline_io.html#neer_match_utilities.baseline_io.ModelBaseline.load">load() (neer_match_utilities.baseline_io.ModelBaseline static method)</a>
+
+      <ul>
+        <li><a href="model.html#neer_match_utilities.model.Model.load">(neer_match_utilities.model.Model static method)</a>
 </li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="baseline_models.html#neer_match_utilities.baseline_models.LogitMatchingModel">LogitMatchingModel (class in neer_match_utilities.baseline_models)</a>
@@ -652,7 +671,11 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="baseline_models.html#neer_match_utilities.baseline_models.GradientBoostingModel.predict_proba">predict_proba() (neer_match_utilities.baseline_models.GradientBoostingModel method)</a>
+
+      <ul>
+        <li><a href="baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.predict_proba">(neer_match_utilities.baseline_models.StatsmodelsInferenceMixin method)</a>
 </li>
+      </ul></li>
       <li><a href="prepare.html#neer_match_utilities.prepare.Prepare">Prepare (class in neer_match_utilities.prepare)</a>
 </li>
       <li><a href="baseline_models.html#neer_match_utilities.baseline_models.ProbitMatchingModel">ProbitMatchingModel (class in neer_match_utilities.baseline_models)</a>
@@ -689,13 +712,15 @@
 </li>
       <li><a href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures">SimilarityFeatures (class in neer_match_utilities.similarity_features)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="training.html#neer_match_utilities.training.soft_f1_loss">soft_f1_loss() (in module neer_match_utilities.training)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="split.html#neer_match_utilities.split.split_test_train">split_test_train() (in module neer_match_utilities.split)</a>
 </li>
       <li><a href="split.html#neer_match_utilities.split.SplitError">SplitError</a>
+</li>
+      <li><a href="baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin">StatsmodelsInferenceMixin (class in neer_match_utilities.baseline_models)</a>
 </li>
       <li><a href="similarity_features.html#neer_match_utilities.similarity_features.subsample_non_matches">subsample_non_matches() (in module neer_match_utilities.similarity_features)</a>
 </li>
@@ -704,7 +729,11 @@
       <li><a href="baseline_models.html#neer_match_utilities.baseline_models.SuggestMixin">SuggestMixin (class in neer_match_utilities.baseline_models)</a>
 </li>
       <li><a href="baseline_models.html#neer_match_utilities.baseline_models.GradientBoostingModel.summary">summary() (neer_match_utilities.baseline_models.GradientBoostingModel method)</a>
+
+      <ul>
+        <li><a href="baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.summary">(neer_match_utilities.baseline_models.StatsmodelsInferenceMixin method)</a>
 </li>
+      </ul></li>
       <li><a href="prepare.html#neer_match_utilities.prepare.synth_mismatches">synth_mismatches() (in module neer_match_utilities.prepare)</a>
 </li>
   </ul></td>
