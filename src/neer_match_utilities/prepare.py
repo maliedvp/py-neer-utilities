@@ -11,8 +11,26 @@ import string
 import uuid
 import warnings
 import pandas as pd
-# from neer_match.similarity_map import available_similarities
+from neer_match import similarity_map as _sim
 from typing import List, Optional, Tuple, Literal
+
+
+def available_similarities() -> dict:
+    """
+    Return the currently registered similarity functions.
+
+    Resolves through :mod:`neer_match.similarity_map` on every call so that
+    similarities registered at runtime (e.g. by
+    :class:`neer_match_utilities.custom_similarities.CustomSimilarities` or
+    :class:`Commonness`) are picked up, including the rescaling of fuzz-based
+    metrics from ``[0, 100]`` to ``[0, 1]``.
+
+    Returns
+    -------
+    dict
+        Mapping ``{similarity_name: callable}``.
+    """
+    return _sim.available_similarities()
 
 
 class Prepare(SuperClass):
