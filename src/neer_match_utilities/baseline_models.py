@@ -9,6 +9,8 @@ CustomSimilarities()  # monkey-patch once, globally
 from neer_match_utilities.similarity_features import SimilarityFeatures
 import statsmodels.api as sm
 from statsmodels.tools.sm_exceptions import ConvergenceWarning
+from scipy import stats
+from scipy.special import expit
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import (
     confusion_matrix,
@@ -125,18 +127,48 @@ class SuggestMixin:
 
 class StatsmodelsInferenceMixin:
     """
-    Keeps the regression table usable after a fitted result has been stripped of its data.
+    Keeps a fitted model usable without its statsmodels ``Results`` object.
 
-    A statsmodels ``Results`` object holds a reference to its ``Model``, and thereby to
-    ``endog`` / ``exog`` -- the full training data. Pickling it therefore stores the entire
-    design matrix, which in entity matching is the complete left x right cross join. For that
-    reason :meth:`neer_match_utilities.baseline_io.ModelBaseline.save` discards the data before
-    pickling and calls :meth:`capture_inference` beforehand, so the coefficient table is
-    preserved as a static artifact. :meth:`summary` falls back to it once the data is gone.
+    Two problems motivate this. First, a ``Results`` object holds a reference to its ``Model``,
+    and thereby to ``endog`` / ``exog`` -- the full training data. Pickling it stores the entire
+    design matrix, which in entity matching is the complete left x right cross join. Second, a
+    pickled ``Results`` contains pandas objects (``params`` is a Series, ``normalized_cov_params``
+    a DataFrame), and pandas pickles are not portable across pandas versions -- an archive
+    written under one version can be unreadable under another.
+
+    :meth:`capture_inference` therefore extracts everything needed for later use -- the
+    coefficient vector, the parameter names and the regression table -- into plain Python and
+    numpy types. :meth:`neer_match_utilities.baseline_io.ModelBaseline` stores those in
+    ``meta.pkl``, and a model reconstructed from them alone can still predict, score and report
+    its summary. The statsmodels pickle is then an optional extra rather than a dependency.
+
+    ``predict_proba`` still delegates to the ``Results`` object whenever one is present, so
+    behavior is unchanged for freshly fitted models and for archives that load cleanly. The
+    pandas-free path engages only when the result is unavailable.
     """
 
     summary_text_: str | None = None
     coef_table_: pd.DataFrame | None = None
+    params_: np.ndarray | None = None
+    param_names_: list[str] | None = None
+
+    def _check_fitted(self):
+        if self.result is None and self.params_ is None:
+            raise RuntimeError(
+                f"{type(self).__name__} is not fitted yet. Call `fit()` first."
+            )
+
+    def _reset_captured(self) -> None:
+        """Discard artifacts of a previous fit, so a refit cannot be saved with stale ones."""
+        self.params_ = None
+        self.param_names_ = None
+        self.coef_table_ = None
+        self.summary_text_ = None
+
+    @staticmethod
+    def _link(z: np.ndarray) -> np.ndarray:
+        """Map the linear predictor to a probability. Implemented per model."""
+        raise NotImplementedError
 
     def _exog_names(self) -> list[str]:
         names = getattr(self.result.params, "index", None)
@@ -160,10 +192,22 @@ class StatsmodelsInferenceMixin:
         )
 
     def capture_inference(self) -> None:
-        """Render and store the regression table while the training data is still attached."""
-        self._check_fitted()
-        if self.coef_table_ is not None:
+        """
+        Extract the fitted model into plain types, while the training data is still attached.
+
+        Stores the coefficient vector, the parameter names and the regression table. These are
+        what :class:`~neer_match_utilities.baseline_io.ModelBaseline` writes to ``meta.pkl``,
+        and what a reloaded model falls back on when the statsmodels pickle is unavailable.
+        """
+        if self.params_ is not None:
             return
+        if self.result is None:
+            raise RuntimeError(
+                f"{type(self).__name__} is not fitted yet. Call `fit()` first."
+            )
+
+        self.param_names_ = self._exog_names()
+        self.params_ = np.asarray(self.result.params, dtype=float)
 
         try:
             self.coef_table_ = self._build_coef_table()
@@ -177,12 +221,70 @@ class StatsmodelsInferenceMixin:
             # table captured above is the durable artifact in that case.
             self.summary_text_ = None
 
+    def _linear_predictor(self, df: pd.DataFrame) -> np.ndarray:
+        """
+        Build the design matrix in *coefficient order* and return ``X @ params``.
+
+        Columns are selected by the stored parameter names rather than by re-deriving them
+        from ``feature_cols``, so the column order cannot drift out of step with the
+        coefficients.
+        """
+        if self.params_ is None or not self.param_names_:
+            raise RuntimeError(
+                f"{type(self).__name__} has neither a statsmodels result nor stored "
+                "coefficients; it cannot predict."
+            )
+
+        missing = [n for n in self.param_names_ if n != "const" and n not in df.columns]
+        if missing:
+            raise KeyError(
+                f"Input is missing {len(missing)} feature column(s) required by the model, "
+                f"e.g. {missing[:3]}"
+            )
+
+        columns = [
+            np.ones(len(df), dtype=float)
+            if name == "const"
+            else df[name].to_numpy(dtype=float)
+            for name in self.param_names_
+        ]
+        return np.column_stack(columns) @ self.params_
+
+    def predict_proba(
+        self,
+        df: pd.DataFrame,
+        feature_prefix: str = "col_",
+    ) -> np.ndarray:
+        """
+        Predict match probabilities.
+
+        Delegates to the statsmodels result when one is present. Otherwise applies the model's
+        link function to the linear predictor built from the stored coefficients, which gives
+        the same answer without requiring the pickled result.
+        """
+        self._check_fitted()
+
+        if self.result is not None:
+            feature_cols = self.feature_cols or sorted(
+                [c for c in df.columns if c.startswith(feature_prefix)]
+            )
+            X_sm = sm.add_constant(df[feature_cols], has_constant="add")
+            return np.asarray(self.result.predict(X_sm))
+
+        return np.asarray(self._link(self._linear_predictor(df)), dtype=float)
+
     def coefficients(self) -> pd.DataFrame:
         """Coefficients, standard errors, z-statistics, p-values and confidence intervals."""
+        self._check_fitted()
+
         if self.coef_table_ is not None:
             return self.coef_table_.copy()
-        self._check_fitted()
-        return self._build_coef_table()
+        if self.result is not None:
+            return self._build_coef_table()
+
+        # Coefficients recovered without their standard errors (e.g. by the archive
+        # migration tool). Report what is known rather than failing.
+        return pd.DataFrame({"coef": self.params_}, index=self.param_names_)
 
     def summary(self):
         """
@@ -192,14 +294,16 @@ class StatsmodelsInferenceMixin:
         the summary captured at save time once it does not.
         """
         self._check_fitted()
-        try:
-            return self.result.summary()
-        except Exception:
-            if self.summary_text_ is not None:
-                return self.summary_text_
-            if self.coef_table_ is not None:
-                return self.coef_table_.copy()
-            raise
+
+        if self.result is not None:
+            try:
+                return self.result.summary()
+            except Exception:
+                pass  # data was stripped; fall through to the captured artifacts
+
+        if self.summary_text_ is not None:
+            return self.summary_text_
+        return self.coefficients()
 
 
 @dataclass
@@ -241,6 +345,8 @@ class LogitMatchingModel(SuggestMixin, StatsmodelsInferenceMixin):
         """
         if match_col not in df.columns:
             raise KeyError(f"Match column '{match_col}' not found in df.columns")
+
+        self._reset_captured()
 
         # 1. Select feature columns
         feature_cols = sorted([c for c in df.columns if c.startswith(feature_prefix)])
@@ -294,27 +400,10 @@ class LogitMatchingModel(SuggestMixin, StatsmodelsInferenceMixin):
 
         return self
 
-    def _check_fitted(self):
-        if self.result is None:
-            raise RuntimeError("LogitMatchingModel is not fitted yet. Call `fit()` first.")
-
-    def predict_proba(
-        self,
-        df: pd.DataFrame,
-        feature_prefix: str = "col_",
-    ) -> np.ndarray:
-        self._check_fitted()
-
-        if self.feature_cols:
-            feature_cols = self.feature_cols
-        else:
-            feature_cols = sorted([c for c in df.columns if c.startswith(feature_prefix)])
-
-        X = df[feature_cols]
-        X_sm = sm.add_constant(X, has_constant="add")
-
-        proba = self.result.predict(X_sm)
-        return np.asarray(proba)
+    @staticmethod
+    def _link(z: np.ndarray) -> np.ndarray:
+        """Logistic CDF, matching ``sm.Logit.predict``."""
+        return expit(z)
 
     def evaluate(
         self,
@@ -387,6 +476,8 @@ class ProbitMatchingModel(SuggestMixin, StatsmodelsInferenceMixin):
         if match_col not in df.columns:
             raise KeyError(f"Match column '{match_col}' not found in df.columns")
 
+        self._reset_captured()
+
         # 1. Select feature columns
         feature_cols = sorted([c for c in df.columns if c.startswith(feature_prefix)])
         X = df[feature_cols]
@@ -433,27 +524,10 @@ class ProbitMatchingModel(SuggestMixin, StatsmodelsInferenceMixin):
 
         return self
 
-    def _check_fitted(self):
-        if self.result is None:
-            raise RuntimeError("ProbitMatchingModel is not fitted yet. Call `fit()` first.")
-
-    def predict_proba(
-        self,
-        df: pd.DataFrame,
-        feature_prefix: str = "col_",
-    ) -> np.ndarray:
-        self._check_fitted()
-
-        if self.feature_cols:
-            feature_cols = self.feature_cols
-        else:
-            feature_cols = sorted([c for c in df.columns if c.startswith(feature_prefix)])
-
-        X = df[feature_cols]
-        X_sm = sm.add_constant(X, has_constant="add")
-
-        proba = self.result.predict(X_sm)
-        return np.asarray(proba)
+    @staticmethod
+    def _link(z: np.ndarray) -> np.ndarray:
+        """Standard normal CDF, matching ``sm.Probit.predict``."""
+        return stats.norm.cdf(z)
 
     def evaluate(
         self,
