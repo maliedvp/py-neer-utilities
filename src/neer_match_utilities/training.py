@@ -180,7 +180,12 @@ class Training(SuperClass):
         )
 
         if is_baseline:
-            ModelBaseline.save(model=model, target_directory=target_directory, name=model_name)
+            ModelBaseline.save(
+                model=model,
+                target_directory=target_directory,
+                name=model_name,
+                similarity_map=self.similarity_map,
+            )
             print(f"Baseline model saved to {Path(target_directory) / model_name / 'model'}")
             return
 

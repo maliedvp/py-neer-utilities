@@ -235,7 +235,9 @@ class BaselineTrainingPipe:
                 target_directory=base_dir,
                 evaluation_train=metrics_train,
                 evaluation_test=metrics_test,
-                export_model=self.export_model,  # keep your signature if you added it
+                # The model was already written in step 6. Saving it again here would
+                # overwrite that meta.pkl with one built from a different call.
+                export_model=False,
             )
 
         # 8) Optional reload sanity check

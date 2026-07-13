@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 import pickle
+import pandas as pd
 import statsmodels.api as sm
 from neer_match.similarity_map import SimilarityMap
 import dill
@@ -11,6 +12,33 @@ from neer_match_utilities.baseline_models import (
     ProbitMatchingModel,
     GradientBoostingModel,
 )
+
+
+def _coef_table_to_payload(coef_table: pd.DataFrame | None) -> dict | None:
+    """
+    Reduce the regression table to plain Python types.
+
+    Storing lists rather than a pickled DataFrame keeps ``meta.pkl`` readable across
+    pandas versions, which a pickled pandas object is not.
+    """
+    if coef_table is None:
+        return None
+    return {
+        "names": [str(i) for i in coef_table.index],
+        "columns": [str(c) for c in coef_table.columns],
+        "values": coef_table.to_numpy(dtype=float).tolist(),
+    }
+
+
+def _coef_table_from_payload(payload: dict | None) -> pd.DataFrame | None:
+    """Rebuild the regression table written by :func:`_coef_table_to_payload`."""
+    if not payload:
+        return None
+    return pd.DataFrame(
+        payload["values"],
+        index=payload["names"],
+        columns=payload["columns"],
+    )
 
 
 class ModelBaseline:
@@ -27,6 +55,7 @@ class ModelBaseline:
         target_directory: Path,
         name: str,
         similarity_map: SimilarityMap | dict | None = None,
+        remove_data: bool = True,
     ) -> None:
         """
         Parameters
@@ -35,6 +64,29 @@ class ModelBaseline:
             Pass either a SimilarityMap instance OR the underlying dict (instructions).
             This is stored so that `ModelBaseline.load(...)` can return a model with
             `loaded_model.similarity_map` just like the DL models.
+        remove_data:
+            Only relevant for the statsmodels baselines (Logit/Probit). A statsmodels
+            ``Results`` object keeps a reference to its ``Model``, and hence to the full
+            ``endog``/``exog`` arrays. Since the design matrix here is the entire
+            left x right cross join, pickling it verbatim costs roughly 1.9 KB per training
+            pair -- tens of gigabytes on realistic data -- in order to persist a coefficient
+            vector of a few hundred bytes.
+
+            When True (default), the regression table is rendered and stored in ``meta.pkl``
+            first, and the result is then pickled without its data. The artifact becomes a
+            few hundred KB regardless of dataset size; ``predict_proba``, ``evaluate``,
+            ``suggest`` and ``summary`` all keep working on the reloaded model. What is lost
+            is the ability to recompute data-dependent quantities (residuals, influence
+            measures) from the archive.
+
+            Set to False to reproduce the old behavior and pickle the data along with
+            the model.
+
+        Notes
+        -----
+        With ``remove_data=True`` statsmodels strips the arrays from the *in-memory* result
+        as well, so the passed-in ``model`` loses its residuals and influence measures too.
+        Its coefficients, predictions and summary are unaffected.
         """
         target_directory = Path(target_directory) / name / "model"
         target_directory.mkdir(parents=True, exist_ok=True)
@@ -51,15 +103,31 @@ class ModelBaseline:
 
         # --- statsmodels models (Logit/Probit) ---
         if hasattr(model, "result") and model.result is not None:
-            model.result.save(str(target_directory / "statsmodels_result.pkl"))
+            # Render the regression table while the data is still attached, so that
+            # inference survives the strip below.
+            if remove_data and hasattr(model, "capture_inference"):
+                model.capture_inference()
+
+            model.result.save(
+                str(target_directory / "statsmodels_result.pkl"),
+                remove_data=remove_data,
+            )
 
             meta = {
                 "model_type": type(model).__name__,
                 "feature_cols": getattr(model, "feature_cols", []),
                 "similarity_map": sim_map_dict,
+                "data_removed": bool(remove_data),
+                "summary_text": getattr(model, "summary_text_", None),
+                "coef_table": _coef_table_to_payload(getattr(model, "coef_table_", None)),
             }
             with open(target_directory / "meta.pkl", "wb") as f:
                 pickle.dump(meta, f)
+
+            # Human-readable copy, so the regression table is legible without Python.
+            summary_text = getattr(model, "summary_text_", None)
+            if summary_text:
+                (target_directory / "summary.txt").write_text(summary_text)
 
             return
 
@@ -84,6 +152,14 @@ class ModelBaseline:
 
     @staticmethod
     def load(model_directory: Path):
+        """
+        Load a baseline model.
+
+        Reads both layouts: models saved with the training data embedded in the statsmodels
+        result (the original behavior), and models saved without it. In the latter case the
+        regression table is restored from ``meta.pkl`` so that ``summary()`` and
+        ``coefficients()`` keep working.
+        """
         base_dir = Path(model_directory)          # .../default_model
         model_dir = base_dir / "model"            # .../default_model/model
 
@@ -105,11 +181,16 @@ class ModelBaseline:
         sim_map_obj = SimilarityMap(sim_map_dict) if isinstance(sim_map_dict, dict) else None
 
         if model_type in {"LogitMatchingModel", "ProbitMatchingModel"}:
-            res = sm.load(str(model_dir / "statsmodels_result.pkl"))   # <-- FIX
+            res = sm.load(str(model_dir / "statsmodels_result.pkl"))
             model = LogitMatchingModel() if model_type == "LogitMatchingModel" else ProbitMatchingModel()
             model.result = res
             model.feature_cols = feature_cols
             model.similarity_map = sim_map_obj
+
+            # Absent for models saved with the data embedded; there `summary()` still
+            # renders from the result itself.
+            model.summary_text_ = meta.get("summary_text", None)
+            model.coef_table_ = _coef_table_from_payload(meta.get("coef_table", None))
             return model
 
         if model_type == "GradientBoostingModel":

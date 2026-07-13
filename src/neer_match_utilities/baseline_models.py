@@ -122,8 +122,88 @@ class SuggestMixin:
 
         return out
 
+
+class StatsmodelsInferenceMixin:
+    """
+    Keeps the regression table usable after a fitted result has been stripped of its data.
+
+    A statsmodels ``Results`` object holds a reference to its ``Model``, and thereby to
+    ``endog`` / ``exog`` -- the full training data. Pickling it therefore stores the entire
+    design matrix, which in entity matching is the complete left x right cross join. For that
+    reason :meth:`neer_match_utilities.baseline_io.ModelBaseline.save` discards the data before
+    pickling and calls :meth:`capture_inference` beforehand, so the coefficient table is
+    preserved as a static artifact. :meth:`summary` falls back to it once the data is gone.
+    """
+
+    summary_text_: str | None = None
+    coef_table_: pd.DataFrame | None = None
+
+    def _exog_names(self) -> list[str]:
+        names = getattr(self.result.params, "index", None)
+        if names is None:
+            names = getattr(self.result.model, "exog_names", [])
+        return [str(n) for n in names]
+
+    def _build_coef_table(self) -> pd.DataFrame:
+        res = self.result
+        ci = np.asarray(res.conf_int(), dtype=float)
+        return pd.DataFrame(
+            {
+                "coef": np.asarray(res.params, dtype=float),
+                "std_err": np.asarray(res.bse, dtype=float),
+                "z": np.asarray(res.tvalues, dtype=float),
+                "p_value": np.asarray(res.pvalues, dtype=float),
+                "ci_lower": ci[:, 0],
+                "ci_upper": ci[:, 1],
+            },
+            index=self._exog_names(),
+        )
+
+    def capture_inference(self) -> None:
+        """Render and store the regression table while the training data is still attached."""
+        self._check_fitted()
+        if self.coef_table_ is not None:
+            return
+
+        try:
+            self.coef_table_ = self._build_coef_table()
+        except Exception as exc:
+            warnings.warn(f"Could not capture the coefficient table before saving: {exc}")
+
+        try:
+            self.summary_text_ = str(self.result.summary())
+        except Exception:
+            # Penalized fits cannot always render a summary. The coefficient
+            # table captured above is the durable artifact in that case.
+            self.summary_text_ = None
+
+    def coefficients(self) -> pd.DataFrame:
+        """Coefficients, standard errors, z-statistics, p-values and confidence intervals."""
+        if self.coef_table_ is not None:
+            return self.coef_table_.copy()
+        self._check_fitted()
+        return self._build_coef_table()
+
+    def summary(self):
+        """
+        The regression table.
+
+        Returns the live statsmodels ``Summary`` while the result still carries its data, and
+        the summary captured at save time once it does not.
+        """
+        self._check_fitted()
+        try:
+            return self.result.summary()
+        except Exception:
+            if self.summary_text_ is not None:
+                return self.summary_text_
+            if self.coef_table_ is not None:
+                return self.coef_table_.copy()
+            raise
+
+
 @dataclass
-class LogitMatchingModel(SuggestMixin):
+class LogitMatchingModel(SuggestMixin, StatsmodelsInferenceMixin):
     """
     Logistic regression baseline on similarity features using statsmodels.
 
@@ -272,13 +352,9 @@ class LogitMatchingModel(SuggestMixin):
             "MCC": float(mcc),
         }
 
-    def summary(self):
-        self._check_fitted()
-        return self.result.summary()
-    
 
 @dataclass
-class ProbitMatchingModel(SuggestMixin):
+class ProbitMatchingModel(SuggestMixin, StatsmodelsInferenceMixin):
     """
     Probit regression baseline on similarity features using statsmodels.
 
@@ -415,9 +491,6 @@ class ProbitMatchingModel(SuggestMixin):
             "MCC": float(mcc),
         }
 
-    def summary(self):
-        self._check_fitted()
-        return self.result.summary()
 
 @dataclass
 class GradientBoostingModel(SuggestMixin):
