@@ -33,6 +33,11 @@ dependencies = [
     "neer-match>=0.7.38",
     "dill>=0.3.8",
     "spacy>=3.8.7",
+    # spacy and weasel both `from click import ...` but neither declares click.
+    # It used to arrive transitively via typer; typer >= 0.26 dropped that
+    # dependency, so a fresh install leaves click absent and `import spacy`
+    # -- and therefore `import neer_match_utilities` -- fails outright.
+    "click>=8.1",
     "pydot>=4.0.1",
     "graphviz>=0.21",
     "statsmodels>=0.14.6",

@@ -331,7 +331,7 @@ class LogitMatchingModel(SuggestMixin, StatsmodelsInferenceMixin):
         match_col: str = "match",
         feature_prefix: str = "col_",
     ) -> "LogitMatchingModel":
-        """
+        r"""
         Fit logistic regression on a pairwise similarity DataFrame.
 
         Parameters
@@ -461,7 +461,7 @@ class ProbitMatchingModel(SuggestMixin, StatsmodelsInferenceMixin):
         match_col: str = "match",
         feature_prefix: str = "col_",
     ) -> "ProbitMatchingModel":
-        """
+        r"""
         Fit probit regression on a pairwise similarity DataFrame.
 
         Parameters
@@ -605,7 +605,7 @@ class GradientBoostingModel(SuggestMixin):
         feature_prefix: str = "col_",
         use_class_weight: bool = False,
     ) -> "GradientBoostingModel":
-        """
+        r"""
         Fit gradient boosting on a pairwise similarity DataFrame.
 
         Parameters
@@ -757,7 +757,7 @@ class GradientBoostingModel(SuggestMixin):
         thresholds: np.ndarray | None = None,
         store_treshold: bool = True,
     ) -> tuple[float, dict]:
-        """
+        r"""
         Find the classification threshold that maximizes a metric on validation data.
 
         Parameters
