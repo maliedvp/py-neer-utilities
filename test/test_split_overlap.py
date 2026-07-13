@@ -79,15 +79,17 @@ def test_split_train_test(sample_data_no_duplicates):
 
 
 
-def test_randomness_of_split(sample_data_no_duplicates):
-    """Ensures that the splits are random."""
+def test_randomness_of_split(sample_data_no_duplicates, split_signature):
+    """Ensures that the splits are random when no random_state is given."""
     df_left, df_right, matches = sample_data_no_duplicates
-    split_1 = split_test_train(df_left, df_right, matches, test_ratio=0.3, validation_ratio=0.2)
-    split_2 = split_test_train(df_left, df_right, matches, test_ratio=0.3, validation_ratio=0.2)
 
-    matches_train_1, _, _, _, _, _, matches_test_1, _, _ = split_1
-    matches_train_2, _, _, _, _, _, matches_test_2, _, _ = split_2
+    # Observed across repeated draws rather than a single pair; see the note in
+    # test_split_duplicates.py::test_randomness_of_split.
+    signatures = {
+        split_signature(df_left, df_right, matches, test_ratio=0.3, validation_ratio=0.2)
+        for _ in range(10)
+    }
 
-    assert not matches_train_1.equals(matches_train_2) or not matches_test_1.equals(matches_test_2), "Splits are not random."
+    assert len(signatures) > 1, "Splits are not random: 10 draws produced an identical split."
 
 

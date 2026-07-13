@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 
 class SplitError(Exception):
@@ -5,7 +6,7 @@ class SplitError(Exception):
     pass
 
 
-def split_test_train(left: pd.DataFrame, right: pd.DataFrame, matches: pd.DataFrame, test_ratio: float = 0.3, validation_ratio: float = 0.1):
+def split_test_train(left: pd.DataFrame, right: pd.DataFrame, matches: pd.DataFrame, test_ratio: float = 0.3, validation_ratio: float = 0.1, random_state: int | None = None):
     """
     Splits datasets into training, validation, and testing subsets.
 
@@ -25,6 +26,11 @@ def split_test_train(left: pd.DataFrame, right: pd.DataFrame, matches: pd.DataFr
         The proportion of the data to be used for testing (default is 0.3).
     validation_ratio : float, optional
         The proportion of the data to be used for validation (default is 0.1).
+    random_state : int or None, optional
+        Seed for the sampling of the three subsets. Pass an integer to obtain a
+        reproducible split, which is required to re-create a training run. If
+        None (default), the split is drawn from unseeded entropy and differs on
+        every call.
 
     Returns
     -------
@@ -59,9 +65,14 @@ def split_test_train(left: pd.DataFrame, right: pd.DataFrame, matches: pd.DataFr
     if matches_test_count + matches_validation_count + matches_train_count != len(matches):
         raise SplitError("Split does not work correctly: The sum of observations in the three datasets is not equal to the number of observations in matches")
 
+    # A single generator is shared by the three draws below, so that its state
+    # advances between them (the draws stay independent) while the whole split
+    # remains reproducible from `random_state`.
+    rng = np.random.default_rng(random_state)
+
     def subsets(matches_count: int, matches_exclude_index: list):
         """Generates random subsets for matches DataFrame and corresponding rows in `left` and `right`."""
-        m = matches[~matches.index.isin(matches_exclude_index)].sample(n=matches_count).copy()
+        m = matches[~matches.index.isin(matches_exclude_index)].sample(n=matches_count, random_state=rng).copy()
         l = left[left.index.isin(m['left'])].copy()
         r = right[right.index.isin(m['right'])].copy()
         return m, l, r
