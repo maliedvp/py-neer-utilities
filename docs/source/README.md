@@ -71,8 +71,7 @@ The package is distributed under the <a href="LICENSE.html">MIT license</a>.
 
 # References
 
-<div id="refs" class="references csl-bib-body hanging-indent"
-entry-spacing="0">
+<div id="refs" class="references csl-bib-body hanging-indent">
 
 <div id="ref-gram2022" class="csl-entry">
 
@@ -85,24 +84,26 @@ Financial Database.” *ACM Journal of Data and Information Quality
 
 <div id="ref-karapanagiotis2023" class="csl-entry">
 
-Karapanagiotis, Pantelis, and Marius Liebald. 2023. “Entity Matching
+Karapanagiotis, Pantelis, and Marius Liebald. 2023. *Entity Matching
 with Similarity Encoding: A Supervised Learning Recommendation Framework
-for Linking (Big) Data.” <http://dx.doi.org/10.2139/ssrn.4541376>.
+for Linking (Big) Data*. <http://dx.doi.org/10.2139/ssrn.4541376>.
 
 </div>
 
 <div id="ref-pyneermatch2024" class="csl-entry">
 
-———. 2024a. “<span class="nocase">NEural-symbolic</span> Entity
-Reasoning and Matching (Python Neer Match).”
+Karapanagiotis, Pantelis, and Marius Liebald. 2024a.
+*<span class="nocase">NEural-symbolic</span> Entity Reasoning and
+Matching (Python Neer Match)*.
 <https://github.com/pi-kappa-devel/py-neer-match>.
 
 </div>
 
 <div id="ref-rneermatch2024" class="csl-entry">
 
-———. 2024b. “<span class="nocase">NEural-symbolic</span> Entity
-Reasoning and Matching (R Neer Match).”
+Karapanagiotis, Pantelis, and Marius Liebald. 2024b.
+*<span class="nocase">NEural-symbolic</span> Entity Reasoning and
+Matching (R Neer Match)*.
 <https://github.com/pi-kappa-devel/r-neer-match>.
 
 </div>
@@ -110,8 +111,8 @@ Reasoning and Matching (R Neer Match).”
 <div id="ref-lin2017" class="csl-entry">
 
 Lin, Tsung-Yi, Priya Goyal, Ross Girshick, Kaiming He, and Piotr Dollár.
-2017. “Focal Loss for Dense Object Detection.” In *Proceedings of the
-IEEE International Conference on Computer Vision (ICCV)*, 2980–88. IEEE.
+2017. “Focal Loss for Dense Object Detection.” *Proceedings of the IEEE
+International Conference on Computer Vision (ICCV)*, 2980–88.
 <https://doi.org/10.1109/ICCV.2017.324>.
 
 </div>
@@ -119,8 +120,8 @@ IEEE International Conference on Computer Vision (ICCV)*, 2980–88. IEEE.
 <div id="ref-lipton2014optimal" class="csl-entry">
 
 Lipton, Zachary C., Charles Elkan, and Balakrishnan Naryanaswamy. 2014.
-“Optimal Thresholding of Classifiers to Maximize F1 Measure.” In *ECML
-PKDD 2014*.
+“Optimal Thresholding of Classifiers to Maximize F1 Measure.” *ECML PKDD
+2014*.
 
 </div>
 
