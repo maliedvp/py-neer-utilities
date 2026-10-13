@@ -44,24 +44,36 @@ def test_statsmodels_fit_warnings_stay_silenced(monkeypatch):
     assert categories.count(RuntimeWarning) == 1  # only the caller's
 
 
-def test_feature_selection_fit_warnings_stay_silenced():
+def make_selector(**kwargs):
     names = ["alpha", "bravo", "charlie", "delta", "echo", "foxtrot"]
     left = pd.DataFrame({"id": range(6), "name": names})
     right = pd.DataFrame({"id": range(6), "name": [n[::-1] if i % 2 else n for i, n in enumerate(names)]})
     matches = pd.DataFrame({"left": range(6), "right": range(6)})
-
-    selector = FeatureSelector(
+    return FeatureSelector(
         {"name": ["levenshtein", "jaro_winkler"]},
         (left, right, matches),
         cv=2, Cs=2, l1_ratios=(0.9,), n_jobs=1,
+        **kwargs,
     )
+
+
+def test_feature_selection_fit_warnings_stay_silenced():
+    # One iteration per cross-validation fit, so that each stops before converging
+    selector = make_selector(max_iter=1)
+
     with warnings.catch_warnings(record=True) as caught:
         warnings.simplefilter("always")
         selector.execute()
 
-    # scikit-learn 1.8 deprecates `penalty`, so the fits emit at least that
-    leaked = [
-        w for w in caught
-        if issubclass(w.category, (FutureWarning, SklearnConvergenceWarning, RuntimeWarning))
-    ]
+    leaked = [w for w in caught if issubclass(w.category, (SklearnConvergenceWarning, RuntimeWarning))]
     assert leaked == []
+
+
+def test_feature_selection_avoids_deprecated_arguments():
+    # LogisticRegression's `penalty` is deprecated in scikit-learn 1.8 and
+    # removed in 1.10; no filter hides that warning any more
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        make_selector().execute()
+
+    assert [str(w.message) for w in caught if issubclass(w.category, FutureWarning)] == []

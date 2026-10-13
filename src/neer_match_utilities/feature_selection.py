@@ -49,19 +49,14 @@ import joblib
 def _fit_warnings_silenced():
     """
     Silence what the elastic-net fits routinely emit: ConvergenceWarning under
-    the loose cross-validation tolerance, the deprecation of `penalty` in
-    scikit-learn 1.8, and RuntimeWarning from the matrix products.
+    the loose cross-validation tolerance, and RuntimeWarning from the matrix
+    products.
 
     These filters used to be set at import, which silenced them in the caller's
     own code as well. They now apply only around the fits below, inside the
     function that joblib runs, so that they hold in its worker processes too.
     """
     with warnings.catch_warnings(), np.errstate(over="ignore", divide="ignore", invalid="ignore"):
-        warnings.filterwarnings(
-            "ignore",
-            category=FutureWarning,
-            message=".*'penalty' was deprecated.*"
-        )
         warnings.simplefilter("ignore", ConvergenceWarning)
         warnings.simplefilter("ignore", RuntimeWarning)
         yield
@@ -595,9 +590,10 @@ class FeatureSelector:
             X_tr, X_va = X_scaled[train_idx], X_scaled[val_idx]
             y_tr, y_va = y[train_idx], y[val_idx]
 
+            # l1_ratio alone selects the elastic-net penalty; passing
+            # penalty= is deprecated in scikit-learn 1.8 and removed in 1.10
             clf = LogisticRegression(
                 solver="saga",
-                penalty="elasticnet",
                 l1_ratio=l1_ratio,
                 C=C,
                 max_iter=self.max_iter,
@@ -640,7 +636,6 @@ class FeatureSelector:
         # Step 6: Refit final model on full training set with best parameters
         final_model = LogisticRegression(
             solver="saga",
-            penalty="elasticnet",
             l1_ratio=best_l1,
             C=best_C,
             max_iter=20000,
