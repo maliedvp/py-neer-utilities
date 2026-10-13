@@ -187,3 +187,29 @@ def test_example_4(example_4):
 
     # Assert all values in 'right' of df_matches exist in df_right['id']
     assert set(df_matches['right']).issubset(df_right['id'])
+
+
+@pytest.mark.parametrize("panel_ids", [(0, 1), ("", "b"), (10, 20)])
+def test_create_connected_groups_merges_any_panel_id(panel_ids):
+    """A match across two panels merges them, whatever their ids are, 0 and "" included."""
+    first, second = panel_ids
+    setup_data = SetupData(matches=[(1, 3)])
+
+    groups = setup_data.create_connected_groups(
+        df_dict={first: [1, 2], second: [3, 4]},
+        matches=setup_data.matches,
+    )
+
+    assert sorted(sorted(g) for g in groups) == [[1, 2, 3, 4]]
+
+
+def test_create_connected_groups_ignores_values_outside_any_panel():
+    """A match involving a value in no panel connects nothing, as before."""
+    setup_data = SetupData(matches=[(1, 99)])
+
+    groups = setup_data.create_connected_groups(
+        df_dict={0: [1, 2], 1: [3, 4]},
+        matches=setup_data.matches,
+    )
+
+    assert sorted(sorted(g) for g in groups) == [[1, 2], [3, 4]]

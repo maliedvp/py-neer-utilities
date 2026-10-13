@@ -160,7 +160,9 @@ class SetupData:
         connections = {}
         for left, right in matches:
             key_left, key_right = value_to_key.get(left), value_to_key.get(right)
-            if key_left and key_right:
+            # Both values belong to some group. A group key such as 0 or ""
+            # is falsy, so test for None rather than for truthiness.
+            if key_left is not None and key_right is not None:
                 if key_left in connections:
                     connections[key_left].add(key_right)
                 else:
