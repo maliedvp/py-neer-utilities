@@ -775,7 +775,9 @@ class GradientBoostingModel(SuggestMixin):
         feature_prefix: str = "col_",
         metric: str = "mcc",
         thresholds: np.ndarray | None = None,
-        store_treshold: bool = True,
+        store_threshold: bool = True,
+        *,
+        store_treshold: bool | None = None,
     ) -> tuple[float, dict]:
         r"""
         Find the classification threshold that maximizes a metric on validation data.
@@ -792,6 +794,12 @@ class GradientBoostingModel(SuggestMixin):
             Metric to maximize.
         thresholds : np.ndarray or None
             Threshold grid. If None, uses np.linspace(0.01, 0.99, 99).
+        store_threshold : bool, default True
+            If True, also store the chosen threshold on the model as
+            ``best_threshold_``, which ``ModelBaseline.save`` saves with it.
+        store_treshold : bool or None
+            Deprecated misspelling of ``store_threshold``, still accepted with a
+            FutureWarning.
 
         Returns
         -------
@@ -800,13 +808,22 @@ class GradientBoostingModel(SuggestMixin):
         best_stats : dict
             Evaluation dict (TP/FP/TN/FN/Accuracy/Recall/Precision/F1/MCC) at best_t.
         """
+        if store_treshold is not None:
+            warnings.warn(
+                "`store_treshold` is deprecated and will be removed in a future "
+                "release; use `store_threshold` instead.",
+                FutureWarning,
+                stacklevel=2,
+            )
+            store_threshold = store_treshold
+
         self._check_fitted()
 
         y_true = df_val[match_col].to_numpy().astype(int)
         proba = self.predict_proba(df_val, feature_prefix=feature_prefix)
 
         return self._best_threshold_from_proba(
-            y_true, proba, metric=metric, thresholds=thresholds, store_treshold=store_treshold
+            y_true, proba, metric=metric, thresholds=thresholds, store_threshold=store_threshold
         )
 
     def _best_threshold_from_proba(
@@ -815,7 +832,7 @@ class GradientBoostingModel(SuggestMixin):
         proba: np.ndarray,
         metric: str = "mcc",
         thresholds: np.ndarray | None = None,
-        store_treshold: bool = True,
+        store_threshold: bool = True,
     ) -> tuple[float, dict]:
         """`best_threshold` on predictions already made, e.g. block by block."""
         if thresholds is None:
@@ -840,7 +857,7 @@ class GradientBoostingModel(SuggestMixin):
                 best_score = score
                 best_t = float(t)
                 best_stats = classification_metrics(y_true, y_hat)
-            if store_treshold:
+            if store_threshold:
                 self.best_threshold_ = best_t
 
         return best_t, best_stats
