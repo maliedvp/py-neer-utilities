@@ -5,6 +5,7 @@ from neer_match.similarity_map import SimilarityMap
 
 from neer_match_utilities.baseline_models import GradientBoostingModel
 from neer_match_utilities.baseline_training import BaselineTrainingPipe
+from neer_match_utilities.feature_selection import FeatureSelector
 from neer_match_utilities.similarity_features import (
     SimilarityFeatures,
     subsample_non_match_positions,
@@ -140,3 +141,19 @@ def test_suggest_does_not_depend_on_chunk_size(ids):
         model.suggest(left, right, pairs_per_chunk=5, **kwargs),
         model.suggest(left, right, **kwargs),
     )
+
+
+def test_feature_selection_does_not_depend_on_chunk_size():
+    def run(pairs_per_chunk):
+        result = FeatureSelector(
+            SMAP, make_data(n=20), cv=2, Cs=3, l1_ratios=(0.9,), n_jobs=1,
+            pairs_per_chunk=pairs_per_chunk,
+        ).execute()
+        return (
+            result.updated_similarity_map,
+            result.selected_feature_columns,
+            result.coef_by_feature.to_dict(),
+            result.meta,
+        )
+
+    assert run(7) == run(10**6)

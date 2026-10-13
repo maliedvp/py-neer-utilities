@@ -194,6 +194,10 @@ class FeatureSelector:
         Example: {'surname': ['jaro_winkler']} always keeps surname jaro_winkler.
     preferred_separators : tuple, default=('__', '|', ':', '-', '_')
         Separators to try when parsing feature names (internal use).
+    pairs_per_chunk : int, default=250_000
+        Number of pairs whose similarity features are computed at a time. Only the
+        feature columns are kept, so memory grows with 8 bytes per feature and
+        pair rather than with the full pairwise frame. Does not affect the result.
 
     Attributes
     ----------
@@ -247,6 +251,8 @@ class FeatureSelector:
         always_keep: Optional[Dict[str, List[str]]] = None,
         # if feature name parsing fails, you can tell the parser a separator preference
         preferred_separators: Tuple[str, ...] = ("__", "|", ":", "-", "_"),
+        # pairs whose similarity features are computed at a time
+        pairs_per_chunk: int = 250_000,
     ):
         self.similarity_map: SimilarityMapDict = dict(similarity_map)
         self.left_train, self.right_train, self.matches_train = training_data
@@ -272,6 +278,7 @@ class FeatureSelector:
         self.max_correlation = max_correlation
         self.always_keep = always_keep or {}
         self.preferred_separators = preferred_separators
+        self.pairs_per_chunk = pairs_per_chunk
 
     def _make_Cs_grid(self) -> np.ndarray:
         """
@@ -489,11 +496,13 @@ class FeatureSelector:
         if self.method != "elastic_net":
             raise ValueError(f"Unsupported method={self.method}. Only 'elastic_net' is implemented.")
 
-        # Step 1: Build similarity feature dataframe from training data
+        # Step 1: Build similarity features from training data, block by block.
+        # Only the feature columns and the match labels are kept, so the full
+        # pairwise frame, with its two ID columns, is never held in memory.
         smap_obj = SimilarityMap(self.similarity_map)
         feats = SimilarityFeatures(similarity_map=smap_obj)
 
-        df_train = feats.pairwise_similarity_dataframe(
+        pairs = feats.pairs(
             left=self.left_train,
             right=self.right_train,
             matches=self.matches_train,
@@ -505,34 +514,41 @@ class FeatureSelector:
             matches_are_indices=self.matches_are_indices,
         )
 
-        if self.match_col not in df_train.columns:
-            raise ValueError(
-                f"Expected match label column '{self.match_col}' in df_train, "
-                f"but columns are: {list(df_train.columns)[:30]}..."
-            )
+        y_blocks, X_blocks = [], []
+        for df_train in pairs.chunks(self.pairs_per_chunk):
+            if self.match_col not in df_train.columns:
+                raise ValueError(
+                    f"Expected match label column '{self.match_col}' in df_train, "
+                    f"but columns are: {list(df_train.columns)[:30]}..."
+                )
 
-        # Step 2: Extract target variable and feature matrix
-        y = df_train[self.match_col].astype(int).to_numpy()
+            # Step 2: Extract target variable and feature matrix
+            y_blocks.append(df_train[self.match_col].astype(int).to_numpy())
+
+            # Filter to similarity feature columns only
+            X_blocks.append(df_train[[c for c in df_train.columns if c.startswith("col_") and c != self.match_col]])
+
+        y = np.concatenate(y_blocks)
+        X = pd.concat(X_blocks)
+        del df_train, X_blocks
 
         # Verify sufficient positive examples for cross-validation
         pos = int(y.sum())
         if pos < self.cv:
             raise ValueError(f"Not enough positives for cv={self.cv}: pos={pos}. Reduce cv or use more labeled matches.")
 
-        X = df_train.drop(columns=[self.match_col])
-
-        # Filter to similarity feature columns only
-        X = X[[c for c in X.columns if c.startswith("col_")]]
-
         # Ensure all features are numeric
         X = X.select_dtypes(include=[np.number]).copy()
 
         # Handle infinity and missing values
-        X = X.replace([np.inf, -np.inf], np.nan).fillna(0.0)
+        # In place: the same values, without two more full copies of X
+        X.replace([np.inf, -np.inf], np.nan, inplace=True)
+        X.fillna(0.0, inplace=True)
 
         # Remove constant columns (no information)
         nunique = X.nunique(dropna=False)
-        X = X.loc[:, nunique > 1]
+        if not (nunique > 1).all():
+            X = X.loc[:, nunique > 1]
 
         if X.shape[1] == 0:
             raise ValueError("After cleaning, no usable similarity feature columns remain.")
@@ -550,6 +566,11 @@ class FeatureSelector:
         scaler = StandardScaler()
         X_scaled = scaler.fit_transform(X)
 
+        # Only the column names are needed from here on, so free the unscaled
+        # copy before the fits rather than holding both through them
+        feature_columns = X.columns
+        del X
+
         # Step 5 (Stage 2): Elastic net cross-validation
         # Build parameter grid for exhaustive search
         Cs_grid = self._make_Cs_grid()
@@ -558,12 +579,18 @@ class FeatureSelector:
         skf = StratifiedKFold(n_splits=self.cv, shuffle=True, random_state=self.random_state)
         scorer = get_scorer(self.scoring)
 
-        # Pre-compute CV folds for reproducibility
-        folds = list(skf.split(X_scaled, y))
+        # Pre-compute CV folds for reproducibility. Each pair's fold number takes
+        # one byte, where the folds' index arrays take eight per pair and fold,
+        # and it is what the worker processes receive.
+        fold_of = np.empty(len(y), dtype=np.min_scalar_type(self.cv))
+        for k, (_, val_idx) in enumerate(skf.split(X_scaled, y)):
+            fold_of[val_idx] = k
 
         def fit_and_score(l1_ratio: float, C: float, fold_idx: int):
             """Train and evaluate one configuration on one CV fold."""
-            train_idx, val_idx = folds[fold_idx]
+            # The indices skf.split yields: both sorted, train the complement
+            in_fold = fold_of == fold_idx
+            train_idx, val_idx = np.flatnonzero(~in_fold), np.flatnonzero(in_fold)
             X_tr, X_va = X_scaled[train_idx], X_scaled[val_idx]
             y_tr, y_va = y[train_idx], y[val_idx]
 
@@ -583,7 +610,7 @@ class FeatureSelector:
             return (l1_ratio, C, fold_idx, float(score))
 
         # Generate all parameter × fold combinations
-        tasks = [(l1, C, k) for l1 in l1_grid for C in Cs_grid for k in range(len(folds))]
+        tasks = [(l1, C, k) for l1 in l1_grid for C in Cs_grid for k in range(self.cv)]
         total_fits = len(tasks)
 
         # Execute parallel CV with progress bar
@@ -623,7 +650,7 @@ class FeatureSelector:
         with _fit_warnings_silenced():
             final_model.fit(X_scaled, y)
 
-        coef = pd.Series(final_model.coef_.ravel(), index=X.columns)
+        coef = pd.Series(final_model.coef_.ravel(), index=feature_columns)
 
         # Step 7: Apply coefficient threshold to select final features
         if self.min_coef_threshold > 0:
@@ -639,7 +666,7 @@ class FeatureSelector:
             if dropped_by_elasticnet:
                 print(f"[FeatureSelector] Stage 2 - Elastic net zeroed {len(dropped_by_elasticnet)} features: {dropped_by_elasticnet}")
 
-        print(f"\n[FeatureSelector] Summary: features_in={X.shape[1]} selected_cols={len(selected_feature_columns)}")
+        print(f"\n[FeatureSelector] Summary: features_in={len(feature_columns)} selected_cols={len(selected_feature_columns)}")
 
         # Diagnostic: print top coefficients
         top_coefs = coef.abs().sort_values(ascending=False).head(15)
@@ -650,7 +677,7 @@ class FeatureSelector:
         print()
 
         print(f"[FeatureSelector] pos={int(y.sum())} neg={int((1-y).sum())} "
-            f"features_in={X.shape[1]} selected_cols={len(selected_feature_columns)}")
+            f"features_in={len(feature_columns)} selected_cols={len(selected_feature_columns)}")
 
         # Step 8: Build metadata dictionary
         meta = {
@@ -660,7 +687,7 @@ class FeatureSelector:
             "l1_ratios": self.l1_ratios,
             "Cs": self.Cs,
             "class_weight": self.class_weight,
-            "n_features_in": int(X.shape[1]),
+            "n_features_in": int(len(feature_columns)),
             "n_features_selected": int(len(selected_feature_columns)),
         }
 
