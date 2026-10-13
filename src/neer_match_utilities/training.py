@@ -354,6 +354,9 @@ def soft_f1_loss(epsilon: float = 1e-7):
     print(loss_value.numpy())  # e.g. 0.1…
     ```
     """
+    if epsilon <= 0:
+        raise ValueError("`epsilon` must be strictly positive.")
+
     def loss(y_true, y_pred):
         y_true = tf.cast(y_true, tf.float32)
         y_pred = tf.clip_by_value(tf.cast(y_pred, tf.float32), epsilon, 1.0 - epsilon)

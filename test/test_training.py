@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 from unittest.mock import Mock, patch
-from neer_match_utilities.training import Training
+from neer_match_utilities.training import Training, soft_f1_loss
 
 
 @pytest.fixture
@@ -46,6 +46,22 @@ def test_matches_reorder(sample_data):
     assert len(reordered_matches) == 2, "The length of the returned dataframe should only be two, corresponding to the number of matches specified above"
     assert reordered_matches['left'].tolist() == [0, 1], "Indices of left matches should be [0, 1]"
     assert reordered_matches['right'].tolist() == [1, 0], "Indices of right matches should be [1, 0]"
+
+
+@pytest.mark.parametrize("epsilon", [0.0, -1e-7])
+def test_soft_f1_loss_rejects_non_positive_epsilon(epsilon):
+    with pytest.raises(ValueError, match="epsilon"):
+        soft_f1_loss(epsilon=epsilon)
+
+
+def test_soft_f1_loss_value():
+    import tensorflow as tf
+
+    loss = soft_f1_loss(epsilon=1e-6)
+    value = loss(tf.constant([[1.0, 0.0, 1.0]]), tf.constant([[0.9, 0.2, 0.7]]))
+
+    # TP = 0.9 + 0.7, FP = 0.2, FN = 0.1 + 0.3  ->  1 - 3.2 / 3.8
+    assert float(value) == pytest.approx(1 - 3.2 / 3.8, abs=1e-5)
 
 
 # def test_evaluate_dataframe():
