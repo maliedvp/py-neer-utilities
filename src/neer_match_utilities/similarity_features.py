@@ -35,9 +35,11 @@ class SimilarityFeatures:
         matches :
             DataFrame describing which pairs are true matches.
             If `matches_are_indices=True`, `matches[matches_id_left]` and
-            `matches[matches_id_right]` are interpreted as row indices into
-            `left` and `right` (0..n-1). If False, they are interpreted as
-            IDs in the same space as `left[left_id_col]` / `right[right_id_col]`.
+            `matches[matches_id_right]` are interpreted as row positions in
+            `left` and `right` (0..n-1), as neer_match interprets them, whatever
+            the frames' index labels are. A position outside 0..n-1 raises
+            ValueError. If False, they are interpreted as IDs in the same space
+            as `left[left_id_col]` / `right[right_id_col]`.
             A pair listed more than once is counted once.
         left_id_col, right_id_col :
             Column names in `left` / `right` that contain the entity IDs.
@@ -47,7 +49,7 @@ class SimilarityFeatures:
             Column names in `matches` identifying the left/right side.
         matches_are_indices :
             If True (default), treat `matches_id_left` / `matches_id_right` as
-            row indices into `left` and `right`. If False, treat them as IDs.
+            row positions in `left` and `right`. If False, treat them as IDs.
 
         Notes
         -----
@@ -188,20 +190,28 @@ class SimilarityPairs:
         matches_tmp = matches[[matches_id_left, matches_id_right]].copy()
 
         if matches_are_indices:
-            # matches[left/right] are row indices into left/right.
-            # Map our ID-columns to row indices, then merge on those.
-            left_id_to_pos = (
-                left.reset_index()
-                .set_index(left_id_col)["index"]
-                .to_dict()
-            )
-            right_id_to_pos = (
-                right.reset_index()
-                .set_index(right_id_col)["index"]
-                .to_dict()
-            )
-            self.left_keys = left_id_series.map(left_id_to_pos).to_numpy()
-            self.right_keys = right_id_series.map(right_id_to_pos).to_numpy()
+            # matches[left/right] are row positions in left/right, 0..n-1, as
+            # neer_match reads them. Not index labels: those differ from the
+            # positions once a frame is filtered or sorted without reset_index.
+            for side, col, n in (
+                ("left", matches_id_left, self.n_left),
+                ("right", matches_id_right, self.n_right),
+            ):
+                values = matches_tmp[col]
+                positions = pd.to_numeric(values, errors="coerce")
+                outside = ~positions.between(0, n - 1) | (positions % 1 != 0)
+                if outside.any():
+                    raise ValueError(
+                        f"With matches_are_indices=True, matches[{col!r}] holds row "
+                        f"positions in the {side} frame, 0..{n - 1}, but "
+                        f"{int(outside.sum())} value(s) are not, e.g. "
+                        f"{values[outside].iloc[0]!r}. Index labels are not row "
+                        "positions unless the index is 0..n-1 (see reset_index); "
+                        "for IDs, pass matches_are_indices=False."
+                    )
+
+            self.left_keys = np.arange(self.n_left)
+            self.right_keys = np.arange(self.n_right)
         else:
             # Old behavior: matches[left/right] are in the same ID space
             # as out_left_id / out_right_id

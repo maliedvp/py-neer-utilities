@@ -157,3 +157,39 @@ def test_feature_selection_does_not_depend_on_chunk_size():
         )
 
     assert run(7) == run(10**6)
+
+
+def three_by_three():
+    left = pd.DataFrame({"id": ["a", "b", "c"], "name": ["ab", "cd", "ef"]})
+    right = pd.DataFrame({"id": ["x", "y", "z"], "name": ["ab", "cd", "ef"]})
+    return left, right, SimilarityFeatures(SimilarityMap({"name": ["levenshtein"]}))
+
+
+@pytest.mark.parametrize(
+    "reindex",
+    [
+        lambda df: df,
+        lambda df: df.set_axis([10, 11, 12]),   # filtered without reset_index
+        lambda df: df.set_axis([2, 1, 0]),      # sorted differently
+        lambda df: df.rename_axis("row"),       # named index
+        lambda df: df.assign(index=[7, 8, 9]),  # a column called "index"
+    ],
+    ids=["default", "filtered", "reordered", "named", "index-column"],
+)
+def test_matches_are_row_positions_whatever_the_index(reindex):
+    left, right, feats = three_by_three()
+    matches = pd.DataFrame({"left": [0, 1, 2], "right": [0, 1, 2]})
+
+    frame = feats.pairwise_similarity_dataframe(reindex(left), right, matches, "id", "id")
+
+    flagged = frame.loc[frame["match"] == 1, ["id_left", "id_right"]].to_numpy()
+    assert list(map(tuple, flagged)) == [("a", "x"), ("b", "y"), ("c", "z")]
+
+
+@pytest.mark.parametrize("position", [3, -1, 1.5, "a"])
+def test_matches_outside_the_frame_raise(position):
+    left, right, feats = three_by_three()
+    matches = pd.DataFrame({"left": [0, position], "right": [0, 1]})
+
+    with pytest.raises(ValueError, match="row positions"):
+        feats.pairwise_similarity_dataframe(left, right, matches, "id", "id")

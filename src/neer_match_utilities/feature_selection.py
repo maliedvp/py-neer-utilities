@@ -159,7 +159,8 @@ class FeatureSelector:
     match_col : str, default='match'
         Name of the binary match indicator column (1=match, 0=non-match).
     matches_are_indices : bool, default=True
-        If True, treat match IDs as integer row indices. If False, treat as entity IDs.
+        If True, treat match IDs as row positions (0..n-1), whatever the frames'
+        index labels are. If False, treat as entity IDs.
     method : str, default='elastic_net'
         Feature selection method. Currently only 'elastic_net' is supported.
     scoring : str, default='average_precision'
