@@ -2,6 +2,71 @@ import numpy as np
 from neer_match import similarity_map as _sim
 from neer_match import similarity_encoding as _enc
 
+# Names of similarities that need scaling (because they come from rapidfuzz.fuzz)
+_FUZZ_KEYS = [
+    "basic_ratio",
+    "partial_ratio",
+    "partial_ratio_alignment",
+    "partial_token_ratio",
+    "partial_token_set_ratio",
+    "partial_token_sort_ratio",
+    "token_ratio",
+    "token_set_ratio",
+    "token_sort_ratio",
+]
+
+# Similarities added on top of neer_match's own, by name. CustomSimilarities and
+# Commonness both register here. Each used to install its own wrapper around
+# neer_match's original function, so whichever was constructed last removed what
+# the other had added -- including the rescaling of the fuzz-based similarities.
+_registered = {}
+
+
+def _norm(f):
+    # Wrap a 0–100 similarity into 0–1
+    def wrapper(x, y):
+        return f(x, y) / 100.0
+    return wrapper
+
+
+def _extended_available():
+    sims = _sim._original_available_similarities().copy()
+
+    # --- 1) Rescale fuzz-based similarities from [0, 100] to [0, 1] ---
+    for key in _FUZZ_KEYS:
+        if key in sims:
+            sims[key] = _norm(sims[key])
+
+    # --- 2) Add registered similarities ---
+    sims.update(_registered)
+    return sims
+
+
+def register_similarities(similarities: dict) -> None:
+    """
+    Make similarity functions available to neer_match by name.
+
+    Registered functions are added to neer_match's own, alongside the rescaling of
+    the fuzz-based similarities from [0, 100] to [0, 1]. A name that is registered
+    again is replaced; all other registered names are kept.
+
+    Parameters
+    ----------
+    similarities : dict
+        Mapping ``{name: callable}``, where each callable takes two values and
+        returns their similarity.
+    """
+    _registered.update(similarities)
+
+    # Store original only once
+    if not hasattr(_sim, "_original_available_similarities"):
+        _sim._original_available_similarities = _sim.available_similarities
+
+    # similarity_encoding imported the name, so its binding is patched as well
+    _sim.available_similarities = _extended_available
+    _enc.available_similarities = _extended_available
+
+
 class CustomSimilarities:
     """
     Monkey-patch neer_match to
@@ -9,19 +74,6 @@ class CustomSimilarities:
     - add custom similarities (notmissing, notzero)
     - rescale fuzz-based similarities from [0, 100] to [0, 1]
     """
-
-    # Names of similarities that need scaling (because they come from rapidfuzz.fuzz)
-    _FUZZ_KEYS = [
-        "basic_ratio",
-        "partial_ratio",
-        "partial_ratio_alignment",
-        "partial_token_ratio",
-        "partial_token_set_ratio",
-        "partial_token_sort_ratio",
-        "token_ratio",
-        "token_set_ratio",
-        "token_sort_ratio",
-    ]
 
     def __init__(self, lat_radius_km: float = 10.0, lon_radius_km: float = 10.0, lat_ref: float = 54.0):
         """
@@ -33,39 +85,13 @@ class CustomSimilarities:
         self.lon_radius_km = lon_radius_km
         self.lat_ref = lat_ref
 
-        # Store original only once
-        if not hasattr(_sim, "_original_available_similarities"):
-            _sim._original_available_similarities = _sim.available_similarities
-
-        orig = _sim._original_available_similarities
-
-        def _extended_available():
-            sims = orig().copy()
-
-            # --- 1) Rescale fuzz-based similarities from [0, 100] to [0, 1] ---
-            def _norm(f):
-                # Wrap a 0–100 similarity into 0–1
-                def wrapper(x, y):
-                    return f(x, y) / 100.0
-                return wrapper
-
-            for key in self._FUZZ_KEYS:
-                if key in sims:
-                    sims[key] = _norm(sims[key])
-
-            # --- 2) Add custom similarities ---
-            sims["notmissing"] = self.notmissing
-            sims["notzero"] = self.notzero
-
-            # --- 3) Add distance-based similarities with configured radius ---
-            sims["within_km_lat"] = self._make_within_km_lat(self.lat_radius_km)
-            sims["within_km_lon"] = self._make_within_km_lon(self.lon_radius_km, self.lat_ref)
-            
-            return sims
-
-        # Monkey-patch both modules to use our extended mapping
-        _sim.available_similarities = _extended_available
-        _enc.available_similarities = _extended_available
+        register_similarities({
+            "notmissing": self.notmissing,
+            "notzero": self.notzero,
+            # Distance-based similarities with the configured radius
+            "within_km_lat": self._make_within_km_lat(self.lat_radius_km),
+            "within_km_lon": self._make_within_km_lon(self.lon_radius_km, self.lat_ref),
+        })
 
     @staticmethod
     def notmissing(x: float, y: float) -> float:

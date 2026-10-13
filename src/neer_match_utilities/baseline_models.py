@@ -1,11 +1,15 @@
 from __future__ import annotations
+from contextlib import contextmanager
 from dataclasses import dataclass, field
 import numpy as np
 import pandas as pd
 from neer_match import similarity_map as _sim
 from neer_match.similarity_map import SimilarityMap
 from neer_match_utilities.custom_similarities import CustomSimilarities
-CustomSimilarities()  # monkey-patch once, globally
+# Monkey-patch once, globally. Saved models were trained on the rescaled fuzz
+# similarities, so predicting with a loaded one must not depend on the caller
+# remembering to call CustomSimilarities() first.
+CustomSimilarities()
 from neer_match_utilities.similarity_features import SimilarityFeatures
 import statsmodels.api as sm
 from statsmodels.tools.sm_exceptions import ConvergenceWarning
@@ -21,11 +25,25 @@ from sklearn.metrics import (
     matthews_corrcoef,
 )
 
-# Surpress certain warnings globally in this module
 import warnings
-warnings.filterwarnings("ignore", category=ConvergenceWarning)
-np.seterr(over='ignore', divide='ignore', invalid='ignore')
-warnings.filterwarnings("ignore", category=RuntimeWarning)
+
+
+@contextmanager
+def _numerical_warnings_silenced():
+    """
+    Silence what fitting and scoring the statsmodels baselines routinely emits:
+    ConvergenceWarning from the regularized fallback, and RuntimeWarning for
+    overflow and division in the likelihood.
+
+    These filters used to be set at import, which silenced every RuntimeWarning
+    in the caller's own code as well. They now apply only within the methods
+    decorated with this.
+    """
+    with warnings.catch_warnings(), np.errstate(over="ignore", divide="ignore", invalid="ignore"):
+        warnings.simplefilter("ignore", ConvergenceWarning)
+        warnings.simplefilter("ignore", RuntimeWarning)
+        yield
+
 
 class SuggestMixin:
     """
@@ -191,6 +209,7 @@ class StatsmodelsInferenceMixin:
             index=self._exog_names(),
         )
 
+    @_numerical_warnings_silenced()
     def capture_inference(self) -> None:
         """
         Extract the fitted model into plain types, while the training data is still attached.
@@ -250,6 +269,7 @@ class StatsmodelsInferenceMixin:
         ]
         return np.column_stack(columns) @ self.params_
 
+    @_numerical_warnings_silenced()
     def predict_proba(
         self,
         df: pd.DataFrame,
@@ -273,6 +293,7 @@ class StatsmodelsInferenceMixin:
 
         return np.asarray(self._link(self._linear_predictor(df)), dtype=float)
 
+    @_numerical_warnings_silenced()
     def coefficients(self) -> pd.DataFrame:
         """Coefficients, standard errors, z-statistics, p-values and confidence intervals."""
         self._check_fitted()
@@ -286,6 +307,7 @@ class StatsmodelsInferenceMixin:
         # migration tool). Report what is known rather than failing.
         return pd.DataFrame({"coef": self.params_}, index=self.param_names_)
 
+    @_numerical_warnings_silenced()
     def summary(self):
         """
         The regression table.
@@ -325,6 +347,7 @@ class LogitMatchingModel(SuggestMixin, StatsmodelsInferenceMixin):
     )
     feature_cols: list[str] = field(default_factory=list, init=False)
 
+    @_numerical_warnings_silenced()
     def fit(
         self,
         df: pd.DataFrame,
@@ -456,6 +479,7 @@ class ProbitMatchingModel(SuggestMixin, StatsmodelsInferenceMixin):
     )
     feature_cols: list[str] = field(default_factory=list, init=False)
 
+    @_numerical_warnings_silenced()
     def fit(
         self,
         df: pd.DataFrame,

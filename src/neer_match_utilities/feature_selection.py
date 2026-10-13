@@ -31,14 +31,6 @@ from joblib import Parallel, delayed
 import warnings
 from sklearn.exceptions import ConvergenceWarning
 
-# Suppress sklearn warnings about deprecated parameters and convergence issues
-warnings.filterwarnings(
-    "ignore",
-    category=FutureWarning,
-    message=".*'penalty' was deprecated.*"
-)
-warnings.filterwarnings("ignore", category=ConvergenceWarning)
-
 try:
     from tqdm.auto import tqdm
 except ImportError:
@@ -52,6 +44,27 @@ SimilarityMapDict = Dict[str, List[str]]
 
 from contextlib import contextmanager
 import joblib
+
+@contextmanager
+def _fit_warnings_silenced():
+    """
+    Silence what the elastic-net fits routinely emit: ConvergenceWarning under
+    the loose cross-validation tolerance, the deprecation of `penalty` in
+    scikit-learn 1.8, and RuntimeWarning from the matrix products.
+
+    These filters used to be set at import, which silenced them in the caller's
+    own code as well. They now apply only around the fits below, inside the
+    function that joblib runs, so that they hold in its worker processes too.
+    """
+    with warnings.catch_warnings(), np.errstate(over="ignore", divide="ignore", invalid="ignore"):
+        warnings.filterwarnings(
+            "ignore",
+            category=FutureWarning,
+            message=".*'penalty' was deprecated.*"
+        )
+        warnings.simplefilter("ignore", ConvergenceWarning)
+        warnings.simplefilter("ignore", RuntimeWarning)
+        yield
 
 @contextmanager
 def tqdm_joblib(tqdm_object):
@@ -564,8 +577,9 @@ class FeatureSelector:
                 class_weight=self.class_weight,
                 random_state=self.random_state,
             )
-            clf.fit(X_tr, y_tr)
-            score = scorer(clf, X_va, y_va)
+            with _fit_warnings_silenced():
+                clf.fit(X_tr, y_tr)
+                score = scorer(clf, X_va, y_va)
             return (l1_ratio, C, fold_idx, float(score))
 
         # Generate all parameter × fold combinations
@@ -606,7 +620,8 @@ class FeatureSelector:
             class_weight=self.class_weight,
             random_state=self.random_state,
         )
-        final_model.fit(X_scaled, y)
+        with _fit_warnings_silenced():
+            final_model.fit(X_scaled, y)
 
         coef = pd.Series(final_model.coef_.ravel(), index=X.columns)
 

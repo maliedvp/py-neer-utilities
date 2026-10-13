@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 from collections import OrderedDict
 from .base import SuperClass
+from .custom_similarities import register_similarities
 import spacy
 import random
 import string
@@ -303,11 +304,9 @@ class Commonness:
         """
         Initialize a Commonness helper and extend available similarity functions.
 
-        This initializer stores references to the input DataFrames, configuration
-        for how to compute "commonness" scores, and (safely) monkey-patches
-        `neer_match.similarity_map.available_similarities` (and the bound reference
-        inside `neer_match.similarity_encoding`) to add a custom similarity
-        function named `"commonness_score"`.
+        This initializer stores references to the input DataFrames and the
+        configuration for how to compute "commonness" scores, and registers a
+        custom similarity function named `"commonness_score"` with neer_match.
 
         Parameters
         ----------
@@ -344,11 +343,11 @@ class Commonness:
 
         Notes
         -----
-        - This method patches `available_similarities()` at runtime to include
-          `"commonness_score"`. The original function is preserved once in the
-          module under `_original_available_similarities` to avoid stacked wrappers.
-        - Patching the bound name inside `similarity_encoding` ensures components
-          that imported the symbol earlier also see the extension.
+        - `"commonness_score"` is registered through
+          :func:`neer_match_utilities.custom_similarities.register_similarities`,
+          next to the similarities added by `CustomSimilarities`. Constructing
+          either one keeps what the other added, including the rescaling of the
+          fuzz-based similarities to [0, 1].
         """
         self.variable_list = list(variable_list)
         self.df_left = df_left.copy()
@@ -366,24 +365,8 @@ class Commonness:
                 "Argument `commonness_source` must be one of {'left','right','both'}."
             )
 
-        # ---- Extend neer_match.similarity_map.available_similarities safely ----
-        from neer_match import similarity_map as _sim
-        from neer_match import similarity_encoding as _enc
-
-        # store original once
-        if not hasattr(_sim, "_original_available_similarities"):
-            _sim._original_available_similarities = _sim.available_similarities
-        orig = _sim._original_available_similarities
-
-        def _extended_available():
-            sims = orig().copy()
-            sims["commonness_score"] = self.commonness_score
-            return sims
-
-        # patch the module attribute
-        _sim.available_similarities = _extended_available
-        # patch the *bound name* inside similarity_encoding, too
-        _enc.available_similarities = _extended_available
+        # ---- Make "commonness_score" available to neer_match ----
+        register_similarities({"commonness_score": self.commonness_score})
 
     @staticmethod
     def _prep_series(s: pd.Series, preprocess: bool) -> pd.Series:
