@@ -958,6 +958,12 @@ class TrainingPipe:
         loss_1 = self._get_stage1_loss()
         self.model.compile(loss=loss_1, optimizer=opt_1)
 
+        # Start from an empty checkpoints/, so that epochs left by an interrupted
+        # run are not renamed into checkpoints_stage_1/ along with this run's
+        checkpoints = self.base_dir / self.model_name / "checkpoints"
+        if checkpoints.exists():
+            shutil.rmtree(checkpoints)
+
         saver = EpochEndSaver(base_dir=self.base_dir, model_name=self.model_name)
         history = self.model.fit(
             self.left_train, self.right_train, self.matches_train,
@@ -1058,6 +1064,12 @@ class TrainingPipe:
         opt_2 = tf.keras.optimizers.AdamW(learning_rate=lr_sched_2, weight_decay=wd_2, clipnorm=1.0)
 
         self.model.compile(loss=focal_loss(alpha=alpha, gamma=self.gamma), optimizer=opt_2)
+
+        # Start from an empty checkpoints/, so that epochs left by an interrupted
+        # run are not renamed into checkpoints_stage_2/ along with this run's
+        checkpoints = self.base_dir / self.model_name / "checkpoints"
+        if checkpoints.exists():
+            shutil.rmtree(checkpoints)
 
         saver = EpochEndSaver(base_dir=self.base_dir, model_name=self.model_name)
         history = self.model.fit(
