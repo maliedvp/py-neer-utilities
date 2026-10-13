@@ -447,10 +447,10 @@ class EpochEndSaver(tf.keras.callbacks.Callback):
         ----------
         base_dir : Path
             The root directory under which the model subdirectories will be created.
-            For instance: Path(__file__).resolve().parent / MODEL_NAME
+            For instance: Path.cwd(), as used by TrainingPipe
         model_name : str
             A short identifier for the model. Each epoch’s directory will be
-            base_dir / model_name / "epoch_<NN>"
+            base_dir / model_name / "checkpoints" / "epoch_<NN>"
         """
         super().__init__()
         self.base_dir = Path(base_dir)

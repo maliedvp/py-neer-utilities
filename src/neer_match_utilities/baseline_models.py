@@ -313,7 +313,7 @@ class LogitMatchingModel(SuggestMixin, StatsmodelsInferenceMixin):
 
     This class is designed as an alternative to the DL/NS models in `neer_match`,
     using statsmodels' Logit on top of the similarity features produced by
-    `AlternativeModels`.
+    `SimilarityFeatures`.
 
     It supports:
     - evaluation with TP, FP, TN, FN, Accuracy, Recall, Precision, F1, MCC,
@@ -337,7 +337,8 @@ class LogitMatchingModel(SuggestMixin, StatsmodelsInferenceMixin):
         Parameters
         ----------
         df : pd.DataFrame
-            (Possibly subsampled) DataFrame produced by AlternativeModels.
+            (Possibly subsampled) DataFrame produced by
+            SimilarityFeatures.pairwise_similarity_dataframe().
         match_col : str, default "match"
             Name of the binary target column.
         feature_prefix : str, default "col\_"
@@ -467,7 +468,8 @@ class ProbitMatchingModel(SuggestMixin, StatsmodelsInferenceMixin):
         Parameters
         ----------
         df : pd.DataFrame
-            (Possibly subsampled) DataFrame produced by AlternativeModels.
+            (Possibly subsampled) DataFrame produced by
+            SimilarityFeatures.pairwise_similarity_dataframe().
         match_col : str, default "match"
             Name of the binary target column.
         feature_prefix : str, default "col\_"
@@ -573,7 +575,7 @@ class GradientBoostingModel(SuggestMixin):
 
     Designed as an alternative to the DL/NS models in `neer_match`, using a
     tree-based GradientBoostingClassifier on top of similarity features
-    produced by `AlternativeModels`.
+    produced by `SimilarityFeatures`.
 
     It supports:
     - evaluation with TP, FP, TN, FN, Accuracy, Recall, Precision, F1, MCC,
@@ -611,7 +613,8 @@ class GradientBoostingModel(SuggestMixin):
         Parameters
         ----------
         df : pd.DataFrame
-            (Possibly subsampled) DataFrame produced by AlternativeModels.
+            (Possibly subsampled) DataFrame produced by
+            SimilarityFeatures.pairwise_similarity_dataframe().
         match_col : str, default "match"
             Name of the binary target column.
         feature_prefix : str, default "col\_"
@@ -763,7 +766,7 @@ class GradientBoostingModel(SuggestMixin):
         Parameters
         ----------
         df_val : pd.DataFrame
-            Validation DataFrame produced by AlternativeModels.pairwise_similarity_dataframe().
+            Validation DataFrame produced by SimilarityFeatures.pairwise_similarity_dataframe().
         match_col : str, default "match"
             Target column.
         feature_prefix : str, default "col\_"

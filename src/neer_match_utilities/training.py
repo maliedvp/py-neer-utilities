@@ -206,14 +206,14 @@ def focal_loss(alpha=0.99, gamma=1.5):
 
     Parameters
     ----------
-    alpha : float, optional, default=0.75
+    alpha : float, optional, default=0.99
         Weighting factor for the positive class (minority class).
 
         - Must be in the range [0, 1].
         - A higher value increases the loss contribution from the positive class
           (underrepresented class) relative to the negative class (overrepresented class).
 
-    gamma : float, optional, default=2.0
+    gamma : float, optional, default=1.5
         Focusing parameter that reduces the loss contribution from easy examples.
 
         - ``gamma = 0``: No focusing, equivalent to Weighted Binary Cross-Entropy Loss (if alpha is set to 0.5).
@@ -386,10 +386,10 @@ def combined_loss(
         - Intermediate values blend the two objectives proportionally.
     epsilon : float, default=1e-7
         Small stabilizer for Soft F1 calculation. Must be ``> 0``.
-    alpha : float, default=0.25
+    alpha : float, default=0.99
         Balancing factor for Focal Loss, weighting the positive (minority) class.
         Must lie in ``[0, 1]``.
-    gamma : float, default=2.0
+    gamma : float, default=1.5
         Focusing parameter for Focal Loss.
         - ``gamma = 0`` reduces to weighted BCE.
         - Larger ``gamma`` emphasizes harder (misclassified) examples.
@@ -468,17 +468,25 @@ def combined_loss(
 
 def alpha_balanced(left, right, matches, mismatch_share:float=1.0, max_alpha:float=.95) -> float:
     """
-    Compute α so that α*N_pos = (1-α)*N_neg.
+    Compute α so that α*N_pos = (1-α)*mismatch_share*N_neg, capped at max_alpha.
+
+    N_pos is the number of matches and N_neg = len(left)*len(right) - N_pos the
+    number of non-matching pairs, so that the positive pairs and the sampled
+    negative pairs carry equal total weight.
 
     Parameters
     ----------
     left, right : pandas.DataFrame
     matches     : pandas.DataFrame
+    mismatch_share : float, default=1.0
+        Share of the non-matching pairs sampled during training.
+    max_alpha : float, default=0.95
+        Upper bound on the returned α.
 
     Returns
     -------
     float
-        α in [0,1] for focal loss (positive-class weight).
+        α in [0,1], at most max_alpha, for focal loss (positive-class weight).
     """
     N_pos   = len(matches)
     N_neg   = len(left)*len(right)-len(matches)

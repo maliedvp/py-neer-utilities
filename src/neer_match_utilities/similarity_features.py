@@ -199,7 +199,7 @@ def to_X_y(df: pd.DataFrame, match_col: str = "match"):
     Parameters
     ----------
     df : pd.DataFrame
-        DataFrame produced by AlternativeModels.pairwise_similarity_dataframe().
+        DataFrame produced by SimilarityFeatures.pairwise_similarity_dataframe().
     match_col : str, default "match"
         Name of the binary match indicator column.
 
