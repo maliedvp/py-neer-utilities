@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 from unittest.mock import Mock, patch
-from neer_match_utilities.training import Training, soft_f1_loss
+from neer_match_utilities.training import Training, alpha_balanced, soft_f1_loss
 
 
 @pytest.fixture
@@ -62,6 +62,31 @@ def test_soft_f1_loss_value():
 
     # TP = 0.9 + 0.7, FP = 0.2, FN = 0.1 + 0.3  ->  1 - 3.2 / 3.8
     assert float(value) == pytest.approx(1 - 3.2 / 3.8, abs=1e-5)
+
+
+def test_alpha_balanced_rejects_empty_inputs():
+    empty = pd.DataFrame({"id": []})
+    no_matches = pd.DataFrame({"left": [], "right": []})
+
+    with pytest.raises(ValueError, match="pairs is zero"):
+        alpha_balanced(empty, empty, no_matches)
+
+
+def test_alpha_balanced_rejects_nothing_to_balance():
+    frame = pd.DataFrame({"id": [0, 1]})
+    no_matches = pd.DataFrame({"left": [], "right": []})
+
+    with pytest.raises(ValueError, match="nothing to balance"):
+        alpha_balanced(frame, frame, no_matches, mismatch_share=0.0)
+
+
+def test_alpha_balanced_value():
+    frame = pd.DataFrame({"id": range(4)})  # 16 pairs
+    matches = pd.DataFrame({"left": range(4), "right": range(4)})  # 12 non-matches
+
+    # alpha * 4 == (1 - alpha) * 0.5 * 12  ->  alpha = 0.6
+    assert alpha_balanced(frame, frame, matches, mismatch_share=0.5, max_alpha=1.0) == pytest.approx(0.6)
+    assert alpha_balanced(frame, frame, matches, mismatch_share=0.5, max_alpha=0.5) == 0.5
 
 
 # def test_evaluate_dataframe():

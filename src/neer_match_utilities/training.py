@@ -503,17 +503,28 @@ def alpha_balanced(left, right, matches, mismatch_share:float=1.0, max_alpha:flo
     -------
     float
         α in [0,1], at most max_alpha, for focal loss (positive-class weight).
+
+    Raises
+    ------
+    ValueError
+        If there are no pairs, or neither matches nor sampled non-matches.
     """
     N_pos   = len(matches)
     N_neg   = len(left)*len(right)-len(matches)
 
-    alpha   = (mismatch_share * N_neg) / (mismatch_share * N_neg + N_pos)
-
-    alpha = min(alpha, max_alpha)
-
+    # Validate before dividing, so these raise instead of a ZeroDivisionError
     N_total = len(left) * len(right)
     if N_total <= 0:
         raise ValueError("Total number of pairs is zero.")
+    if mismatch_share * N_neg + N_pos <= 0:
+        raise ValueError(
+            f"There are no matches and no sampled non-matches "
+            f"(mismatch_share={mismatch_share}), so there is nothing to balance."
+        )
+
+    alpha   = (mismatch_share * N_neg) / (mismatch_share * N_neg + N_pos)
+
+    alpha = min(alpha, max_alpha)
 
     return alpha
 
