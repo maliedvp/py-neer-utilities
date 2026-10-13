@@ -654,6 +654,9 @@ class TrainingPipe:
       to the active stage's mismatch sampling configuration.
     """
 
+    # Share of the non-matches the warm-up pass samples: small, to keep it short
+    WARMUP_MISMATCH_SHARE = 0.05
+
     # ---------- Built-in helpers ----------
     @staticmethod
     def required_batch_size(num_matches: int,
@@ -913,17 +916,14 @@ class TrainingPipe:
             record_depth = self.record_depth,
         )
 
-        # Warmup pass to initialize shapes/BN, etc.
-        # Use mismatch_share_1 if stage_1 is active, otherwise fall back to stage_2.
-        warmup_mismatch_share = (
-            self.mismatch_share_1 if self.stage_1 else self.mismatch_share_2
-        )
-
+        # Warmup pass to initialize shapes/BN, etc. Its batches are sized for the
+        # share of non-matches it samples, so they hold no_tm_pbatch matches as
+        # the stages' batches do.
         bsz_warm, _ = self.required_batch_size(
             len(self.matches_train),
             len(self.left_train),
             len(self.right_train),
-            warmup_mismatch_share,
+            self.WARMUP_MISMATCH_SHARE,
             desired_pos_per_batch=self.no_tm_pbatch,
         )
         self.model.compile()
@@ -933,7 +933,7 @@ class TrainingPipe:
             self.matches_train,
             epochs=1,
             batch_size=bsz_warm,
-            mismatch_share=0.05,
+            mismatch_share=self.WARMUP_MISMATCH_SHARE,
             shuffle=True,
         )
 
