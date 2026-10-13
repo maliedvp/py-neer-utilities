@@ -560,8 +560,9 @@ class TrainingPipe:
         training labels. Defaults to `"id_unique"`.
 
     no_tm_pbatch : int
-        Target number of positive (matching) pairs per batch. Used to adapt batch size
-        dynamically via the `required_batch_size` heuristic.
+        Target number of positive (matching) pairs per batch, in both stages and in
+        the warm-up pass. Used to adapt batch size dynamically via the
+        `required_batch_size` heuristic. Required whichever stages run.
 
     save_architecture: bool, optional
         Whether to save the model architecture in an image alongside weights when exporting.
@@ -580,8 +581,8 @@ class TrainingPipe:
 
     stage_2 : bool, optional
         Whether to run the second training stage (focal-loss fine-tuning).  
-        If False, the arguments `epochs_2`, `mismatch_share_2`, `no_tm_pbatch`,
-        `gamma`, and `max_alpha` are not required and will be ignored.
+        If False, the arguments `epochs_2`, `mismatch_share_2`, `gamma`, and
+        `max_alpha` are not required and will be ignored.
 
     epochs_1 : int, optional
         Number of training epochs during the first phase (soft-F1 pretraining).
@@ -791,7 +792,7 @@ class TrainingPipe:
                 for name, val in [
                     ("epochs_1", epochs_1),
                     ("mismatch_share_1", mismatch_share_1),
-                    ("no_tm_pbatch", no_tm_pbatch),  # NEW
+                    ("no_tm_pbatch", no_tm_pbatch),
                 ]
                 if val is None
             }
@@ -835,10 +836,10 @@ class TrainingPipe:
             self.gamma = float(gamma)
             self.max_alpha = float(max_alpha)
         else:
-            # dummy values; not used when stage_2=False
+            # dummy values; not used when stage_2=False. no_tm_pbatch is not
+            # among them: stage 1 and the warm-up pass use it too.
             self.epochs_2 = 0
             self.mismatch_share_2 = 0.0
-            self.no_tm_pbatch = 0
             self.gamma = 0.0
             self.max_alpha = 0.0
 
@@ -912,7 +913,7 @@ class TrainingPipe:
             len(self.left_train),
             len(self.right_train),
             warmup_mismatch_share,
-            desired_pos_per_batch=16,
+            desired_pos_per_batch=self.no_tm_pbatch,
         )
         self.model.compile()
         self.model.fit(
@@ -945,7 +946,7 @@ class TrainingPipe:
 
         batch_size, expected_pos = self.required_batch_size(
             len(self.matches_train), len(self.left_train), len(self.right_train),
-            self.mismatch_share_1, desired_pos_per_batch=16
+            self.mismatch_share_1, desired_pos_per_batch=self.no_tm_pbatch
         )
         peak_lr = self.suggest_peak_lr_adamw(batch_size, expected_pos, P)
 
