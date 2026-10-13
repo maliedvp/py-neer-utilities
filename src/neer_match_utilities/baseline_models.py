@@ -45,6 +45,40 @@ def _numerical_warnings_silenced():
         yield
 
 
+def classification_metrics(y_true: np.ndarray, y_hat: np.ndarray) -> dict:
+    """
+    Confusion counts and scores of binary predictions.
+
+    Shared by the baseline models' ``evaluate`` and by
+    :class:`~neer_match_utilities.baseline_training.BaselineTrainingPipe`, which
+    collects the predictions block by block rather than from one frame.
+
+    Returns a dict:
+
+    - TP, FP, TN, FN (integers)
+    - Accuracy, Recall, Precision, F1, MCC (floats)
+    """
+    tn, fp, fn, tp = confusion_matrix(y_true, y_hat, labels=[0, 1]).ravel()
+
+    acc = accuracy_score(y_true, y_hat)
+    prec = precision_score(y_true, y_hat, zero_division=0)
+    rec = recall_score(y_true, y_hat, zero_division=0)
+    f1 = f1_score(y_true, y_hat, zero_division=0)
+    mcc = matthews_corrcoef(y_true, y_hat) if tp + fp + tn + fn > 0 else 0.0
+
+    return {
+        "TP": int(tp),
+        "FP": int(fp),
+        "TN": int(tn),
+        "FN": int(fn),
+        "Accuracy": float(acc),
+        "Recall": float(rec),
+        "Precision": float(prec),
+        "F1": float(f1),
+        "MCC": float(mcc),
+    }
+
+
 class SuggestMixin:
     """
     Adds a NeerMatch-like .suggest(left, right, count, verbose) API to baseline models.
@@ -66,6 +100,7 @@ class SuggestMixin:
         verbose: int = 0,
         left_id_col: str | None = None,
         right_id_col: str | None = None,
+        pairs_per_chunk: int = 250_000,
     ) -> pd.DataFrame:
         """
         Return top-k candidate matches per left record (like neer_match DL models).
@@ -74,6 +109,11 @@ class SuggestMixin:
           - left: integer row index into `left` (0..len(left)-1)
           - right: integer row index into `right` (0..len(right)-1)
           - prediction: match probability
+
+        Pairs are scored in blocks of whole left rows, at most ``pairs_per_chunk``
+        pairs (but at least one left row) at a time, so memory does not grow with
+        ``len(left) * len(right)``. The result does not depend on the block size,
+        up to floating-point rounding of the probabilities.
         """
         if self.similarity_map is None:
             raise ValueError(
@@ -105,7 +145,7 @@ class SuggestMixin:
 
         empty_matches = pd.DataFrame({"left": [], "right": []})
 
-        df_pairs = feats.pairwise_similarity_dataframe(
+        pairs = feats.pairs(
             left=left_tmp,
             right=right_tmp,
             matches=empty_matches,
@@ -117,9 +157,6 @@ class SuggestMixin:
             matches_are_indices=False,
         )
 
-        proba = self.predict_proba(df_pairs)
-        df_pairs["prediction"] = proba
-
         # Identify the output ID columns produced by SimilarityFeatures
         # It may suffix _left/_right if names collide.
         if left_id_col == right_id_col:
@@ -129,16 +166,26 @@ class SuggestMixin:
             out_left = left_id_col
             out_right = right_id_col
 
-        out = df_pairs[[out_left, out_right, "prediction"]].rename(
-            columns={out_left: "left", out_right: "right"}
-        )
+        def top_k(out):
+            # Top-k per left. The sort is stable, so ties keep the pair order.
+            out = out.sort_values(["left", "prediction"], ascending=[True, False])
+            return out.groupby("left", as_index=False).head(count)
 
-        # Top-k per left
-        out = out.sort_values(["left", "prediction"], ascending=[True, False])
-        out = out.groupby("left", as_index=False).head(count).reset_index(drop=True)
+        # Keep each block's top-k only. The top-k of all pairs is among them, and
+        # repeating the selection over the kept rows finds it, ties included.
+        kept = []
+        for df_pairs in pairs.chunks(pairs_per_chunk):
+            df_pairs["prediction"] = self.predict_proba(df_pairs)
+            kept.append(top_k(
+                df_pairs[[out_left, out_right, "prediction"]].rename(
+                    columns={out_left: "left", out_right: "right"}
+                )
+            ))
+
+        out = top_k(pd.concat(kept)).reset_index(drop=True)
 
         if verbose:
-            print(f"[baseline.suggest] left={len(left_tmp)} right={len(right_tmp)} pairs={len(df_pairs)}")
+            print(f"[baseline.suggest] left={len(left_tmp)} right={len(right_tmp)} pairs={len(pairs)}")
 
         return out
 
@@ -445,25 +492,7 @@ class LogitMatchingModel(SuggestMixin, StatsmodelsInferenceMixin):
         proba = self.predict_proba(df, feature_prefix=feature_prefix)
         y_hat = (proba >= threshold).astype(int)
 
-        tn, fp, fn, tp = confusion_matrix(y_true, y_hat, labels=[0, 1]).ravel()
-
-        acc = accuracy_score(y_true, y_hat)
-        prec = precision_score(y_true, y_hat, zero_division=0)
-        rec = recall_score(y_true, y_hat, zero_division=0)
-        f1 = f1_score(y_true, y_hat, zero_division=0)
-        mcc = matthews_corrcoef(y_true, y_hat) if tp + fp + tn + fn > 0 else 0.0
-
-        return {
-            "TP": int(tp),
-            "FP": int(fp),
-            "TN": int(tn),
-            "FN": int(fn),
-            "Accuracy": float(acc),
-            "Recall": float(rec),
-            "Precision": float(prec),
-            "F1": float(f1),
-            "MCC": float(mcc),
-        }
+        return classification_metrics(y_true, y_hat)
 
 
 @dataclass
@@ -571,25 +600,7 @@ class ProbitMatchingModel(SuggestMixin, StatsmodelsInferenceMixin):
         proba = self.predict_proba(df, feature_prefix=feature_prefix)
         y_hat = (proba >= threshold).astype(int)
 
-        tn, fp, fn, tp = confusion_matrix(y_true, y_hat, labels=[0, 1]).ravel()
-
-        acc = accuracy_score(y_true, y_hat)
-        prec = precision_score(y_true, y_hat, zero_division=0)
-        rec = recall_score(y_true, y_hat, zero_division=0)
-        f1 = f1_score(y_true, y_hat, zero_division=0)
-        mcc = matthews_corrcoef(y_true, y_hat) if tp + fp + tn + fn > 0 else 0.0
-
-        return {
-            "TP": int(tp),
-            "FP": int(fp),
-            "TN": int(tn),
-            "FN": int(fn),
-            "Accuracy": float(acc),
-            "Recall": float(rec),
-            "Precision": float(prec),
-            "F1": float(f1),
-            "MCC": float(mcc),
-        }
+        return classification_metrics(y_true, y_hat)
 
 
 @dataclass
@@ -729,25 +740,7 @@ class GradientBoostingModel(SuggestMixin):
         proba = self.predict_proba(df, feature_prefix=feature_prefix)
         y_hat = (proba >= threshold).astype(int)
 
-        tn, fp, fn, tp = confusion_matrix(y_true, y_hat, labels=[0, 1]).ravel()
-
-        acc = accuracy_score(y_true, y_hat)
-        prec = precision_score(y_true, y_hat, zero_division=0)
-        rec = recall_score(y_true, y_hat, zero_division=0)
-        f1 = f1_score(y_true, y_hat, zero_division=0)
-        mcc = matthews_corrcoef(y_true, y_hat) if (tp + fp + tn + fn) > 0 else 0.0
-
-        return {
-            "TP": int(tp),
-            "FP": int(fp),
-            "TN": int(tn),
-            "FN": int(fn),
-            "Accuracy": float(acc),
-            "Recall": float(rec),
-            "Precision": float(prec),
-            "F1": float(f1),
-            "MCC": float(mcc),
-        }
+        return classification_metrics(y_true, y_hat)
 
     def summary(self, top_k: int = 20) -> pd.DataFrame:
         """
@@ -809,11 +802,24 @@ class GradientBoostingModel(SuggestMixin):
         """
         self._check_fitted()
 
-        if thresholds is None:
-            thresholds = np.linspace(0.01, 0.99, 99)
-
         y_true = df_val[match_col].to_numpy().astype(int)
         proba = self.predict_proba(df_val, feature_prefix=feature_prefix)
+
+        return self._best_threshold_from_proba(
+            y_true, proba, metric=metric, thresholds=thresholds, store_treshold=store_treshold
+        )
+
+    def _best_threshold_from_proba(
+        self,
+        y_true: np.ndarray,
+        proba: np.ndarray,
+        metric: str = "mcc",
+        thresholds: np.ndarray | None = None,
+        store_treshold: bool = True,
+    ) -> tuple[float, dict]:
+        """`best_threshold` on predictions already made, e.g. block by block."""
+        if thresholds is None:
+            thresholds = np.linspace(0.01, 0.99, 99)
 
         best_t = 0.5
         best_score = -np.inf
@@ -833,12 +839,7 @@ class GradientBoostingModel(SuggestMixin):
             if score > best_score:
                 best_score = score
                 best_t = float(t)
-                best_stats = self.evaluate(
-                    df_val,
-                    match_col=match_col,
-                    feature_prefix=feature_prefix,
-                    threshold=float(t),
-                )
+                best_stats = classification_metrics(y_true, y_hat)
             if store_treshold:
                 self.best_threshold_ = best_t
 

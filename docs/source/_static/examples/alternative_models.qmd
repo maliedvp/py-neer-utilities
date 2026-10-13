@@ -40,6 +40,7 @@ training_pipeline = BaselineTrainingPipe(
     mismatch_share_fit=1.0,       # 1.0 = use all, 0.1 = use 10%
     random_state=42,
     shuffle_fit=True,
+    pairs_per_chunk=250_000,      # pairs whose features are in memory at once
 
     # Prediction threshold
     threshold=0.5,
