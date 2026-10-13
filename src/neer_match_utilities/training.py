@@ -976,7 +976,7 @@ class TrainingPipe:
 
         # Load best R1 model
         self.model = Model.load(self.base_dir / self.model_name / "checkpoints" / f"epoch_{best_epoch_str}")
-        print("[R1] best epoch:", best_epoch, "path:", self.base_dir / self.model_name / "checkpoints_round1" / f"epoch_{best_epoch_str}")
+        print("[R1] best epoch:", best_epoch, "path:", self.base_dir / self.model_name / "checkpoints_stage_1" / f"epoch_{best_epoch_str}")
 
         # Sanity-evaluate the loaded model before Round 2 training
         probe_loss = self._get_stage1_loss()
@@ -994,6 +994,8 @@ class TrainingPipe:
         old_path = self.base_dir / self.model_name / "checkpoints"
         new_path = self.base_dir / self.model_name / "checkpoints_stage_1"
         if old_path.exists():
+            if new_path.exists():
+                shutil.rmtree(new_path)  # left by an earlier run
             old_path.rename(new_path)
 
     def _get_stage1_loss(self):
@@ -1073,7 +1075,7 @@ class TrainingPipe:
         best_epoch = int(best_row["epoch"])
         best_epoch_str = f"{best_epoch:02d}"
         self.model = Model.load(self.base_dir / self.model_name / "checkpoints" / f"epoch_{best_epoch_str}")
-        print("[R2] best epoch:", best_epoch, "path:", self.base_dir / self.model_name / "checkpoints" / f"epoch_{best_epoch_str}")
+        print("[R2] best epoch:", best_epoch, "path:", self.base_dir / self.model_name / "checkpoints_stage_2" / f"epoch_{best_epoch_str}")
 
         # Re-compile for export/eval
         self.model.compile(loss=focal_loss(alpha=alpha, gamma=self.gamma), optimizer=opt_2)
@@ -1095,6 +1097,18 @@ class TrainingPipe:
             model=self.model, target_directory=self.base_dir, name=self.model_name,
             save_architecture=self.save_architecture, overwrite=self.overwrite,
         )
+
+        # Remove checkpoints of a stage this run skipped. They were left by an
+        # earlier run under the same name and would otherwise sit next to a model
+        # they did not produce. This waits for the save above, so that a run that
+        # fails earlier leaves the previous run's files intact.
+        for stage_dir, stage_ran in (
+            ("checkpoints_stage_1", self.stage_1),
+            ("checkpoints_stage_2", self.stage_2),
+        ):
+            stale = self.base_dir / self.model_name / stage_dir
+            if not stage_ran and stale.exists():
+                shutil.rmtree(stale)
 
         # Evaluate on supplied splits
         perf_train = self.model.evaluate(self.left_train, self.right_train, self.matches_train, mismatch_share=1.0)
