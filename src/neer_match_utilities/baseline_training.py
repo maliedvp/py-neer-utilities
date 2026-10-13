@@ -193,6 +193,10 @@ class BaselineTrainingPipe:
         model.fit(df_fit, match_col="match")
         del df_fit
 
+        # suggest() needs the similarity map. ModelBaseline.load attaches it to a
+        # reloaded model; attach it here too, so the returned model can suggest.
+        model.similarity_map = smap
+
         # 4) Threshold selection
         chosen_t = float(self.threshold)
 

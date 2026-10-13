@@ -193,3 +193,24 @@ def test_matches_outside_the_frame_raise(position):
 
     with pytest.raises(ValueError, match="row positions"):
         feats.pairwise_similarity_dataframe(left, right, matches, "id", "id")
+
+
+@pytest.mark.parametrize("model_kind", ["gb", "logit"])
+def test_returned_model_suggests_like_the_reloaded_one(tmp_path, model_kind):
+    from neer_match_utilities.baseline_io import ModelBaseline
+
+    model = BaselineTrainingPipe(
+        model_name="m",
+        similarity_map=SMAP,
+        training_data=make_data(seed=0),
+        validation_data=make_data(seed=1),
+        testing_data=make_data(seed=2),
+        model_kind=model_kind,
+        base_dir=tmp_path,
+    ).execute()
+    left, right, _ = make_data(seed=3)
+
+    pd.testing.assert_frame_equal(
+        model.suggest(left, right, count=3),
+        ModelBaseline.load(tmp_path / "m").suggest(left, right, count=3),
+    )
