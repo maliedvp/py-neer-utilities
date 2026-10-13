@@ -532,10 +532,15 @@ class GenerateID:
         for idx, period in enumerate(periods[:-1]):
             print(f"Processing periods {period}-{periods[idx + 1]} at {pd.Timestamp.now()}")
 
-            left = df_slice[df_slice[self.time_var] == period].reset_index(drop=False)
-            right = df_slice[df_slice[self.time_var] == periods[idx + 1]].reset_index(drop=False)
+            left = df_slice[df_slice[self.time_var] == period]
+            right = df_slice[df_slice[self.time_var] == periods[idx + 1]]
 
-            suggestions = self._call_suggest(left, right, count=1)
+            # The model sees each period's rows by position, 0..n-1. Their index
+            # labels are kept apart, not in a reset_index column, whose name
+            # would depend on the name of the index.
+            suggestions = self._call_suggest(
+                left.reset_index(drop=True), right.reset_index(drop=True), count=1
+            )
             suggestions = suggestions[suggestions['prediction'] >= self.prediction_threshold]
 
             suggestions = self.relations_left_right(
@@ -544,12 +549,12 @@ class GenerateID:
             )
 
             suggestions = pd.merge(
-                left[['index']].rename(columns={'index': 'index_left'}),
+                pd.DataFrame({'index_left': left.index}),
                 suggestions, left_index=True, right_on='left'
             )
             suggestions = pd.merge(
                 suggestions,
-                right[['index']].rename(columns={'index': 'index_right'}),
+                pd.DataFrame({'index_right': right.index}),
                 left_on='right', right_index=True
             )
 
@@ -608,7 +613,13 @@ class GenerateID:
             temp_df['id_right_harm'] = temp_df['index_right'].map(replacement_map)
 
             update_map = dict(zip(temp_df['id_right_harm'], temp_df['id_left_harm']))
-            id_mapping['index_harm'] = id_mapping['index_harm'].map(update_map).fillna(id_mapping['index_harm']).astype(int)
+
+            # Replace only the remapped entries, so that labels keep their type.
+            # map/fillna/astype(int) truncated float labels -- 0.1 and 0.2 both
+            # became 0, merging two entities -- and rejected string labels.
+            harm = id_mapping['index_harm']
+            remapped = harm.isin(list(update_map))
+            id_mapping.loc[remapped, 'index_harm'] = harm[remapped].map(update_map)
 
         return id_mapping
 
