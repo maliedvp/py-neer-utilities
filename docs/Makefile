@@ -33,7 +33,9 @@ help:
 	# Prepare README.md for the root directory
 	cp $(SOURCEDIR)/README.md ../README.md
 	$(SED_INPLACE) 's|\[MIT license\](LICENSE.html)|[MIT license](LICENSE.txt)|g' ../README.md
-	$(SED_INPLACE) 's|\_static\/|docs/source/_static/|g' ../README.md
+	# Point the logo's relative src at docs/source/_static/. Matching src=" only
+	# leaves links alone that already contain docs/source/_static/.
+	$(SED_INPLACE) 's|src="_static/|src="docs/source/_static/|g' ../README.md
 
 	# Prepare README.md for Sphinx HTML documentation
 # 	cp $(SOURCEDIR)/README.md $(SOURCEDIR)/README.md

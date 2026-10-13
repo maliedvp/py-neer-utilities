@@ -40,7 +40,7 @@ previously labeled as `mlmatch`).
 
 The documentation provides examples of how `neermatch` may be used. The
 data used in these examples are available in this
-[folder](https://github.com/maliedvp/py-neer-utilities/tree/master/docs/source/docs/source/_static/examples)
+[folder](https://github.com/maliedvp/py-neer-utilities/tree/master/docs/source/_static/examples)
 of the GitHub repository.
 
 # Contributors
