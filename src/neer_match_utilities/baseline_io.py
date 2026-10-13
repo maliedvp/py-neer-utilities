@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 import pickle
+import shutil
 import warnings
 import numpy as np
 import pandas as pd
@@ -58,6 +59,7 @@ class ModelBaseline:
         name: str,
         similarity_map: SimilarityMap | dict | None = None,
         remove_data: bool = True,
+        overwrite: bool = False,
     ) -> None:
         """
         Parameters
@@ -83,6 +85,11 @@ class ModelBaseline:
 
             Set to False to reproduce the old behavior and pickle the data along with
             the model.
+        overwrite:
+            Whether to replace a model already saved under ``name``. When False
+            (default), an existing ``target_directory / name / "model"`` raises
+            ``FileExistsError``. When True, that directory is removed first, so no
+            file from the previous model survives next to the new one.
 
         Notes
         -----
@@ -91,6 +98,15 @@ class ModelBaseline:
         Its coefficients, predictions and summary are unaffected.
         """
         target_directory = Path(target_directory) / name / "model"
+
+        if target_directory.exists():
+            if not overwrite:
+                raise FileExistsError(
+                    f"Directory '{target_directory}' already exists. "
+                    "Pass overwrite=True to replace the saved model."
+                )
+            shutil.rmtree(target_directory)
+
         target_directory.mkdir(parents=True, exist_ok=True)
 
         # --- normalize similarity_map to a plain dict (like SimilarityMap.instructions) ---

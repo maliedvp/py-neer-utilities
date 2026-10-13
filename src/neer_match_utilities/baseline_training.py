@@ -78,6 +78,8 @@ class BaselineTrainingPipe:
     export_model: bool = True
     export_stats: bool = True
     reload_sanity_check: bool = True
+    # last, so that existing positional arguments keep their meaning
+    overwrite: bool = False  # replace a model already saved under model_name
 
     # internals (filled during execute)
     model_: Any = field(default=None, init=False)
@@ -122,6 +124,15 @@ class BaselineTrainingPipe:
     # ---------------------------
     def execute(self) -> Any:
         base_dir = self._resolve_base_dir()
+
+        # Fail now rather than at step 6, after the features have been built
+        model_dir = base_dir / self.model_name / "model"
+        if self.export_model and not self.overwrite and model_dir.exists():
+            raise FileExistsError(
+                f"Directory '{model_dir}' already exists. Pass overwrite=True to "
+                "replace the saved model, or choose a different model_name."
+            )
+
         smap = self._smap()
 
         left_train, right_train, matches_train = self._unpack_split(self.training_data)
@@ -218,6 +229,7 @@ class BaselineTrainingPipe:
                 target_directory=base_dir,
                 name=self.model_name,
                 similarity_map=smap,  # store instructions
+                overwrite=self.overwrite,
             )
 
         # 7) Export performance + similarity map

@@ -133,6 +133,7 @@ class Training(SuperClass):
         evaluation_train: dict | None = None,
         evaluation_test: dict | None = None,
         export_model: bool = False,
+        overwrite: bool = False,
     ):
         """
         Exports performance metrics and similarity map.
@@ -143,10 +144,21 @@ class Training(SuperClass):
         - baseline via ModelBaseline.save
 
         Default behavior remains unchanged because export_model defaults to False.
+        ``overwrite`` is passed on to the model saver, which raises
+        ``FileExistsError`` for an existing model unless it is True.
         """
 
         # Construct the full path for the model directory
         model_dir = Path(target_directory) / model_name
+
+        # Refuse before writing anything, so that the metrics on disk cannot end
+        # up describing a different model than the one saved next to them.
+        if export_model and not overwrite and (model_dir / "model").exists():
+            raise FileExistsError(
+                f"Directory '{model_dir / 'model'}' already exists. "
+                "Pass overwrite=True to replace the saved model."
+            )
+
         model_dir.mkdir(parents=True, exist_ok=True)
 
         # -----------------------------
@@ -185,13 +197,14 @@ class Training(SuperClass):
                 target_directory=target_directory,
                 name=model_name,
                 similarity_map=self.similarity_map,
+                overwrite=overwrite,
             )
             print(f"Baseline model saved to {Path(target_directory) / model_name / 'model'}")
             return
 
         # Fall back to existing DL/NS saver
         # (This preserves old behavior unless you set export_model=True.)
-        Model.save(model=model, target_directory=target_directory, name=model_name)
+        Model.save(model=model, target_directory=target_directory, name=model_name, overwrite=overwrite)
         print(f"DL/NS model saved to {Path(target_directory) / model_name / 'model'}")
 
 
@@ -552,6 +565,11 @@ class TrainingPipe:
         Requires binaries of of graphviz to be installed. Otherwise, the code breaks.
         Defaults to `False`.
 
+    overwrite : bool, optional
+        Whether to replace a model already saved under `model_name`. If False,
+        `execute()` raises `FileExistsError` before training starts when
+        ``model_name/model`` exists in the working directory. Defaults to `False`.
+
     stage_1 : bool, optional
         Whether to run the first training stage (soft-F1 pretraining).  
         If False, the arguments `epochs_1` and `mismatch_share_1` are not required
@@ -736,6 +754,7 @@ class TrainingPipe:
         id_right_col: str = "id_unique",
         no_tm_pbatch: int | None = None,
         save_architecture: bool = False,
+        overwrite: bool = False,
         stage_1: bool = True,
         stage_2: bool = True,
         epochs_1: int | None = None,
@@ -824,6 +843,7 @@ class TrainingPipe:
         self.id_right_col = id_right_col
 
         self.save_architecture = save_architecture
+        self.overwrite = bool(overwrite)
 
         # Unpack user-supplied data
         self.left_train, self.right_train, self.matches_train = self._unpack_split(training_data)
@@ -860,6 +880,14 @@ class TrainingPipe:
 
     # ---------- Public entry point ----------
     def execute(self):
+        # Fail now rather than at the final save, after all epochs have run
+        model_dir = self.base_dir / self.model_name / "model"
+        if model_dir.exists() and not self.overwrite:
+            raise FileExistsError(
+                f"Directory '{model_dir}' already exists. Pass overwrite=True to "
+                "replace the saved model, or choose a different model_name."
+            )
+
         # Build model with provided similarity map
         smap = SimilarityMap(self.similarity_map)
         self.model = DLMatchingModel(
@@ -1063,7 +1091,10 @@ class TrainingPipe:
         assert self.model is not None and self.training_util is not None
 
         # Save the final bundle
-        Model.save(model=self.model, target_directory=self.base_dir, name=self.model_name, save_architecture=self.save_architecture)
+        Model.save(
+            model=self.model, target_directory=self.base_dir, name=self.model_name,
+            save_architecture=self.save_architecture, overwrite=self.overwrite,
+        )
 
         # Evaluate on supplied splits
         perf_train = self.model.evaluate(self.left_train, self.right_train, self.matches_train, mismatch_share=1.0)

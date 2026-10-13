@@ -51,6 +51,7 @@ training_pipeline = BaselineTrainingPipe(
     # Export settings
     base_dir=None,                # defaults to current directory
     export_model=True,
+    overwrite=False,              # True replaces a model saved under model_name
     export_stats=True,
     reload_sanity_check=True,     # verify model can be reloaded
 )
@@ -164,6 +165,7 @@ training_pipeline = TrainingPipe(
 
     # Export
     save_architecture=False,          # requires graphviz binaries
+    overwrite=False,                  # True replaces a model saved under model_name
 )
 
 training_pipeline.execute()

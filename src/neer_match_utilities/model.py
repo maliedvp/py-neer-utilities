@@ -9,7 +9,6 @@ from typing import Dict, List
 
 import typing
 import shutil
-import sys
 
 
 class Model:
@@ -30,6 +29,7 @@ class Model:
         target_directory: Path,
         name: str,
         save_architecture: bool = False,
+        overwrite: bool = False,
     ) -> None:
         """
         Save the model to a specified directory.
@@ -42,23 +42,28 @@ class Model:
             The directory where the model should be saved.
         name : str
             Name of the model directory.
+        save_architecture : bool, optional
+            Whether to also render the architecture as ``architecture.png``.
+            Requires the graphviz binaries. Defaults to False.
+        overwrite : bool, optional
+            Whether to replace a model already saved under ``name``. Defaults to
+            False, in which case an existing model raises ``FileExistsError``.
+
+        Raises
+        ------
+        FileExistsError
+            If ``target_directory / name / "model"`` exists and ``overwrite`` is False.
         """
 
         target_directory = Path(target_directory) / name / "model"
 
         if target_directory.exists():
-            replace = input(
-                f"Directory '{target_directory}' already exists. Replace the old model? (y/n): "
-            ).strip().lower()
-            if replace == "y":
-                shutil.rmtree(target_directory)
-                print(f"Old model at '{target_directory}' has been replaced.")
-            elif replace == "n":
-                print("Execution halted as per user request.")
-                sys.exit(0)
-            else:
-                print("Invalid input. Please type 'y' or 'n'. Aborting operation.")
-                return
+            if not overwrite:
+                raise FileExistsError(
+                    f"Directory '{target_directory}' already exists. "
+                    "Pass overwrite=True to replace the saved model."
+                )
+            shutil.rmtree(target_directory)
 
         target_directory.mkdir(parents=True, exist_ok=True)
 
@@ -480,10 +485,12 @@ class EpochEndSaver(tf.keras.callbacks.Callback):
                 f"`EpochEndSaver` expected DLMatchingModel or NSMatchingModel, got {type(self.model)}"
             )
 
-        # Now call your custom save function:
+        # Now call your custom save function. A checkpoint left behind by an
+        # interrupted run is stale, so it is replaced rather than kept.
         Model.save(
             model=self.model,
             target_directory=target_directory,
-            name=epoch_dir_name
+            name=epoch_dir_name,
+            overwrite=True,
         )
 
