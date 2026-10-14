@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Alternative Classification Models &mdash; Neer Match Utilities 1.1.0 documentation</title>
+  <title>Alternative Classification Models &mdash; Neer Match Utilities 1.2.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=fc837d61"></script>
+      <script src="_static/documentation_options.js?v=6efca38a"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -124,6 +124,11 @@
 <li class="toctree-l2"><a class="reference internal" href="model.html#neer_match_utilities.model.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="model.html#neer_match_utilities.model.Model.load"><code class="docutils literal notranslate"><span class="pre">Model.load()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="model.html#neer_match_utilities.model.Model.save"><code class="docutils literal notranslate"><span class="pre">Model.save()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="model.html#neer_match_utilities.model.ValidationMetrics"><code class="docutils literal notranslate"><span class="pre">ValidationMetrics</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="model.html#neer_match_utilities.model.ValidationMetrics.__init__"><code class="docutils literal notranslate"><span class="pre">ValidationMetrics.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#neer_match_utilities.model.ValidationMetrics.on_epoch_end"><code class="docutils literal notranslate"><span class="pre">ValidationMetrics.on_epoch_end()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -457,6 +462,10 @@ training with customizable loss functions.</p>
     <span class="n">training_data</span><span class="o">=</span><span class="p">(</span><span class="n">left_train</span><span class="p">,</span> <span class="n">right_train</span><span class="p">,</span> <span class="n">matches_train</span><span class="p">),</span>
     <span class="n">testing_data</span><span class="o">=</span><span class="p">(</span><span class="n">left_test</span><span class="p">,</span> <span class="n">right_test</span><span class="p">,</span> <span class="n">matches_test</span><span class="p">),</span>
 
+    <span class="c1"># Optional: validation data, scored after every epoch</span>
+    <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="n">left_validation</span><span class="p">,</span> <span class="n">right_validation</span><span class="p">,</span> <span class="n">matches_validation</span><span class="p">),</span>
+    <span class="n">early_stopping_patience</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>         <span class="c1"># stop a stage after 5 epochs without a better val_F1</span>
+
     <span class="c1"># ID columns</span>
     <span class="n">id_left_col</span><span class="o">=</span><span class="s2">"company_id"</span><span class="p">,</span>
     <span class="n">id_right_col</span><span class="o">=</span><span class="s2">"company_id"</span><span class="p">,</span>
@@ -509,6 +518,16 @@ matching patterns.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">stage_2</span></code>: Fine-tuning phase using focal loss to focus on hard
 examples.</p></li>
 <li><p>You can disable either stage by setting it to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+<p><strong>Validation:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">validation_data</span></code>: If given, the model is scored on all validation
+pairs after every epoch, the metrics are logged as <code class="docutils literal notranslate"><span class="pre">val_F1</span></code>,
+<code class="docutils literal notranslate"><span class="pre">val_MCC</span></code>, etc. in the history and in <code class="docutils literal notranslate"><span class="pre">epoch_overview.csv</span></code>, and each
+stage keeps the epoch with the highest <code class="docutils literal notranslate"><span class="pre">val_F1</span></code> instead of the highest
+training F1.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">early_stopping_patience</span></code>: Stops a stage once <code class="docutils literal notranslate"><span class="pre">val_F1</span></code> has not
+improved for this many epochs. Requires <code class="docutils literal notranslate"><span class="pre">validation_data</span></code>.</p></li>
 </ul>
 <p><strong>Sampling:</strong></p>
 <ul class="simple">

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Model &mdash; Neer Match Utilities 1.1.0 documentation</title>
+  <title>Model &mdash; Neer Match Utilities 1.2.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=fc837d61"></script>
+      <script src="_static/documentation_options.js?v=6efca38a"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -124,6 +124,11 @@
 <li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.model.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.model.Model.load"><code class="docutils literal notranslate"><span class="pre">Model.load()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.model.Model.save"><code class="docutils literal notranslate"><span class="pre">Model.save()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.model.ValidationMetrics"><code class="docutils literal notranslate"><span class="pre">ValidationMetrics</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.model.ValidationMetrics.__init__"><code class="docutils literal notranslate"><span class="pre">ValidationMetrics.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.model.ValidationMetrics.on_epoch_end"><code class="docutils literal notranslate"><span class="pre">ValidationMetrics.on_epoch_end()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -404,6 +409,54 @@ False, in which case an existing model raises <code class="docutils literal notr
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="neer_match_utilities.model.ValidationMetrics">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">neer_match_utilities.model.</span></span><span class="sig-name descname"><span class="pre">ValidationMetrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1024</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/model.html#ValidationMetrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.model.ValidationMetrics" title="Link to this definition"></a></dt>
+<dd><p>Score the model on validation data at the end of every epoch.</p>
+<p>The metrics <code class="docutils literal notranslate"><span class="pre">DLMatchingModel.evaluate</span></code> returns for all validation record
+pairs are added to the epoch’s logs with a <code class="docutils literal notranslate"><span class="pre">val_</span></code> prefix (<code class="docutils literal notranslate"><span class="pre">val_F1</span></code>,
+<code class="docutils literal notranslate"><span class="pre">val_MCC</span></code>, <code class="docutils literal notranslate"><span class="pre">val_Loss</span></code>, …), where the history and later callbacks, such
+as EarlyStopping, see them.</p>
+<p>It calls <code class="docutils literal notranslate"><span class="pre">evaluate</span></code> on data frames, which every supported neer-match
+version provides; Keras’s own <code class="docutils literal notranslate"><span class="pre">validation_data</span></code> needs a newer neer-match.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="neer_match_utilities.model.ValidationMetrics.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1024</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/model.html#ValidationMetrics.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.model.ValidationMetrics.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>left</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – The validation data, in the format the model is trained on.</p></li>
+<li><p><strong>right</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – The validation data, in the format the model is trained on.</p></li>
+<li><p><strong>matches</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – The validation data, in the format the model is trained on.</p></li>
+<li><p><strong>batch_size</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Record pairs per evaluation batch. Affects speed and memory only;
+<code class="docutils literal notranslate"><span class="pre">val_Loss</span></code> is neer-match’s loss summed over these batches.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neer_match_utilities.model.ValidationMetrics.on_epoch_end">
+<span class="sig-name descname"><span class="pre">on_epoch_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epoch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/model.html#ValidationMetrics.on_epoch_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.model.ValidationMetrics.on_epoch_end" title="Link to this definition"></a></dt>
+<dd><p>Called at the end of an epoch.</p>
+<p>Subclasses should override for any actions to run. This function should
+only be called during TRAIN mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>epoch</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Integer, index of epoch.</p></li>
+<li><p><strong>logs</strong> – Dict, metric results for this training epoch, and for the
+validation epoch if validation is performed. Validation result
+keys are prefixed with <cite>val_</cite>. For training epoch, the values of
+the <cite>Model</cite>’s metrics are returned. Example:
+<cite>{‘loss’: 0.2, ‘accuracy’: 0.7}</cite>.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>A Minimal Training Pipeline &mdash; Neer Match Utilities 1.1.0 documentation</title>
+  <title>A Minimal Training Pipeline &mdash; Neer Match Utilities 1.2.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=fc837d61"></script>
+      <script src="_static/documentation_options.js?v=6efca38a"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
@@ -126,6 +126,11 @@
 <li class="toctree-l2"><a class="reference internal" href="model.html#neer_match_utilities.model.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="model.html#neer_match_utilities.model.Model.load"><code class="docutils literal notranslate"><span class="pre">Model.load()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="model.html#neer_match_utilities.model.Model.save"><code class="docutils literal notranslate"><span class="pre">Model.save()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="model.html#neer_match_utilities.model.ValidationMetrics"><code class="docutils literal notranslate"><span class="pre">ValidationMetrics</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="model.html#neer_match_utilities.model.ValidationMetrics.__init__"><code class="docutils literal notranslate"><span class="pre">ValidationMetrics.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#neer_match_utilities.model.ValidationMetrics.on_epoch_end"><code class="docutils literal notranslate"><span class="pre">ValidationMetrics.on_epoch_end()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -971,7 +976,7 @@ Probit, or GradientBoost) follow a similar syntax and are covered in
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Performance metrics saved to /Users/marli453/develop/py-neer-utilities/docs/source/_static/examples/demonstration_model/performance.csv
 Similarity map saved to /Users/marli453/develop/py-neer-utilities/docs/source/_static/examples/demonstration_model/similarity_map.dill
 
-LogitMatchingModel(result=&lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x12fd17710&gt;, feature_cols=['col_city_city_levenshtein', 'col_company_name_company_name_jaro_winkler', 'col_company_name_company_name_levenshtein', 'col_company_name_company_name_partial_token_sort_ratio', 'col_industry_industry_jaro_winkler', 'col_industry_industry_levenshtein'])
+LogitMatchingModel(result=&lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x133dd6450&gt;, feature_cols=['col_city_city_levenshtein', 'col_company_name_company_name_jaro_winkler', 'col_company_name_company_name_levenshtein', 'col_company_name_company_name_partial_token_sort_ratio', 'col_industry_industry_jaro_winkler', 'col_industry_industry_levenshtein'])
 </pre></div>
 </div>
 </section>

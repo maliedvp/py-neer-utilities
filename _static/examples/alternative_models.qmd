@@ -138,6 +138,10 @@ training_pipeline = TrainingPipe(
     training_data=(left_train, right_train, matches_train),
     testing_data=(left_test, right_test, matches_test),
 
+    # Optional: validation data, scored after every epoch
+    validation_data=(left_validation, right_validation, matches_validation),
+    early_stopping_patience=5,         # stop a stage after 5 epochs without a better val_F1
+
     # ID columns
     id_left_col="company_id",
     id_right_col="company_id",
@@ -186,6 +190,11 @@ training_pipeline.execute()
 - `stage_1`: Pretraining phase using soft-F1 loss to learn basic matching patterns.
 - `stage_2`: Fine-tuning phase using focal loss to focus on hard examples.
 - You can disable either stage by setting it to `False`.
+
+**Validation:**
+
+- `validation_data`: If given, the model is scored on all validation pairs after every epoch, the metrics are logged as `val_F1`, `val_MCC`, etc. in the history and in `epoch_overview.csv`, and each stage keeps the epoch with the highest `val_F1` instead of the highest training F1.
+- `early_stopping_patience`: Stops a stage once `val_F1` has not improved for this many epochs. Requires `validation_data`.
 
 **Sampling:**
 

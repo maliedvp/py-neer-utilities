@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.training &mdash; Neer Match Utilities 1.1.0 documentation</title>
+  <title>neer_match_utilities.training &mdash; Neer Match Utilities 1.2.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/extra.css?v=503a7970" />
@@ -15,7 +15,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=fc837d61"></script>
+      <script src="../../_static/documentation_options.js?v=6efca38a"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -121,6 +121,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../../model.html#neer_match_utilities.model.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../model.html#neer_match_utilities.model.Model.load"><code class="docutils literal notranslate"><span class="pre">Model.load()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../model.html#neer_match_utilities.model.Model.save"><code class="docutils literal notranslate"><span class="pre">Model.save()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../model.html#neer_match_utilities.model.ValidationMetrics"><code class="docutils literal notranslate"><span class="pre">ValidationMetrics</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../model.html#neer_match_utilities.model.ValidationMetrics.__init__"><code class="docutils literal notranslate"><span class="pre">ValidationMetrics.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../model.html#neer_match_utilities.model.ValidationMetrics.on_epoch_end"><code class="docutils literal notranslate"><span class="pre">ValidationMetrics.on_epoch_end()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -323,7 +328,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">neer_match.similarity_map</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimilarityMap</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">neer_match.matching_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">DLMatchingModel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.baseline_io</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelBaseline</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">EpochEndSaver</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">EpochEndSaver</span><span class="p">,</span> <span class="n">ValidationMetrics</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
@@ -899,6 +904,18 @@
 <span class="sd">        - Tuple: (left_test, right_test, matches_test)</span>
 <span class="sd">        - Dict: {"left": left_test, "right": right_test, "matches": matches_test}</span>
 
+<span class="sd">    validation_data : tuple or dict, optional</span>
+<span class="sd">        Preprocessed validation data, in the same formats as `training_data`.</span>
+<span class="sd">        If given, the model is scored on all validation record pairs after every</span>
+<span class="sd">        epoch of both stages. The metrics are logged with a `val_` prefix (e.g.</span>
+<span class="sd">        `val_F1`, `val_MCC`) in the history and in `epoch_overview.csv`, and each</span>
+<span class="sd">        stage keeps the epoch with the highest `val_F1` instead of the highest</span>
+<span class="sd">        training F1. Defaults to `None`.</span>
+
+<span class="sd">    early_stopping_patience : int, optional</span>
+<span class="sd">        Requires `validation_data`. If given, a stage stops once `val_F1` has not</span>
+<span class="sd">        improved for this many epochs. Defaults to `None` (no early stopping).</span>
+
 <span class="sd">    similarity_map : dict</span>
 <span class="sd">        User-defined similarity configuration mapping variable names to similarity measures.</span>
 <span class="sd">        Must follow the format accepted by `SimilarityMap`.</span>
@@ -1120,6 +1137,8 @@
         <span class="n">testing_data</span><span class="p">,</span>    <span class="c1"># (left_test, right_test, matches_test)   OR dict with keys</span>
         <span class="n">similarity_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
+        <span class="n">validation_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># same formats as training_data</span>
+        <span class="n">early_stopping_patience</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">initial_feature_width_scales</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
         <span class="n">feature_depths</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
         <span class="n">initial_record_width_scale</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
@@ -1222,14 +1241,27 @@
         <span class="c1"># Unpack user-supplied data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matches_train</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unpack_split</span><span class="p">(</span><span class="n">training_data</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">left_test</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_test</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matches_test</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unpack_split</span><span class="p">(</span><span class="n">testing_data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validation_data</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="kc">None</span> <span class="k">if</span> <span class="n">validation_data</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unpack_split</span><span class="p">(</span><span class="n">validation_data</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">early_stopping_patience</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">validation_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"early_stopping_patience requires validation_data."</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">early_stopping_patience</span> <span class="o">=</span> <span class="n">early_stopping_patience</span>
 
         <span class="c1"># Basic sanity checks</span>
-        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span>
+        <span class="n">frames</span> <span class="o">=</span> <span class="p">[</span>
             <span class="p">(</span><span class="s2">"left_train"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_left_col</span><span class="p">),</span>
             <span class="p">(</span><span class="s2">"right_train"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_right_col</span><span class="p">),</span>
             <span class="p">(</span><span class="s2">"left_test"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">left_test</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_left_col</span><span class="p">),</span>
             <span class="p">(</span><span class="s2">"right_test"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_test</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_right_col</span><span class="p">),</span>
-        <span class="p">]:</span>
+        <span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">validation_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">frames</span> <span class="o">+=</span> <span class="p">[</span>
+                <span class="p">(</span><span class="s2">"left_validation"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">validation_data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_left_col</span><span class="p">),</span>
+                <span class="p">(</span><span class="s2">"right_validation"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">validation_data</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_right_col</span><span class="p">),</span>
+            <span class="p">]</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">frames</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must include column '</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2">'."</span><span class="p">)</span>
 
@@ -1308,6 +1340,28 @@
         <span class="c1"># Save, evaluate, export</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_finalize_and_report</span><span class="p">()</span>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_selection_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""The epoch metric each stage maximizes to pick its best epoch."""</span>
+        <span class="k">return</span> <span class="s2">"val_F1"</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">validation_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">"f1"</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_stage_callbacks</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Callbacks for one stage's fit. Validation scoring comes first, so that</span>
+<span class="sd">        early stopping and the history see the val_ metrics it logs.</span>
+<span class="sd">        """</span>
+        <span class="n">callbacks</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">validation_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">callbacks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ValidationMetrics</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">validation_data</span><span class="p">))</span>
+        <span class="n">callbacks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EpochEndSaver</span><span class="p">(</span><span class="n">base_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">early_stopping_patience</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">callbacks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">callbacks</span><span class="o">.</span><span class="n">EarlyStopping</span><span class="p">(</span>
+                    <span class="n">monitor</span><span class="o">=</span><span class="s2">"val_F1"</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"max"</span><span class="p">,</span> <span class="n">patience</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">early_stopping_patience</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">callbacks</span>
+
     <span class="c1"># ---------- Rounds ----------</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_round1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
@@ -1336,11 +1390,10 @@
         <span class="k">if</span> <span class="n">checkpoints</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
             <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">checkpoints</span><span class="p">)</span>
 
-        <span class="n">saver</span> <span class="o">=</span> <span class="n">EpochEndSaver</span><span class="p">(</span><span class="n">base_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">)</span>
         <span class="n">history</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matches_train</span><span class="p">,</span>
             <span class="n">epochs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">epochs_1</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
-            <span class="n">mismatch_share</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mismatch_share_1</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">saver</span><span class="p">]</span>
+            <span class="n">mismatch_share</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mismatch_share_1</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_stage_callbacks</span><span class="p">()</span>
         <span class="p">)</span>
 
         <span class="n">df_epoch</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">history</span><span class="o">.</span><span class="n">history</span><span class="p">)</span>
@@ -1348,13 +1401,13 @@
         <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">"checkpoints"</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">df_epoch</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">"checkpoints"</span> <span class="o">/</span> <span class="s2">"epoch_overview.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-        <span class="n">best_row</span> <span class="o">=</span> <span class="n">df_epoch</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_epoch</span><span class="p">[</span><span class="s2">"f1"</span><span class="p">]</span><span class="o">.</span><span class="n">idxmax</span><span class="p">()]</span>
+        <span class="n">best_row</span> <span class="o">=</span> <span class="n">df_epoch</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_epoch</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_selection_metric</span><span class="p">]</span><span class="o">.</span><span class="n">idxmax</span><span class="p">()]</span>
         <span class="n">best_epoch</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">best_row</span><span class="p">[</span><span class="s2">"epoch"</span><span class="p">])</span>
         <span class="n">best_epoch_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">best_epoch</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">"</span>
 
         <span class="c1"># Load best R1 model</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">"checkpoints"</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"epoch_</span><span class="si">{</span><span class="n">best_epoch_str</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"[R1] best epoch:"</span><span class="p">,</span> <span class="n">best_epoch</span><span class="p">,</span> <span class="s2">"path:"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">"checkpoints_stage_1"</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"epoch_</span><span class="si">{</span><span class="n">best_epoch_str</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[R1] best epoch by </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_selection_metric</span><span class="si">}</span><span class="s2">:"</span><span class="p">,</span> <span class="n">best_epoch</span><span class="p">,</span> <span class="s2">"path:"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">"checkpoints_stage_1"</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"epoch_</span><span class="si">{</span><span class="n">best_epoch_str</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="c1"># Sanity-evaluate the loaded model before Round 2 training</span>
         <span class="n">probe_loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_stage1_loss</span><span class="p">()</span>
@@ -1443,11 +1496,10 @@
         <span class="k">if</span> <span class="n">checkpoints</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
             <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">checkpoints</span><span class="p">)</span>
 
-        <span class="n">saver</span> <span class="o">=</span> <span class="n">EpochEndSaver</span><span class="p">(</span><span class="n">base_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">)</span>
         <span class="n">history</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matches_train</span><span class="p">,</span>
             <span class="n">epochs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">epochs_2</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
-            <span class="n">mismatch_share</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mismatch_share_2</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">saver</span><span class="p">]</span>
+            <span class="n">mismatch_share</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mismatch_share_2</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_stage_callbacks</span><span class="p">()</span>
         <span class="p">)</span>
 
         <span class="n">df_epoch</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">history</span><span class="o">.</span><span class="n">history</span><span class="p">)</span>
@@ -1455,11 +1507,11 @@
         <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">"checkpoints"</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">df_epoch</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">"checkpoints"</span> <span class="o">/</span> <span class="s2">"epoch_overview.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-        <span class="n">best_row</span> <span class="o">=</span> <span class="n">df_epoch</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_epoch</span><span class="p">[</span><span class="s2">"f1"</span><span class="p">]</span><span class="o">.</span><span class="n">idxmax</span><span class="p">()]</span>
+        <span class="n">best_row</span> <span class="o">=</span> <span class="n">df_epoch</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_epoch</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_selection_metric</span><span class="p">]</span><span class="o">.</span><span class="n">idxmax</span><span class="p">()]</span>
         <span class="n">best_epoch</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">best_row</span><span class="p">[</span><span class="s2">"epoch"</span><span class="p">])</span>
         <span class="n">best_epoch_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">best_epoch</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">"</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">"checkpoints"</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"epoch_</span><span class="si">{</span><span class="n">best_epoch_str</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"[R2] best epoch:"</span><span class="p">,</span> <span class="n">best_epoch</span><span class="p">,</span> <span class="s2">"path:"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">"checkpoints_stage_2"</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"epoch_</span><span class="si">{</span><span class="n">best_epoch_str</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[R2] best epoch by </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_selection_metric</span><span class="si">}</span><span class="s2">:"</span><span class="p">,</span> <span class="n">best_epoch</span><span class="p">,</span> <span class="s2">"path:"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">"checkpoints_stage_2"</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"epoch_</span><span class="si">{</span><span class="n">best_epoch_str</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="c1"># Re-compile for export/eval</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">focal_loss</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">gamma</span><span class="p">),</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">opt_2</span><span class="p">)</span>

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Creating a Common Identifier (ID) &mdash; Neer Match Utilities 1.1.0 documentation</title>
+  <title>Creating a Common Identifier (ID) &mdash; Neer Match Utilities 1.2.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=fc837d61"></script>
+      <script src="_static/documentation_options.js?v=6efca38a"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -124,6 +124,11 @@
 <li class="toctree-l2"><a class="reference internal" href="model.html#neer_match_utilities.model.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="model.html#neer_match_utilities.model.Model.load"><code class="docutils literal notranslate"><span class="pre">Model.load()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="model.html#neer_match_utilities.model.Model.save"><code class="docutils literal notranslate"><span class="pre">Model.save()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="model.html#neer_match_utilities.model.ValidationMetrics"><code class="docutils literal notranslate"><span class="pre">ValidationMetrics</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="model.html#neer_match_utilities.model.ValidationMetrics.__init__"><code class="docutils literal notranslate"><span class="pre">ValidationMetrics.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#neer_match_utilities.model.ValidationMetrics.on_epoch_end"><code class="docutils literal notranslate"><span class="pre">ValidationMetrics.on_epoch_end()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -432,7 +437,7 @@ DataFrames vertically.</p>
 <span class="n">result</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Processing periods left-right at 2026-10-13 21:33:48.761581
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Processing periods left-right at 2026-10-14 10:45:37.510651
 </pre></div>
 </div>
 <div>
@@ -457,23 +462,23 @@ DataFrames vertically.</p>
 <tbody>
 <tr class="row-even"><td><p>0</p></td>
 <td><p>0</p></td>
-<td><p>488c421b-68e2-46ac-bde8-a5411a54f7d6</p></td>
+<td><p>fa16061a-763f-4faa-bae4-2d3f89091a6f</p></td>
 </tr>
 <tr class="row-odd"><td><p>1</p></td>
 <td><p>1</p></td>
-<td><p>a4f4ccac-c409-4163-8259-b2076f1378be</p></td>
+<td><p>4d02d7f8-1d86-4227-a745-0187da1c607e</p></td>
 </tr>
 <tr class="row-even"><td><p>2</p></td>
 <td><p>2</p></td>
-<td><p>712eef29-2480-427e-b8b4-b419e0d15a98</p></td>
+<td><p>5e7c28af-15cf-4378-8a77-9deff1b0c979</p></td>
 </tr>
 <tr class="row-odd"><td><p>3</p></td>
 <td><p>3</p></td>
-<td><p>1b828dec-53b9-4b09-9812-cc9b5d968920</p></td>
+<td><p>973fdf6f-aa18-44fa-b1f5-571eccb343e7</p></td>
 </tr>
 <tr class="row-even"><td><p>4</p></td>
 <td><p>4</p></td>
-<td><p>a4a0ebfe-45f3-4e5e-aea9-5b7ed5fdc58a</p></td>
+<td><p>b3e8ef6e-329c-4a6e-8d86-d4db190bb76d</p></td>
 </tr>
 </tbody>
 </table>
@@ -530,15 +535,15 @@ DataFrames vertically.</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>885</p></td>
-<td><p>a4a0ebfe-45f3-4e5e-aea9-5b7ed5fdc58a</p></td>
+<tr class="row-even"><td><p>960</p></td>
+<td><p>b3e8ef6e-329c-4a6e-8d86-d4db190bb76d</p></td>
 <td><p>22ac99ae20</p></td>
 <td><p>left</p></td>
 <td><p>KAISERSTEINBRUCH-ACTIENGESELLSCHAFT IN LIQU. I…</p></td>
 <td><p>KÖLN</p></td>
 </tr>
-<tr class="row-odd"><td><p>886</p></td>
-<td><p>a4a0ebfe-45f3-4e5e-aea9-5b7ed5fdc58a</p></td>
+<tr class="row-odd"><td><p>961</p></td>
+<td><p>b3e8ef6e-329c-4a6e-8d86-d4db190bb76d</p></td>
 <td><p>e9823a3073</p></td>
 <td><p>right</p></td>
 <td><p>KAISERSTEINBRUCH-ACTIENGESELLSCHAFT IN KÖLN,</p></td>
