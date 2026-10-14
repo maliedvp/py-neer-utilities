@@ -187,6 +187,7 @@ training_pipeline = BaselineTrainingPipe(
     mismatch_share_fit=1.0,
     # tune_threshold=False, # recommended for "gb"
     # tune_metric="mcc",
+    overwrite=True, # replace the model saved by a previous run
 )
 
 training_pipeline.execute()

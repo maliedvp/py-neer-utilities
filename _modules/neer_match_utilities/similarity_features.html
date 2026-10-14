@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.similarity_features &mdash; Neer Match Utilities 1.0.2 documentation</title>
+  <title>neer_match_utilities.similarity_features &mdash; Neer Match Utilities 1.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/extra.css?v=503a7970" />
@@ -15,7 +15,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=1ed6394b"></script>
+      <script src="../../_static/documentation_options.js?v=fc837d61"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -156,6 +156,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.SuggestMixin.suggest"><code class="docutils literal notranslate"><span class="pre">SuggestMixin.suggest()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.classification_metrics"><code class="docutils literal notranslate"><span class="pre">classification_metrics()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../baseline_training.html">Baseline Training</a><ul>
@@ -257,9 +258,20 @@
 <li class="toctree-l1"><a class="reference internal" href="../../similarity_features.html">Similarity Features</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.__init__"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.pairs"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.pairs()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.pairwise_similarity_dataframe"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.pairwise_similarity_dataframe()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__init__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__len__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__len__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.chunks"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.chunks()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.frame"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.frame()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.match_flags"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.match_flags()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.rows"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.rows()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.subsample_non_match_positions"><code class="docutils literal notranslate"><span class="pre">subsample_non_match_positions()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.subsample_non_matches"><code class="docutils literal notranslate"><span class="pre">subsample_non_matches()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.to_X_y"><code class="docutils literal notranslate"><span class="pre">to_X_y()</span></code></a></li>
 </ul>
@@ -271,6 +283,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../custom_similarities.html#neer_match_utilities.custom_similarities.CustomSimilarities.notzero"><code class="docutils literal notranslate"><span class="pre">CustomSimilarities.notzero()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../custom_similarities.html#neer_match_utilities.custom_similarities.register_similarities"><code class="docutils literal notranslate"><span class="pre">register_similarities()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -307,6 +320,7 @@
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterator</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
@@ -328,12 +342,12 @@
         <span class="n">matches</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
         <span class="n">left_id_col</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">right_id_col</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">match_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;match&quot;</span><span class="p">,</span>
-        <span class="n">matches_id_left</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;left&quot;</span><span class="p">,</span>
-        <span class="n">matches_id_right</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;right&quot;</span><span class="p">,</span>
+        <span class="n">match_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"match"</span><span class="p">,</span>
+        <span class="n">matches_id_left</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"left"</span><span class="p">,</span>
+        <span class="n">matches_id_right</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"right"</span><span class="p">,</span>
         <span class="n">matches_are_indices</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Build full cross-join of left × right, compute similarity features</span>
 <span class="sd">        specified in SimilarityMap, and attach match indicator.</span>
 
@@ -344,9 +358,12 @@
 <span class="sd">        matches :</span>
 <span class="sd">            DataFrame describing which pairs are true matches.</span>
 <span class="sd">            If `matches_are_indices=True`, `matches[matches_id_left]` and</span>
-<span class="sd">            `matches[matches_id_right]` are interpreted as row indices into</span>
-<span class="sd">            `left` and `right` (0..n-1). If False, they are interpreted as</span>
-<span class="sd">            IDs in the same space as `left[left_id_col]` / `right[right_id_col]`.</span>
+<span class="sd">            `matches[matches_id_right]` are interpreted as row positions in</span>
+<span class="sd">            `left` and `right` (0..n-1), as neer_match interprets them, whatever</span>
+<span class="sd">            the frames' index labels are. A position outside 0..n-1 raises</span>
+<span class="sd">            ValueError. If False, they are interpreted as IDs in the same space</span>
+<span class="sd">            as `left[left_id_col]` / `right[right_id_col]`.</span>
+<span class="sd">            A pair listed more than once is counted once.</span>
 <span class="sd">        left_id_col, right_id_col :</span>
 <span class="sd">            Column names in `left` / `right` that contain the entity IDs.</span>
 <span class="sd">        match_col :</span>
@@ -355,51 +372,114 @@
 <span class="sd">            Column names in `matches` identifying the left/right side.</span>
 <span class="sd">        matches_are_indices :</span>
 <span class="sd">            If True (default), treat `matches_id_left` / `matches_id_right` as</span>
-<span class="sd">            row indices into `left` and `right`. If False, treat them as IDs.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">            row positions in `left` and `right`. If False, treat them as IDs.</span>
 
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        The frame holds one row per pair, so its memory grows with</span>
+<span class="sd">        ``len(left) * len(right)``. :meth:`pairs` builds the same rows in blocks,</span>
+<span class="sd">        or only selected ones.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pairs</span><span class="p">(</span>
+            <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">matches</span><span class="p">,</span> <span class="n">left_id_col</span><span class="p">,</span> <span class="n">right_id_col</span><span class="p">,</span>
+            <span class="n">match_col</span><span class="o">=</span><span class="n">match_col</span><span class="p">,</span>
+            <span class="n">matches_id_left</span><span class="o">=</span><span class="n">matches_id_left</span><span class="p">,</span>
+            <span class="n">matches_id_right</span><span class="o">=</span><span class="n">matches_id_right</span><span class="p">,</span>
+            <span class="n">matches_are_indices</span><span class="o">=</span><span class="n">matches_are_indices</span><span class="p">,</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">frame</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="SimilarityFeatures.pairs">
+<a class="viewcode-back" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.pairs">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pairs</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">left</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">right</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">matches</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">left_id_col</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">right_id_col</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">match_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"match"</span><span class="p">,</span>
+        <span class="n">matches_id_left</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"left"</span><span class="p">,</span>
+        <span class="n">matches_id_right</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"right"</span><span class="p">,</span>
+        <span class="n">matches_are_indices</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"SimilarityPairs"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        The rows of :meth:`pairwise_similarity_dataframe`, built on demand.</span>
+
+<span class="sd">        Takes the same arguments. Nothing is computed per pair until rows are</span>
+<span class="sd">        requested from the returned object, in full, in blocks of left rows, or</span>
+<span class="sd">        selected by position.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="n">SimilarityPairs</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">similarity_map</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">matches</span><span class="p">,</span> <span class="n">left_id_col</span><span class="p">,</span> <span class="n">right_id_col</span><span class="p">,</span>
+            <span class="n">match_col</span><span class="p">,</span> <span class="n">matches_id_left</span><span class="p">,</span> <span class="n">matches_id_right</span><span class="p">,</span> <span class="n">matches_are_indices</span><span class="p">,</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="SimilarityPairs">
+<a class="viewcode-back" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SimilarityPairs</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The rows of a pairwise similarity frame, built on demand.</span>
+
+<span class="sd">    Row ``k`` pairs left row ``k // len(right)`` with right row</span>
+<span class="sd">    ``k % len(right)``, as in the full cross join. Everything that does not</span>
+<span class="sd">    depend on the pair -- the ID lookups, each compared column's values, the</span>
+<span class="sd">    match keys -- is derived once here, so building the rows in several calls</span>
+<span class="sd">    costs no more than building them in one, and gives the same values.</span>
+<span class="sd">    """</span>
+
+<div class="viewcode-block" id="SimilarityPairs.__init__">
+<a class="viewcode-back" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">similarity_map</span><span class="p">:</span> <span class="n">_sim</span><span class="o">.</span><span class="n">SimilarityMap</span><span class="p">,</span>
+        <span class="n">left</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">right</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">matches</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">left_id_col</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">right_id_col</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">match_col</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">matches_id_left</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">matches_id_right</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">matches_are_indices</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="c1"># ------------------------------------------------------------------</span>
         <span class="c1"># 1. Extract ID arrays explicitly from left/right columns</span>
         <span class="c1"># ------------------------------------------------------------------</span>
         <span class="k">if</span> <span class="n">left_id_col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">left</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">left_id_col</span><span class="si">!r}</span><span class="s2"> not in left.columns&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">left_id_col</span><span class="si">!r}</span><span class="s2"> not in left.columns"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">right_id_col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">right</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">right_id_col</span><span class="si">!r}</span><span class="s2"> not in right.columns&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">right_id_col</span><span class="si">!r}</span><span class="s2"> not in right.columns"</span><span class="p">)</span>
 
-        <span class="n">left_ids</span> <span class="o">=</span> <span class="n">left</span><span class="p">[</span><span class="n">left_id_col</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
-        <span class="n">right_ids</span> <span class="o">=</span> <span class="n">right</span><span class="p">[</span><span class="n">right_id_col</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">left_ids</span> <span class="o">=</span> <span class="n">left</span><span class="p">[</span><span class="n">left_id_col</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right_ids</span> <span class="o">=</span> <span class="n">right</span><span class="p">[</span><span class="n">right_id_col</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_left</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_right</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left_ids</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">right_ids</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">left_ids</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">right_ids</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="c1"># Decide output ID column names</span>
-            <span class="k">if</span> <span class="n">left_id_col</span> <span class="o">==</span> <span class="n">right_id_col</span><span class="p">:</span>
-                <span class="n">out_left_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">left_id_col</span><span class="si">}</span><span class="s2">_left&quot;</span>
-                <span class="n">out_right_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">right_id_col</span><span class="si">}</span><span class="s2">_right&quot;</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">out_left_id</span> <span class="o">=</span> <span class="n">left_id_col</span>
-                <span class="n">out_right_id</span> <span class="o">=</span> <span class="n">right_id_col</span>
-
-            <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">out_left_id</span><span class="p">,</span> <span class="n">out_right_id</span><span class="p">,</span> <span class="n">match_col</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">match_col</span> <span class="o">=</span> <span class="n">match_col</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">matches_id_left</span> <span class="o">=</span> <span class="n">matches_id_left</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">matches_id_right</span> <span class="o">=</span> <span class="n">matches_id_right</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">matches_are_indices</span> <span class="o">=</span> <span class="n">matches_are_indices</span>
 
         <span class="c1"># Decide output column names for IDs</span>
         <span class="k">if</span> <span class="n">left_id_col</span> <span class="o">==</span> <span class="n">right_id_col</span><span class="p">:</span>
-            <span class="n">out_left_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">left_id_col</span><span class="si">}</span><span class="s2">_left&quot;</span>
-            <span class="n">out_right_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">right_id_col</span><span class="si">}</span><span class="s2">_right&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">out_left_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">left_id_col</span><span class="si">}</span><span class="s2">_left"</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">out_right_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">right_id_col</span><span class="si">}</span><span class="s2">_right"</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">out_left_id</span> <span class="o">=</span> <span class="n">left_id_col</span>
-            <span class="n">out_right_id</span> <span class="o">=</span> <span class="n">right_id_col</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">out_left_id</span> <span class="o">=</span> <span class="n">left_id_col</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">out_right_id</span> <span class="o">=</span> <span class="n">right_id_col</span>
 
-        <span class="c1"># full cross join</span>
-        <span class="n">df_pairs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-            <span class="p">{</span>
-                <span class="n">out_left_id</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">left_ids</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">right_ids</span><span class="p">)),</span>
-                <span class="n">out_right_id</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">right_ids</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">left_ids</span><span class="p">)),</span>
-            <span class="p">}</span>
-        <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>
 
         <span class="c1"># For lookup (ID → row)</span>
         <span class="n">left_indexed</span> <span class="o">=</span> <span class="n">left</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">left_id_col</span><span class="p">)</span>
         <span class="n">right_indexed</span> <span class="o">=</span> <span class="n">right</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">right_id_col</span><span class="p">)</span>
+        <span class="n">left_id_series</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left_ids</span><span class="p">)</span>
+        <span class="n">right_id_series</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">right_ids</span><span class="p">)</span>
 
         <span class="c1"># ------------------------------------------------------------------</span>
         <span class="c1"># 2. Load similarity functions (built-in + custom)</span>
@@ -407,27 +487,170 @@
         <span class="n">sim_funcs</span> <span class="o">=</span> <span class="n">_sim</span><span class="o">.</span><span class="n">available_similarities</span><span class="p">()</span>
 
         <span class="c1"># ------------------------------------------------------------------</span>
-        <span class="c1"># 3. Compute similarity features only for entries in SimilarityMap</span>
+        <span class="c1"># 3. Per similarity, each left and right row's value, looked up by ID.</span>
+        <span class="c1">#    Kept as Series so that every block sees the same values and dtype.</span>
         <span class="c1"># ------------------------------------------------------------------</span>
-        <span class="k">for</span> <span class="n">lcol</span><span class="p">,</span> <span class="n">rcol</span><span class="p">,</span> <span class="n">sim_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">similarity_map</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">lcol</span><span class="p">,</span> <span class="n">rcol</span><span class="p">,</span> <span class="n">sim_name</span> <span class="ow">in</span> <span class="n">similarity_map</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">sim_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sim_funcs</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Similarity &#39;</span><span class="si">{</span><span class="n">sim_name</span><span class="si">}</span><span class="s2">&#39; not found. &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;Available: </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">sim_funcs</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s2">"Similarity '</span><span class="si">{</span><span class="n">sim_name</span><span class="si">}</span><span class="s2">' not found. "</span>
+                    <span class="sa">f</span><span class="s2">"Available: </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">sim_funcs</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span>
                 <span class="p">)</span>
 
-            <span class="n">func</span> <span class="o">=</span> <span class="n">sim_funcs</span><span class="p">[</span><span class="n">sim_name</span><span class="p">]</span>
-            <span class="n">col_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;col_</span><span class="si">{</span><span class="n">lcol</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">rcol</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">sim_name</span><span class="si">}</span><span class="s2">&quot;</span>
-
             <span class="c1"># Dict-based lookup to avoid index alignment quirks</span>
-            <span class="n">left_map</span> <span class="o">=</span> <span class="n">left_indexed</span><span class="p">[</span><span class="n">lcol</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
-            <span class="n">right_map</span> <span class="o">=</span> <span class="n">right_indexed</span><span class="p">[</span><span class="n">rcol</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+            <span class="n">left_values</span> <span class="o">=</span> <span class="n">left_id_series</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">left_indexed</span><span class="p">[</span><span class="n">lcol</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+            <span class="n">right_values</span> <span class="o">=</span> <span class="n">right_id_series</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">right_indexed</span><span class="p">[</span><span class="n">rcol</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
 
-            <span class="n">left_series</span> <span class="o">=</span> <span class="n">df_pairs</span><span class="p">[</span><span class="n">out_left_id</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">left_map</span><span class="p">)</span>
-            <span class="n">right_series</span> <span class="o">=</span> <span class="n">df_pairs</span><span class="p">[</span><span class="n">out_right_id</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">right_map</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">((</span>
+                <span class="sa">f</span><span class="s2">"col_</span><span class="si">{</span><span class="n">lcol</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">rcol</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">sim_name</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                <span class="n">sim_funcs</span><span class="p">[</span><span class="n">sim_name</span><span class="p">],</span>
+                <span class="n">left_values</span><span class="p">,</span>
+                <span class="n">right_values</span><span class="p">,</span>
+                <span class="n">left_values</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
+                <span class="n">right_values</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
+            <span class="p">))</span>
+
+        <span class="c1"># ------------------------------------------------------------------</span>
+        <span class="c1"># 4. Match keys</span>
+        <span class="c1"># ------------------------------------------------------------------</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">{</span><span class="n">matches_id_left</span><span class="p">,</span> <span class="n">matches_id_right</span><span class="p">}</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">matches</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"'matches' must contain columns </span><span class="si">{</span><span class="n">matches_id_left</span><span class="si">!r}</span><span class="s2"> and </span><span class="si">{</span><span class="n">matches_id_right</span><span class="si">!r}</span><span class="s2">"</span>
+            <span class="p">)</span>
+
+        <span class="n">matches_tmp</span> <span class="o">=</span> <span class="n">matches</span><span class="p">[[</span><span class="n">matches_id_left</span><span class="p">,</span> <span class="n">matches_id_right</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">matches_are_indices</span><span class="p">:</span>
+            <span class="c1"># matches[left/right] are row positions in left/right, 0..n-1, as</span>
+            <span class="c1"># neer_match reads them. Not index labels: those differ from the</span>
+            <span class="c1"># positions once a frame is filtered or sorted without reset_index.</span>
+            <span class="k">for</span> <span class="n">side</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">(</span>
+                <span class="p">(</span><span class="s2">"left"</span><span class="p">,</span> <span class="n">matches_id_left</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_left</span><span class="p">),</span>
+                <span class="p">(</span><span class="s2">"right"</span><span class="p">,</span> <span class="n">matches_id_right</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_right</span><span class="p">),</span>
+            <span class="p">):</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="n">matches_tmp</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+                <span class="n">positions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">"coerce"</span><span class="p">)</span>
+                <span class="n">outside</span> <span class="o">=</span> <span class="o">~</span><span class="n">positions</span><span class="o">.</span><span class="n">between</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">positions</span> <span class="o">%</span> <span class="mi">1</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">outside</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">"With matches_are_indices=True, matches[</span><span class="si">{</span><span class="n">col</span><span class="si">!r}</span><span class="s2">] holds row "</span>
+                        <span class="sa">f</span><span class="s2">"positions in the </span><span class="si">{</span><span class="n">side</span><span class="si">}</span><span class="s2"> frame, 0..</span><span class="si">{</span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">, but "</span>
+                        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">outside</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">}</span><span class="s2"> value(s) are not, e.g. "</span>
+                        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">values</span><span class="p">[</span><span class="n">outside</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">!r}</span><span class="s2">. Index labels are not row "</span>
+                        <span class="s2">"positions unless the index is 0..n-1 (see reset_index); "</span>
+                        <span class="s2">"for IDs, pass matches_are_indices=False."</span>
+                    <span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">left_keys</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_left</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">right_keys</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_right</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Old behavior: matches[left/right] are in the same ID space</span>
+            <span class="c1"># as out_left_id / out_right_id</span>
+
+            <span class="c1"># Ensure dtype compatibility before merging</span>
+            <span class="n">matches_tmp</span><span class="p">[</span><span class="n">matches_id_left</span><span class="p">]</span> <span class="o">=</span> <span class="n">matches_tmp</span><span class="p">[</span><span class="n">matches_id_left</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">left_id_series</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+            <span class="n">matches_tmp</span><span class="p">[</span><span class="n">matches_id_right</span><span class="p">]</span> <span class="o">=</span> <span class="n">matches_tmp</span><span class="p">[</span><span class="n">matches_id_right</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">right_id_series</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+
+        <span class="c1"># A pair listed twice would otherwise appear twice in the frame</span>
+        <span class="n">matches_tmp</span> <span class="o">=</span> <span class="n">matches_tmp</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
+        <span class="n">matches_tmp</span><span class="p">[</span><span class="n">match_col</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">matches_tmp</span> <span class="o">=</span> <span class="n">matches_tmp</span></div>
+
+
+<div class="viewcode-block" id="SimilarityPairs.__len__">
+<a class="viewcode-back" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__len__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_left</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_right</span></div>
+
+
+<div class="viewcode-block" id="SimilarityPairs.frame">
+<a class="viewcode-back" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.frame">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">frame</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""All rows, as :meth:`SimilarityFeatures.pairwise_similarity_dataframe` returns them."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_left</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SimilarityPairs.chunks">
+<a class="viewcode-back" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.chunks">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">chunks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pairs_per_chunk</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">250_000</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        All rows, in consecutive blocks of whole left rows.</span>
+
+<span class="sd">        Each block holds as many left rows as fit in ``pairs_per_chunk`` pairs, and</span>
+<span class="sd">        at least one. Its index continues the full frame's, so concatenated, the</span>
+<span class="sd">        blocks equal :meth:`frame`.</span>
+<span class="sd">        """</span>
+        <span class="k">for</span> <span class="n">start</span><span class="p">,</span> <span class="n">stop</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_row_blocks</span><span class="p">(</span><span class="n">pairs_per_chunk</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SimilarityPairs.match_flags">
+<a class="viewcode-back" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.match_flags">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">match_flags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pairs_per_chunk</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">250_000</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""The match column of :meth:`frame`, without computing any similarity."""</span>
+        <span class="n">flags</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="bp">self</span><span class="o">.</span><span class="n">match_col</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">start</span><span class="p">,</span> <span class="n">stop</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_row_blocks</span><span class="p">(</span><span class="n">pairs_per_chunk</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">flags</span><span class="p">)</span> <span class="k">if</span> <span class="n">flags</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SimilarityPairs.rows">
+<a class="viewcode-back" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.rows">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rows</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">positions</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""The rows of :meth:`frame` at ``positions``, in that order and indexed by them."""</span>
+        <span class="n">positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">intp</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build</span><span class="p">(</span>
+            <span class="n">positions</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_right</span><span class="p">,</span> <span class="n">positions</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_right</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Index</span><span class="p">(</span><span class="n">positions</span><span class="p">)</span>
+        <span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_row_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pairs_per_chunk</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">pairs_per_chunk</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"pairs_per_chunk must be at least 1, got </span><span class="si">{</span><span class="n">pairs_per_chunk</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_left</span>
+            <span class="k">return</span>
+        <span class="n">rows_per_block</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">pairs_per_chunk</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_right</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">start</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_left</span><span class="p">,</span> <span class="n">rows_per_block</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">start</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">start</span> <span class="o">+</span> <span class="n">rows_per_block</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_left</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">stop</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">features</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">out_left_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_right_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">match_col</span><span class="p">])</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_right</span><span class="p">),</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_right</span><span class="p">),</span> <span class="n">stop</span> <span class="o">-</span> <span class="n">start</span><span class="p">),</span>
+            <span class="n">pd</span><span class="o">.</span><span class="n">RangeIndex</span><span class="p">(</span><span class="n">start</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_right</span><span class="p">,</span> <span class="n">stop</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_right</span><span class="p">),</span>
+            <span class="n">features</span><span class="o">=</span><span class="n">features</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left_pos</span><span class="p">,</span> <span class="n">right_pos</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">features</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="n">match_col</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">match_col</span>
+        <span class="n">matches_id_left</span><span class="p">,</span> <span class="n">matches_id_right</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">matches_id_left</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matches_id_right</span>
+        <span class="n">out_left_id</span><span class="p">,</span> <span class="n">out_right_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_left_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_right_id</span>
+
+        <span class="n">df_pairs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="n">out_left_id</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">left_ids</span><span class="p">[</span><span class="n">left_pos</span><span class="p">],</span>
+                <span class="n">out_right_id</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_ids</span><span class="p">[</span><span class="n">right_pos</span><span class="p">],</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+
+        <span class="c1"># ------------------------------------------------------------------</span>
+        <span class="c1"># 5. Compute similarity features only for entries in SimilarityMap</span>
+        <span class="c1"># ------------------------------------------------------------------</span>
+        <span class="k">for</span> <span class="n">col_name</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">left_values</span><span class="p">,</span> <span class="n">right_values</span><span class="p">,</span> <span class="n">left_nan</span><span class="p">,</span> <span class="n">right_nan</span> <span class="ow">in</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">features</span> <span class="k">if</span> <span class="n">features</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="p">):</span>
+            <span class="n">left_series</span> <span class="o">=</span> <span class="n">left_values</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">left_pos</span><span class="p">)</span>
+            <span class="n">right_series</span> <span class="o">=</span> <span class="n">right_values</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">right_pos</span><span class="p">)</span>
 
             <span class="c1"># Mask where any side is missing</span>
-            <span class="n">nan_mask</span> <span class="o">=</span> <span class="n">left_series</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span> <span class="o">|</span> <span class="n">right_series</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span>
+            <span class="n">nan_mask</span> <span class="o">=</span> <span class="n">left_nan</span><span class="p">[</span><span class="n">left_pos</span><span class="p">]</span> <span class="o">|</span> <span class="n">right_nan</span><span class="p">[</span><span class="n">right_pos</span><span class="p">]</span>
 
             <span class="n">sim_vals</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">is_nan</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">left_series</span><span class="p">,</span> <span class="n">right_series</span><span class="p">,</span> <span class="n">nan_mask</span><span class="p">):</span>
@@ -440,58 +663,30 @@
             <span class="n">df_pairs</span><span class="p">[</span><span class="n">col_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">sim_vals</span>
 
         <span class="c1"># ------------------------------------------------------------------</span>
-        <span class="c1"># 4. Match indicator</span>
+        <span class="c1"># 6. Match indicator</span>
         <span class="c1"># ------------------------------------------------------------------</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="p">{</span><span class="n">matches_id_left</span><span class="p">,</span> <span class="n">matches_id_right</span><span class="p">}</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">matches</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;&#39;matches&#39; must contain columns </span><span class="si">{</span><span class="n">matches_id_left</span><span class="si">!r}</span><span class="s2"> and </span><span class="si">{</span><span class="n">matches_id_right</span><span class="si">!r}</span><span class="s2">&quot;</span>
-            <span class="p">)</span>
-
-        <span class="n">matches_tmp</span> <span class="o">=</span> <span class="n">matches</span><span class="p">[[</span><span class="n">matches_id_left</span><span class="p">,</span> <span class="n">matches_id_right</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">matches_tmp</span><span class="p">[</span><span class="n">match_col</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-
-        <span class="k">if</span> <span class="n">matches_are_indices</span><span class="p">:</span>
-            <span class="c1"># matches[left/right] are row indices into left/right.</span>
-            <span class="c1"># Map our ID-columns to row indices, then merge on those.</span>
-            <span class="n">left_id_to_pos</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">left</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-                <span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">left_id_col</span><span class="p">)[</span><span class="s2">&quot;index&quot;</span><span class="p">]</span>
-                <span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
-            <span class="p">)</span>
-            <span class="n">right_id_to_pos</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">right</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-                <span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">right_id_col</span><span class="p">)[</span><span class="s2">&quot;index&quot;</span><span class="p">]</span>
-                <span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
-            <span class="p">)</span>
-
-            <span class="n">df_pairs</span><span class="p">[</span><span class="s2">&quot;_left_pos&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_pairs</span><span class="p">[</span><span class="n">out_left_id</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">left_id_to_pos</span><span class="p">)</span>
-            <span class="n">df_pairs</span><span class="p">[</span><span class="s2">&quot;_right_pos&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_pairs</span><span class="p">[</span><span class="n">out_right_id</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">right_id_to_pos</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">matches_are_indices</span><span class="p">:</span>
+            <span class="n">df_pairs</span><span class="p">[</span><span class="s2">"_left_pos"</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">left_keys</span><span class="p">[</span><span class="n">left_pos</span><span class="p">]</span>
+            <span class="n">df_pairs</span><span class="p">[</span><span class="s2">"_right_pos"</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_keys</span><span class="p">[</span><span class="n">right_pos</span><span class="p">]</span>
 
             <span class="n">df_pairs</span> <span class="o">=</span> <span class="n">df_pairs</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
-                <span class="n">matches_tmp</span><span class="p">,</span>
-                <span class="n">left_on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;_left_pos&quot;</span><span class="p">,</span> <span class="s2">&quot;_right_pos&quot;</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">matches_tmp</span><span class="p">,</span>
+                <span class="n">left_on</span><span class="o">=</span><span class="p">[</span><span class="s2">"_left_pos"</span><span class="p">,</span> <span class="s2">"_right_pos"</span><span class="p">],</span>
                 <span class="n">right_on</span><span class="o">=</span><span class="p">[</span><span class="n">matches_id_left</span><span class="p">,</span> <span class="n">matches_id_right</span><span class="p">],</span>
-                <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span>
+                <span class="n">how</span><span class="o">=</span><span class="s2">"left"</span><span class="p">,</span>
             <span class="p">)</span>
 
             <span class="n">df_pairs</span><span class="p">[</span><span class="n">match_col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_pairs</span><span class="p">[</span><span class="n">match_col</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 
             <span class="c1"># Clean up helper columns</span>
-            <span class="n">df_pairs</span> <span class="o">=</span> <span class="n">df_pairs</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;_left_pos&quot;</span><span class="p">,</span> <span class="s2">&quot;_right_pos&quot;</span><span class="p">,</span> <span class="n">matches_id_left</span><span class="p">,</span> <span class="n">matches_id_right</span><span class="p">])</span>
+            <span class="n">df_pairs</span> <span class="o">=</span> <span class="n">df_pairs</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"_left_pos"</span><span class="p">,</span> <span class="s2">"_right_pos"</span><span class="p">,</span> <span class="n">matches_id_left</span><span class="p">,</span> <span class="n">matches_id_right</span><span class="p">])</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># Old behavior: matches[left/right] are in the same ID space</span>
-            <span class="c1"># as out_left_id / out_right_id</span>
-
-            <span class="c1"># Ensure dtype compatibility before merging</span>
-            <span class="n">matches_tmp</span><span class="p">[</span><span class="n">matches_id_left</span><span class="p">]</span> <span class="o">=</span> <span class="n">matches_tmp</span><span class="p">[</span><span class="n">matches_id_left</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">df_pairs</span><span class="p">[</span><span class="n">out_left_id</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
-            <span class="n">matches_tmp</span><span class="p">[</span><span class="n">matches_id_right</span><span class="p">]</span> <span class="o">=</span> <span class="n">matches_tmp</span><span class="p">[</span><span class="n">matches_id_right</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">df_pairs</span><span class="p">[</span><span class="n">out_right_id</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
-
             <span class="n">df_pairs</span> <span class="o">=</span> <span class="n">df_pairs</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
-                <span class="n">matches_tmp</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">matches_tmp</span><span class="p">,</span>
                 <span class="n">left_on</span><span class="o">=</span><span class="p">[</span><span class="n">out_left_id</span><span class="p">,</span> <span class="n">out_right_id</span><span class="p">],</span>
                 <span class="n">right_on</span><span class="o">=</span><span class="p">[</span><span class="n">matches_id_left</span><span class="p">,</span> <span class="n">matches_id_right</span><span class="p">],</span>
-                <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span>
+                <span class="n">how</span><span class="o">=</span><span class="s2">"left"</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="n">df_pairs</span><span class="p">[</span><span class="n">match_col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_pairs</span><span class="p">[</span><span class="n">match_col</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 
@@ -500,21 +695,22 @@
             <span class="k">if</span> <span class="n">matches_id_right</span> <span class="o">!=</span> <span class="n">out_right_id</span><span class="p">:</span>
                 <span class="n">df_pairs</span> <span class="o">=</span> <span class="n">df_pairs</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">matches_id_right</span><span class="p">])</span>
 
+        <span class="n">df_pairs</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">index</span>
         <span class="k">return</span> <span class="n">df_pairs</span></div>
-</div>
 
-    
+
+
 <div class="viewcode-block" id="to_X_y">
 <a class="viewcode-back" href="../../similarity_features.html#neer_match_utilities.similarity_features.to_X_y">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">to_X_y</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">match_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;match&quot;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">to_X_y</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">match_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"match"</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Extract (X, y) from a pairwise similarity DataFrame.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    df : pd.DataFrame</span>
-<span class="sd">        DataFrame produced by AlternativeModels.pairwise_similarity_dataframe().</span>
-<span class="sd">    match_col : str, default &quot;match&quot;</span>
+<span class="sd">        DataFrame produced by SimilarityFeatures.pairwise_similarity_dataframe().</span>
+<span class="sd">    match_col : str, default "match"</span>
 <span class="sd">        Name of the binary match indicator column.</span>
 
 <span class="sd">    Returns</span>
@@ -523,12 +719,12 @@
 <span class="sd">        Feature matrix containing all similarity columns (col_*).</span>
 <span class="sd">    y : np.ndarray</span>
 <span class="sd">        Target array (0/1).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">match_col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Match column &#39;</span><span class="si">{</span><span class="n">match_col</span><span class="si">}</span><span class="s2">&#39; not found in DataFrame.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Match column '</span><span class="si">{</span><span class="n">match_col</span><span class="si">}</span><span class="s2">' not found in DataFrame."</span><span class="p">)</span>
 
     <span class="c1"># Select all similarity feature columns</span>
-    <span class="n">feature_cols</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;col_&quot;</span><span class="p">)])</span>
+    <span class="n">feature_cols</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"col_"</span><span class="p">)])</span>
 
     <span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">feature_cols</span><span class="p">]</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">match_col</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
@@ -540,12 +736,12 @@
 <a class="viewcode-back" href="../../similarity_features.html#neer_match_utilities.similarity_features.subsample_non_matches">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">subsample_non_matches</span><span class="p">(</span>
     <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-    <span class="n">match_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;match&quot;</span><span class="p">,</span>
+    <span class="n">match_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"match"</span><span class="p">,</span>
     <span class="n">mismatch_share</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
     <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">shuffle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Return a subsample of df where all matches are kept and a fraction of</span>
 <span class="sd">    non-matches is sampled.</span>
 
@@ -568,14 +764,14 @@
 <span class="sd">    -------</span>
 <span class="sd">    df_sub :</span>
 <span class="sd">        Subsampled DataFrame with all matches and a subset of non-matches.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;</span> <span class="n">mismatch_share</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;mismatch_share must be in (0, 1], got </span><span class="si">{</span><span class="n">mismatch_share</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">"mismatch_share must be in (0, 1], got </span><span class="si">{</span><span class="n">mismatch_share</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">match_col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Match column &#39;</span><span class="si">{</span><span class="n">match_col</span><span class="si">}</span><span class="s2">&#39; not found in df.columns&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Match column '</span><span class="si">{</span><span class="n">match_col</span><span class="si">}</span><span class="s2">' not found in df.columns"</span><span class="p">)</span>
 
     <span class="n">mask_pos</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">match_col</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span>
     <span class="n">mask_neg</span> <span class="o">=</span> <span class="o">~</span><span class="n">mask_pos</span>
@@ -596,6 +792,75 @@
 
     <span class="k">return</span> <span class="n">df_sub</span></div>
 
+
+<div class="viewcode-block" id="subsample_non_match_positions">
+<a class="viewcode-back" href="../../similarity_features.html#neer_match_utilities.similarity_features.subsample_non_match_positions">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">subsample_non_match_positions</span><span class="p">(</span>
+    <span class="n">match</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">mismatch_share</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">shuffle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Positions of the rows :func:`subsample_non_matches` keeps, in its order.</span>
+
+<span class="sd">    ``subsample_non_matches(df, ...)`` equals ``df.iloc[positions]`` for</span>
+<span class="sd">    ``positions = subsample_non_match_positions(df[match_col].to_numpy(), ...)``</span>
+<span class="sd">    and the same remaining arguments. Only the match column is needed, so the</span>
+<span class="sd">    similarity features can be computed afterwards for the kept rows alone.</span>
+
+<span class="sd">    Both draws are made as pandas' ``DataFrame.sample`` makes them: an integer</span>
+<span class="sd">    seed starts a fresh ``numpy.random.RandomState`` for each, None uses numpy's</span>
+<span class="sd">    global one, and ``round(mismatch_share * n)`` non-matches are kept. Calling</span>
+<span class="sd">    numpy directly keeps the result independent of pandas' implementation;</span>
+<span class="sd">    numpy holds the ``RandomState`` stream fixed across versions (NEP 19).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    match :</span>
+<span class="sd">        Binary match indicator per row (1 = match).</span>
+<span class="sd">    mismatch_share, random_state, shuffle :</span>
+<span class="sd">        As for :func:`subsample_non_matches`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        Row positions: all matches, then the sampled non-matches, shuffled</span>
+<span class="sd">        together if ``shuffle`` is True.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;</span> <span class="n">mismatch_share</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"mismatch_share must be in (0, 1], got </span><span class="si">{</span><span class="n">mismatch_share</span><span class="si">}</span><span class="s2">"</span>
+        <span class="p">)</span>
+
+    <span class="n">is_match</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">match</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="n">positions_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">is_match</span><span class="p">)</span>
+    <span class="n">positions_neg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="o">~</span><span class="n">is_match</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mismatch_share</span> <span class="o">&lt;</span> <span class="mf">1.0</span><span class="p">:</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">mismatch_share</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">positions_neg</span><span class="p">))</span>
+        <span class="n">positions_neg</span> <span class="o">=</span> <span class="n">positions_neg</span><span class="p">[</span>
+            <span class="n">_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">positions_neg</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="p">]</span>
+
+    <span class="n">positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">positions_pos</span><span class="p">,</span> <span class="n">positions_neg</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">shuffle</span><span class="p">:</span>
+        <span class="n">positions</span> <span class="o">=</span> <span class="n">positions</span><span class="p">[</span>
+            <span class="n">_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">positions</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">positions</span><span class="p">),</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">positions</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""The numpy random state pandas' ``DataFrame.sample`` uses for ``random_state``."""</span>
+    <span class="k">if</span> <span class="n">random_state</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">random_state</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="n">random_state</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
 </pre></div>
 
            </div>

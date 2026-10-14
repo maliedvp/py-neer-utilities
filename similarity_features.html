@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Similarity Features &mdash; Neer Match Utilities 1.0.2 documentation</title>
+  <title>Similarity Features &mdash; Neer Match Utilities 1.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=1ed6394b"></script>
+      <script src="_static/documentation_options.js?v=fc837d61"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -159,6 +159,7 @@
 <li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.SuggestMixin.suggest"><code class="docutils literal notranslate"><span class="pre">SuggestMixin.suggest()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.classification_metrics"><code class="docutils literal notranslate"><span class="pre">classification_metrics()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="baseline_training.html">Baseline Training</a><ul>
@@ -260,9 +261,20 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Similarity Features</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.similarity_features.SimilarityFeatures"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.similarity_features.SimilarityFeatures.__init__"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.similarity_features.SimilarityFeatures.pairs"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.pairs()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.similarity_features.SimilarityFeatures.pairwise_similarity_dataframe"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.pairwise_similarity_dataframe()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.similarity_features.SimilarityPairs"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.similarity_features.SimilarityPairs.__init__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.similarity_features.SimilarityPairs.__len__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__len__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.similarity_features.SimilarityPairs.chunks"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.chunks()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.similarity_features.SimilarityPairs.frame"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.frame()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.similarity_features.SimilarityPairs.match_flags"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.match_flags()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.similarity_features.SimilarityPairs.rows"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.rows()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.similarity_features.subsample_non_match_positions"><code class="docutils literal notranslate"><span class="pre">subsample_non_match_positions()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.similarity_features.subsample_non_matches"><code class="docutils literal notranslate"><span class="pre">subsample_non_matches()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.similarity_features.to_X_y"><code class="docutils literal notranslate"><span class="pre">to_X_y()</span></code></a></li>
 </ul>
@@ -274,6 +286,7 @@
 <li class="toctree-l3"><a class="reference internal" href="custom_similarities.html#neer_match_utilities.custom_similarities.CustomSimilarities.notzero"><code class="docutils literal notranslate"><span class="pre">CustomSimilarities.notzero()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="custom_similarities.html#neer_match_utilities.custom_similarities.register_similarities"><code class="docutils literal notranslate"><span class="pre">register_similarities()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -317,6 +330,20 @@
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="neer_match_utilities.similarity_features.SimilarityFeatures.pairs">
+<span class="sig-name descname"><span class="pre">pairs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left_id_col</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right_id_col</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">match_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'match'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches_id_left</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'left'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches_id_right</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'right'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches_are_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/similarity_features.html#SimilarityFeatures.pairs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.similarity_features.SimilarityFeatures.pairs" title="Link to this definition"></a></dt>
+<dd><p>The rows of <a class="reference internal" href="#neer_match_utilities.similarity_features.SimilarityFeatures.pairwise_similarity_dataframe" title="neer_match_utilities.similarity_features.SimilarityFeatures.pairwise_similarity_dataframe"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pairwise_similarity_dataframe()</span></code></a>, built on demand.</p>
+<p>Takes the same arguments. Nothing is computed per pair until rows are
+requested from the returned object, in full, in blocks of left rows, or
+selected by position.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#neer_match_utilities.similarity_features.SimilarityPairs" title="neer_match_utilities.similarity_features.SimilarityPairs"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimilarityPairs</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="neer_match_utilities.similarity_features.SimilarityFeatures.pairwise_similarity_dataframe">
 <span class="sig-name descname"><span class="pre">pairwise_similarity_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left_id_col</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right_id_col</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">match_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'match'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches_id_left</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'left'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches_id_right</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'right'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches_are_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/similarity_features.html#SimilarityFeatures.pairwise_similarity_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.similarity_features.SimilarityFeatures.pairwise_similarity_dataframe" title="Link to this definition"></a></dt>
 <dd><p>Build full cross-join of left × right, compute similarity features
@@ -328,24 +355,136 @@ specified in SimilarityMap, and attach match indicator.</p>
 <li><p><strong>right</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Left- and right-hand side entity tables.</p></li>
 <li><p><strong>matches</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – DataFrame describing which pairs are true matches.
 If <cite>matches_are_indices=True</cite>, <cite>matches[matches_id_left]</cite> and
-<cite>matches[matches_id_right]</cite> are interpreted as row indices into
-<cite>left</cite> and <cite>right</cite> (0..n-1). If False, they are interpreted as
-IDs in the same space as <cite>left[left_id_col]</cite> / <cite>right[right_id_col]</cite>.</p></li>
+<cite>matches[matches_id_right]</cite> are interpreted as row positions in
+<cite>left</cite> and <cite>right</cite> (0..n-1), as neer_match interprets them, whatever
+the frames’ index labels are. A position outside 0..n-1 raises
+ValueError. If False, they are interpreted as IDs in the same space
+as <cite>left[left_id_col]</cite> / <cite>right[right_id_col]</cite>.
+A pair listed more than once is counted once.</p></li>
 <li><p><strong>left_id_col</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Column names in <cite>left</cite> / <cite>right</cite> that contain the entity IDs.</p></li>
 <li><p><strong>right_id_col</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Column names in <cite>left</cite> / <cite>right</cite> that contain the entity IDs.</p></li>
 <li><p><strong>match_col</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Name of the binary match indicator column in the output.</p></li>
 <li><p><strong>matches_id_left</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Column names in <cite>matches</cite> identifying the left/right side.</p></li>
 <li><p><strong>matches_id_right</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Column names in <cite>matches</cite> identifying the left/right side.</p></li>
 <li><p><strong>matches_are_indices</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – If True (default), treat <cite>matches_id_left</cite> / <cite>matches_id_right</cite> as
-row indices into <cite>left</cite> and <cite>right</cite>. If False, treat them as IDs.</p></li>
+row positions in <cite>left</cite> and <cite>right</cite>. If False, treat them as IDs.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>The frame holds one row per pair, so its memory grows with
+<code class="docutils literal notranslate"><span class="pre">len(left)</span> <span class="pre">*</span> <span class="pre">len(right)</span></code>. <a class="reference internal" href="#neer_match_utilities.similarity_features.SimilarityFeatures.pairs" title="neer_match_utilities.similarity_features.SimilarityFeatures.pairs"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pairs()</span></code></a> builds the same rows in blocks,
+or only selected ones.</p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="neer_match_utilities.similarity_features.SimilarityPairs">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">neer_match_utilities.similarity_features.</span></span><span class="sig-name descname"><span class="pre">SimilarityPairs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">similarity_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left_id_col</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right_id_col</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">match_col</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches_id_left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches_id_right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches_are_indices</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/similarity_features.html#SimilarityPairs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.similarity_features.SimilarityPairs" title="Link to this definition"></a></dt>
+<dd><p>The rows of a pairwise similarity frame, built on demand.</p>
+<p>Row <code class="docutils literal notranslate"><span class="pre">k</span></code> pairs left row <code class="docutils literal notranslate"><span class="pre">k</span> <span class="pre">//</span> <span class="pre">len(right)</span></code> with right row
+<code class="docutils literal notranslate"><span class="pre">k</span> <span class="pre">%</span> <span class="pre">len(right)</span></code>, as in the full cross join. Everything that does not
+depend on the pair – the ID lookups, each compared column’s values, the
+match keys – is derived once here, so building the rows in several calls
+costs no more than building them in one, and gives the same values.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="neer_match_utilities.similarity_features.SimilarityPairs.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">similarity_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left_id_col</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right_id_col</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">match_col</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches_id_left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches_id_right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches_are_indices</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/similarity_features.html#SimilarityPairs.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.similarity_features.SimilarityPairs.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neer_match_utilities.similarity_features.SimilarityPairs.__len__">
+<span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/similarity_features.html#SimilarityPairs.__len__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.similarity_features.SimilarityPairs.__len__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neer_match_utilities.similarity_features.SimilarityPairs.chunks">
+<span class="sig-name descname"><span class="pre">chunks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pairs_per_chunk</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">250000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/similarity_features.html#SimilarityPairs.chunks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.similarity_features.SimilarityPairs.chunks" title="Link to this definition"></a></dt>
+<dd><p>All rows, in consecutive blocks of whole left rows.</p>
+<p>Each block holds as many left rows as fit in <code class="docutils literal notranslate"><span class="pre">pairs_per_chunk</span></code> pairs, and
+at least one. Its index continues the full frame’s, so concatenated, the
+blocks equal <a class="reference internal" href="#neer_match_utilities.similarity_features.SimilarityPairs.frame" title="neer_match_utilities.similarity_features.SimilarityPairs.frame"><code class="xref py py-meth docutils literal notranslate"><span class="pre">frame()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterator</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neer_match_utilities.similarity_features.SimilarityPairs.frame">
+<span class="sig-name descname"><span class="pre">frame</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/similarity_features.html#SimilarityPairs.frame"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.similarity_features.SimilarityPairs.frame" title="Link to this definition"></a></dt>
+<dd><p>All rows, as <a class="reference internal" href="#neer_match_utilities.similarity_features.SimilarityFeatures.pairwise_similarity_dataframe" title="neer_match_utilities.similarity_features.SimilarityFeatures.pairwise_similarity_dataframe"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SimilarityFeatures.pairwise_similarity_dataframe()</span></code></a> returns them.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neer_match_utilities.similarity_features.SimilarityPairs.match_flags">
+<span class="sig-name descname"><span class="pre">match_flags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pairs_per_chunk</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">250000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/similarity_features.html#SimilarityPairs.match_flags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.similarity_features.SimilarityPairs.match_flags" title="Link to this definition"></a></dt>
+<dd><p>The match column of <a class="reference internal" href="#neer_match_utilities.similarity_features.SimilarityPairs.frame" title="neer_match_utilities.similarity_features.SimilarityPairs.frame"><code class="xref py py-meth docutils literal notranslate"><span class="pre">frame()</span></code></a>, without computing any similarity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neer_match_utilities.similarity_features.SimilarityPairs.rows">
+<span class="sig-name descname"><span class="pre">rows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">positions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/similarity_features.html#SimilarityPairs.rows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.similarity_features.SimilarityPairs.rows" title="Link to this definition"></a></dt>
+<dd><p>The rows of <a class="reference internal" href="#neer_match_utilities.similarity_features.SimilarityPairs.frame" title="neer_match_utilities.similarity_features.SimilarityPairs.frame"><code class="xref py py-meth docutils literal notranslate"><span class="pre">frame()</span></code></a> at <code class="docutils literal notranslate"><span class="pre">positions</span></code>, in that order and indexed by them.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="neer_match_utilities.similarity_features.subsample_non_match_positions">
+<span class="sig-prename descclassname"><span class="pre">neer_match_utilities.similarity_features.</span></span><span class="sig-name descname"><span class="pre">subsample_non_match_positions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">match</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mismatch_share</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shuffle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/similarity_features.html#subsample_non_match_positions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.similarity_features.subsample_non_match_positions" title="Link to this definition"></a></dt>
+<dd><p>Positions of the rows <a class="reference internal" href="#neer_match_utilities.similarity_features.subsample_non_matches" title="neer_match_utilities.similarity_features.subsample_non_matches"><code class="xref py py-func docutils literal notranslate"><span class="pre">subsample_non_matches()</span></code></a> keeps, in its order.</p>
+<p><code class="docutils literal notranslate"><span class="pre">subsample_non_matches(df,</span> <span class="pre">...)</span></code> equals <code class="docutils literal notranslate"><span class="pre">df.iloc[positions]</span></code> for
+<code class="docutils literal notranslate"><span class="pre">positions</span> <span class="pre">=</span> <span class="pre">subsample_non_match_positions(df[match_col].to_numpy(),</span> <span class="pre">...)</span></code>
+and the same remaining arguments. Only the match column is needed, so the
+similarity features can be computed afterwards for the kept rows alone.</p>
+<p>Both draws are made as pandas’ <code class="docutils literal notranslate"><span class="pre">DataFrame.sample</span></code> makes them: an integer
+seed starts a fresh <code class="docutils literal notranslate"><span class="pre">numpy.random.RandomState</span></code> for each, None uses numpy’s
+global one, and <code class="docutils literal notranslate"><span class="pre">round(mismatch_share</span> <span class="pre">*</span> <span class="pre">n)</span></code> non-matches are kept. Calling
+numpy directly keeps the result independent of pandas’ implementation;
+numpy holds the <code class="docutils literal notranslate"><span class="pre">RandomState</span></code> stream fixed across versions (NEP 19).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>match</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – Binary match indicator per row (1 = match).</p></li>
+<li><p><strong>mismatch_share</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – As for <a class="reference internal" href="#neer_match_utilities.similarity_features.subsample_non_matches" title="neer_match_utilities.similarity_features.subsample_non_matches"><code class="xref py py-func docutils literal notranslate"><span class="pre">subsample_non_matches()</span></code></a>.</p></li>
+<li><p><strong>random_state</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – As for <a class="reference internal" href="#neer_match_utilities.similarity_features.subsample_non_matches" title="neer_match_utilities.similarity_features.subsample_non_matches"><code class="xref py py-func docutils literal notranslate"><span class="pre">subsample_non_matches()</span></code></a>.</p></li>
+<li><p><strong>shuffle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – As for <a class="reference internal" href="#neer_match_utilities.similarity_features.subsample_non_matches" title="neer_match_utilities.similarity_features.subsample_non_matches"><code class="xref py py-func docutils literal notranslate"><span class="pre">subsample_non_matches()</span></code></a>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Row positions: all matches, then the sampled non-matches, shuffled
+together if <code class="docutils literal notranslate"><span class="pre">shuffle</span></code> is True.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -381,7 +520,7 @@ non-matches is sampled.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>df</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – DataFrame produced by AlternativeModels.pairwise_similarity_dataframe().</p></li>
+<li><p><strong>df</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – DataFrame produced by SimilarityFeatures.pairwise_similarity_dataframe().</p></li>
 <li><p><strong>match_col</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Name of the binary match indicator column.</p></li>
 </ul>
 </dd>

@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.feature_selection &mdash; Neer Match Utilities 1.0.2 documentation</title>
+  <title>neer_match_utilities.feature_selection &mdash; Neer Match Utilities 1.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/extra.css?v=503a7970" />
@@ -15,7 +15,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=1ed6394b"></script>
+      <script src="../../_static/documentation_options.js?v=fc837d61"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -156,6 +156,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.SuggestMixin.suggest"><code class="docutils literal notranslate"><span class="pre">SuggestMixin.suggest()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.classification_metrics"><code class="docutils literal notranslate"><span class="pre">classification_metrics()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../baseline_training.html">Baseline Training</a><ul>
@@ -257,9 +258,20 @@
 <li class="toctree-l1"><a class="reference internal" href="../../similarity_features.html">Similarity Features</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.__init__"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.pairs"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.pairs()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.pairwise_similarity_dataframe"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.pairwise_similarity_dataframe()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__init__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__len__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__len__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.chunks"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.chunks()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.frame"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.frame()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.match_flags"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.match_flags()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.rows"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.rows()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.subsample_non_match_positions"><code class="docutils literal notranslate"><span class="pre">subsample_non_match_positions()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.subsample_non_matches"><code class="docutils literal notranslate"><span class="pre">subsample_non_matches()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.to_X_y"><code class="docutils literal notranslate"><span class="pre">to_X_y()</span></code></a></li>
 </ul>
@@ -271,6 +283,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../custom_similarities.html#neer_match_utilities.custom_similarities.CustomSimilarities.notzero"><code class="docutils literal notranslate"><span class="pre">CustomSimilarities.notzero()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../custom_similarities.html#neer_match_utilities.custom_similarities.register_similarities"><code class="docutils literal notranslate"><span class="pre">register_similarities()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -304,7 +317,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for neer_match_utilities.feature_selection</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">Feature selection utilities for similarity-based entity matching.</span>
 
 <span class="sd">This module provides tools for selecting the most informative similarity features</span>
@@ -318,7 +331,7 @@
 
 <span class="sd">The feature selector is designed to handle extreme class imbalance, which is</span>
 <span class="sd">common in entity matching tasks where true matches are rare.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -337,14 +350,6 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConvergenceWarning</span>
 
-<span class="c1"># Suppress sklearn warnings about deprecated parameters and convergence issues</span>
-<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span>
-    <span class="s2">&quot;ignore&quot;</span><span class="p">,</span>
-    <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">,</span>
-    <span class="n">message</span><span class="o">=</span><span class="s2">&quot;.*&#39;penalty&#39; was deprecated.*&quot;</span>
-<span class="p">)</span>
-<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">ConvergenceWarning</span><span class="p">)</span>
-
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">tqdm.auto</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
@@ -359,18 +364,34 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">contextmanager</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">joblib</span>
 
+<span class="nd">@contextmanager</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_fit_warnings_silenced</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Silence what the elastic-net fits routinely emit: ConvergenceWarning under</span>
+<span class="sd">    the loose cross-validation tolerance, and RuntimeWarning from the matrix</span>
+<span class="sd">    products.</span>
+
+<span class="sd">    These filters used to be set at import, which silenced them in the caller's</span>
+<span class="sd">    own code as well. They now apply only around the fits below, inside the</span>
+<span class="sd">    function that joblib runs, so that they hold in its worker processes too.</span>
+<span class="sd">    """</span>
+    <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">(),</span> <span class="n">np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">over</span><span class="o">=</span><span class="s2">"ignore"</span><span class="p">,</span> <span class="n">divide</span><span class="o">=</span><span class="s2">"ignore"</span><span class="p">,</span> <span class="n">invalid</span><span class="o">=</span><span class="s2">"ignore"</span><span class="p">):</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">"ignore"</span><span class="p">,</span> <span class="n">ConvergenceWarning</span><span class="p">)</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">"ignore"</span><span class="p">,</span> <span class="ne">RuntimeWarning</span><span class="p">)</span>
+        <span class="k">yield</span>
+
 <div class="viewcode-block" id="tqdm_joblib">
 <a class="viewcode-back" href="../../feature_selection.html#neer_match_utilities.feature_selection.tqdm_joblib">[docs]</a>
 <span class="nd">@contextmanager</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">tqdm_joblib</span><span class="p">(</span><span class="n">tqdm_object</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Context manager to integrate tqdm progress bars with joblib parallel execution.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    tqdm_object : tqdm.tqdm or None</span>
 <span class="sd">        Progress bar object to update during parallel execution.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">tqdm_object</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">yield</span>
         <span class="k">return</span>
@@ -393,7 +414,7 @@
 <a class="viewcode-back" href="../../feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">FeatureSelectionResult</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Result object returned by FeatureSelector.execute().</span>
 
 <span class="sd">    Attributes</span>
@@ -402,7 +423,7 @@
 <span class="sd">        Reduced similarity map containing only selected features.</span>
 <span class="sd">        Keys are variable names, values are lists of similarity concept names.</span>
 <span class="sd">    selected_feature_columns : List[str]</span>
-<span class="sd">        Names of selected feature columns in the format &#39;col_{var}_{var}_{similarity}&#39;.</span>
+<span class="sd">        Names of selected feature columns in the format 'col_{var}_{var}_{similarity}'.</span>
 <span class="sd">    selected_pairs : List[Tuple[str, str]]</span>
 <span class="sd">        List of (variable, similarity_concept) tuples that were selected.</span>
 <span class="sd">    coef_by_feature : pd.Series</span>
@@ -416,7 +437,7 @@
 <span class="sd">        - n_features_in: Number of input features</span>
 <span class="sd">        - n_features_selected: Number of features selected</span>
 <span class="sd">        - did_fallback: Whether fallback to original map occurred</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">updated_similarity_map</span><span class="p">:</span> <span class="n">SimilarityMapDict</span>
     <span class="n">selected_feature_columns</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
     <span class="n">selected_pairs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span>
@@ -428,7 +449,7 @@
 <div class="viewcode-block" id="FeatureSelector">
 <a class="viewcode-back" href="../../feature_selection.html#neer_match_utilities.feature_selection.FeatureSelector">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">FeatureSelector</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Supervised feature selector for similarity-based entity matching.</span>
 
 <span class="sd">    This class implements a two-stage feature selection process optimized for</span>
@@ -450,22 +471,23 @@
 <span class="sd">    ----------</span>
 <span class="sd">    similarity_map : Dict[str, List[str]] or SimilarityMap</span>
 <span class="sd">        Mapping from variable names to lists of similarity concepts.</span>
-<span class="sd">        Example: {&#39;name&#39;: [&#39;jaro_winkler&#39;, &#39;levenshtein&#39;], &#39;address&#39;: [&#39;cosine&#39;]}</span>
+<span class="sd">        Example: {'name': ['jaro_winkler', 'levenshtein'], 'address': ['cosine']}</span>
 <span class="sd">    training_data : Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]</span>
 <span class="sd">        Three-tuple of (left_df, right_df, matches_df) used for feature selection.</span>
-<span class="sd">    id_left_col, id_right_col : str, default=&#39;id&#39;</span>
+<span class="sd">    id_left_col, id_right_col : str, default='id'</span>
 <span class="sd">        Column names containing entity IDs in left and right dataframes.</span>
-<span class="sd">    matches_id_left, matches_id_right : str, default=&#39;left&#39;, &#39;right&#39;</span>
+<span class="sd">    matches_id_left, matches_id_right : str, default='left', 'right'</span>
 <span class="sd">        Column names in matches_df identifying left/right entity IDs.</span>
-<span class="sd">    match_col : str, default=&#39;match&#39;</span>
+<span class="sd">    match_col : str, default='match'</span>
 <span class="sd">        Name of the binary match indicator column (1=match, 0=non-match).</span>
 <span class="sd">    matches_are_indices : bool, default=True</span>
-<span class="sd">        If True, treat match IDs as integer row indices. If False, treat as entity IDs.</span>
-<span class="sd">    method : str, default=&#39;elastic_net&#39;</span>
-<span class="sd">        Feature selection method. Currently only &#39;elastic_net&#39; is supported.</span>
-<span class="sd">    scoring : str, default=&#39;average_precision&#39;</span>
-<span class="sd">        Scoring metric for cross-validation. Options: &#39;f1&#39;, &#39;roc_auc&#39;,</span>
-<span class="sd">        &#39;average_precision&#39;, &#39;neg_log_loss&#39;. For imbalanced data, &#39;average_precision&#39;</span>
+<span class="sd">        If True, treat match IDs as row positions (0..n-1), whatever the frames'</span>
+<span class="sd">        index labels are. If False, treat as entity IDs.</span>
+<span class="sd">    method : str, default='elastic_net'</span>
+<span class="sd">        Feature selection method. Currently only 'elastic_net' is supported.</span>
+<span class="sd">    scoring : str, default='average_precision'</span>
+<span class="sd">        Scoring metric for cross-validation. Options: 'f1', 'roc_auc',</span>
+<span class="sd">        'average_precision', 'neg_log_loss'. For imbalanced data, 'average_precision'</span>
 <span class="sd">        is recommended.</span>
 <span class="sd">    cv : int, default=5</span>
 <span class="sd">        Number of cross-validation folds.</span>
@@ -474,8 +496,8 @@
 <span class="sd">    Cs : int or Iterable[float], default=20</span>
 <span class="sd">        Regularization strengths to try. If int, generates `Cs` values</span>
 <span class="sd">        logarithmically spaced from 0.01 to 1000. Higher C = less regularization.</span>
-<span class="sd">    class_weight : str or None, default=&#39;balanced&#39;</span>
-<span class="sd">        Class weighting strategy. &#39;balanced&#39; adjusts weights inversely proportional</span>
+<span class="sd">    class_weight : str or None, default='balanced'</span>
+<span class="sd">        Class weighting strategy. 'balanced' adjusts weights inversely proportional</span>
 <span class="sd">        to class frequencies, recommended for imbalanced data.</span>
 <span class="sd">    max_iter : int, default=5000</span>
 <span class="sd">        Maximum iterations for elastic net solver.</span>
@@ -492,9 +514,13 @@
 <span class="sd">        If None, Stage 1 is skipped.</span>
 <span class="sd">    always_keep : Dict[str, List[str]] or None, default=None</span>
 <span class="sd">        Features to always retain regardless of selection results.</span>
-<span class="sd">        Example: {&#39;surname&#39;: [&#39;jaro_winkler&#39;]} always keeps surname jaro_winkler.</span>
-<span class="sd">    preferred_separators : tuple, default=(&#39;__&#39;, &#39;|&#39;, &#39;:&#39;, &#39;-&#39;, &#39;_&#39;)</span>
+<span class="sd">        Example: {'surname': ['jaro_winkler']} always keeps surname jaro_winkler.</span>
+<span class="sd">    preferred_separators : tuple, default=('__', '|', ':', '-', '_')</span>
 <span class="sd">        Separators to try when parsing feature names (internal use).</span>
+<span class="sd">    pairs_per_chunk : int, default=250_000</span>
+<span class="sd">        Number of pairs whose similarity features are computed at a time. Only the</span>
+<span class="sd">        feature columns are kept, so memory grows with 8 bytes per feature and</span>
+<span class="sd">        pair rather than with the full pairwise frame. Does not affect the result.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -507,16 +533,16 @@
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; from neer_match_utilities import FeatureSelector</span>
 <span class="sd">    &gt;&gt;&gt; selector = FeatureSelector(</span>
-<span class="sd">    ...     similarity_map={&#39;name&#39;: [&#39;jaro_winkler&#39;, &#39;levenshtein&#39;, &#39;cosine&#39;],</span>
-<span class="sd">    ...                     &#39;address&#39;: [&#39;jaro_winkler&#39;, &#39;levenshtein&#39;]},</span>
+<span class="sd">    ...     similarity_map={'name': ['jaro_winkler', 'levenshtein', 'cosine'],</span>
+<span class="sd">    ...                     'address': ['jaro_winkler', 'levenshtein']},</span>
 <span class="sd">    ...     training_data=(left_df, right_df, matches_df),</span>
 <span class="sd">    ...     max_correlation=0.95,</span>
 <span class="sd">    ...     min_coef_threshold=0.01</span>
 <span class="sd">    ... )</span>
 <span class="sd">    &gt;&gt;&gt; result = selector.execute()</span>
 <span class="sd">    &gt;&gt;&gt; print(result.updated_similarity_map)</span>
-<span class="sd">    {&#39;name&#39;: [&#39;jaro_winkler&#39;], &#39;address&#39;: [&#39;levenshtein&#39;]}</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    {'name': ['jaro_winkler'], 'address': ['levenshtein']}</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="FeatureSelector.__init__">
 <a class="viewcode-back" href="../../feature_selection.html#neer_match_utilities.feature_selection.FeatureSelector.__init__">[docs]</a>
@@ -526,19 +552,19 @@
         <span class="n">training_data</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="c1"># these must match how you build df_train in your pipeline</span>
-        <span class="n">id_left_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;id&quot;</span><span class="p">,</span>
-        <span class="n">id_right_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;id&quot;</span><span class="p">,</span>
-        <span class="n">matches_id_left</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;left&quot;</span><span class="p">,</span>
-        <span class="n">matches_id_right</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;right&quot;</span><span class="p">,</span>
-        <span class="n">match_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;match&quot;</span><span class="p">,</span>
+        <span class="n">id_left_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"id"</span><span class="p">,</span>
+        <span class="n">id_right_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"id"</span><span class="p">,</span>
+        <span class="n">matches_id_left</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"left"</span><span class="p">,</span>
+        <span class="n">matches_id_right</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"right"</span><span class="p">,</span>
+        <span class="n">match_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"match"</span><span class="p">,</span>
         <span class="n">matches_are_indices</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="c1"># selection configuration</span>
-        <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;elastic_net&quot;</span><span class="p">,</span>  <span class="c1"># currently only elastic_net</span>
-        <span class="n">scoring</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;average_precision&quot;</span><span class="p">,</span>  <span class="c1"># &quot;f1&quot; | &quot;roc_auc&quot; | &quot;average_precision&quot; | &quot;neg_log_loss&quot;</span>
+        <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"elastic_net"</span><span class="p">,</span>  <span class="c1"># currently only elastic_net</span>
+        <span class="n">scoring</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"average_precision"</span><span class="p">,</span>  <span class="c1"># "f1" | "roc_auc" | "average_precision" | "neg_log_loss"</span>
         <span class="n">cv</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
         <span class="n">l1_ratios</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
         <span class="n">Cs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
-        <span class="n">class_weight</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;balanced&quot;</span><span class="p">,</span>  <span class="c1"># consider &quot;balanced&quot; if match class is rare</span>
+        <span class="n">class_weight</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"balanced"</span><span class="p">,</span>  <span class="c1"># consider "balanced" if match class is rare</span>
         <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">,</span>
         <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span>
         <span class="n">n_jobs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
@@ -549,7 +575,9 @@
         <span class="c1"># if you want to always keep certain similarities</span>
         <span class="n">always_keep</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="c1"># if feature name parsing fails, you can tell the parser a separator preference</span>
-        <span class="n">preferred_separators</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;__&quot;</span><span class="p">,</span> <span class="s2">&quot;|&quot;</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">),</span>
+        <span class="n">preferred_separators</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"__"</span><span class="p">,</span> <span class="s2">"|"</span><span class="p">,</span> <span class="s2">":"</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">,</span> <span class="s2">"_"</span><span class="p">),</span>
+        <span class="c1"># pairs whose similarity features are computed at a time</span>
+        <span class="n">pairs_per_chunk</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">250_000</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">similarity_map</span><span class="p">:</span> <span class="n">SimilarityMapDict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">similarity_map</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matches_train</span> <span class="o">=</span> <span class="n">training_data</span>
@@ -574,11 +602,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">min_coef_threshold</span> <span class="o">=</span> <span class="n">min_coef_threshold</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_correlation</span> <span class="o">=</span> <span class="n">max_correlation</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">always_keep</span> <span class="o">=</span> <span class="n">always_keep</span> <span class="ow">or</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">preferred_separators</span> <span class="o">=</span> <span class="n">preferred_separators</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">preferred_separators</span> <span class="o">=</span> <span class="n">preferred_separators</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pairs_per_chunk</span> <span class="o">=</span> <span class="n">pairs_per_chunk</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_make_Cs_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Generate grid of regularization parameter values for cross-validation.</span>
 
 <span class="sd">        Returns</span>
@@ -592,13 +621,13 @@
 <span class="sd">        -----</span>
 <span class="sd">        Higher C values mean less regularization (more features kept).</span>
 <span class="sd">        Lower C values mean stronger regularization (more aggressive dropping).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Cs</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Cs</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Cs</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_drop_correlated_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Remove redundant features based on pairwise correlations (Stage 1).</span>
 
 <span class="sd">        For each group of features with pairwise correlation exceeding</span>
@@ -621,11 +650,11 @@
 <span class="sd">        -----</span>
 <span class="sd">        If `self.max_correlation` is None, no filtering is performed and X</span>
 <span class="sd">        is returned unchanged.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_correlation</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">X</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[FeatureSelector] Checking for correlations &gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">max_correlation</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[FeatureSelector] Checking for correlations &gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">max_correlation</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="c1"># Compute pairwise feature correlations</span>
         <span class="n">corr_matrix</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>
@@ -661,25 +690,25 @@
                         <span class="k">if</span> <span class="n">candidate</span> <span class="o">!=</span> <span class="n">best_feature</span><span class="p">:</span>
                             <span class="n">to_drop</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">candidate</span><span class="p">)</span>
                             <span class="n">dropped_details</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">candidate</span><span class="si">}</span><span class="s2"> (target_corr=</span><span class="si">{</span><span class="n">target_corr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">candidate</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">) &quot;</span>
-                                <span class="sa">f</span><span class="s2">&quot;-&gt; kept </span><span class="si">{</span><span class="n">best_feature</span><span class="si">}</span><span class="s2"> (target_corr=</span><span class="si">{</span><span class="n">target_corr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">best_feature</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">)&quot;</span>
+                                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">candidate</span><span class="si">}</span><span class="s2"> (target_corr=</span><span class="si">{</span><span class="n">target_corr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">candidate</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">) "</span>
+                                <span class="sa">f</span><span class="s2">"-&gt; kept </span><span class="si">{</span><span class="n">best_feature</span><span class="si">}</span><span class="s2"> (target_corr=</span><span class="si">{</span><span class="n">target_corr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">best_feature</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">)"</span>
                             <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">to_drop</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[FeatureSelector] Stage 1 - Dropping </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">to_drop</span><span class="p">)</span><span class="si">}</span><span class="s2"> correlated features: </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">to_drop</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[FeatureSelector] Stage 1 - Details (kept most predictive):&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[FeatureSelector] Stage 1 - Dropping </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">to_drop</span><span class="p">)</span><span class="si">}</span><span class="s2"> correlated features: </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">to_drop</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[FeatureSelector] Stage 1 - Details (kept most predictive):"</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">detail</span> <span class="ow">in</span> <span class="n">dropped_details</span><span class="p">[:</span><span class="mi">5</span><span class="p">]:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - </span><span class="si">{</span><span class="n">detail</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  - </span><span class="si">{</span><span class="n">detail</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dropped_details</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  ... and </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dropped_details</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">5</span><span class="si">}</span><span class="s2"> more&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  ... and </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dropped_details</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">5</span><span class="si">}</span><span class="s2"> more"</span><span class="p">)</span>
             <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">to_drop</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[FeatureSelector] Stage 1 - No highly correlated features found&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[FeatureSelector] Stage 1 - No highly correlated features found"</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">X</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_print_correlation_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">top_n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Print diagnostic information about feature correlations.</span>
 
 <span class="sd">        Parameters</span>
@@ -688,7 +717,7 @@
 <span class="sd">            Feature matrix.</span>
 <span class="sd">        top_n : int, default=10</span>
 <span class="sd">            Number of top correlations to display.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">corr_matrix</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>
 
         <span class="c1"># Extract upper triangle to avoid duplicate pairs</span>
@@ -706,32 +735,32 @@
 
         <span class="k">if</span> <span class="n">correlations</span><span class="p">:</span>
             <span class="n">correlations</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[FeatureSelector] Top </span><span class="si">{</span><span class="n">top_n</span><span class="si">}</span><span class="s2"> feature correlations:&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">[FeatureSelector] Top </span><span class="si">{</span><span class="n">top_n</span><span class="si">}</span><span class="s2"> feature correlations:"</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">corr_val</span><span class="p">,</span> <span class="n">feat1</span><span class="p">,</span> <span class="n">feat2</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">correlations</span><span class="p">[:</span><span class="n">top_n</span><span class="p">],</span> <span class="mi">1</span><span class="p">):</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">. </span><span class="si">{</span><span class="n">feat1</span><span class="si">}</span><span class="s2"> &lt;-&gt; </span><span class="si">{</span><span class="n">feat2</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">corr_val</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">. </span><span class="si">{</span><span class="n">feat1</span><span class="si">}</span><span class="s2"> &lt;-&gt; </span><span class="si">{</span><span class="n">feat2</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">corr_val</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_selected_cols_to_similarity_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selected_cols</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Convert selected feature column names back to similarity map format.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        selected_cols : list[str]</span>
-<span class="sd">            List of selected feature column names (format: &#39;col_{var}_{var}_{similarity}&#39;).</span>
+<span class="sd">            List of selected feature column names (format: 'col_{var}_{var}_{similarity}').</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        dict[str, list[str]]</span>
 <span class="sd">            Updated similarity map containing only selected features.</span>
 <span class="sd">            Variables with no selected features are excluded.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">selected_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">selected_cols</span><span class="p">)</span>
         <span class="n">selected</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="c1"># Parse feature names to extract (variable, similarity) pairs</span>
         <span class="k">for</span> <span class="n">lcol</span><span class="p">,</span> <span class="n">rcol</span><span class="p">,</span> <span class="n">sim</span> <span class="ow">in</span> <span class="n">SimilarityMap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">similarity_map</span><span class="p">):</span>
-            <span class="n">col_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;col_</span><span class="si">{</span><span class="n">lcol</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">rcol</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">sim</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">col_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"col_</span><span class="si">{</span><span class="n">lcol</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">rcol</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">sim</span><span class="si">}</span><span class="s2">"</span>
             <span class="k">if</span> <span class="n">col_name</span> <span class="ow">in</span> <span class="n">selected_set</span><span class="p">:</span>
                 <span class="n">selected</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">lcol</span><span class="p">,</span> <span class="nb">set</span><span class="p">())</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">sim</span><span class="p">)</span>
 
@@ -751,7 +780,7 @@
 <div class="viewcode-block" id="FeatureSelector.execute">
 <a class="viewcode-back" href="../../feature_selection.html#neer_match_utilities.feature_selection.FeatureSelector.execute">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FeatureSelectionResult</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Execute the two-stage feature selection process.</span>
 
 <span class="sd">        This method performs:</span>
@@ -772,7 +801,7 @@
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        ValueError</span>
-<span class="sd">            If the method is not &#39;elastic_net&#39;, or if no usable features remain</span>
+<span class="sd">            If the method is not 'elastic_net', or if no usable features remain</span>
 <span class="sd">            after cleaning or correlation filtering, or if there are too few</span>
 <span class="sd">            positive examples for cross-validation.</span>
 
@@ -789,17 +818,19 @@
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
 <span class="sd">        &gt;&gt;&gt; result = selector.execute()</span>
-<span class="sd">        &gt;&gt;&gt; print(f&quot;Selected {len(result.selected_feature_columns)} features&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; print(f&quot;Updated similarity map: {result.updated_similarity_map}&quot;)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">!=</span> <span class="s2">&quot;elastic_net&quot;</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported method=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">method</span><span class="si">}</span><span class="s2">. Only &#39;elastic_net&#39; is implemented.&quot;</span><span class="p">)</span>
+<span class="sd">        &gt;&gt;&gt; print(f"Selected {len(result.selected_feature_columns)} features")</span>
+<span class="sd">        &gt;&gt;&gt; print(f"Updated similarity map: {result.updated_similarity_map}")</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">!=</span> <span class="s2">"elastic_net"</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unsupported method=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">method</span><span class="si">}</span><span class="s2">. Only 'elastic_net' is implemented."</span><span class="p">)</span>
 
-        <span class="c1"># Step 1: Build similarity feature dataframe from training data</span>
+        <span class="c1"># Step 1: Build similarity features from training data, block by block.</span>
+        <span class="c1"># Only the feature columns and the match labels are kept, so the full</span>
+        <span class="c1"># pairwise frame, with its two ID columns, is never held in memory.</span>
         <span class="n">smap_obj</span> <span class="o">=</span> <span class="n">SimilarityMap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">similarity_map</span><span class="p">)</span>
         <span class="n">feats</span> <span class="o">=</span> <span class="n">SimilarityFeatures</span><span class="p">(</span><span class="n">similarity_map</span><span class="o">=</span><span class="n">smap_obj</span><span class="p">)</span>
 
-        <span class="n">df_train</span> <span class="o">=</span> <span class="n">feats</span><span class="o">.</span><span class="n">pairwise_similarity_dataframe</span><span class="p">(</span>
+        <span class="n">pairs</span> <span class="o">=</span> <span class="n">feats</span><span class="o">.</span><span class="n">pairs</span><span class="p">(</span>
             <span class="n">left</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">,</span>
             <span class="n">right</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">,</span>
             <span class="n">matches</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">matches_train</span><span class="p">,</span>
@@ -811,37 +842,44 @@
             <span class="n">matches_are_indices</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">matches_are_indices</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">match_col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df_train</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Expected match label column &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">match_col</span><span class="si">}</span><span class="s2">&#39; in df_train, &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;but columns are: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">df_train</span><span class="o">.</span><span class="n">columns</span><span class="p">)[:</span><span class="mi">30</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span>
-            <span class="p">)</span>
+        <span class="n">y_blocks</span><span class="p">,</span> <span class="n">X_blocks</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">df_train</span> <span class="ow">in</span> <span class="n">pairs</span><span class="o">.</span><span class="n">chunks</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pairs_per_chunk</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">match_col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df_train</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"Expected match label column '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">match_col</span><span class="si">}</span><span class="s2">' in df_train, "</span>
+                    <span class="sa">f</span><span class="s2">"but columns are: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">df_train</span><span class="o">.</span><span class="n">columns</span><span class="p">)[:</span><span class="mi">30</span><span class="p">]</span><span class="si">}</span><span class="s2">..."</span>
+                <span class="p">)</span>
 
-        <span class="c1"># Step 2: Extract target variable and feature matrix</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="n">df_train</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">match_col</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+            <span class="c1"># Step 2: Extract target variable and feature matrix</span>
+            <span class="n">y_blocks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_train</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">match_col</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span>
+
+            <span class="c1"># Filter to similarity feature columns only</span>
+            <span class="n">X_blocks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_train</span><span class="p">[[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df_train</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"col_"</span><span class="p">)</span> <span class="ow">and</span> <span class="n">c</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">match_col</span><span class="p">]])</span>
+
+        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">y_blocks</span><span class="p">)</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">X_blocks</span><span class="p">)</span>
+        <span class="k">del</span> <span class="n">df_train</span><span class="p">,</span> <span class="n">X_blocks</span>
 
         <span class="c1"># Verify sufficient positive examples for cross-validation</span>
         <span class="n">pos</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
         <span class="k">if</span> <span class="n">pos</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Not enough positives for cv=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cv</span><span class="si">}</span><span class="s2">: pos=</span><span class="si">{</span><span class="n">pos</span><span class="si">}</span><span class="s2">. Reduce cv or use more labeled matches.&quot;</span><span class="p">)</span>
-
-        <span class="n">X</span> <span class="o">=</span> <span class="n">df_train</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">match_col</span><span class="p">])</span>
-
-        <span class="c1"># Filter to similarity feature columns only</span>
-        <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;col_&quot;</span><span class="p">)]]</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Not enough positives for cv=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cv</span><span class="si">}</span><span class="s2">: pos=</span><span class="si">{</span><span class="n">pos</span><span class="si">}</span><span class="s2">. Reduce cv or use more labeled matches."</span><span class="p">)</span>
 
         <span class="c1"># Ensure all features are numeric</span>
         <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">])</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
         <span class="c1"># Handle infinity and missing values</span>
-        <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">replace</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="c1"># In place: the same values, without two more full copies of X</span>
+        <span class="n">X</span><span class="o">.</span><span class="n">replace</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">X</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="c1"># Remove constant columns (no information)</span>
         <span class="n">nunique</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">nunique</span><span class="p">(</span><span class="n">dropna</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">nunique</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">nunique</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">nunique</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;After cleaning, no usable similarity feature columns remain.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"After cleaning, no usable similarity feature columns remain."</span><span class="p">)</span>
 
         <span class="c1"># Diagnostic: print top feature correlations</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_print_correlation_summary</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
@@ -850,11 +888,16 @@
         <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_drop_correlated_features</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;After correlation filtering, no usable similarity feature columns remain.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"After correlation filtering, no usable similarity feature columns remain."</span><span class="p">)</span>
 
         <span class="c1"># Step 4: Standardize features (required for elastic net)</span>
         <span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
         <span class="n">X_scaled</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="c1"># Only the column names are needed from here on, so free the unscaled</span>
+        <span class="c1"># copy before the fits rather than holding both through them</span>
+        <span class="n">feature_columns</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span>
+        <span class="k">del</span> <span class="n">X</span>
 
         <span class="c1"># Step 5 (Stage 2): Elastic net cross-validation</span>
         <span class="c1"># Build parameter grid for exhaustive search</span>
@@ -864,18 +907,25 @@
         <span class="n">skf</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cv</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">)</span>
         <span class="n">scorer</span> <span class="o">=</span> <span class="n">get_scorer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scoring</span><span class="p">)</span>
 
-        <span class="c1"># Pre-compute CV folds for reproducibility</span>
-        <span class="n">folds</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">skf</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X_scaled</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+        <span class="c1"># Pre-compute CV folds for reproducibility. Each pair's fold number takes</span>
+        <span class="c1"># one byte, where the folds' index arrays take eight per pair and fold,</span>
+        <span class="c1"># and it is what the worker processes receive.</span>
+        <span class="n">fold_of</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">min_scalar_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cv</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">val_idx</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">skf</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X_scaled</span><span class="p">,</span> <span class="n">y</span><span class="p">)):</span>
+            <span class="n">fold_of</span><span class="p">[</span><span class="n">val_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">k</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">fit_and_score</span><span class="p">(</span><span class="n">l1_ratio</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">C</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fold_idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;Train and evaluate one configuration on one CV fold.&quot;&quot;&quot;</span>
-            <span class="n">train_idx</span><span class="p">,</span> <span class="n">val_idx</span> <span class="o">=</span> <span class="n">folds</span><span class="p">[</span><span class="n">fold_idx</span><span class="p">]</span>
+<span class="w">            </span><span class="sd">"""Train and evaluate one configuration on one CV fold."""</span>
+            <span class="c1"># The indices skf.split yields: both sorted, train the complement</span>
+            <span class="n">in_fold</span> <span class="o">=</span> <span class="n">fold_of</span> <span class="o">==</span> <span class="n">fold_idx</span>
+            <span class="n">train_idx</span><span class="p">,</span> <span class="n">val_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="o">~</span><span class="n">in_fold</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">in_fold</span><span class="p">)</span>
             <span class="n">X_tr</span><span class="p">,</span> <span class="n">X_va</span> <span class="o">=</span> <span class="n">X_scaled</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">X_scaled</span><span class="p">[</span><span class="n">val_idx</span><span class="p">]</span>
             <span class="n">y_tr</span><span class="p">,</span> <span class="n">y_va</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">val_idx</span><span class="p">]</span>
 
+            <span class="c1"># l1_ratio alone selects the elastic-net penalty; passing</span>
+            <span class="c1"># penalty= is deprecated in scikit-learn 1.8 and removed in 1.10</span>
             <span class="n">clf</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span>
-                <span class="n">solver</span><span class="o">=</span><span class="s2">&quot;saga&quot;</span><span class="p">,</span>
-                <span class="n">penalty</span><span class="o">=</span><span class="s2">&quot;elasticnet&quot;</span><span class="p">,</span>
+                <span class="n">solver</span><span class="o">=</span><span class="s2">"saga"</span><span class="p">,</span>
                 <span class="n">l1_ratio</span><span class="o">=</span><span class="n">l1_ratio</span><span class="p">,</span>
                 <span class="n">C</span><span class="o">=</span><span class="n">C</span><span class="p">,</span>
                 <span class="n">max_iter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span><span class="p">,</span>
@@ -883,19 +933,20 @@
                 <span class="n">class_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">class_weight</span><span class="p">,</span>
                 <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">,</span>
             <span class="p">)</span>
-            <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_tr</span><span class="p">,</span> <span class="n">y_tr</span><span class="p">)</span>
-            <span class="n">score</span> <span class="o">=</span> <span class="n">scorer</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">X_va</span><span class="p">,</span> <span class="n">y_va</span><span class="p">)</span>
+            <span class="k">with</span> <span class="n">_fit_warnings_silenced</span><span class="p">():</span>
+                <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_tr</span><span class="p">,</span> <span class="n">y_tr</span><span class="p">)</span>
+                <span class="n">score</span> <span class="o">=</span> <span class="n">scorer</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">X_va</span><span class="p">,</span> <span class="n">y_va</span><span class="p">)</span>
             <span class="k">return</span> <span class="p">(</span><span class="n">l1_ratio</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">fold_idx</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">score</span><span class="p">))</span>
 
         <span class="c1"># Generate all parameter × fold combinations</span>
-        <span class="n">tasks</span> <span class="o">=</span> <span class="p">[(</span><span class="n">l1</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">l1</span> <span class="ow">in</span> <span class="n">l1_grid</span> <span class="k">for</span> <span class="n">C</span> <span class="ow">in</span> <span class="n">Cs_grid</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">folds</span><span class="p">))]</span>
+        <span class="n">tasks</span> <span class="o">=</span> <span class="p">[(</span><span class="n">l1</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">l1</span> <span class="ow">in</span> <span class="n">l1_grid</span> <span class="k">for</span> <span class="n">C</span> <span class="ow">in</span> <span class="n">Cs_grid</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cv</span><span class="p">)]</span>
         <span class="n">total_fits</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tasks</span><span class="p">)</span>
 
         <span class="c1"># Execute parallel CV with progress bar</span>
-        <span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="n">total_fits</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;[FeatureSelector] CV fits&quot;</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;fit&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">tqdm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="n">total_fits</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">"[FeatureSelector] CV fits"</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">"fit"</span><span class="p">)</span> <span class="k">if</span> <span class="n">tqdm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
 
         <span class="k">with</span> <span class="n">tqdm_joblib</span><span class="p">(</span><span class="n">pbar</span><span class="p">):</span>
-            <span class="n">results</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">prefer</span><span class="o">=</span><span class="s2">&quot;processes&quot;</span><span class="p">)(</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">prefer</span><span class="o">=</span><span class="s2">"processes"</span><span class="p">)(</span>
                 <span class="n">delayed</span><span class="p">(</span><span class="n">fit_and_score</span><span class="p">)(</span><span class="n">l1</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">l1</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="ow">in</span> <span class="n">tasks</span>
             <span class="p">)</span>
 
@@ -912,12 +963,11 @@
         <span class="n">best_l1</span><span class="p">,</span> <span class="n">best_C</span> <span class="o">=</span> <span class="n">best_params</span>
         <span class="n">best_score</span> <span class="o">=</span> <span class="n">mean_scores</span><span class="p">[</span><span class="n">best_params</span><span class="p">]</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[FeatureSelector] Stage 2 - Best params: l1_ratio=</span><span class="si">{</span><span class="n">best_l1</span><span class="si">}</span><span class="s2">, C=</span><span class="si">{</span><span class="n">best_C</span><span class="si">}</span><span class="s2">, score=</span><span class="si">{</span><span class="n">best_score</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[FeatureSelector] Stage 2 - Best params: l1_ratio=</span><span class="si">{</span><span class="n">best_l1</span><span class="si">}</span><span class="s2">, C=</span><span class="si">{</span><span class="n">best_C</span><span class="si">}</span><span class="s2">, score=</span><span class="si">{</span><span class="n">best_score</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="c1"># Step 6: Refit final model on full training set with best parameters</span>
         <span class="n">final_model</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span>
-            <span class="n">solver</span><span class="o">=</span><span class="s2">&quot;saga&quot;</span><span class="p">,</span>
-            <span class="n">penalty</span><span class="o">=</span><span class="s2">&quot;elasticnet&quot;</span><span class="p">,</span>
+            <span class="n">solver</span><span class="o">=</span><span class="s2">"saga"</span><span class="p">,</span>
             <span class="n">l1_ratio</span><span class="o">=</span><span class="n">best_l1</span><span class="p">,</span>
             <span class="n">C</span><span class="o">=</span><span class="n">best_C</span><span class="p">,</span>
             <span class="n">max_iter</span><span class="o">=</span><span class="mi">20000</span><span class="p">,</span>
@@ -925,66 +975,67 @@
             <span class="n">class_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">class_weight</span><span class="p">,</span>
             <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">final_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_scaled</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">_fit_warnings_silenced</span><span class="p">():</span>
+            <span class="n">final_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_scaled</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
-        <span class="n">coef</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">final_model</span><span class="o">.</span><span class="n">coef_</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">index</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="n">coef</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">final_model</span><span class="o">.</span><span class="n">coef_</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">index</span><span class="o">=</span><span class="n">feature_columns</span><span class="p">)</span>
 
         <span class="c1"># Step 7: Apply coefficient threshold to select final features</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_coef_threshold</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">mask</span> <span class="o">=</span> <span class="n">coef</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_coef_threshold</span>
             <span class="n">selected_feature_columns</span> <span class="o">=</span> <span class="n">coef</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
             <span class="n">dropped_by_threshold</span> <span class="o">=</span> <span class="n">coef</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">~</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[FeatureSelector] Stage 2 - Applied min_coef_threshold=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">min_coef_threshold</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[FeatureSelector] Stage 2 - Applied min_coef_threshold=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">min_coef_threshold</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">dropped_by_threshold</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[FeatureSelector] Stage 2 - Dropping </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dropped_by_threshold</span><span class="p">)</span><span class="si">}</span><span class="s2"> features with weak coefficients: </span><span class="si">{</span><span class="n">dropped_by_threshold</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[FeatureSelector] Stage 2 - Dropping </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dropped_by_threshold</span><span class="p">)</span><span class="si">}</span><span class="s2"> features with weak coefficients: </span><span class="si">{</span><span class="n">dropped_by_threshold</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">selected_feature_columns</span> <span class="o">=</span> <span class="n">coef</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">coef</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
             <span class="n">dropped_by_elasticnet</span> <span class="o">=</span> <span class="n">coef</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">coef</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">dropped_by_elasticnet</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[FeatureSelector] Stage 2 - Elastic net zeroed </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dropped_by_elasticnet</span><span class="p">)</span><span class="si">}</span><span class="s2"> features: </span><span class="si">{</span><span class="n">dropped_by_elasticnet</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[FeatureSelector] Stage 2 - Elastic net zeroed </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dropped_by_elasticnet</span><span class="p">)</span><span class="si">}</span><span class="s2"> features: </span><span class="si">{</span><span class="n">dropped_by_elasticnet</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[FeatureSelector] Summary: features_in=</span><span class="si">{</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> selected_cols=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">selected_feature_columns</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">[FeatureSelector] Summary: features_in=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">feature_columns</span><span class="p">)</span><span class="si">}</span><span class="s2"> selected_cols=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">selected_feature_columns</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="c1"># Diagnostic: print top coefficients</span>
         <span class="n">top_coefs</span> <span class="o">=</span> <span class="n">coef</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[FeatureSelector] Top 15 coefficients by absolute value:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">[FeatureSelector] Top 15 coefficients by absolute value:"</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">feat</span> <span class="ow">in</span> <span class="n">top_coefs</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
-            <span class="n">marker</span> <span class="o">=</span> <span class="s2">&quot;✓&quot;</span> <span class="k">if</span> <span class="n">feat</span> <span class="ow">in</span> <span class="n">selected_feature_columns</span> <span class="k">else</span> <span class="s2">&quot;✗&quot;</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">marker</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">feat</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">coef</span><span class="p">[</span><span class="n">feat</span><span class="p">]</span><span class="si">:</span><span class="s2">+.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">marker</span> <span class="o">=</span> <span class="s2">"✓"</span> <span class="k">if</span> <span class="n">feat</span> <span class="ow">in</span> <span class="n">selected_feature_columns</span> <span class="k">else</span> <span class="s2">"✗"</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">marker</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">feat</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">coef</span><span class="p">[</span><span class="n">feat</span><span class="p">]</span><span class="si">:</span><span class="s2">+.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">()</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[FeatureSelector] pos=</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">}</span><span class="s2"> neg=</span><span class="si">{</span><span class="nb">int</span><span class="p">((</span><span class="mi">1</span><span class="o">-</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">}</span><span class="s2"> &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;features_in=</span><span class="si">{</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> selected_cols=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">selected_feature_columns</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[FeatureSelector] pos=</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">}</span><span class="s2"> neg=</span><span class="si">{</span><span class="nb">int</span><span class="p">((</span><span class="mi">1</span><span class="o">-</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">}</span><span class="s2"> "</span>
+            <span class="sa">f</span><span class="s2">"features_in=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">feature_columns</span><span class="p">)</span><span class="si">}</span><span class="s2"> selected_cols=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">selected_feature_columns</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="c1"># Step 8: Build metadata dictionary</span>
         <span class="n">meta</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span><span class="p">,</span>
-            <span class="s2">&quot;scoring&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">scoring</span><span class="p">,</span>
-            <span class="s2">&quot;cv&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv</span><span class="p">,</span>
-            <span class="s2">&quot;l1_ratios&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">l1_ratios</span><span class="p">,</span>
-            <span class="s2">&quot;Cs&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Cs</span><span class="p">,</span>
-            <span class="s2">&quot;class_weight&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_weight</span><span class="p">,</span>
-            <span class="s2">&quot;n_features_in&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
-            <span class="s2">&quot;n_features_selected&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">selected_feature_columns</span><span class="p">)),</span>
+            <span class="s2">"method"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span><span class="p">,</span>
+            <span class="s2">"scoring"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">scoring</span><span class="p">,</span>
+            <span class="s2">"cv"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv</span><span class="p">,</span>
+            <span class="s2">"l1_ratios"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">l1_ratios</span><span class="p">,</span>
+            <span class="s2">"Cs"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Cs</span><span class="p">,</span>
+            <span class="s2">"class_weight"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_weight</span><span class="p">,</span>
+            <span class="s2">"n_features_in"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">feature_columns</span><span class="p">)),</span>
+            <span class="s2">"n_features_selected"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">selected_feature_columns</span><span class="p">)),</span>
         <span class="p">}</span>
 
-        <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;did_fallback&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">meta</span><span class="p">[</span><span class="s2">"did_fallback"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="c1"># Step 9: Convert selected features back to similarity map format</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected_feature_columns</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="c1"># Fallback: no features selected, keep original map</span>
             <span class="n">updated</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">similarity_map</span><span class="p">)</span>
-            <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;did_fallback&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">meta</span><span class="p">[</span><span class="s2">"did_fallback"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">updated</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_selected_cols_to_similarity_map</span><span class="p">(</span><span class="n">selected_feature_columns</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">updated</span><span class="p">:</span>
                 <span class="c1"># Fallback: conversion produced empty map</span>
                 <span class="n">updated</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">similarity_map</span><span class="p">)</span>
-                <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;did_fallback&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">meta</span><span class="p">[</span><span class="s2">"did_fallback"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="n">selected_pairs</span> <span class="o">=</span> <span class="p">[(</span><span class="n">var</span><span class="p">,</span> <span class="n">sim</span><span class="p">)</span> <span class="k">for</span> <span class="n">var</span><span class="p">,</span> <span class="n">sims</span> <span class="ow">in</span> <span class="n">updated</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">for</span> <span class="n">sim</span> <span class="ow">in</span> <span class="n">sims</span><span class="p">]</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[FeatureSelector] did_fallback=</span><span class="si">{</span><span class="n">meta</span><span class="p">[</span><span class="s1">&#39;did_fallback&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[FeatureSelector] did_fallback=</span><span class="si">{</span><span class="n">meta</span><span class="p">[</span><span class="s1">'did_fallback'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">FeatureSelectionResult</span><span class="p">(</span>
             <span class="n">updated_similarity_map</span><span class="o">=</span><span class="n">updated</span><span class="p">,</span>

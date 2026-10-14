@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Alternative Classification Models &mdash; Neer Match Utilities 1.0.2 documentation</title>
+  <title>Alternative Classification Models &mdash; Neer Match Utilities 1.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=1ed6394b"></script>
+      <script src="_static/documentation_options.js?v=fc837d61"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -159,6 +159,7 @@
 <li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.SuggestMixin.suggest"><code class="docutils literal notranslate"><span class="pre">SuggestMixin.suggest()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.classification_metrics"><code class="docutils literal notranslate"><span class="pre">classification_metrics()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="baseline_training.html">Baseline Training</a><ul>
@@ -260,9 +261,20 @@
 <li class="toctree-l1"><a class="reference internal" href="similarity_features.html">Similarity Features</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.__init__"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.pairs"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.pairs()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.pairwise_similarity_dataframe"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.pairwise_similarity_dataframe()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__init__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__len__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__len__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.chunks"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.chunks()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.frame"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.frame()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.match_flags"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.match_flags()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.rows"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.rows()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.subsample_non_match_positions"><code class="docutils literal notranslate"><span class="pre">subsample_non_match_positions()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.subsample_non_matches"><code class="docutils literal notranslate"><span class="pre">subsample_non_matches()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.to_X_y"><code class="docutils literal notranslate"><span class="pre">to_X_y()</span></code></a></li>
 </ul>
@@ -274,6 +286,7 @@
 <li class="toctree-l3"><a class="reference internal" href="custom_similarities.html#neer_match_utilities.custom_similarities.CustomSimilarities.notzero"><code class="docutils literal notranslate"><span class="pre">CustomSimilarities.notzero()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="custom_similarities.html#neer_match_utilities.custom_similarities.register_similarities"><code class="docutils literal notranslate"><span class="pre">register_similarities()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -324,27 +337,28 @@ benchmarks.</p>
 
 <span class="n">training_pipeline</span> <span class="o">=</span> <span class="n">BaselineTrainingPipe</span><span class="p">(</span>
     <span class="c1"># Required</span>
-    <span class="n">model_name</span><span class="o">=</span><span class="s1">&#39;my_logit_model&#39;</span><span class="p">,</span>
+    <span class="n">model_name</span><span class="o">=</span><span class="s1">'my_logit_model'</span><span class="p">,</span>
     <span class="n">similarity_map</span><span class="o">=</span><span class="n">smap</span><span class="p">,</span>
     <span class="n">training_data</span><span class="o">=</span><span class="p">(</span><span class="n">left_train</span><span class="p">,</span> <span class="n">right_train</span><span class="p">,</span> <span class="n">matches_train</span><span class="p">),</span>
     <span class="n">testing_data</span><span class="o">=</span><span class="p">(</span><span class="n">left_test</span><span class="p">,</span> <span class="n">right_test</span><span class="p">,</span> <span class="n">matches_test</span><span class="p">),</span>
 
     <span class="c1"># Model type</span>
-    <span class="n">model_kind</span><span class="o">=</span><span class="s2">&quot;logit&quot;</span><span class="p">,</span>  <span class="c1"># &quot;logit&quot; | &quot;probit&quot; | &quot;gb&quot;</span>
+    <span class="n">model_kind</span><span class="o">=</span><span class="s2">"logit"</span><span class="p">,</span>  <span class="c1"># "logit" | "probit" | "gb"</span>
 
     <span class="c1"># ID columns (must match your data)</span>
-    <span class="n">id_left_col</span><span class="o">=</span><span class="s2">&quot;company_id&quot;</span><span class="p">,</span>
-    <span class="n">id_right_col</span><span class="o">=</span><span class="s2">&quot;company_id&quot;</span><span class="p">,</span>
+    <span class="n">id_left_col</span><span class="o">=</span><span class="s2">"company_id"</span><span class="p">,</span>
+    <span class="n">id_right_col</span><span class="o">=</span><span class="s2">"company_id"</span><span class="p">,</span>
 
     <span class="c1"># How matches dataframe is structured</span>
-    <span class="n">matches_id_left</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span>       <span class="c1"># column name for left IDs in matches</span>
-    <span class="n">matches_id_right</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span>     <span class="c1"># column name for right IDs in matches</span>
+    <span class="n">matches_id_left</span><span class="o">=</span><span class="s2">"left"</span><span class="p">,</span>       <span class="c1"># column name for left IDs in matches</span>
+    <span class="n">matches_id_right</span><span class="o">=</span><span class="s2">"right"</span><span class="p">,</span>     <span class="c1"># column name for right IDs in matches</span>
     <span class="n">matches_are_indices</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>     <span class="c1"># True if matches contain row indices, False if IDs</span>
 
     <span class="c1"># Sampling: fraction of non-matches to use during fitting</span>
     <span class="n">mismatch_share_fit</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>       <span class="c1"># 1.0 = use all, 0.1 = use 10%</span>
     <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
     <span class="n">shuffle_fit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">pairs_per_chunk</span><span class="o">=</span><span class="mi">250_000</span><span class="p">,</span>      <span class="c1"># pairs whose features are in memory at once</span>
 
     <span class="c1"># Prediction threshold</span>
     <span class="n">threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
@@ -356,6 +370,7 @@ benchmarks.</p>
     <span class="c1"># Export settings</span>
     <span class="n">base_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>                <span class="c1"># defaults to current directory</span>
     <span class="n">export_model</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>              <span class="c1"># True replaces a model saved under model_name</span>
     <span class="n">export_stats</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">reload_sanity_check</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>     <span class="c1"># verify model can be reloaded</span>
 <span class="p">)</span>
@@ -369,17 +384,17 @@ benchmarks.</p>
 <p>Probit regression using statsmodels. Similar to Logit but uses the
 cumulative normal distribution.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">training_pipeline</span> <span class="o">=</span> <span class="n">BaselineTrainingPipe</span><span class="p">(</span>
-    <span class="n">model_name</span><span class="o">=</span><span class="s1">&#39;my_probit_model&#39;</span><span class="p">,</span>
+    <span class="n">model_name</span><span class="o">=</span><span class="s1">'my_probit_model'</span><span class="p">,</span>
     <span class="n">similarity_map</span><span class="o">=</span><span class="n">smap</span><span class="p">,</span>
     <span class="n">training_data</span><span class="o">=</span><span class="p">(</span><span class="n">left_train</span><span class="p">,</span> <span class="n">right_train</span><span class="p">,</span> <span class="n">matches_train</span><span class="p">),</span>
     <span class="n">testing_data</span><span class="o">=</span><span class="p">(</span><span class="n">left_test</span><span class="p">,</span> <span class="n">right_test</span><span class="p">,</span> <span class="n">matches_test</span><span class="p">),</span>
 
-    <span class="n">model_kind</span><span class="o">=</span><span class="s2">&quot;probit&quot;</span><span class="p">,</span>
+    <span class="n">model_kind</span><span class="o">=</span><span class="s2">"probit"</span><span class="p">,</span>
 
-    <span class="n">id_left_col</span><span class="o">=</span><span class="s2">&quot;company_id&quot;</span><span class="p">,</span>
-    <span class="n">id_right_col</span><span class="o">=</span><span class="s2">&quot;company_id&quot;</span><span class="p">,</span>
-    <span class="n">matches_id_left</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span>
-    <span class="n">matches_id_right</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span>
+    <span class="n">id_left_col</span><span class="o">=</span><span class="s2">"company_id"</span><span class="p">,</span>
+    <span class="n">id_right_col</span><span class="o">=</span><span class="s2">"company_id"</span><span class="p">,</span>
+    <span class="n">matches_id_left</span><span class="o">=</span><span class="s2">"left"</span><span class="p">,</span>
+    <span class="n">matches_id_right</span><span class="o">=</span><span class="s2">"right"</span><span class="p">,</span>
     <span class="n">matches_are_indices</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 
     <span class="n">mismatch_share_fit</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
@@ -399,17 +414,17 @@ cumulative normal distribution.</p>
 <p>Gradient Boosting using scikit-learn. More powerful but less
 interpretable.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">training_pipeline</span> <span class="o">=</span> <span class="n">BaselineTrainingPipe</span><span class="p">(</span>
-    <span class="n">model_name</span><span class="o">=</span><span class="s1">&#39;my_gb_model&#39;</span><span class="p">,</span>
+    <span class="n">model_name</span><span class="o">=</span><span class="s1">'my_gb_model'</span><span class="p">,</span>
     <span class="n">similarity_map</span><span class="o">=</span><span class="n">smap</span><span class="p">,</span>
     <span class="n">training_data</span><span class="o">=</span><span class="p">(</span><span class="n">left_train</span><span class="p">,</span> <span class="n">right_train</span><span class="p">,</span> <span class="n">matches_train</span><span class="p">),</span>
     <span class="n">testing_data</span><span class="o">=</span><span class="p">(</span><span class="n">left_test</span><span class="p">,</span> <span class="n">right_test</span><span class="p">,</span> <span class="n">matches_test</span><span class="p">),</span>
 
-    <span class="n">model_kind</span><span class="o">=</span><span class="s2">&quot;gb&quot;</span><span class="p">,</span>
+    <span class="n">model_kind</span><span class="o">=</span><span class="s2">"gb"</span><span class="p">,</span>
 
-    <span class="n">id_left_col</span><span class="o">=</span><span class="s2">&quot;company_id&quot;</span><span class="p">,</span>
-    <span class="n">id_right_col</span><span class="o">=</span><span class="s2">&quot;company_id&quot;</span><span class="p">,</span>
-    <span class="n">matches_id_left</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span>
-    <span class="n">matches_id_right</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span>
+    <span class="n">id_left_col</span><span class="o">=</span><span class="s2">"company_id"</span><span class="p">,</span>
+    <span class="n">id_right_col</span><span class="o">=</span><span class="s2">"company_id"</span><span class="p">,</span>
+    <span class="n">matches_id_left</span><span class="o">=</span><span class="s2">"left"</span><span class="p">,</span>
+    <span class="n">matches_id_right</span><span class="o">=</span><span class="s2">"right"</span><span class="p">,</span>
     <span class="n">matches_are_indices</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 
     <span class="c1"># Sampling (GB often works well with subsampling)</span>
@@ -417,7 +432,7 @@ interpretable.</p>
 
     <span class="c1"># Threshold tuning (recommended for GB)</span>
     <span class="n">tune_threshold</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>          <span class="c1"># automatically find best threshold</span>
-    <span class="n">tune_metric</span><span class="o">=</span><span class="s2">&quot;mcc&quot;</span><span class="p">,</span>            <span class="c1"># &quot;mcc&quot; or &quot;f1&quot;</span>
+    <span class="n">tune_metric</span><span class="o">=</span><span class="s2">"mcc"</span><span class="p">,</span>            <span class="c1"># "mcc" or "f1"</span>
     <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="n">left_val</span><span class="p">,</span> <span class="n">right_val</span><span class="p">,</span> <span class="n">matches_val</span><span class="p">),</span>  <span class="c1"># required for tuning</span>
 
     <span class="n">export_model</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -437,14 +452,14 @@ training with customizable loss functions.</p>
 
 <span class="n">training_pipeline</span> <span class="o">=</span> <span class="n">TrainingPipe</span><span class="p">(</span>
     <span class="c1"># Required</span>
-    <span class="n">model_name</span><span class="o">=</span><span class="s1">&#39;my_ann_model&#39;</span><span class="p">,</span>
+    <span class="n">model_name</span><span class="o">=</span><span class="s1">'my_ann_model'</span><span class="p">,</span>
     <span class="n">similarity_map</span><span class="o">=</span><span class="n">similarity_map</span><span class="p">,</span>  <span class="c1"># dict format, not SimilarityMap object</span>
     <span class="n">training_data</span><span class="o">=</span><span class="p">(</span><span class="n">left_train</span><span class="p">,</span> <span class="n">right_train</span><span class="p">,</span> <span class="n">matches_train</span><span class="p">),</span>
     <span class="n">testing_data</span><span class="o">=</span><span class="p">(</span><span class="n">left_test</span><span class="p">,</span> <span class="n">right_test</span><span class="p">,</span> <span class="n">matches_test</span><span class="p">),</span>
 
     <span class="c1"># ID columns</span>
-    <span class="n">id_left_col</span><span class="o">=</span><span class="s2">&quot;company_id&quot;</span><span class="p">,</span>
-    <span class="n">id_right_col</span><span class="o">=</span><span class="s2">&quot;company_id&quot;</span><span class="p">,</span>
+    <span class="n">id_left_col</span><span class="o">=</span><span class="s2">"company_id"</span><span class="p">,</span>
+    <span class="n">id_right_col</span><span class="o">=</span><span class="s2">"company_id"</span><span class="p">,</span>
 
     <span class="c1"># Network architecture</span>
     <span class="n">initial_feature_width_scales</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>  <span class="c1"># width multiplier for feature networks</span>
@@ -456,7 +471,7 @@ training with customizable loss functions.</p>
     <span class="n">stage_1</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">epochs_1</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
     <span class="n">mismatch_share_1</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>            <span class="c1"># fraction of non-matches per epoch</span>
-    <span class="n">stage1_loss</span><span class="o">=</span><span class="s2">&quot;soft_f1&quot;</span><span class="p">,</span>            <span class="c1"># &quot;soft_f1&quot; | &quot;binary_crossentropy&quot; | callable</span>
+    <span class="n">stage1_loss</span><span class="o">=</span><span class="s2">"soft_f1"</span><span class="p">,</span>            <span class="c1"># "soft_f1" | "binary_crossentropy" | callable</span>
 
     <span class="c1"># Stage 2: Focal loss fine-tuning</span>
     <span class="n">stage_2</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -470,6 +485,7 @@ training with customizable loss functions.</p>
 
     <span class="c1"># Export</span>
     <span class="n">save_architecture</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>          <span class="c1"># requires graphviz binaries</span>
+    <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>                  <span class="c1"># True replaces a model saved under model_name</span>
 <span class="p">)</span>
 
 <span class="n">training_pipeline</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
@@ -514,12 +530,12 @@ imbalance.</p></li>
 <p>You can run only one training stage:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Only Stage 1 (faster, simpler)</span>
 <span class="n">training_pipeline</span> <span class="o">=</span> <span class="n">TrainingPipe</span><span class="p">(</span>
-    <span class="n">model_name</span><span class="o">=</span><span class="s1">&#39;my_model_stage1_only&#39;</span><span class="p">,</span>
+    <span class="n">model_name</span><span class="o">=</span><span class="s1">'my_model_stage1_only'</span><span class="p">,</span>
     <span class="n">similarity_map</span><span class="o">=</span><span class="n">similarity_map</span><span class="p">,</span>
     <span class="n">training_data</span><span class="o">=</span><span class="p">(</span><span class="n">left_train</span><span class="p">,</span> <span class="n">right_train</span><span class="p">,</span> <span class="n">matches_train</span><span class="p">),</span>
     <span class="n">testing_data</span><span class="o">=</span><span class="p">(</span><span class="n">left_test</span><span class="p">,</span> <span class="n">right_test</span><span class="p">,</span> <span class="n">matches_test</span><span class="p">),</span>
-    <span class="n">id_left_col</span><span class="o">=</span><span class="s2">&quot;company_id&quot;</span><span class="p">,</span>
-    <span class="n">id_right_col</span><span class="o">=</span><span class="s2">&quot;company_id&quot;</span><span class="p">,</span>
+    <span class="n">id_left_col</span><span class="o">=</span><span class="s2">"company_id"</span><span class="p">,</span>
+    <span class="n">id_right_col</span><span class="o">=</span><span class="s2">"company_id"</span><span class="p">,</span>
 
     <span class="n">stage_1</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">epochs_1</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>

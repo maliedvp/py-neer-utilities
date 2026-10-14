@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Additional Functionalities &mdash; Neer Match Utilities 1.0.2 documentation</title>
+  <title>Additional Functionalities &mdash; Neer Match Utilities 1.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=1ed6394b"></script>
+      <script src="_static/documentation_options.js?v=fc837d61"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -159,6 +159,7 @@
 <li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.SuggestMixin.suggest"><code class="docutils literal notranslate"><span class="pre">SuggestMixin.suggest()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.classification_metrics"><code class="docutils literal notranslate"><span class="pre">classification_metrics()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="baseline_training.html">Baseline Training</a><ul>
@@ -260,9 +261,20 @@
 <li class="toctree-l1"><a class="reference internal" href="similarity_features.html">Similarity Features</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.__init__"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.pairs"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.pairs()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.pairwise_similarity_dataframe"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.pairwise_similarity_dataframe()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__init__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__len__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__len__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.chunks"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.chunks()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.frame"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.frame()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.match_flags"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.match_flags()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.rows"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.rows()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.subsample_non_match_positions"><code class="docutils literal notranslate"><span class="pre">subsample_non_match_positions()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.subsample_non_matches"><code class="docutils literal notranslate"><span class="pre">subsample_non_matches()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.to_X_y"><code class="docutils literal notranslate"><span class="pre">to_X_y()</span></code></a></li>
 </ul>
@@ -274,6 +286,7 @@
 <li class="toctree-l3"><a class="reference internal" href="custom_similarities.html#neer_match_utilities.custom_similarities.CustomSimilarities.notzero"><code class="docutils literal notranslate"><span class="pre">CustomSimilarities.notzero()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="custom_similarities.html#neer_match_utilities.custom_similarities.register_similarities"><code class="docutils literal notranslate"><span class="pre">register_similarities()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -334,7 +347,7 @@ reliable frequency estimates.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.prepare</span><span class="w"> </span><span class="kn">import</span> <span class="n">Commonness</span>
 
 <span class="n">c</span> <span class="o">=</span> <span class="n">Commonness</span><span class="p">(</span>
-    <span class="n">variable_list</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;surname&#39;</span><span class="p">],</span>
+    <span class="n">variable_list</span><span class="o">=</span><span class="p">[</span><span class="s1">'name'</span><span class="p">,</span> <span class="s1">'surname'</span><span class="p">],</span>
     <span class="n">df_left</span><span class="o">=</span><span class="n">left</span><span class="p">,</span>
     <span class="n">df_right</span><span class="o">=</span><span class="n">right</span><span class="p">,</span>
 
@@ -342,8 +355,8 @@ reliable frequency estimates.</p>
     <span class="n">df_left_full</span><span class="o">=</span><span class="n">left_full</span><span class="p">,</span>       <span class="c1"># full left dataset (or left if representative)</span>
     <span class="n">df_right_full</span><span class="o">=</span><span class="n">right_full</span><span class="p">,</span>     <span class="c1"># full right dataset (or right if representative)</span>
 
-    <span class="n">commonness_source</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span>     <span class="c1"># &quot;left&quot; | &quot;right&quot; | &quot;both&quot; — which corpus to use</span>
-    <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;minmax&#39;</span><span class="p">,</span>             <span class="c1"># &quot;relative&quot; | &quot;minmax&quot; | &quot;log&quot;</span>
+    <span class="n">commonness_source</span><span class="o">=</span><span class="s1">'both'</span><span class="p">,</span>     <span class="c1"># "left" | "right" | "both" — which corpus to use</span>
+    <span class="n">scoring</span><span class="o">=</span><span class="s1">'minmax'</span><span class="p">,</span>             <span class="c1"># "relative" | "minmax" | "log"</span>
     <span class="n">fill_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>               <span class="c1"># score for unseen values</span>
     <span class="n">preprocess</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>              <span class="c1"># normalize strings (strip &amp; lowercase) before counting</span>
 <span class="p">)</span>
@@ -379,17 +392,17 @@ from CSV files).</p>
     <span class="n">similarity_map</span><span class="o">=</span><span class="n">similarity_map</span><span class="p">,</span>
     <span class="n">df_left</span><span class="o">=</span><span class="n">left</span><span class="p">,</span>
     <span class="n">df_right</span><span class="o">=</span><span class="n">right</span><span class="p">,</span>
-    <span class="n">id_left</span><span class="o">=</span><span class="s1">&#39;company_id&#39;</span><span class="p">,</span>
-    <span class="n">id_right</span><span class="o">=</span><span class="s1">&#39;company_id&#39;</span><span class="p">,</span>
-    <span class="n">spacy_pipeline</span><span class="o">=</span><span class="s1">&#39;de_core_news_sm&#39;</span><span class="p">,</span>
-    <span class="n">additional_stop_words</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;AG&#39;</span><span class="p">]</span>
+    <span class="n">id_left</span><span class="o">=</span><span class="s1">'company_id'</span><span class="p">,</span>
+    <span class="n">id_right</span><span class="o">=</span><span class="s1">'company_id'</span><span class="p">,</span>
+    <span class="n">spacy_pipeline</span><span class="o">=</span><span class="s1">'de_core_news_sm'</span><span class="p">,</span>
+    <span class="n">additional_stop_words</span><span class="o">=</span><span class="p">[</span><span class="s1">'AG'</span><span class="p">]</span>
 <span class="p">)</span>
 
 <span class="c1"># Get formatted and harmonized datasets</span>
 
 <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">prepare</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
     <span class="n">fill_numeric_na</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">to_numeric</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;found_year&#39;</span><span class="p">],</span>
+    <span class="n">to_numeric</span><span class="o">=</span><span class="p">[</span><span class="s1">'found_year'</span><span class="p">],</span>
     <span class="n">fill_string_na</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">capitalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">lower_case</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -423,21 +436,21 @@ entity matching, where true matches are rare relative to non-matches.</p>
     <span class="n">training_data</span><span class="o">=</span><span class="p">(</span><span class="n">left_train</span><span class="p">,</span> <span class="n">right_train</span><span class="p">,</span> <span class="n">matches_train</span><span class="p">),</span>
 
     <span class="c1"># ID and match columns</span>
-    <span class="n">id_left_col</span><span class="o">=</span><span class="s2">&quot;id_unique&quot;</span><span class="p">,</span>
-    <span class="n">id_right_col</span><span class="o">=</span><span class="s2">&quot;id_unique&quot;</span><span class="p">,</span>
-    <span class="n">matches_id_left</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span>
-    <span class="n">matches_id_right</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span>
-    <span class="n">match_col</span><span class="o">=</span><span class="s2">&quot;match&quot;</span><span class="p">,</span>
+    <span class="n">id_left_col</span><span class="o">=</span><span class="s2">"id_unique"</span><span class="p">,</span>
+    <span class="n">id_right_col</span><span class="o">=</span><span class="s2">"id_unique"</span><span class="p">,</span>
+    <span class="n">matches_id_left</span><span class="o">=</span><span class="s2">"left"</span><span class="p">,</span>
+    <span class="n">matches_id_right</span><span class="o">=</span><span class="s2">"right"</span><span class="p">,</span>
+    <span class="n">match_col</span><span class="o">=</span><span class="s2">"match"</span><span class="p">,</span>
     <span class="n">matches_are_indices</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 
     <span class="c1"># Stage 1: Correlation filtering</span>
     <span class="n">max_correlation</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span>       <span class="c1"># drop features with pairwise correlation &gt; 0.95</span>
 
     <span class="c1"># Stage 2: Elastic net</span>
-    <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;average_precision&quot;</span><span class="p">,</span> <span class="c1"># metric for CV; recommended for imbalanced data</span>
+    <span class="n">scoring</span><span class="o">=</span><span class="s2">"average_precision"</span><span class="p">,</span> <span class="c1"># metric for CV; recommended for imbalanced data</span>
     <span class="n">cv</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>                        <span class="c1"># number of cross-validation folds</span>
     <span class="n">Cs</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>                       <span class="c1"># number of regularization strengths to search</span>
-    <span class="n">class_weight</span><span class="o">=</span><span class="s2">&quot;balanced&quot;</span><span class="p">,</span>     <span class="c1"># adjust for class imbalance</span>
+    <span class="n">class_weight</span><span class="o">=</span><span class="s2">"balanced"</span><span class="p">,</span>     <span class="c1"># adjust for class imbalance</span>
     <span class="n">min_coef_threshold</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>     <span class="c1"># drop features with |coefficient| below this</span>
 
     <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
@@ -456,7 +469,7 @@ directly in subsequent training:</p>
 <span class="nb">print</span><span class="p">(</span><span class="n">fs_result</span><span class="o">.</span><span class="n">coef_by_feature</span><span class="p">)</span>
 
 <span class="c1"># Check selection metadata</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Features: </span><span class="si">{</span><span class="n">fs_result</span><span class="o">.</span><span class="n">meta</span><span class="p">[</span><span class="s1">&#39;n_features_in&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">fs_result</span><span class="o">.</span><span class="n">meta</span><span class="p">[</span><span class="s1">&#39;n_features_selected&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Features: </span><span class="si">{</span><span class="n">fs_result</span><span class="o">.</span><span class="n">meta</span><span class="p">[</span><span class="s1">'n_features_in'</span><span class="p">]</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">fs_result</span><span class="o">.</span><span class="n">meta</span><span class="p">[</span><span class="s1">'n_features_selected'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -468,9 +481,9 @@ directly in subsequent training:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
-<span class="n">matches</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;matches.csv&#39;</span><span class="p">)</span>
-<span class="n">left</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;left.csv&#39;</span><span class="p">)</span>
-<span class="n">right</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;right.csv&#39;</span><span class="p">)</span>
+<span class="n">matches</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">'matches.csv'</span><span class="p">)</span>
+<span class="n">left</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">'left.csv'</span><span class="p">)</span>
+<span class="n">right</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">'right.csv'</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -846,9 +859,9 @@ directly in subsequent training:</p>
 <p>5 rows × 21 columns</p>
 </div>
 <p>All three DataFrames have the same number of observations:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Number of observations in matches: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Number of observations in left: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">left</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Number of observations in right: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">right</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Number of observations in matches: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Number of observations in left: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">left</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Number of observations in right: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">right</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Number of observations in matches: 692
@@ -867,16 +880,16 @@ additional match <em>8bf51ba8a0</em>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Add an extra match to simulate a many-to-many relationship</span>
 
 <span class="n">extra_match</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-    <span class="s1">&#39;company_id_left&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;1e87fc75b4&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;company_id_right&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;8bf51ba8a0&#39;</span><span class="p">]</span>
+    <span class="s1">'company_id_left'</span> <span class="p">:</span> <span class="p">[</span><span class="s1">'1e87fc75b4'</span><span class="p">],</span>
+    <span class="s1">'company_id_right'</span> <span class="p">:</span> <span class="p">[</span><span class="s1">'8bf51ba8a0'</span><span class="p">]</span>
 <span class="p">})</span>
 <span class="n">matches</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">matches</span><span class="p">,</span> <span class="n">extra_match</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Now, inspect the modified <code class="docutils literal notranslate"><span class="pre">matches</span></code> dataframe for the affected IDs:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">matches</span><span class="p">[</span>
-    <span class="n">matches</span><span class="p">[</span><span class="s1">&#39;company_id_left&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">&#39;1e87fc75b4&#39;</span><span class="p">,</span> <span class="s1">&#39;810c9c3435&#39;</span><span class="p">])</span> <span class="o">|</span>
-    <span class="n">matches</span><span class="p">[</span><span class="s1">&#39;company_id_right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">&#39;0008e07878&#39;</span><span class="p">,</span> <span class="s1">&#39;8bf51ba8a0&#39;</span><span class="p">])</span>
+    <span class="n">matches</span><span class="p">[</span><span class="s1">'company_id_left'</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">'1e87fc75b4'</span><span class="p">,</span> <span class="s1">'810c9c3435'</span><span class="p">])</span> <span class="o">|</span>
+    <span class="n">matches</span><span class="p">[</span><span class="s1">'company_id_right'</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">'0008e07878'</span><span class="p">,</span> <span class="s1">'8bf51ba8a0'</span><span class="p">])</span>
 <span class="p">]</span>
 </pre></div>
 </div>
@@ -994,7 +1007,7 @@ and <code class="docutils literal notranslate"><span class="pre">right</span></c
 <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">matches</span> <span class="o">=</span> <span class="n">SetupData</span><span class="p">(</span><span class="n">matches</span><span class="o">=</span><span class="n">matches</span><span class="p">)</span><span class="o">.</span><span class="n">data_preparation_cs</span><span class="p">(</span>
     <span class="n">df_left</span><span class="o">=</span><span class="n">left</span><span class="p">,</span>
     <span class="n">df_right</span><span class="o">=</span><span class="n">right</span><span class="p">,</span>
-    <span class="n">unique_id</span><span class="o">=</span><span class="s1">&#39;company_id&#39;</span>
+    <span class="n">unique_id</span><span class="o">=</span><span class="s1">'company_id'</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -1006,12 +1019,12 @@ relationships by checking the relevant company IDs in the updated
 datasets.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Verify the updated matches for the specific company_ids</span>
 
-<span class="n">artificial_group</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;1e87fc75b4&#39;</span><span class="p">,</span> <span class="s1">&#39;810c9c3435&#39;</span><span class="p">,</span> <span class="s1">&#39;0008e07878&#39;</span><span class="p">,</span> <span class="s1">&#39;8bf51ba8a0&#39;</span><span class="p">]</span>
+<span class="n">artificial_group</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'1e87fc75b4'</span><span class="p">,</span> <span class="s1">'810c9c3435'</span><span class="p">,</span> <span class="s1">'0008e07878'</span><span class="p">,</span> <span class="s1">'8bf51ba8a0'</span><span class="p">]</span>
 
 <span class="n">matches_subset</span> <span class="o">=</span> <span class="n">matches</span><span class="p">[</span>
-    <span class="n">matches</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">artificial_group</span><span class="p">)</span> <span class="o">|</span>
-    <span class="n">matches</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">artificial_group</span><span class="p">)</span>
-<span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">])</span>
+    <span class="n">matches</span><span class="p">[</span><span class="s1">'left'</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">artificial_group</span><span class="p">)</span> <span class="o">|</span>
+    <span class="n">matches</span><span class="p">[</span><span class="s1">'right'</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">artificial_group</span><span class="p">)</span>
+<span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">'left'</span><span class="p">,</span> <span class="s1">'right'</span><span class="p">])</span>
 
 <span class="n">matches_subset</span>
 </pre></div>
@@ -1074,8 +1087,8 @@ datasets.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check the corresponding records in the left dataset</span>
 
 <span class="n">left_subset</span> <span class="o">=</span> <span class="n">left</span><span class="p">[</span>
-    <span class="n">left</span><span class="p">[</span><span class="s1">&#39;company_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">artificial_group</span><span class="p">)</span>
-<span class="p">][[</span><span class="s1">&#39;company_id&#39;</span><span class="p">]]</span>
+    <span class="n">left</span><span class="p">[</span><span class="s1">'company_id'</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">artificial_group</span><span class="p">)</span>
+<span class="p">][[</span><span class="s1">'company_id'</span><span class="p">]]</span>
 <span class="n">left_subset</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1113,8 +1126,8 @@ datasets.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check the corresponding records in the right dataset</span>
 
 <span class="n">right_subset</span> <span class="o">=</span> <span class="n">right</span><span class="p">[</span>
-    <span class="n">right</span><span class="p">[</span><span class="s1">&#39;company_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">artificial_group</span><span class="p">)</span>
-<span class="p">][[</span><span class="s1">&#39;company_id&#39;</span><span class="p">]]</span>
+    <span class="n">right</span><span class="p">[</span><span class="s1">'company_id'</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">artificial_group</span><span class="p">)</span>
+<span class="p">][[</span><span class="s1">'company_id'</span><span class="p">]]</span>
 <span class="n">right_subset</span>
 </pre></div>
 </div>
@@ -1153,12 +1166,12 @@ datasets.</p>
 real-world relationships, even when the matching is more complex than a
 simple 1:1 mapping. To prevent the simulated change from affecting
 subsequent steps, we drop the observations associated with these IDs.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">left</span> <span class="o">=</span> <span class="n">left</span><span class="p">[</span><span class="o">~</span><span class="n">left</span><span class="p">[</span><span class="s1">&#39;company_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">artificial_group</span><span class="p">)]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">right</span> <span class="o">=</span> <span class="n">right</span><span class="p">[</span><span class="o">~</span><span class="n">right</span><span class="p">[</span><span class="s1">&#39;company_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">artificial_group</span><span class="p">)]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">left</span> <span class="o">=</span> <span class="n">left</span><span class="p">[</span><span class="o">~</span><span class="n">left</span><span class="p">[</span><span class="s1">'company_id'</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">artificial_group</span><span class="p">)]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">right</span> <span class="o">=</span> <span class="n">right</span><span class="p">[</span><span class="o">~</span><span class="n">right</span><span class="p">[</span><span class="s1">'company_id'</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">artificial_group</span><span class="p">)]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">matches</span> <span class="o">=</span> <span class="n">matches</span><span class="p">[</span>
-    <span class="p">(</span><span class="o">~</span><span class="n">matches</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">artificial_group</span><span class="p">))</span>
+    <span class="p">(</span><span class="o">~</span><span class="n">matches</span><span class="p">[</span><span class="s1">'left'</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">artificial_group</span><span class="p">))</span>
     <span class="o">&amp;</span>
-    <span class="p">(</span><span class="o">~</span><span class="n">matches</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">artificial_group</span><span class="p">))</span>
+    <span class="p">(</span><span class="o">~</span><span class="n">matches</span><span class="p">[</span><span class="s1">'right'</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">artificial_group</span><span class="p">))</span>
 <span class="p">]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>

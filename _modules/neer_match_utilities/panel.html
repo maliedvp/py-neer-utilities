@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.panel &mdash; Neer Match Utilities 1.0.2 documentation</title>
+  <title>neer_match_utilities.panel &mdash; Neer Match Utilities 1.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/extra.css?v=503a7970" />
@@ -15,7 +15,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=1ed6394b"></script>
+      <script src="../../_static/documentation_options.js?v=fc837d61"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -156,6 +156,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.SuggestMixin.suggest"><code class="docutils literal notranslate"><span class="pre">SuggestMixin.suggest()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.classification_metrics"><code class="docutils literal notranslate"><span class="pre">classification_metrics()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../baseline_training.html">Baseline Training</a><ul>
@@ -257,9 +258,20 @@
 <li class="toctree-l1"><a class="reference internal" href="../../similarity_features.html">Similarity Features</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.__init__"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.pairs"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.pairs()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.pairwise_similarity_dataframe"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.pairwise_similarity_dataframe()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__init__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__len__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__len__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.chunks"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.chunks()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.frame"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.frame()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.match_flags"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.match_flags()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.rows"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.rows()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.subsample_non_match_positions"><code class="docutils literal notranslate"><span class="pre">subsample_non_match_positions()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.subsample_non_matches"><code class="docutils literal notranslate"><span class="pre">subsample_non_matches()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.to_X_y"><code class="docutils literal notranslate"><span class="pre">to_X_y()</span></code></a></li>
 </ul>
@@ -271,6 +283,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../custom_similarities.html#neer_match_utilities.custom_similarities.CustomSimilarities.notzero"><code class="docutils literal notranslate"><span class="pre">CustomSimilarities.notzero()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../custom_similarities.html#neer_match_utilities.custom_similarities.register_similarities"><code class="docutils literal notranslate"><span class="pre">register_similarities()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -316,26 +329,26 @@
 <div class="viewcode-block" id="SetupData">
 <a class="viewcode-back" href="../../panel.html#neer_match_utilities.panel.SetupData">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SetupData</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A class for processing and preparing data with overlapping matches and panel relationships.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    matches : list</span>
 <span class="sd">        A list of tuples representing matches.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="SetupData.__init__">
 <a class="viewcode-back" href="../../panel.html#neer_match_utilities.panel.SetupData.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matches</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Initialize the SetupData class.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        matches : list, optional</span>
 <span class="sd">            A list of tuples representing matches. Defaults to an empty list.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">matches</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">matches</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">matches</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
@@ -343,18 +356,18 @@
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">matches</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">matches</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">matches</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">))</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">dfm</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matches</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">])</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dfm</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matches</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'left'</span><span class="p">,</span> <span class="s1">'right'</span><span class="p">])</span></div>
 
 
 <div class="viewcode-block" id="SetupData.adjust_overlap">
 <a class="viewcode-back" href="../../panel.html#neer_match_utilities.panel.SetupData.adjust_overlap">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">adjust_overlap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dfm</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Adjusts the overlap in the matches DataFrame by generating additional</span>
 <span class="sd">        ordered pairs from connected components in the match graph.</span>
 
-<span class="sd">        This function takes a DataFrame containing match pairs in the &#39;left&#39; and</span>
-<span class="sd">        &#39;right&#39; columns. It constructs a full connection graph from these matches,</span>
+<span class="sd">        This function takes a DataFrame containing match pairs in the 'left' and</span>
+<span class="sd">        'right' columns. It constructs a full connection graph from these matches,</span>
 <span class="sd">        computes connected components using depth-first search (DFS), and then,</span>
 <span class="sd">        for each connected component with more than one element, generates all</span>
 <span class="sd">        ordered pairs (i.e. permutations) of distinct IDs. These new pairs are</span>
@@ -363,7 +376,7 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        dfm : pd.DataFrame</span>
-<span class="sd">            A DataFrame with columns &#39;left&#39; and &#39;right&#39; representing the matching</span>
+<span class="sd">            A DataFrame with columns 'left' and 'right' representing the matching</span>
 <span class="sd">            pairs, where each entry is a unique identifier.</span>
 
 <span class="sd">        Returns</span>
@@ -382,13 +395,13 @@
 <span class="sd">          ensuring that only pairs of distinct IDs are created.</span>
 <span class="sd">        - The new pairs are simply appended to the original DataFrame without</span>
 <span class="sd">          dropping duplicates.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="c1"># Build the full connection graph from all matches</span>
-        <span class="n">all_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">dfm</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">dfm</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]))</span>
+        <span class="n">all_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">dfm</span><span class="p">[</span><span class="s1">'left'</span><span class="p">])</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">dfm</span><span class="p">[</span><span class="s1">'right'</span><span class="p">]))</span>
         <span class="n">graph</span> <span class="o">=</span> <span class="p">{</span><span class="n">id_</span><span class="p">:</span> <span class="nb">set</span><span class="p">()</span> <span class="k">for</span> <span class="n">id_</span> <span class="ow">in</span> <span class="n">all_ids</span><span class="p">}</span>
         <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">dfm</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-            <span class="n">l</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span>
+            <span class="n">l</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">'left'</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s1">'right'</span><span class="p">]</span>
             <span class="n">graph</span><span class="p">[</span><span class="n">l</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
             <span class="n">graph</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
         
@@ -414,7 +427,7 @@
                 <span class="c1"># This generates both (A,B) and (B,A) for all distinct A and B.</span>
                 <span class="n">new_pairs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">permutations</span><span class="p">(</span><span class="n">comp</span><span class="p">,</span> <span class="mi">2</span><span class="p">)))</span>
         
-        <span class="n">new_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">new_pairs</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">])</span>
+        <span class="n">new_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">new_pairs</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'left'</span><span class="p">,</span> <span class="s1">'right'</span><span class="p">])</span>
 
         <span class="c1"># Append new rows to the original dfm without resetting its order:</span>
         <span class="n">df_combi</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">dfm</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">new_df</span><span class="p">])</span>
@@ -426,12 +439,12 @@
 <a class="viewcode-back" href="../../panel.html#neer_match_utilities.panel.SetupData.drop_repetitions">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">drop_repetitions</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Remove duplicate pairs in the DataFrame irrespective of the order of elements.</span>
 
-<span class="sd">        This function treats each pair in the &#39;left&#39; and &#39;right&#39; columns as unordered.</span>
-<span class="sd">        It creates a temporary column &#39;sorted_pair&#39; that contains a sorted tuple of the </span>
-<span class="sd">        &#39;left&#39; and &#39;right&#39; values for each row. For example, the pairs (A, B) and (B, A)</span>
+<span class="sd">        This function treats each pair in the 'left' and 'right' columns as unordered.</span>
+<span class="sd">        It creates a temporary column 'sorted_pair' that contains a sorted tuple of the </span>
+<span class="sd">        'left' and 'right' values for each row. For example, the pairs (A, B) and (B, A)</span>
 <span class="sd">        will both be transformed into (A, B), and only one instance will be retained.</span>
 <span class="sd">        The function then drops duplicate rows based on this sorted pair and removes </span>
 <span class="sd">        the temporary column before returning the result.</span>
@@ -439,18 +452,18 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        df : pd.DataFrame</span>
-<span class="sd">            A DataFrame containing at least the columns &#39;left&#39; and &#39;right&#39;, which represent</span>
+<span class="sd">            A DataFrame containing at least the columns 'left' and 'right', which represent</span>
 <span class="sd">            paired elements.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        pd.DataFrame</span>
 <span class="sd">            A DataFrame in which duplicate pairs (ignoring order) have been removed.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
-        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;sorted_pair&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">([</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]])),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">&#39;left&#39;</span><span class="p">,</span><span class="s1">&#39;right&#39;</span><span class="p">])</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sorted_pair&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sorted_pair&#39;</span><span class="p">])</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">'sorted_pair'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">([</span><span class="n">row</span><span class="p">[</span><span class="s1">'left'</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s1">'right'</span><span class="p">]])),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">'left'</span><span class="p">,</span><span class="s1">'right'</span><span class="p">])</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">'sorted_pair'</span><span class="p">])</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'sorted_pair'</span><span class="p">])</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">df</span></div>
@@ -459,7 +472,7 @@
 <div class="viewcode-block" id="SetupData.create_connected_groups">
 <a class="viewcode-back" href="../../panel.html#neer_match_utilities.panel.SetupData.create_connected_groups">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_connected_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">matches</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a list of lists where sublists contain connected values as one group.</span>
 
 <span class="sd">        Parameters</span>
@@ -473,13 +486,15 @@
 <span class="sd">        -------</span>
 <span class="sd">        list of list of int</span>
 <span class="sd">            A list of lists with connected values grouped together.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="n">value_to_key</span> <span class="o">=</span> <span class="p">{</span><span class="n">val</span><span class="p">:</span> <span class="n">key</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">df_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">values</span><span class="p">}</span>
         <span class="n">connections</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
             <span class="n">key_left</span><span class="p">,</span> <span class="n">key_right</span> <span class="o">=</span> <span class="n">value_to_key</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">value_to_key</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">key_left</span> <span class="ow">and</span> <span class="n">key_right</span><span class="p">:</span>
+            <span class="c1"># Both values belong to some group. A group key such as 0 or ""</span>
+            <span class="c1"># is falsy, so test for None rather than for truthiness.</span>
+            <span class="k">if</span> <span class="n">key_left</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">key_right</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">key_left</span> <span class="ow">in</span> <span class="n">connections</span><span class="p">:</span>
                     <span class="n">connections</span><span class="p">[</span><span class="n">key_left</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key_right</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
@@ -521,7 +536,7 @@
 <div class="viewcode-block" id="SetupData.panel_preparation">
 <a class="viewcode-back" href="../../panel.html#neer_match_utilities.panel.SetupData.panel_preparation">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">panel_preparation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dfm</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">df_panel</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">unique_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">panel_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Generate combinations of IDs for each panel and append them to the DataFrame.</span>
 
 <span class="sd">        Parameters</span>
@@ -539,7 +554,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        pd.DataFrame</span>
 <span class="sd">            Updated DataFrame with appended combinations.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="n">df_dict</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -553,7 +568,7 @@
         <span class="p">)</span>
         <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">:</span>
             <span class="n">sorted_group</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
-            <span class="n">combinations_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">combinations</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">])</span>
+            <span class="n">combinations_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">combinations</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'left'</span><span class="p">,</span> <span class="s1">'right'</span><span class="p">])</span>
             <span class="n">dfm</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">dfm</span><span class="p">,</span> <span class="n">combinations_df</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">dfm</span></div>
@@ -566,7 +581,7 @@
 <div class="viewcode-block" id="SetupData.data_preparation_panel">
 <a class="viewcode-back" href="../../panel.html#neer_match_utilities.panel.SetupData.data_preparation_panel">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">data_preparation_panel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df_panel</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">unique_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">panel_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Prepare data by handling overlaps, panel combinations, and duplicates.</span>
 
 <span class="sd">        This function converts the unique identifier column to a numeric type (if possible),</span>
@@ -587,10 +602,10 @@
 <span class="sd">        -------</span>
 <span class="sd">        tuple</span>
 <span class="sd">            A tuple of three DataFrames: left, right, and the final matches.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Convert unique_id to numeric if possible, else to string.</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">df_panel</span><span class="p">[</span><span class="n">unique_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">df_panel</span><span class="p">[</span><span class="n">unique_id</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;raise&#39;</span><span class="p">)</span>
+            <span class="n">df_panel</span><span class="p">[</span><span class="n">unique_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">df_panel</span><span class="p">[</span><span class="n">unique_id</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">'raise'</span><span class="p">)</span>
             <span class="n">stabile_dtype</span> <span class="o">=</span> <span class="n">df_panel</span><span class="p">[</span><span class="n">unique_id</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
             <span class="n">df_panel</span><span class="p">[</span><span class="n">unique_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_panel</span><span class="p">[</span><span class="n">unique_id</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
@@ -605,27 +620,27 @@
         <span class="n">dfm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">drop_repetitions</span><span class="p">(</span><span class="n">dfm</span><span class="p">)</span>
 
         <span class="c1"># Define left and right directly from the full set of matches.</span>
-        <span class="n">unique_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">dfm</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">dfm</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]))</span>
+        <span class="n">unique_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">dfm</span><span class="p">[</span><span class="s1">'left'</span><span class="p">])</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">dfm</span><span class="p">[</span><span class="s1">'right'</span><span class="p">]))</span>
         <span class="n">combined</span> <span class="o">=</span> <span class="n">df_panel</span><span class="p">[</span><span class="n">df_panel</span><span class="p">[</span><span class="n">unique_id</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">unique_ids</span><span class="p">)]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
 
         <span class="c1"># Prepare left DataFrame, drop panel_id column if provided, convert type, sort by unique_id.</span>
-        <span class="n">left</span> <span class="o">=</span> <span class="n">combined</span><span class="p">[</span><span class="n">combined</span><span class="p">[</span><span class="n">unique_id</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">dfm</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">])]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">left</span> <span class="o">=</span> <span class="n">combined</span><span class="p">[</span><span class="n">combined</span><span class="p">[</span><span class="n">unique_id</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">dfm</span><span class="p">[</span><span class="s1">'left'</span><span class="p">])]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">panel_id</span><span class="p">:</span>
             <span class="n">left</span> <span class="o">=</span> <span class="n">left</span><span class="p">[[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">left</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span> <span class="o">!=</span> <span class="n">panel_id</span><span class="p">]]</span>
         <span class="n">left</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">unique_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">left</span><span class="p">[</span><span class="n">unique_id</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">stabile_dtype</span><span class="p">)</span>
         <span class="n">left</span> <span class="o">=</span> <span class="n">left</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="n">unique_id</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="c1"># Prepare right DataFrame similarly.</span>
-        <span class="n">right</span> <span class="o">=</span> <span class="n">combined</span><span class="p">[</span><span class="n">combined</span><span class="p">[</span><span class="n">unique_id</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">dfm</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">])]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">right</span> <span class="o">=</span> <span class="n">combined</span><span class="p">[</span><span class="n">combined</span><span class="p">[</span><span class="n">unique_id</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">dfm</span><span class="p">[</span><span class="s1">'right'</span><span class="p">])]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">panel_id</span><span class="p">:</span>
             <span class="n">right</span> <span class="o">=</span> <span class="n">right</span><span class="p">[[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">right</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span> <span class="o">!=</span> <span class="n">panel_id</span><span class="p">]]</span>
         <span class="n">right</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">unique_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">right</span><span class="p">[</span><span class="n">unique_id</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">stabile_dtype</span><span class="p">)</span>
         <span class="n">right</span> <span class="o">=</span> <span class="n">right</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="n">unique_id</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        it is (correctly) possible that some observations now are included in left and right. (see test/test_setup.py)</span>
 <span class="sd">        identify them and add them to the dfm</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="n">lr_list</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
             <span class="nb">list</span><span class="p">(</span>
@@ -639,16 +654,16 @@
             <span class="p">[</span>
                 <span class="n">dfm</span><span class="p">,</span>
                 <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-                    <span class="s1">&#39;left&#39;</span> <span class="p">:</span> <span class="n">lr_list</span><span class="p">,</span>
-                    <span class="s1">&#39;right&#39;</span> <span class="p">:</span> <span class="n">lr_list</span>
+                    <span class="s1">'left'</span> <span class="p">:</span> <span class="n">lr_list</span><span class="p">,</span>
+                    <span class="s1">'right'</span> <span class="p">:</span> <span class="n">lr_list</span>
                 <span class="p">})</span>
             <span class="p">],</span>
             <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
             <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span>
         <span class="p">)</span>
 
-        <span class="n">dfm</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dfm</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">stabile_dtype</span><span class="p">)</span>
-        <span class="n">dfm</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dfm</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">stabile_dtype</span><span class="p">)</span>
+        <span class="n">dfm</span><span class="p">[</span><span class="s1">'left'</span><span class="p">]</span> <span class="o">=</span> <span class="n">dfm</span><span class="p">[</span><span class="s1">'left'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">stabile_dtype</span><span class="p">)</span>
+        <span class="n">dfm</span><span class="p">[</span><span class="s1">'right'</span><span class="p">]</span> <span class="o">=</span> <span class="n">dfm</span><span class="p">[</span><span class="s1">'right'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">stabile_dtype</span><span class="p">)</span>
 
 
         <span class="k">return</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">dfm</span></div>
@@ -659,7 +674,7 @@
 <div class="viewcode-block" id="GenerateID">
 <a class="viewcode-back" href="../../panel.html#neer_match_utilities.panel.GenerateID">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">GenerateID</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A class to generate and harmonize unique IDs across time periods for panel data.</span>
 
 <span class="sd">    Methods</span>
@@ -674,7 +689,7 @@
 <span class="sd">        Assign unique IDs to the harmonized IDs.</span>
 <span class="sd">    execute():</span>
 <span class="sd">        Execute the full ID generation and harmonization process.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="GenerateID.__init__">
 <a class="viewcode-back" href="../../panel.html#neer_match_utilities.panel.GenerateID.__init__">[docs]</a>
@@ -684,12 +699,12 @@
         <span class="n">panel_var</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
         <span class="n">time_var</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
         <span class="n">model</span><span class="p">,</span> 
-        <span class="n">similarity_map</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="s2">&quot;SimilarityMap&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+        <span class="n">similarity_map</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="s2">"SimilarityMap"</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
         <span class="n">prediction_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="mf">0.9</span><span class="p">,</span>
         <span class="n">subgroups</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">relation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;m:m&#39;</span>
+        <span class="n">relation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'m:m'</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Initialize the GenerateID class.</span>
 
 <span class="sd">        Parameters</span>
@@ -709,25 +724,25 @@
 <span class="sd">        prediction_threshold : float, optional</span>
 <span class="sd">            Threshold for predictions. Defaults to 0.9.</span>
 <span class="sd">        relation : str, optional</span>
-<span class="sd">            Relationship between observations in cross sectional data. Default is &#39;m:m&#39;</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">            Relationship between observations in cross sectional data. Default is 'm:m'</span>
+<span class="sd">        """</span>
 
         <span class="n">subgroups</span> <span class="o">=</span> <span class="n">subgroups</span> <span class="ow">or</span> <span class="p">[]</span>
 
         <span class="k">if</span> <span class="n">df_panel</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">duplicated</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The index of df_panel contains duplicate entries.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The index of df_panel contains duplicate entries."</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">panel_var</span> <span class="o">=</span> <span class="n">panel_var</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time_var</span> <span class="o">=</span> <span class="n">time_var</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">subgroups</span> <span class="o">=</span> <span class="n">subgroups</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
     
-        <span class="c1"># Use the provided similarity_map, or if not provided, take the model&#39;s own similarity_map.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">similarity_map</span> <span class="o">=</span> <span class="n">similarity_map</span> <span class="k">if</span> <span class="n">similarity_map</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;similarity_map&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="c1"># Use the provided similarity_map, or if not provided, take the model's own similarity_map.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">similarity_map</span> <span class="o">=</span> <span class="n">similarity_map</span> <span class="k">if</span> <span class="n">similarity_map</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"similarity_map"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     
         <span class="c1"># Resolve default prediction_threshold if None</span>
         <span class="k">if</span> <span class="n">prediction_threshold</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">bt</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;best_threshold_&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">bt</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"best_threshold_"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">bt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">prediction_threshold</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">bt</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -742,7 +757,7 @@
             <span class="n">field_keys</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">similarity_map</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
             <span class="n">field_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">similarity_map</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">similarity_map</span><span class="p">,</span> <span class="s2">&quot;instructions&quot;</span><span class="p">):</span>
+        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">similarity_map</span><span class="p">,</span> <span class="s2">"instructions"</span><span class="p">):</span>
             <span class="n">field_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">similarity_map</span><span class="o">.</span><span class="n">instructions</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">field_keys</span> <span class="o">=</span> <span class="p">[]</span>
@@ -757,14 +772,14 @@
 <div class="viewcode-block" id="GenerateID.group_by_subgroups">
 <a class="viewcode-back" href="../../panel.html#neer_match_utilities.panel.GenerateID.group_by_subgroups">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">group_by_subgroups</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Group the panel data into subgroups.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        pd.core.groupby.generic.DataFrameGroupBy</span>
 <span class="sd">            Grouped dataframe by subgroups.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_panel</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subgroups</span><span class="p">)</span></div>
 
@@ -772,20 +787,20 @@
 <div class="viewcode-block" id="GenerateID.relations_left_right">
 <a class="viewcode-back" href="../../panel.html#neer_match_utilities.panel.GenerateID.relations_left_right">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">relations_left_right</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">relation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Apply validation rules to enforce relationships between matched observations.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        df : pd.DataFrame</span>
-<span class="sd">            DataFrame containing &#39;left&#39;, &#39;right&#39;, and &#39;prediction&#39; columns.</span>
+<span class="sd">            DataFrame containing 'left', 'right', and 'prediction' columns.</span>
 <span class="sd">        relation : str, optional</span>
 <span class="sd">            Validation mode for relationships. If None, defaults to `self.relation`.</span>
 <span class="sd">            Options:</span>
-<span class="sd">            - &#39;m:m&#39; : Many-to-many, no duplicates removed.</span>
-<span class="sd">            - &#39;1:m&#39; : Unique &#39;left&#39; values.</span>
-<span class="sd">            - &#39;m:1&#39; : Unique &#39;right&#39; values.</span>
-<span class="sd">            - &#39;1:1&#39; : Unique &#39;left&#39; and &#39;right&#39; values.</span>
+<span class="sd">            - 'm:m' : Many-to-many, no duplicates removed.</span>
+<span class="sd">            - '1:m' : Unique 'left' values.</span>
+<span class="sd">            - 'm:1' : Unique 'right' values.</span>
+<span class="sd">            - '1:1' : Unique 'left' and 'right' values.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -795,43 +810,43 @@
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        ValueError</span>
-<span class="sd">            If `relation` is not one of [&#39;m:m&#39;, &#39;1:m&#39;, &#39;m:1&#39;, &#39;1:1&#39;].</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">            If `relation` is not one of ['m:m', '1:m', 'm:1', '1:1'].</span>
+<span class="sd">        """</span>
 
         <span class="n">relation</span> <span class="o">=</span> <span class="n">relation</span> <span class="k">if</span> <span class="n">relation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">relation</span>
 
-        <span class="k">if</span> <span class="n">relation</span> <span class="o">==</span> <span class="s1">&#39;m:m&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">relation</span> <span class="o">==</span> <span class="s1">'m:m'</span><span class="p">:</span>
             <span class="k">pass</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
-                <span class="n">by</span> <span class="o">=</span> <span class="s1">&#39;prediction&#39;</span><span class="p">,</span>
+                <span class="n">by</span> <span class="o">=</span> <span class="s1">'prediction'</span><span class="p">,</span>
                 <span class="n">ascending</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                 <span class="n">ignore_index</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">relation</span> <span class="o">==</span> <span class="s1">&#39;1:m&#39;</span><span class="p">:</span>        
+            <span class="k">if</span> <span class="n">relation</span> <span class="o">==</span> <span class="s1">'1:m'</span><span class="p">:</span>        
                 <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span>
-                    <span class="n">subset</span> <span class="o">=</span> <span class="s1">&#39;left&#39;</span><span class="p">,</span>
-                    <span class="n">keep</span><span class="o">=</span><span class="s1">&#39;first&#39;</span>
+                    <span class="n">subset</span> <span class="o">=</span> <span class="s1">'left'</span><span class="p">,</span>
+                    <span class="n">keep</span><span class="o">=</span><span class="s1">'first'</span>
                 <span class="p">)</span>
-            <span class="k">elif</span> <span class="n">relation</span> <span class="o">==</span> <span class="s1">&#39;m:1&#39;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">relation</span> <span class="o">==</span> <span class="s1">'m:1'</span><span class="p">:</span>
                 <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span>
-                    <span class="n">subset</span> <span class="o">=</span> <span class="s1">&#39;right&#39;</span><span class="p">,</span>
-                    <span class="n">keep</span><span class="o">=</span><span class="s1">&#39;first&#39;</span>
+                    <span class="n">subset</span> <span class="o">=</span> <span class="s1">'right'</span><span class="p">,</span>
+                    <span class="n">keep</span><span class="o">=</span><span class="s1">'first'</span>
                 <span class="p">)</span>
-            <span class="k">elif</span> <span class="n">relation</span> <span class="o">==</span> <span class="s1">&#39;1:1&#39;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">relation</span> <span class="o">==</span> <span class="s1">'1:1'</span><span class="p">:</span>
                 <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span>
-                    <span class="n">subset</span> <span class="o">=</span> <span class="s1">&#39;left&#39;</span><span class="p">,</span>
-                    <span class="n">keep</span><span class="o">=</span><span class="s1">&#39;first&#39;</span>
+                    <span class="n">subset</span> <span class="o">=</span> <span class="s1">'left'</span><span class="p">,</span>
+                    <span class="n">keep</span><span class="o">=</span><span class="s1">'first'</span>
                 <span class="p">)</span>
                 <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span>
-                    <span class="n">subset</span> <span class="o">=</span> <span class="s1">&#39;right&#39;</span><span class="p">,</span>
-                    <span class="n">keep</span><span class="o">=</span><span class="s1">&#39;first&#39;</span>
+                    <span class="n">subset</span> <span class="o">=</span> <span class="s1">'right'</span><span class="p">,</span>
+                    <span class="n">keep</span><span class="o">=</span><span class="s1">'first'</span>
                 <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Invalid value for `relation`: &#39;</span><span class="si">{</span><span class="n">relation</span><span class="si">}</span><span class="s2">&#39;. &quot;</span>
-                    <span class="s2">&quot;It must be one of [&#39;m:m&#39;, &#39;1:m&#39;, &#39;m:1&#39;, &#39;1:1&#39;].&quot;</span>
+                    <span class="sa">f</span><span class="s2">"Invalid value for `relation`: '</span><span class="si">{</span><span class="n">relation</span><span class="si">}</span><span class="s2">'. "</span>
+                    <span class="s2">"It must be one of ['m:m', '1:m', 'm:1', '1:1']."</span>
                 <span class="p">)</span>
 
             <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -848,7 +863,7 @@
 <div class="viewcode-block" id="GenerateID.generate_suggestions">
 <a class="viewcode-back" href="../../panel.html#neer_match_utilities.panel.GenerateID.generate_suggestions">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">generate_suggestions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df_slice</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Generate ID suggestions for consecutive time periods.</span>
 
 <span class="sd">        Parameters</span>
@@ -862,19 +877,24 @@
 <span class="sd">            A tuple containing:</span>
 <span class="sd">            - pd.DataFrame: A concatenated dataframe of suggestions.</span>
 <span class="sd">            - list of int: A list of periods.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="n">periods</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">df_slice</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">time_var</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
         <span class="n">suggestions_dict</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">period</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">periods</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Processing periods </span><span class="si">{</span><span class="n">period</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">periods</span><span class="p">[</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> at </span><span class="si">{</span><span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Processing periods </span><span class="si">{</span><span class="n">period</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">periods</span><span class="p">[</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> at </span><span class="si">{</span><span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-            <span class="n">left</span> <span class="o">=</span> <span class="n">df_slice</span><span class="p">[</span><span class="n">df_slice</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">time_var</span><span class="p">]</span> <span class="o">==</span> <span class="n">period</span><span class="p">]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-            <span class="n">right</span> <span class="o">=</span> <span class="n">df_slice</span><span class="p">[</span><span class="n">df_slice</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">time_var</span><span class="p">]</span> <span class="o">==</span> <span class="n">periods</span><span class="p">[</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">left</span> <span class="o">=</span> <span class="n">df_slice</span><span class="p">[</span><span class="n">df_slice</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">time_var</span><span class="p">]</span> <span class="o">==</span> <span class="n">period</span><span class="p">]</span>
+            <span class="n">right</span> <span class="o">=</span> <span class="n">df_slice</span><span class="p">[</span><span class="n">df_slice</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">time_var</span><span class="p">]</span> <span class="o">==</span> <span class="n">periods</span><span class="p">[</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]]</span>
 
-            <span class="n">suggestions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_suggest</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-            <span class="n">suggestions</span> <span class="o">=</span> <span class="n">suggestions</span><span class="p">[</span><span class="n">suggestions</span><span class="p">[</span><span class="s1">&#39;prediction&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prediction_threshold</span><span class="p">]</span>
+            <span class="c1"># The model sees each period's rows by position, 0..n-1. Their index</span>
+            <span class="c1"># labels are kept apart, not in a reset_index column, whose name</span>
+            <span class="c1"># would depend on the name of the index.</span>
+            <span class="n">suggestions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_suggest</span><span class="p">(</span>
+                <span class="n">left</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">right</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">count</span><span class="o">=</span><span class="mi">1</span>
+            <span class="p">)</span>
+            <span class="n">suggestions</span> <span class="o">=</span> <span class="n">suggestions</span><span class="p">[</span><span class="n">suggestions</span><span class="p">[</span><span class="s1">'prediction'</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prediction_threshold</span><span class="p">]</span>
 
             <span class="n">suggestions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relations_left_right</span><span class="p">(</span>
                   <span class="n">df</span> <span class="o">=</span> <span class="n">suggestions</span><span class="p">,</span>
@@ -882,32 +902,32 @@
             <span class="p">)</span>
 
             <span class="n">suggestions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
-                <span class="n">left</span><span class="p">[[</span><span class="s1">&#39;index&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;index&#39;</span><span class="p">:</span> <span class="s1">&#39;index_left&#39;</span><span class="p">}),</span>
-                <span class="n">suggestions</span><span class="p">,</span> <span class="n">left_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s1">&#39;left&#39;</span>
+                <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'index_left'</span><span class="p">:</span> <span class="n">left</span><span class="o">.</span><span class="n">index</span><span class="p">}),</span>
+                <span class="n">suggestions</span><span class="p">,</span> <span class="n">left_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s1">'left'</span>
             <span class="p">)</span>
             <span class="n">suggestions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
                 <span class="n">suggestions</span><span class="p">,</span>
-                <span class="n">right</span><span class="p">[[</span><span class="s1">&#39;index&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;index&#39;</span><span class="p">:</span> <span class="s1">&#39;index_right&#39;</span><span class="p">}),</span>
-                <span class="n">left_on</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="n">right_index</span><span class="o">=</span><span class="kc">True</span>
+                <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'index_right'</span><span class="p">:</span> <span class="n">right</span><span class="o">.</span><span class="n">index</span><span class="p">}),</span>
+                <span class="n">left_on</span><span class="o">=</span><span class="s1">'right'</span><span class="p">,</span> <span class="n">right_index</span><span class="o">=</span><span class="kc">True</span>
             <span class="p">)</span>
 
-            <span class="n">suggestions</span><span class="p">[</span><span class="s1">&#39;period_left&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">period</span>
-            <span class="n">suggestions</span><span class="p">[</span><span class="s1">&#39;period_right&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">periods</span><span class="p">[</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
-            <span class="n">suggestions</span><span class="p">[</span><span class="s1">&#39;periods_compared&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">period</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">periods</span><span class="p">[</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">suggestions</span><span class="p">[</span><span class="s1">'period_left'</span><span class="p">]</span> <span class="o">=</span> <span class="n">period</span>
+            <span class="n">suggestions</span><span class="p">[</span><span class="s1">'period_right'</span><span class="p">]</span> <span class="o">=</span> <span class="n">periods</span><span class="p">[</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">suggestions</span><span class="p">[</span><span class="s1">'periods_compared'</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">period</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">periods</span><span class="p">[</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
 
-            <span class="n">suggestions</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">suggestions</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'left'</span><span class="p">,</span> <span class="s1">'right'</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="n">suggestions_dict</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">suggestions</span>
 
         <span class="k">if</span> <span class="n">suggestions_dict</span><span class="p">:</span>
             <span class="n">suggestions_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">suggestions_dict</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">suggestions_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span>
-                <span class="s1">&#39;index_left&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;prediction&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;index_right&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;period_left&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;period_right&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;periods_compared&#39;</span>
+                <span class="s1">'index_left'</span><span class="p">,</span>
+                <span class="s1">'prediction'</span><span class="p">,</span>
+                <span class="s1">'index_right'</span><span class="p">,</span>
+                <span class="s1">'period_left'</span><span class="p">,</span>
+                <span class="s1">'period_right'</span><span class="p">,</span>
+                <span class="s1">'periods_compared'</span>
             <span class="p">])</span>
 
         <span class="k">return</span> <span class="n">suggestions_df</span><span class="p">,</span> <span class="n">periods</span></div>
@@ -916,7 +936,7 @@
 <div class="viewcode-block" id="GenerateID.harmonize_ids">
 <a class="viewcode-back" href="../../panel.html#neer_match_utilities.panel.GenerateID.harmonize_ids">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">harmonize_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suggestions</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">periods</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">original_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Harmonize IDs across time periods.</span>
 
 <span class="sd">        Parameters</span>
@@ -932,24 +952,30 @@
 <span class="sd">        -------</span>
 <span class="sd">        pd.DataFrame</span>
 <span class="sd">            Harmonized ID mapping.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="n">unique_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">original_df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
 
         <span class="n">id_mapping</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-            <span class="s1">&#39;index&#39;</span><span class="p">:</span> <span class="n">unique_ids</span><span class="p">,</span>
-            <span class="s1">&#39;index_harm&#39;</span><span class="p">:</span> <span class="n">unique_ids</span>
+            <span class="s1">'index'</span><span class="p">:</span> <span class="n">unique_ids</span><span class="p">,</span>
+            <span class="s1">'index_harm'</span><span class="p">:</span> <span class="n">unique_ids</span>
         <span class="p">})</span>
 
         <span class="k">for</span> <span class="n">period</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">periods</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-            <span class="n">replacement_map</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">id_mapping</span><span class="p">[</span><span class="s1">&#39;index&#39;</span><span class="p">],</span> <span class="n">id_mapping</span><span class="p">[</span><span class="s1">&#39;index_harm&#39;</span><span class="p">]))</span>
-            <span class="n">temp_df</span> <span class="o">=</span> <span class="n">suggestions</span><span class="p">[</span><span class="n">suggestions</span><span class="p">[</span><span class="s1">&#39;period_right&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">period</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">replacement_map</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">id_mapping</span><span class="p">[</span><span class="s1">'index'</span><span class="p">],</span> <span class="n">id_mapping</span><span class="p">[</span><span class="s1">'index_harm'</span><span class="p">]))</span>
+            <span class="n">temp_df</span> <span class="o">=</span> <span class="n">suggestions</span><span class="p">[</span><span class="n">suggestions</span><span class="p">[</span><span class="s1">'period_right'</span><span class="p">]</span> <span class="o">==</span> <span class="n">period</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
-            <span class="n">temp_df</span><span class="p">[</span><span class="s1">&#39;id_left_harm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_df</span><span class="p">[</span><span class="s1">&#39;index_left&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">replacement_map</span><span class="p">)</span>
-            <span class="n">temp_df</span><span class="p">[</span><span class="s1">&#39;id_right_harm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_df</span><span class="p">[</span><span class="s1">&#39;index_right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">replacement_map</span><span class="p">)</span>
+            <span class="n">temp_df</span><span class="p">[</span><span class="s1">'id_left_harm'</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_df</span><span class="p">[</span><span class="s1">'index_left'</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">replacement_map</span><span class="p">)</span>
+            <span class="n">temp_df</span><span class="p">[</span><span class="s1">'id_right_harm'</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_df</span><span class="p">[</span><span class="s1">'index_right'</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">replacement_map</span><span class="p">)</span>
 
-            <span class="n">update_map</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">temp_df</span><span class="p">[</span><span class="s1">&#39;id_right_harm&#39;</span><span class="p">],</span> <span class="n">temp_df</span><span class="p">[</span><span class="s1">&#39;id_left_harm&#39;</span><span class="p">]))</span>
-            <span class="n">id_mapping</span><span class="p">[</span><span class="s1">&#39;index_harm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">id_mapping</span><span class="p">[</span><span class="s1">&#39;index_harm&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">update_map</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">id_mapping</span><span class="p">[</span><span class="s1">&#39;index_harm&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+            <span class="n">update_map</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">temp_df</span><span class="p">[</span><span class="s1">'id_right_harm'</span><span class="p">],</span> <span class="n">temp_df</span><span class="p">[</span><span class="s1">'id_left_harm'</span><span class="p">]))</span>
+
+            <span class="c1"># Replace only the remapped entries, so that labels keep their type.</span>
+            <span class="c1"># map/fillna/astype(int) truncated float labels -- 0.1 and 0.2 both</span>
+            <span class="c1"># became 0, merging two entities -- and rejected string labels.</span>
+            <span class="n">harm</span> <span class="o">=</span> <span class="n">id_mapping</span><span class="p">[</span><span class="s1">'index_harm'</span><span class="p">]</span>
+            <span class="n">remapped</span> <span class="o">=</span> <span class="n">harm</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">update_map</span><span class="p">))</span>
+            <span class="n">id_mapping</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">remapped</span><span class="p">,</span> <span class="s1">'index_harm'</span><span class="p">]</span> <span class="o">=</span> <span class="n">harm</span><span class="p">[</span><span class="n">remapped</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">update_map</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">id_mapping</span></div>
 
@@ -957,7 +983,7 @@
 <div class="viewcode-block" id="GenerateID.assign_ids">
 <a class="viewcode-back" href="../../panel.html#neer_match_utilities.panel.GenerateID.assign_ids">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">assign_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_mapping</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Assign unique IDs to the harmonized IDs.</span>
 
 <span class="sd">        Parameters</span>
@@ -969,27 +995,27 @@
 <span class="sd">        -------</span>
 <span class="sd">        pd.DataFrame</span>
 <span class="sd">            Dataframe with assigned unique IDs.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
-        <span class="n">unique_indices</span> <span class="o">=</span> <span class="n">id_mapping</span><span class="p">[</span><span class="s1">&#39;index_harm&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+        <span class="n">unique_indices</span> <span class="o">=</span> <span class="n">id_mapping</span><span class="p">[</span><span class="s1">'index_harm'</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
         <span class="n">id_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">idx</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">unique_indices</span><span class="p">}</span>
 
-        <span class="n">id_mapping</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">panel_var</span><span class="p">]</span> <span class="o">=</span> <span class="n">id_mapping</span><span class="p">[</span><span class="s1">&#39;index_harm&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">id_map</span><span class="p">)</span>
-        <span class="n">id_mapping</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;index_harm&#39;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">id_mapping</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">panel_var</span><span class="p">]</span> <span class="o">=</span> <span class="n">id_mapping</span><span class="p">[</span><span class="s1">'index_harm'</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">id_map</span><span class="p">)</span>
+        <span class="n">id_mapping</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'index_harm'</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">id_mapping</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="GenerateID.execute">
 <a class="viewcode-back" href="../../panel.html#neer_match_utilities.panel.GenerateID.execute">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Execute the full ID generation and harmonization process.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        pd.DataFrame</span>
 <span class="sd">            The final ID mapping.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">subgroups</span><span class="p">:</span>
             <span class="n">harmonized_dict</span> <span class="o">=</span> <span class="p">{}</span>

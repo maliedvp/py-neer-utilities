@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.custom_similarities &mdash; Neer Match Utilities 1.0.2 documentation</title>
+  <title>neer_match_utilities.custom_similarities &mdash; Neer Match Utilities 1.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/extra.css?v=503a7970" />
@@ -15,7 +15,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=1ed6394b"></script>
+      <script src="../../_static/documentation_options.js?v=fc837d61"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -156,6 +156,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.SuggestMixin.suggest"><code class="docutils literal notranslate"><span class="pre">SuggestMixin.suggest()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.classification_metrics"><code class="docutils literal notranslate"><span class="pre">classification_metrics()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../baseline_training.html">Baseline Training</a><ul>
@@ -257,9 +258,20 @@
 <li class="toctree-l1"><a class="reference internal" href="../../similarity_features.html">Similarity Features</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.__init__"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.pairs"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.pairs()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.pairwise_similarity_dataframe"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.pairwise_similarity_dataframe()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__init__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__len__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__len__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.chunks"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.chunks()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.frame"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.frame()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.match_flags"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.match_flags()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.rows"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.rows()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.subsample_non_match_positions"><code class="docutils literal notranslate"><span class="pre">subsample_non_match_positions()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.subsample_non_matches"><code class="docutils literal notranslate"><span class="pre">subsample_non_matches()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.to_X_y"><code class="docutils literal notranslate"><span class="pre">to_X_y()</span></code></a></li>
 </ul>
@@ -271,6 +283,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../custom_similarities.html#neer_match_utilities.custom_similarities.CustomSimilarities.notzero"><code class="docutils literal notranslate"><span class="pre">CustomSimilarities.notzero()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../custom_similarities.html#neer_match_utilities.custom_similarities.register_similarities"><code class="docutils literal notranslate"><span class="pre">register_similarities()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -308,82 +321,111 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">neer_match</span><span class="w"> </span><span class="kn">import</span> <span class="n">similarity_map</span> <span class="k">as</span> <span class="n">_sim</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">neer_match</span><span class="w"> </span><span class="kn">import</span> <span class="n">similarity_encoding</span> <span class="k">as</span> <span class="n">_enc</span>
 
+<span class="c1"># Names of similarities that need scaling (because they come from rapidfuzz.fuzz)</span>
+<span class="n">_FUZZ_KEYS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">"basic_ratio"</span><span class="p">,</span>
+    <span class="s2">"partial_ratio"</span><span class="p">,</span>
+    <span class="s2">"partial_ratio_alignment"</span><span class="p">,</span>
+    <span class="s2">"partial_token_ratio"</span><span class="p">,</span>
+    <span class="s2">"partial_token_set_ratio"</span><span class="p">,</span>
+    <span class="s2">"partial_token_sort_ratio"</span><span class="p">,</span>
+    <span class="s2">"token_ratio"</span><span class="p">,</span>
+    <span class="s2">"token_set_ratio"</span><span class="p">,</span>
+    <span class="s2">"token_sort_ratio"</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="c1"># Similarities added on top of neer_match's own, by name. CustomSimilarities and</span>
+<span class="c1"># Commonness both register here. Each used to install its own wrapper around</span>
+<span class="c1"># neer_match's original function, so whichever was constructed last removed what</span>
+<span class="c1"># the other had added -- including the rescaling of the fuzz-based similarities.</span>
+<span class="n">_registered</span> <span class="o">=</span> <span class="p">{}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_norm</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+    <span class="c1"># Wrap a 0–100 similarity into 0–1</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">wrapper</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="mf">100.0</span>
+    <span class="k">return</span> <span class="n">wrapper</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_extended_available</span><span class="p">():</span>
+    <span class="n">sims</span> <span class="o">=</span> <span class="n">_sim</span><span class="o">.</span><span class="n">_original_available_similarities</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="c1"># --- 1) Rescale fuzz-based similarities from [0, 100] to [0, 1] ---</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">_FUZZ_KEYS</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">sims</span><span class="p">:</span>
+            <span class="n">sims</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">_norm</span><span class="p">(</span><span class="n">sims</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
+    <span class="c1"># --- 2) Add registered similarities ---</span>
+    <span class="n">sims</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">_registered</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sims</span>
+
+
+<div class="viewcode-block" id="register_similarities">
+<a class="viewcode-back" href="../../custom_similarities.html#neer_match_utilities.custom_similarities.register_similarities">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">register_similarities</span><span class="p">(</span><span class="n">similarities</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Make similarity functions available to neer_match by name.</span>
+
+<span class="sd">    Registered functions are added to neer_match's own, alongside the rescaling of</span>
+<span class="sd">    the fuzz-based similarities from [0, 100] to [0, 1]. A name that is registered</span>
+<span class="sd">    again is replaced; all other registered names are kept.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    similarities : dict</span>
+<span class="sd">        Mapping ``{name: callable}``, where each callable takes two values and</span>
+<span class="sd">        returns their similarity.</span>
+<span class="sd">    """</span>
+    <span class="n">_registered</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">similarities</span><span class="p">)</span>
+
+    <span class="c1"># Store original only once</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">_sim</span><span class="p">,</span> <span class="s2">"_original_available_similarities"</span><span class="p">):</span>
+        <span class="n">_sim</span><span class="o">.</span><span class="n">_original_available_similarities</span> <span class="o">=</span> <span class="n">_sim</span><span class="o">.</span><span class="n">available_similarities</span>
+
+    <span class="c1"># similarity_encoding imported the name, so its binding is patched as well</span>
+    <span class="n">_sim</span><span class="o">.</span><span class="n">available_similarities</span> <span class="o">=</span> <span class="n">_extended_available</span>
+    <span class="n">_enc</span><span class="o">.</span><span class="n">available_similarities</span> <span class="o">=</span> <span class="n">_extended_available</span></div>
+
+
+
 <div class="viewcode-block" id="CustomSimilarities">
 <a class="viewcode-back" href="../../custom_similarities.html#neer_match_utilities.custom_similarities.CustomSimilarities">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CustomSimilarities</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Monkey-patch neer_match to</span>
 
 <span class="sd">    - add custom similarities (notmissing, notzero)</span>
 <span class="sd">    - rescale fuzz-based similarities from [0, 100] to [0, 1]</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="c1"># Names of similarities that need scaling (because they come from rapidfuzz.fuzz)</span>
-    <span class="n">_FUZZ_KEYS</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s2">&quot;basic_ratio&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;partial_ratio&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;partial_ratio_alignment&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;partial_token_ratio&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;partial_token_set_ratio&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;partial_token_sort_ratio&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;token_ratio&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;token_set_ratio&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;token_sort_ratio&quot;</span><span class="p">,</span>
-    <span class="p">]</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="CustomSimilarities.__init__">
 <a class="viewcode-back" href="../../custom_similarities.html#neer_match_utilities.custom_similarities.CustomSimilarities.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat_radius_km</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span> <span class="n">lon_radius_km</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span> <span class="n">lat_ref</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">54.0</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        lat_radius_km: radius in km for within_km_lat similarity</span>
 <span class="sd">        lon_radius_km: radius in km for within_km_lon similarity</span>
 <span class="sd">        lat_ref: reference latitude (degrees) for longitude distance (UK ~54°)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lat_radius_km</span> <span class="o">=</span> <span class="n">lat_radius_km</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lon_radius_km</span> <span class="o">=</span> <span class="n">lon_radius_km</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lat_ref</span> <span class="o">=</span> <span class="n">lat_ref</span>
 
-        <span class="c1"># Store original only once</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">_sim</span><span class="p">,</span> <span class="s2">&quot;_original_available_similarities&quot;</span><span class="p">):</span>
-            <span class="n">_sim</span><span class="o">.</span><span class="n">_original_available_similarities</span> <span class="o">=</span> <span class="n">_sim</span><span class="o">.</span><span class="n">available_similarities</span>
-
-        <span class="n">orig</span> <span class="o">=</span> <span class="n">_sim</span><span class="o">.</span><span class="n">_original_available_similarities</span>
-
-        <span class="k">def</span><span class="w"> </span><span class="nf">_extended_available</span><span class="p">():</span>
-            <span class="n">sims</span> <span class="o">=</span> <span class="n">orig</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-
-            <span class="c1"># --- 1) Rescale fuzz-based similarities from [0, 100] to [0, 1] ---</span>
-            <span class="k">def</span><span class="w"> </span><span class="nf">_norm</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
-                <span class="c1"># Wrap a 0–100 similarity into 0–1</span>
-                <span class="k">def</span><span class="w"> </span><span class="nf">wrapper</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-                    <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="mf">100.0</span>
-                <span class="k">return</span> <span class="n">wrapper</span>
-
-            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_FUZZ_KEYS</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">sims</span><span class="p">:</span>
-                    <span class="n">sims</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">_norm</span><span class="p">(</span><span class="n">sims</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
-
-            <span class="c1"># --- 2) Add custom similarities ---</span>
-            <span class="n">sims</span><span class="p">[</span><span class="s2">&quot;notmissing&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">notmissing</span>
-            <span class="n">sims</span><span class="p">[</span><span class="s2">&quot;notzero&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">notzero</span>
-
-            <span class="c1"># --- 3) Add distance-based similarities with configured radius ---</span>
-            <span class="n">sims</span><span class="p">[</span><span class="s2">&quot;within_km_lat&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_within_km_lat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lat_radius_km</span><span class="p">)</span>
-            <span class="n">sims</span><span class="p">[</span><span class="s2">&quot;within_km_lon&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_within_km_lon</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lon_radius_km</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lat_ref</span><span class="p">)</span>
-            
-            <span class="k">return</span> <span class="n">sims</span>
-
-        <span class="c1"># Monkey-patch both modules to use our extended mapping</span>
-        <span class="n">_sim</span><span class="o">.</span><span class="n">available_similarities</span> <span class="o">=</span> <span class="n">_extended_available</span>
-        <span class="n">_enc</span><span class="o">.</span><span class="n">available_similarities</span> <span class="o">=</span> <span class="n">_extended_available</span></div>
+        <span class="n">register_similarities</span><span class="p">({</span>
+            <span class="s2">"notmissing"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">notmissing</span><span class="p">,</span>
+            <span class="s2">"notzero"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">notzero</span><span class="p">,</span>
+            <span class="c1"># Distance-based similarities with the configured radius</span>
+            <span class="s2">"within_km_lat"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_within_km_lat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lat_radius_km</span><span class="p">),</span>
+            <span class="s2">"within_km_lon"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_within_km_lon</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lon_radius_km</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lat_ref</span><span class="p">),</span>
+        <span class="p">})</span></div>
 
 
 <div class="viewcode-block" id="CustomSimilarities.notmissing">
 <a class="viewcode-back" href="../../custom_similarities.html#neer_match_utilities.custom_similarities.CustomSimilarities.notmissing">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">notmissing</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return 1.0 if both values are not missing (None, &#39;&#39;, or NaN).&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">y</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Return 1.0 if both values are not missing (None, '', or NaN)."""</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">''</span><span class="p">]</span> <span class="ow">or</span> <span class="n">y</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">''</span><span class="p">]:</span>
             <span class="k">return</span> <span class="mf">0.0</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
             <span class="k">return</span> <span class="mf">0.0</span>
@@ -396,8 +438,8 @@
 <a class="viewcode-back" href="../../custom_similarities.html#neer_match_utilities.custom_similarities.CustomSimilarities.notzero">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">notzero</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return 1.0 if both values are non-zero.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="n">y</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Return 1.0 if both values are non-zero."""</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">''</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="n">y</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">''</span><span class="p">,</span> <span class="mi">0</span><span class="p">]:</span>
             <span class="k">return</span> <span class="mf">0.0</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
             <span class="k">return</span> <span class="mf">0.0</span>
@@ -408,15 +450,15 @@
     
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_make_within_km_lat</span><span class="p">(</span><span class="n">radius_km</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a similarity function sim(lat1, lat2) that returns 1.0</span>
 <span class="sd">        if |lat1 - lat2| corresponds to &lt;= radius_km, else 0.0.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">km_per_deg_lat</span> <span class="o">=</span> <span class="mf">111.32</span>
         <span class="n">threshold_deg</span> <span class="o">=</span> <span class="n">radius_km</span> <span class="o">/</span> <span class="n">km_per_deg_lat</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">sim</span><span class="p">(</span><span class="n">lat1</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lat2</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">lat1</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">lat2</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">lat1</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s2">""</span><span class="p">]</span> <span class="ow">or</span> <span class="n">lat2</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s2">""</span><span class="p">]:</span>
                 <span class="k">return</span> <span class="mf">0.0</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lat1</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">lat1</span><span class="p">):</span>
                 <span class="k">return</span> <span class="mf">0.0</span>
@@ -428,17 +470,17 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_make_within_km_lon</span><span class="p">(</span><span class="n">radius_km</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lat_ref</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a similarity function sim(lon1, lon2) that returns 1.0</span>
 <span class="sd">        if |lon1 - lon2| corresponds to &lt;= radius_km, else 0.0.</span>
 
 <span class="sd">        Uses km_per_deg_lon = 111.32 * cos(lat_ref).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">km_per_deg_lon</span> <span class="o">=</span> <span class="mf">111.32</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">lat_ref</span><span class="p">))</span>
         <span class="n">threshold_deg</span> <span class="o">=</span> <span class="n">radius_km</span> <span class="o">/</span> <span class="n">km_per_deg_lon</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">sim</span><span class="p">(</span><span class="n">lon1</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lon2</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">lon1</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">lon2</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">lon1</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s2">""</span><span class="p">]</span> <span class="ow">or</span> <span class="n">lon2</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s2">""</span><span class="p">]:</span>
                 <span class="k">return</span> <span class="mf">0.0</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lon1</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">lon1</span><span class="p">):</span>
                 <span class="k">return</span> <span class="mf">0.0</span>

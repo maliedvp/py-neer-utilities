@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Creating a Common Identifier (ID) &mdash; Neer Match Utilities 1.0.2 documentation</title>
+  <title>Creating a Common Identifier (ID) &mdash; Neer Match Utilities 1.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=1ed6394b"></script>
+      <script src="_static/documentation_options.js?v=fc837d61"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -159,6 +159,7 @@
 <li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.SuggestMixin.suggest"><code class="docutils literal notranslate"><span class="pre">SuggestMixin.suggest()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.classification_metrics"><code class="docutils literal notranslate"><span class="pre">classification_metrics()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="baseline_training.html">Baseline Training</a><ul>
@@ -260,9 +261,20 @@
 <li class="toctree-l1"><a class="reference internal" href="similarity_features.html">Similarity Features</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.__init__"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.pairs"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.pairs()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.pairwise_similarity_dataframe"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.pairwise_similarity_dataframe()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__init__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__len__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__len__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.chunks"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.chunks()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.frame"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.frame()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.match_flags"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.match_flags()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.rows"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.rows()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.subsample_non_match_positions"><code class="docutils literal notranslate"><span class="pre">subsample_non_match_positions()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.subsample_non_matches"><code class="docutils literal notranslate"><span class="pre">subsample_non_matches()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.to_X_y"><code class="docutils literal notranslate"><span class="pre">to_X_y()</span></code></a></li>
 </ul>
@@ -274,6 +286,7 @@
 <li class="toctree-l3"><a class="reference internal" href="custom_similarities.html#neer_match_utilities.custom_similarities.CustomSimilarities.notzero"><code class="docutils literal notranslate"><span class="pre">CustomSimilarities.notzero()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="custom_similarities.html#neer_match_utilities.custom_similarities.register_similarities"><code class="docutils literal notranslate"><span class="pre">register_similarities()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -329,13 +342,13 @@ both the model and the data into memory.</p>
 <span class="c1"># Load model (and the similarity map used during training)</span>
 
 <span class="n">loaded_model</span> <span class="o">=</span> <span class="n">ModelBaseline</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
-    <span class="s1">&#39;demonstration_model&#39;</span>
+    <span class="s1">'demonstration_model'</span>
 <span class="p">)</span>
 
 <span class="c1"># Load files</span>
 
-<span class="n">left</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;left.csv&#39;</span><span class="p">)</span>
-<span class="n">right</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;right.csv&#39;</span><span class="p">)</span>
+<span class="n">left</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">'left.csv'</span><span class="p">)</span>
+<span class="n">right</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">'right.csv'</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -352,15 +365,15 @@ need to redefine it.</p>
     <span class="n">similarity_map</span><span class="o">=</span><span class="n">loaded_model</span><span class="o">.</span><span class="n">similarity_map</span><span class="p">,</span> 
     <span class="n">df_left</span><span class="o">=</span><span class="n">left</span><span class="p">,</span> 
     <span class="n">df_right</span><span class="o">=</span><span class="n">right</span><span class="p">,</span> 
-    <span class="n">id_left</span><span class="o">=</span><span class="s1">&#39;company_id&#39;</span><span class="p">,</span> 
-    <span class="n">id_right</span><span class="o">=</span><span class="s1">&#39;company_id&#39;</span><span class="p">,</span>
+    <span class="n">id_left</span><span class="o">=</span><span class="s1">'company_id'</span><span class="p">,</span> 
+    <span class="n">id_right</span><span class="o">=</span><span class="s1">'company_id'</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="c1"># Get formatted and harmonized datasets</span>
 
 <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">prepare</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
     <span class="n">fill_numeric_na</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">to_numeric</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;found_year&#39;</span><span class="p">],</span>
+    <span class="n">to_numeric</span><span class="o">=</span><span class="p">[</span><span class="s1">'found_year'</span><span class="p">],</span>
     <span class="n">fill_string_na</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
     <span class="n">capitalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">lower_case</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -389,8 +402,8 @@ a column (<em>side</em>) to distinguish the two sources, then stack the
 DataFrames vertically.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.panel</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerateID</span>
 
-<span class="n">left</span><span class="p">[</span><span class="s1">&#39;side&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;left&#39;</span>
-<span class="n">right</span><span class="p">[</span><span class="s1">&#39;side&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;right&#39;</span>
+<span class="n">left</span><span class="p">[</span><span class="s1">'side'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'left'</span>
+<span class="n">right</span><span class="p">[</span><span class="s1">'side'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'right'</span>
 
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
     <span class="p">[</span>
@@ -405,12 +418,12 @@ DataFrames vertically.</p>
 
 <span class="n">id_generator</span> <span class="o">=</span> <span class="n">GenerateID</span><span class="p">(</span>
     <span class="n">df_panel</span><span class="o">=</span><span class="n">df</span><span class="p">,</span>
-    <span class="n">panel_var</span><span class="o">=</span><span class="s1">&#39;panel_id&#39;</span><span class="p">,</span>
-    <span class="n">time_var</span><span class="o">=</span><span class="s1">&#39;side&#39;</span><span class="p">,</span>
+    <span class="n">panel_var</span><span class="o">=</span><span class="s1">'panel_id'</span><span class="p">,</span>
+    <span class="n">time_var</span><span class="o">=</span><span class="s1">'side'</span><span class="p">,</span>
     <span class="n">model</span><span class="o">=</span><span class="n">loaded_model</span><span class="p">,</span>
     <span class="n">prediction_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
     <span class="n">subgroups</span><span class="o">=</span><span class="p">[],</span>
-    <span class="n">relation</span><span class="o">=</span><span class="s1">&#39;m:m&#39;</span><span class="p">,</span>
+    <span class="n">relation</span><span class="o">=</span><span class="s1">'m:m'</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="c1"># Execute the ID generation</span>
@@ -419,7 +432,7 @@ DataFrames vertically.</p>
 <span class="n">result</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Processing periods left-right at 2026-07-13 12:14:07.064701
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Processing periods left-right at 2026-10-13 21:33:48.761581
 </pre></div>
 </div>
 <div>
@@ -444,23 +457,23 @@ DataFrames vertically.</p>
 <tbody>
 <tr class="row-even"><td><p>0</p></td>
 <td><p>0</p></td>
-<td><p>6470b2cd-e812-4580-839e-0476a312891a</p></td>
+<td><p>488c421b-68e2-46ac-bde8-a5411a54f7d6</p></td>
 </tr>
 <tr class="row-odd"><td><p>1</p></td>
 <td><p>1</p></td>
-<td><p>6b679750-5b7a-4419-990a-132b74863bbe</p></td>
+<td><p>a4f4ccac-c409-4163-8259-b2076f1378be</p></td>
 </tr>
 <tr class="row-even"><td><p>2</p></td>
 <td><p>2</p></td>
-<td><p>b87a1402-3d25-4ba2-9fe0-a0a37a738004</p></td>
+<td><p>712eef29-2480-427e-b8b4-b419e0d15a98</p></td>
 </tr>
 <tr class="row-odd"><td><p>3</p></td>
 <td><p>3</p></td>
-<td><p>69033936-83dc-484a-ad6f-32bcc46eff4a</p></td>
+<td><p>1b828dec-53b9-4b09-9812-cc9b5d968920</p></td>
 </tr>
 <tr class="row-even"><td><p>4</p></td>
 <td><p>4</p></td>
-<td><p>bfda264b-42a8-4c47-a177-74578aa6821a</p></td>
+<td><p>a4a0ebfe-45f3-4e5e-aea9-5b7ed5fdc58a</p></td>
 </tr>
 </tbody>
 </table>
@@ -472,24 +485,24 @@ DataFrames vertically.</p>
     <span class="n">df</span><span class="p">,</span>
     <span class="n">result</span><span class="p">,</span>
     <span class="n">left_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">right_on</span><span class="o">=</span><span class="s1">&#39;index&#39;</span><span class="p">,</span>
-    <span class="n">validate</span><span class="o">=</span><span class="s1">&#39;1:1&#39;</span>
+    <span class="n">right_on</span><span class="o">=</span><span class="s1">'index'</span><span class="p">,</span>
+    <span class="n">validate</span><span class="o">=</span><span class="s1">'1:1'</span>
 <span class="p">)</span>
 
-<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">&#39;panel_id&#39;</span><span class="p">,</span> <span class="s1">&#39;side&#39;</span><span class="p">,</span> <span class="s1">&#39;company_id&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">'panel_id'</span><span class="p">,</span> <span class="s1">'side'</span><span class="p">,</span> <span class="s1">'company_id'</span><span class="p">])</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="c1"># Prepare selection to be viewed</span>
 
-<span class="n">selected_ids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;22ac99ae20&#39;</span><span class="p">,</span> <span class="s1">&#39;e9823a3073&#39;</span><span class="p">]</span>
+<span class="n">selected_ids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'22ac99ae20'</span><span class="p">,</span> <span class="s1">'e9823a3073'</span><span class="p">]</span>
 <span class="n">columns_to_show</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s1">&#39;panel_id&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;company_id&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;side&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;company_name&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;city&#39;</span><span class="p">,</span>
+    <span class="s1">'panel_id'</span><span class="p">,</span>
+    <span class="s1">'company_id'</span><span class="p">,</span>
+    <span class="s1">'side'</span><span class="p">,</span>
+    <span class="s1">'company_name'</span><span class="p">,</span>
+    <span class="s1">'city'</span><span class="p">,</span>
 <span class="p">]</span>
 
-<span class="n">df_selection</span><span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;company_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">selected_ids</span><span class="p">)][</span><span class="n">columns_to_show</span><span class="p">]</span>
+<span class="n">df_selection</span><span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">'company_id'</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">selected_ids</span><span class="p">)][</span><span class="n">columns_to_show</span><span class="p">]</span>
 
 <span class="n">df_selection</span>
 </pre></div>
@@ -517,15 +530,15 @@ DataFrames vertically.</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>1014</p></td>
-<td><p>bfda264b-42a8-4c47-a177-74578aa6821a</p></td>
+<tr class="row-even"><td><p>885</p></td>
+<td><p>a4a0ebfe-45f3-4e5e-aea9-5b7ed5fdc58a</p></td>
 <td><p>22ac99ae20</p></td>
 <td><p>left</p></td>
 <td><p>KAISERSTEINBRUCH-ACTIENGESELLSCHAFT IN LIQU. I…</p></td>
 <td><p>KÖLN</p></td>
 </tr>
-<tr class="row-odd"><td><p>1015</p></td>
-<td><p>bfda264b-42a8-4c47-a177-74578aa6821a</p></td>
+<tr class="row-odd"><td><p>886</p></td>
+<td><p>a4a0ebfe-45f3-4e5e-aea9-5b7ed5fdc58a</p></td>
 <td><p>e9823a3073</p></td>
 <td><p>right</p></td>
 <td><p>KAISERSTEINBRUCH-ACTIENGESELLSCHAFT IN KÖLN,</p></td>

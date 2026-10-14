@@ -40,6 +40,7 @@ training_pipeline = BaselineTrainingPipe(
     mismatch_share_fit=1.0,       # 1.0 = use all, 0.1 = use 10%
     random_state=42,
     shuffle_fit=True,
+    pairs_per_chunk=250_000,      # pairs whose features are in memory at once
 
     # Prediction threshold
     threshold=0.5,
@@ -51,6 +52,7 @@ training_pipeline = BaselineTrainingPipe(
     # Export settings
     base_dir=None,                # defaults to current directory
     export_model=True,
+    overwrite=False,              # True replaces a model saved under model_name
     export_stats=True,
     reload_sanity_check=True,     # verify model can be reloaded
 )
@@ -164,6 +166,7 @@ training_pipeline = TrainingPipe(
 
     # Export
     save_architecture=False,          # requires graphviz binaries
+    overwrite=False,                  # True replaces a model saved under model_name
 )
 
 training_pipeline.execute()

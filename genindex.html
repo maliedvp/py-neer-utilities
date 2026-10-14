@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; Neer Match Utilities 1.0.2 documentation</title>
+  <title>Index &mdash; Neer Match Utilities 1.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/css/extra.css?v=503a7970" />
@@ -15,7 +15,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=1ed6394b"></script>
+      <script src="_static/documentation_options.js?v=fc837d61"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -156,6 +156,7 @@
 <li class="toctree-l3"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.SuggestMixin.suggest"><code class="docutils literal notranslate"><span class="pre">SuggestMixin.suggest()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="baseline_models.html#neer_match_utilities.baseline_models.classification_metrics"><code class="docutils literal notranslate"><span class="pre">classification_metrics()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="baseline_training.html">Baseline Training</a><ul>
@@ -257,9 +258,20 @@
 <li class="toctree-l1"><a class="reference internal" href="similarity_features.html">Similarity Features</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.__init__"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.pairs"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.pairs()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.pairwise_similarity_dataframe"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.pairwise_similarity_dataframe()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__init__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__len__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__len__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.chunks"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.chunks()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.frame"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.frame()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.match_flags"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.match_flags()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.rows"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.rows()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.subsample_non_match_positions"><code class="docutils literal notranslate"><span class="pre">subsample_non_match_positions()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.subsample_non_matches"><code class="docutils literal notranslate"><span class="pre">subsample_non_matches()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.to_X_y"><code class="docutils literal notranslate"><span class="pre">to_X_y()</span></code></a></li>
 </ul>
@@ -271,6 +283,7 @@
 <li class="toctree-l3"><a class="reference internal" href="custom_similarities.html#neer_match_utilities.custom_similarities.CustomSimilarities.notzero"><code class="docutils literal notranslate"><span class="pre">CustomSimilarities.notzero()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="custom_similarities.html#neer_match_utilities.custom_similarities.register_similarities"><code class="docutils literal notranslate"><span class="pre">register_similarities()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -354,11 +367,17 @@
 </li>
         <li><a href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.__init__">(neer_match_utilities.similarity_features.SimilarityFeatures method)</a>
 </li>
+        <li><a href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__init__">(neer_match_utilities.similarity_features.SimilarityPairs method)</a>
+</li>
         <li><a href="training.html#neer_match_utilities.training.TrainingPipe.__init__">(neer_match_utilities.training.TrainingPipe method)</a>
 </li>
         <li><a href="training.html#neer_match_utilities.training.TrainingPipe.WarmupCosine.__init__">(neer_match_utilities.training.TrainingPipe.WarmupCosine method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__len__">__len__() (neer_match_utilities.similarity_features.SimilarityPairs method)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -395,12 +414,16 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.capture_inference">capture_inference() (neer_match_utilities.baseline_models.StatsmodelsInferenceMixin method)</a>
 </li>
-      <li><a href="feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult.coef_by_feature">coef_by_feature (neer_match_utilities.feature_selection.FeatureSelectionResult attribute)</a>
+      <li><a href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.chunks">chunks() (neer_match_utilities.similarity_features.SimilarityPairs method)</a>
 </li>
-      <li><a href="baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.coefficients">coefficients() (neer_match_utilities.baseline_models.StatsmodelsInferenceMixin method)</a>
+      <li><a href="baseline_models.html#neer_match_utilities.baseline_models.classification_metrics">classification_metrics() (in module neer_match_utilities.baseline_models)</a>
+</li>
+      <li><a href="feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult.coef_by_feature">coef_by_feature (neer_match_utilities.feature_selection.FeatureSelectionResult attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.coefficients">coefficients() (neer_match_utilities.baseline_models.StatsmodelsInferenceMixin method)</a>
+</li>
       <li><a href="training.html#neer_match_utilities.training.combined_loss">combined_loss() (in module neer_match_utilities.training)</a>
 </li>
       <li><a href="panel.html#neer_match_utilities.panel.SetupData.create_connected_groups">create_connected_groups() (neer_match_utilities.panel.SetupData method)</a>
@@ -465,6 +488,8 @@
 </li>
       <li><a href="prepare.html#neer_match_utilities.prepare.Prepare.format">format() (neer_match_utilities.prepare.Prepare method)</a>
 </li>
+      <li><a href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.frame">frame() (neer_match_utilities.similarity_features.SimilarityPairs method)</a>
+</li>
       <li><a href="training.html#neer_match_utilities.training.TrainingPipe.WarmupCosine.from_config">from_config() (neer_match_utilities.training.TrainingPipe.WarmupCosine class method)</a>
 </li>
   </ul></td>
@@ -513,6 +538,8 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.match_flags">match_flags() (neer_match_utilities.similarity_features.SimilarityPairs method)</a>
+</li>
       <li><a href="panel.html#neer_match_utilities.panel.SetupData.matches">matches (neer_match_utilities.panel.SetupData attribute)</a>
 </li>
       <li><a href="training.html#neer_match_utilities.training.Training.matches_reorder">matches_reorder() (neer_match_utilities.training.Training method)</a>
@@ -662,6 +689,8 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.pairs">pairs() (neer_match_utilities.similarity_features.SimilarityFeatures method)</a>
+</li>
       <li><a href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.pairwise_similarity_dataframe">pairwise_similarity_dataframe() (neer_match_utilities.similarity_features.SimilarityFeatures method)</a>
 </li>
       <li><a href="panel.html#neer_match_utilities.panel.SetupData.panel_preparation">panel_preparation() (neer_match_utilities.panel.SetupData method)</a>
@@ -686,7 +715,13 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="custom_similarities.html#neer_match_utilities.custom_similarities.register_similarities">register_similarities() (in module neer_match_utilities.custom_similarities)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="panel.html#neer_match_utilities.panel.GenerateID.relations_left_right">relations_left_right() (neer_match_utilities.panel.GenerateID method)</a>
+</li>
+      <li><a href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.rows">rows() (neer_match_utilities.similarity_features.SimilarityPairs method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -712,6 +747,8 @@
 </li>
       <li><a href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures">SimilarityFeatures (class in neer_match_utilities.similarity_features)</a>
 </li>
+      <li><a href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs">SimilarityPairs (class in neer_match_utilities.similarity_features)</a>
+</li>
       <li><a href="training.html#neer_match_utilities.training.soft_f1_loss">soft_f1_loss() (in module neer_match_utilities.training)</a>
 </li>
   </ul></td>
@@ -721,6 +758,8 @@
       <li><a href="split.html#neer_match_utilities.split.SplitError">SplitError</a>
 </li>
       <li><a href="baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin">StatsmodelsInferenceMixin (class in neer_match_utilities.baseline_models)</a>
+</li>
+      <li><a href="similarity_features.html#neer_match_utilities.similarity_features.subsample_non_match_positions">subsample_non_match_positions() (in module neer_match_utilities.similarity_features)</a>
 </li>
       <li><a href="similarity_features.html#neer_match_utilities.similarity_features.subsample_non_matches">subsample_non_matches() (in module neer_match_utilities.similarity_features)</a>
 </li>

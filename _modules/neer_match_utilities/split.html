@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.split &mdash; Neer Match Utilities 1.0.2 documentation</title>
+  <title>neer_match_utilities.split &mdash; Neer Match Utilities 1.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/extra.css?v=503a7970" />
@@ -15,7 +15,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=1ed6394b"></script>
+      <script src="../../_static/documentation_options.js?v=fc837d61"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -156,6 +156,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.SuggestMixin.suggest"><code class="docutils literal notranslate"><span class="pre">SuggestMixin.suggest()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.classification_metrics"><code class="docutils literal notranslate"><span class="pre">classification_metrics()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../baseline_training.html">Baseline Training</a><ul>
@@ -257,9 +258,20 @@
 <li class="toctree-l1"><a class="reference internal" href="../../similarity_features.html">Similarity Features</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.__init__"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.pairs"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.pairs()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.pairwise_similarity_dataframe"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.pairwise_similarity_dataframe()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__init__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__len__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__len__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.chunks"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.chunks()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.frame"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.frame()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.match_flags"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.match_flags()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.rows"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.rows()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.subsample_non_match_positions"><code class="docutils literal notranslate"><span class="pre">subsample_non_match_positions()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.subsample_non_matches"><code class="docutils literal notranslate"><span class="pre">subsample_non_matches()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.to_X_y"><code class="docutils literal notranslate"><span class="pre">to_X_y()</span></code></a></li>
 </ul>
@@ -271,6 +283,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../custom_similarities.html#neer_match_utilities.custom_similarities.CustomSimilarities.notzero"><code class="docutils literal notranslate"><span class="pre">CustomSimilarities.notzero()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../custom_similarities.html#neer_match_utilities.custom_similarities.register_similarities"><code class="docutils literal notranslate"><span class="pre">register_similarities()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -310,7 +323,7 @@
 <div class="viewcode-block" id="SplitError">
 <a class="viewcode-back" href="../../split.html#neer_match_utilities.split.SplitError">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SplitError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom exception for errors in data splitting.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Custom exception for errors in data splitting."""</span>
     <span class="k">pass</span></div>
 
 
@@ -318,7 +331,7 @@
 <div class="viewcode-block" id="split_test_train">
 <a class="viewcode-back" href="../../split.html#neer_match_utilities.split.split_test_train">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">split_test_train</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">matches</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">test_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,</span> <span class="n">validation_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Splits datasets into training, validation, and testing subsets.</span>
 
 <span class="sd">    This function ensures that only observations from `left` and `right` that are referenced</span>
@@ -332,7 +345,7 @@
 <span class="sd">        The right dataset to split.</span>
 <span class="sd">    matches : pd.DataFrame</span>
 <span class="sd">        A DataFrame containing matching pairs between the left and right datasets.</span>
-<span class="sd">        It must include columns &#39;left&#39; and &#39;right&#39;, referencing indices in `left` and `right`.</span>
+<span class="sd">        It must include columns 'left' and 'right', referencing indices in `left` and `right`.</span>
 <span class="sd">    test_ratio : float, optional</span>
 <span class="sd">        The proportion of the data to be used for testing (default is 0.3).</span>
 <span class="sd">    validation_ratio : float, optional</span>
@@ -361,11 +374,11 @@
 <span class="sd">    ------</span>
 <span class="sd">    SplitError</span>
 <span class="sd">        If the total counts of split subsets do not match the original dataset size.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     
     <span class="c1"># Filter `left` and `right` to only include rows referenced in `matches`</span>
-    <span class="n">left</span> <span class="o">=</span> <span class="n">left</span><span class="p">[</span><span class="n">left</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">matches</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">])]</span>
-    <span class="n">right</span> <span class="o">=</span> <span class="n">right</span><span class="p">[</span><span class="n">right</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">matches</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">])]</span>
+    <span class="n">left</span> <span class="o">=</span> <span class="n">left</span><span class="p">[</span><span class="n">left</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">matches</span><span class="p">[</span><span class="s1">'left'</span><span class="p">])]</span>
+    <span class="n">right</span> <span class="o">=</span> <span class="n">right</span><span class="p">[</span><span class="n">right</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">matches</span><span class="p">[</span><span class="s1">'right'</span><span class="p">])]</span>
 
     <span class="c1"># Get absolute counts for each subset</span>
     <span class="n">matches_test_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">test_ratio</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">)))</span>
@@ -374,7 +387,7 @@
 
     <span class="c1"># Validate the requested counts</span>
     <span class="k">if</span> <span class="n">matches_test_count</span> <span class="o">+</span> <span class="n">matches_validation_count</span> <span class="o">+</span> <span class="n">matches_train_count</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="n">SplitError</span><span class="p">(</span><span class="s2">&quot;Split does not work correctly: The sum of observations in the three datasets is not equal to the number of observations in matches&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">SplitError</span><span class="p">(</span><span class="s2">"Split does not work correctly: The sum of observations in the three datasets is not equal to the number of observations in matches"</span><span class="p">)</span>
 
     <span class="c1"># A single generator is shared by the three draws below, so that its state</span>
     <span class="c1"># advances between them (the draws stay independent) while the whole split</span>
@@ -382,10 +395,10 @@
     <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">subsets</span><span class="p">(</span><span class="n">matches_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">matches_exclude_index</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generates random subsets for matches DataFrame and corresponding rows in `left` and `right`.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Generates random subsets for matches DataFrame and corresponding rows in `left` and `right`."""</span>
         <span class="n">m</span> <span class="o">=</span> <span class="n">matches</span><span class="p">[</span><span class="o">~</span><span class="n">matches</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">matches_exclude_index</span><span class="p">)]</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">matches_count</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">l</span> <span class="o">=</span> <span class="n">left</span><span class="p">[</span><span class="n">left</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">])]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">r</span> <span class="o">=</span> <span class="n">right</span><span class="p">[</span><span class="n">right</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">])]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">l</span> <span class="o">=</span> <span class="n">left</span><span class="p">[</span><span class="n">left</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="s1">'left'</span><span class="p">])]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">right</span><span class="p">[</span><span class="n">right</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="s1">'right'</span><span class="p">])]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">m</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">r</span>
 
     <span class="n">matches_test</span><span class="p">,</span> <span class="n">left_test</span><span class="p">,</span> <span class="n">right_test</span> <span class="o">=</span> <span class="n">subsets</span><span class="p">(</span>
@@ -406,13 +419,13 @@
     <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">process_dataset</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Processes a single dataset by adding an &#39;index_original&#39; column,</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Processes a single dataset by adding an 'index_original' column,</span>
 <span class="sd">        resetting the index, and creating a mapping dictionary.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;index_original&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="sd">        """</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">'index_original'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">mapping_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;index_original&#39;</span><span class="p">],</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">))</span>
+        <span class="n">mapping_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'index_original'</span><span class="p">],</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">df</span><span class="p">,</span> <span class="n">mapping_dict</span>
 
     <span class="c1"># Process datasets individually</span>
@@ -427,9 +440,9 @@
 
     <span class="c1"># Update matches dataframes</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_matches</span><span class="p">(</span><span class="n">matches_df</span><span class="p">,</span> <span class="n">left_dict</span><span class="p">,</span> <span class="n">right_dict</span><span class="p">):</span>
-        <span class="n">matches_df</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">matches_df</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">left_dict</span><span class="p">)</span>
-        <span class="n">matches_df</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">matches_df</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">right_dict</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">matches_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">matches_df</span><span class="p">[</span><span class="s1">'left'</span><span class="p">]</span> <span class="o">=</span> <span class="n">matches_df</span><span class="p">[</span><span class="s1">'left'</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">left_dict</span><span class="p">)</span>
+        <span class="n">matches_df</span><span class="p">[</span><span class="s1">'right'</span><span class="p">]</span> <span class="o">=</span> <span class="n">matches_df</span><span class="p">[</span><span class="s1">'right'</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">right_dict</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">matches_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">'left'</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="n">matches_train</span> <span class="o">=</span> <span class="n">update_matches</span><span class="p">(</span>
         <span class="n">matches_train</span><span class="p">,</span> 

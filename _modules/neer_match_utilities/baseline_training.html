@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.baseline_training &mdash; Neer Match Utilities 1.0.2 documentation</title>
+  <title>neer_match_utilities.baseline_training &mdash; Neer Match Utilities 1.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/extra.css?v=503a7970" />
@@ -15,7 +15,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=1ed6394b"></script>
+      <script src="../../_static/documentation_options.js?v=fc837d61"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -156,6 +156,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.SuggestMixin.suggest"><code class="docutils literal notranslate"><span class="pre">SuggestMixin.suggest()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.classification_metrics"><code class="docutils literal notranslate"><span class="pre">classification_metrics()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../baseline_training.html">Baseline Training</a><ul>
@@ -257,9 +258,20 @@
 <li class="toctree-l1"><a class="reference internal" href="../../similarity_features.html">Similarity Features</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.__init__"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.pairs"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.pairs()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.pairwise_similarity_dataframe"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.pairwise_similarity_dataframe()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__init__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__len__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__len__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.chunks"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.chunks()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.frame"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.frame()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.match_flags"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.match_flags()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.rows"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.rows()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.subsample_non_match_positions"><code class="docutils literal notranslate"><span class="pre">subsample_non_match_positions()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.subsample_non_matches"><code class="docutils literal notranslate"><span class="pre">subsample_non_matches()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.to_X_y"><code class="docutils literal notranslate"><span class="pre">to_X_y()</span></code></a></li>
 </ul>
@@ -271,6 +283,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../custom_similarities.html#neer_match_utilities.custom_similarities.CustomSimilarities.notzero"><code class="docutils literal notranslate"><span class="pre">CustomSimilarities.notzero()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../custom_similarities.html#neer_match_utilities.custom_similarities.register_similarities"><code class="docutils literal notranslate"><span class="pre">register_similarities()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -310,31 +323,34 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Literal</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">neer_match.similarity_map</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimilarityMap</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.similarity_features</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">SimilarityFeatures</span><span class="p">,</span>
-    <span class="n">subsample_non_matches</span><span class="p">,</span>
+    <span class="n">SimilarityPairs</span><span class="p">,</span>
+    <span class="n">subsample_non_match_positions</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.baseline_models</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">LogitMatchingModel</span><span class="p">,</span>
     <span class="n">ProbitMatchingModel</span><span class="p">,</span>
     <span class="n">GradientBoostingModel</span><span class="p">,</span>
+    <span class="n">classification_metrics</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.baseline_io</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelBaseline</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.training</span><span class="w"> </span><span class="kn">import</span> <span class="n">Training</span>  <span class="c1"># for performance_statistics_export</span>
 
 
-<span class="n">BaselineKind</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;logit&quot;</span><span class="p">,</span> <span class="s2">&quot;probit&quot;</span><span class="p">,</span> <span class="s2">&quot;gb&quot;</span><span class="p">]</span>
+<span class="n">BaselineKind</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"logit"</span><span class="p">,</span> <span class="s2">"probit"</span><span class="p">,</span> <span class="s2">"gb"</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="BaselineTrainingPipe">
 <a class="viewcode-back" href="../../baseline_training.html#neer_match_utilities.baseline_training.BaselineTrainingPipe">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">BaselineTrainingPipe</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Orchestrates training + evaluation + export for baseline (non-DL) models:</span>
 <span class="sd">    - LogitMatchingModel (statsmodels)</span>
 <span class="sd">    - ProbitMatchingModel (statsmodels)</span>
@@ -342,34 +358,44 @@
 
 <span class="sd">    Pipeline steps</span>
 <span class="sd">    --------------</span>
-<span class="sd">    1) Build full pairwise similarity DataFrames for train/val/test</span>
-<span class="sd">    2) Subsample non-matches for fitting (optional)</span>
+<span class="sd">    1) Set up the pairwise similarity features for train/val/test</span>
+<span class="sd">    2) Subsample non-matches for fitting (optional), choosing the pairs before</span>
+<span class="sd">       computing their features</span>
 <span class="sd">    3) Fit selected baseline model</span>
 <span class="sd">    4) Choose threshold (optional; recommended for GB)</span>
-<span class="sd">    5) Evaluate on full train + test</span>
-<span class="sd">    6) Save model via ModelBaseline.save(...)</span>
+<span class="sd">    5) Save model via ModelBaseline.save(...)</span>
+<span class="sd">    6) Evaluate on full train + test, together with the reloaded model for the</span>
+<span class="sd">       sanity check</span>
 <span class="sd">    7) Export performance.csv + similarity_map.dill via Training.performance_statistics_export(...)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+
+<span class="sd">    Similarity features are computed in blocks of at most ``pairs_per_chunk``</span>
+<span class="sd">    pairs and discarded once scored, so memory does not grow with the number of</span>
+<span class="sd">    pairs. Only the labels and predictions of all pairs are kept, a few bytes</span>
+<span class="sd">    each. The fitted model does not depend on ``pairs_per_chunk``. Logit and</span>
+<span class="sd">    probit probabilities come from matrix products, whose rounding can differ in</span>
+<span class="sd">    the last bits between block sizes, so a pair scored within about 1e-15 of</span>
+<span class="sd">    the threshold could be classified differently.</span>
+<span class="sd">    """</span>
 
     <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">similarity_map</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="n">SimilarityMap</span>
 
     <span class="c1"># data</span>
-    <span class="n">training_data</span><span class="p">:</span> <span class="n">Any</span>  <span class="c1"># (left_train, right_train, matches_train) or {&quot;left&quot;:..,&quot;right&quot;:..,&quot;matches&quot;:..}</span>
+    <span class="n">training_data</span><span class="p">:</span> <span class="n">Any</span>  <span class="c1"># (left_train, right_train, matches_train) or {"left":..,"right":..,"matches":..}</span>
     <span class="n">testing_data</span><span class="p">:</span> <span class="n">Any</span>
     <span class="n">validation_data</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="c1"># id columns</span>
-    <span class="n">id_left_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;id&quot;</span>
-    <span class="n">id_right_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;id&quot;</span>
+    <span class="n">id_left_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"id"</span>
+    <span class="n">id_right_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"id"</span>
 
     <span class="c1"># how to interpret matches df</span>
-    <span class="n">matches_id_left</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;left&quot;</span>
-    <span class="n">matches_id_right</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;right&quot;</span>
+    <span class="n">matches_id_left</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"left"</span>
+    <span class="n">matches_id_right</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"right"</span>
     <span class="n">matches_are_indices</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="c1"># model config</span>
-    <span class="n">model_kind</span><span class="p">:</span> <span class="n">BaselineKind</span> <span class="o">=</span> <span class="s2">&quot;gb&quot;</span>
+    <span class="n">model_kind</span><span class="p">:</span> <span class="n">BaselineKind</span> <span class="o">=</span> <span class="s2">"gb"</span>
 
     <span class="c1"># sampling</span>
     <span class="n">mismatch_share_fit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
@@ -379,13 +405,16 @@
     <span class="c1"># thresholding</span>
     <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span>
     <span class="n">tune_threshold</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="n">tune_metric</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;mcc&quot;</span><span class="p">,</span> <span class="s2">&quot;f1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;mcc&quot;</span>
+    <span class="n">tune_metric</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"mcc"</span><span class="p">,</span> <span class="s2">"f1"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"mcc"</span>
 
     <span class="c1"># export</span>
     <span class="n">base_dir</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">export_model</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">export_stats</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">reload_sanity_check</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="c1"># last, so that existing positional arguments keep their meaning</span>
+    <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># replace a model already saved under model_name</span>
+    <span class="n">pairs_per_chunk</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">250_000</span>  <span class="c1"># pairs whose features are held in memory at once</span>
 
     <span class="c1"># internals (filled during execute)</span>
     <span class="n">model_</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -402,7 +431,7 @@
         <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">obj</span><span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">],</span> <span class="n">obj</span><span class="p">[</span><span class="s2">&quot;right&quot;</span><span class="p">],</span> <span class="n">obj</span><span class="p">[</span><span class="s2">&quot;matches&quot;</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">obj</span><span class="p">[</span><span class="s2">"left"</span><span class="p">],</span> <span class="n">obj</span><span class="p">[</span><span class="s2">"right"</span><span class="p">],</span> <span class="n">obj</span><span class="p">[</span><span class="s2">"matches"</span><span class="p">]</span>
         <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">matches</span> <span class="o">=</span> <span class="n">obj</span>
         <span class="k">return</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">matches</span>
 
@@ -411,16 +440,16 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">similarity_map</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">similarity_map</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">SimilarityMap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">similarity_map</span><span class="p">)</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;similarity_map must be a dict or a SimilarityMap instance&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"similarity_map must be a dict or a SimilarityMap instance"</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_make_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_kind</span> <span class="o">==</span> <span class="s2">&quot;logit&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_kind</span> <span class="o">==</span> <span class="s2">"logit"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">LogitMatchingModel</span><span class="p">()</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_kind</span> <span class="o">==</span> <span class="s2">&quot;probit&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_kind</span> <span class="o">==</span> <span class="s2">"probit"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">ProbitMatchingModel</span><span class="p">()</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_kind</span> <span class="o">==</span> <span class="s2">&quot;gb&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_kind</span> <span class="o">==</span> <span class="s2">"gb"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">GradientBoostingModel</span><span class="p">()</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown model_kind: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_kind</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown model_kind: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_kind</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_resolve_base_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span><span class="p">)</span>
@@ -430,6 +459,18 @@
     <span class="c1"># ---------------------------</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
         <span class="n">base_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_base_dir</span><span class="p">()</span>
+
+        <span class="c1"># Fail now rather than at step 6, after the features have been built</span>
+        <span class="n">model_dir</span> <span class="o">=</span> <span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">"model"</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">export_model</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">overwrite</span> <span class="ow">and</span> <span class="n">model_dir</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">FileExistsError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Directory '</span><span class="si">{</span><span class="n">model_dir</span><span class="si">}</span><span class="s2">' already exists. Pass overwrite=True to "</span>
+                <span class="s2">"replace the saved model, or choose a different model_name."</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_kind</span> <span class="o">==</span> <span class="s2">"gb"</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">tune_threshold</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">validation_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"tune_threshold=True requires validation_data for GradientBoostingModel."</span><span class="p">)</span>
+
         <span class="n">smap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smap</span><span class="p">()</span>
 
         <span class="n">left_train</span><span class="p">,</span> <span class="n">right_train</span><span class="p">,</span> <span class="n">matches_train</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unpack_split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">training_data</span><span class="p">)</span>
@@ -439,67 +480,52 @@
         <span class="k">if</span> <span class="n">unpacked_val</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">left_val</span><span class="p">,</span> <span class="n">right_val</span><span class="p">,</span> <span class="n">matches_val</span> <span class="o">=</span> <span class="n">unpacked_val</span>
 
-        <span class="c1"># 1) Build similarity features</span>
+        <span class="c1"># 1) Set up similarity features. Nothing is computed per pair yet.</span>
         <span class="n">feats</span> <span class="o">=</span> <span class="n">SimilarityFeatures</span><span class="p">(</span><span class="n">similarity_map</span><span class="o">=</span><span class="n">smap</span><span class="p">)</span>
-
-        <span class="n">df_train</span> <span class="o">=</span> <span class="n">feats</span><span class="o">.</span><span class="n">pairwise_similarity_dataframe</span><span class="p">(</span>
-            <span class="n">left</span><span class="o">=</span><span class="n">left_train</span><span class="p">,</span>
-            <span class="n">right</span><span class="o">=</span><span class="n">right_train</span><span class="p">,</span>
-            <span class="n">matches</span><span class="o">=</span><span class="n">matches_train</span><span class="p">,</span>
+        <span class="n">pair_args</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
             <span class="n">left_id_col</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id_left_col</span><span class="p">,</span>
             <span class="n">right_id_col</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id_right_col</span><span class="p">,</span>
-            <span class="n">match_col</span><span class="o">=</span><span class="s2">&quot;match&quot;</span><span class="p">,</span>
+            <span class="n">match_col</span><span class="o">=</span><span class="s2">"match"</span><span class="p">,</span>
             <span class="n">matches_id_left</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">matches_id_left</span><span class="p">,</span>
             <span class="n">matches_id_right</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">matches_id_right</span><span class="p">,</span>
             <span class="n">matches_are_indices</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">matches_are_indices</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="n">df_test</span> <span class="o">=</span> <span class="n">feats</span><span class="o">.</span><span class="n">pairwise_similarity_dataframe</span><span class="p">(</span>
-            <span class="n">left</span><span class="o">=</span><span class="n">left_test</span><span class="p">,</span>
-            <span class="n">right</span><span class="o">=</span><span class="n">right_test</span><span class="p">,</span>
-            <span class="n">matches</span><span class="o">=</span><span class="n">matches_test</span><span class="p">,</span>
-            <span class="n">left_id_col</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id_left_col</span><span class="p">,</span>
-            <span class="n">right_id_col</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id_right_col</span><span class="p">,</span>
-            <span class="n">match_col</span><span class="o">=</span><span class="s2">&quot;match&quot;</span><span class="p">,</span>
-            <span class="n">matches_id_left</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">matches_id_left</span><span class="p">,</span>
-            <span class="n">matches_id_right</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">matches_id_right</span><span class="p">,</span>
-            <span class="n">matches_are_indices</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">matches_are_indices</span><span class="p">,</span>
-        <span class="p">)</span>
+        <span class="n">train_pairs</span> <span class="o">=</span> <span class="n">feats</span><span class="o">.</span><span class="n">pairs</span><span class="p">(</span><span class="n">left_train</span><span class="p">,</span> <span class="n">right_train</span><span class="p">,</span> <span class="n">matches_train</span><span class="p">,</span> <span class="o">**</span><span class="n">pair_args</span><span class="p">)</span>
+        <span class="n">test_pairs</span> <span class="o">=</span> <span class="n">feats</span><span class="o">.</span><span class="n">pairs</span><span class="p">(</span><span class="n">left_test</span><span class="p">,</span> <span class="n">right_test</span><span class="p">,</span> <span class="n">matches_test</span><span class="p">,</span> <span class="o">**</span><span class="n">pair_args</span><span class="p">)</span>
 
-        <span class="n">df_val</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">val_pairs</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">left_val</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">df_val</span> <span class="o">=</span> <span class="n">feats</span><span class="o">.</span><span class="n">pairwise_similarity_dataframe</span><span class="p">(</span>
-                <span class="n">left</span><span class="o">=</span><span class="n">left_val</span><span class="p">,</span>
-                <span class="n">right</span><span class="o">=</span><span class="n">right_val</span><span class="p">,</span>
-                <span class="n">matches</span><span class="o">=</span><span class="n">matches_val</span><span class="p">,</span>
-                <span class="n">left_id_col</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id_left_col</span><span class="p">,</span>
-                <span class="n">right_id_col</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id_right_col</span><span class="p">,</span>
-                <span class="n">match_col</span><span class="o">=</span><span class="s2">&quot;match&quot;</span><span class="p">,</span>
-                <span class="n">matches_id_left</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">matches_id_left</span><span class="p">,</span>
-                <span class="n">matches_id_right</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">matches_id_right</span><span class="p">,</span>
-                <span class="n">matches_are_indices</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">matches_are_indices</span><span class="p">,</span>
-            <span class="p">)</span>
+            <span class="n">val_pairs</span> <span class="o">=</span> <span class="n">feats</span><span class="o">.</span><span class="n">pairs</span><span class="p">(</span><span class="n">left_val</span><span class="p">,</span> <span class="n">right_val</span><span class="p">,</span> <span class="n">matches_val</span><span class="p">,</span> <span class="o">**</span><span class="n">pair_args</span><span class="p">)</span>
 
-        <span class="c1"># 2) Subsample for fitting</span>
-        <span class="n">df_fit</span> <span class="o">=</span> <span class="n">subsample_non_matches</span><span class="p">(</span>
-            <span class="n">df_train</span><span class="p">,</span>
-            <span class="n">match_col</span><span class="o">=</span><span class="s2">&quot;match&quot;</span><span class="p">,</span>
+        <span class="c1"># 2) Subsample for fitting. The pairs are chosen from the match column</span>
+        <span class="c1">#    alone, exactly as subsample_non_matches would choose them from the</span>
+        <span class="c1">#    full frame, and only the chosen ones get their features computed.</span>
+        <span class="n">positions</span> <span class="o">=</span> <span class="n">subsample_non_match_positions</span><span class="p">(</span>
+            <span class="n">train_pairs</span><span class="o">.</span><span class="n">match_flags</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pairs_per_chunk</span><span class="p">),</span>
             <span class="n">mismatch_share</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mismatch_share_fit</span><span class="p">,</span>
             <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">,</span>
             <span class="n">shuffle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shuffle_fit</span><span class="p">,</span>
         <span class="p">)</span>
+        <span class="n">df_fit</span> <span class="o">=</span> <span class="n">train_pairs</span><span class="o">.</span><span class="n">rows</span><span class="p">(</span><span class="n">positions</span><span class="p">)</span>
 
         <span class="c1"># 3) Fit model</span>
         <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_model</span><span class="p">()</span>
-        <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df_fit</span><span class="p">,</span> <span class="n">match_col</span><span class="o">=</span><span class="s2">&quot;match&quot;</span><span class="p">)</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df_fit</span><span class="p">,</span> <span class="n">match_col</span><span class="o">=</span><span class="s2">"match"</span><span class="p">)</span>
+        <span class="k">del</span> <span class="n">df_fit</span>
+
+        <span class="c1"># suggest() needs the similarity map. ModelBaseline.load attaches it to a</span>
+        <span class="c1"># reloaded model; attach it here too, so the returned model can suggest.</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">similarity_map</span> <span class="o">=</span> <span class="n">smap</span>
 
         <span class="c1"># 4) Threshold selection</span>
         <span class="n">chosen_t</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_kind</span> <span class="o">==</span> <span class="s2">&quot;gb&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">tune_threshold</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">df_val</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;tune_threshold=True requires validation_data for GradientBoostingModel.&quot;</span><span class="p">)</span>
-            <span class="n">best_t</span><span class="p">,</span> <span class="n">val_stats</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">best_threshold</span><span class="p">(</span><span class="n">df_val</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tune_metric</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_kind</span> <span class="o">==</span> <span class="s2">"gb"</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">tune_threshold</span><span class="p">:</span>
+            <span class="n">y_val</span><span class="p">,</span> <span class="n">proba_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_labels_and_probabilities</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">val_pairs</span><span class="p">)</span>
+            <span class="n">best_t</span><span class="p">,</span> <span class="n">val_stats</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">_best_threshold_from_proba</span><span class="p">(</span>
+                <span class="n">y_val</span><span class="p">,</span> <span class="n">proba_val</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tune_metric</span>
+            <span class="p">)</span>
             <span class="c1"># store in-model + in-pipe</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">best_threshold_</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">best_t</span><span class="p">)</span>
             <span class="n">chosen_t</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">best_t</span><span class="p">)</span>
@@ -507,26 +533,41 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">best_threshold_</span> <span class="o">=</span> <span class="n">chosen_t</span>
 
-        <span class="c1"># 5) Evaluate</span>
-        <span class="n">metrics_train</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">df_train</span><span class="p">,</span> <span class="n">match_col</span><span class="o">=</span><span class="s2">&quot;match&quot;</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="n">chosen_t</span><span class="p">)</span>
-        <span class="n">metrics_test</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">df_test</span><span class="p">,</span> <span class="n">match_col</span><span class="o">=</span><span class="s2">&quot;match&quot;</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="n">chosen_t</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">model_</span> <span class="o">=</span> <span class="n">model</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">metrics_train_</span> <span class="o">=</span> <span class="n">metrics_train</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">metrics_test_</span> <span class="o">=</span> <span class="n">metrics_test</span>
-
         <span class="c1"># If model supports storing the threshold (GB does in your code), keep it:</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;best_threshold_&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"best_threshold_"</span><span class="p">):</span>
             <span class="n">model</span><span class="o">.</span><span class="n">best_threshold_</span> <span class="o">=</span> <span class="n">chosen_t</span>
 
-        <span class="c1"># 6) Save model</span>
+        <span class="c1"># 5) Save model</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">export_model</span><span class="p">:</span>
             <span class="n">ModelBaseline</span><span class="o">.</span><span class="n">save</span><span class="p">(</span>
                 <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
                 <span class="n">target_directory</span><span class="o">=</span><span class="n">base_dir</span><span class="p">,</span>
                 <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span>
                 <span class="n">similarity_map</span><span class="o">=</span><span class="n">smap</span><span class="p">,</span>  <span class="c1"># store instructions</span>
+                <span class="n">overwrite</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">overwrite</span><span class="p">,</span>
             <span class="p">)</span>
+
+        <span class="c1"># 6) Evaluate. For the reload sanity check, the saved model is loaded</span>
+        <span class="c1">#    first and scored in the same pass, so that the features of every</span>
+        <span class="c1">#    pair are computed only once.</span>
+        <span class="n">models</span><span class="p">,</span> <span class="n">thresholds</span> <span class="o">=</span> <span class="p">[</span><span class="n">model</span><span class="p">],</span> <span class="p">[</span><span class="n">chosen_t</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reload_sanity_check</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">export_model</span><span class="p">:</span>
+            <span class="n">loaded</span> <span class="o">=</span> <span class="n">ModelBaseline</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">)</span>
+
+            <span class="c1"># Ensure we use the same threshold</span>
+            <span class="n">t_reload</span> <span class="o">=</span> <span class="n">chosen_t</span>
+            <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">loaded</span><span class="p">,</span> <span class="s2">"best_threshold_"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">t_reload</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">loaded</span><span class="o">.</span><span class="n">best_threshold_</span><span class="p">)</span>
+
+            <span class="n">models</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loaded</span><span class="p">)</span>
+            <span class="n">thresholds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t_reload</span><span class="p">)</span>
+
+        <span class="n">metrics_train</span><span class="p">,</span> <span class="o">*</span><span class="n">reloaded_train</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_evaluate</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="n">thresholds</span><span class="p">,</span> <span class="n">train_pairs</span><span class="p">)</span>
+        <span class="n">metrics_test</span><span class="p">,</span> <span class="o">*</span><span class="n">reloaded_test</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_evaluate</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="n">thresholds</span><span class="p">,</span> <span class="n">test_pairs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metrics_train_</span> <span class="o">=</span> <span class="n">metrics_train</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metrics_test_</span> <span class="o">=</span> <span class="n">metrics_test</span>
 
         <span class="c1"># 7) Export performance + similarity map</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">export_stats</span><span class="p">:</span>
@@ -543,29 +584,43 @@
                 <span class="n">target_directory</span><span class="o">=</span><span class="n">base_dir</span><span class="p">,</span>
                 <span class="n">evaluation_train</span><span class="o">=</span><span class="n">metrics_train</span><span class="p">,</span>
                 <span class="n">evaluation_test</span><span class="o">=</span><span class="n">metrics_test</span><span class="p">,</span>
-                <span class="c1"># The model was already written in step 6. Saving it again here would</span>
+                <span class="c1"># The model was already written in step 5. Saving it again here would</span>
                 <span class="c1"># overwrite that meta.pkl with one built from a different call.</span>
                 <span class="n">export_model</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="p">)</span>
 
         <span class="c1"># 8) Optional reload sanity check</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reload_sanity_check</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">export_model</span><span class="p">:</span>
-            <span class="n">loaded</span> <span class="o">=</span> <span class="n">ModelBaseline</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">reloaded_train</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">reloaded_train</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">metrics_train</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s2">"Train metrics changed after reload!"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">reloaded_test</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">metrics_test</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s2">"Test metrics changed after reload!"</span><span class="p">)</span>
 
-            <span class="c1"># Ensure we use the same threshold</span>
-            <span class="n">t_reload</span> <span class="o">=</span> <span class="n">chosen_t</span>
-            <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">loaded</span><span class="p">,</span> <span class="s2">&quot;best_threshold_&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">t_reload</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">loaded</span><span class="o">.</span><span class="n">best_threshold_</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">model</span>
 
-            <span class="n">mtr</span> <span class="o">=</span> <span class="n">loaded</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">df_train</span><span class="p">,</span> <span class="n">match_col</span><span class="o">=</span><span class="s2">&quot;match&quot;</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="n">t_reload</span><span class="p">)</span>
-            <span class="n">mts</span> <span class="o">=</span> <span class="n">loaded</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">df_test</span><span class="p">,</span> <span class="n">match_col</span><span class="o">=</span><span class="s2">&quot;match&quot;</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="n">t_reload</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_labels_and_probabilities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">pairs</span><span class="p">:</span> <span class="n">SimilarityPairs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Match labels and predicted probabilities of all pairs, scored block by block."""</span>
+        <span class="n">labels</span><span class="p">,</span> <span class="n">probabilities</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">pairs</span><span class="o">.</span><span class="n">chunks</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pairs_per_chunk</span><span class="p">):</span>
+            <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="p">[</span><span class="s2">"match"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+            <span class="n">probabilities</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">chunk</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">labels</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">probabilities</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">mtr</span> <span class="o">!=</span> <span class="n">metrics_train</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s2">&quot;Train metrics changed after reload!&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">mts</span> <span class="o">!=</span> <span class="n">metrics_test</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s2">&quot;Test metrics changed after reload!&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">models</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">thresholds</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">pairs</span><span class="p">:</span> <span class="n">SimilarityPairs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        `evaluate` of each model on all pairs, scored block by block.</span>
 
-        <span class="k">return</span> <span class="n">model</span></div>
+<span class="sd">        Per pair, only the label and each model's 0/1 prediction are kept.</span>
+<span class="sd">        """</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">predictions</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">models</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">pairs</span><span class="o">.</span><span class="n">chunks</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pairs_per_chunk</span><span class="p">):</span>
+            <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="p">[</span><span class="s2">"match"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">model</span><span class="p">,</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">kept</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="n">thresholds</span><span class="p">,</span> <span class="n">predictions</span><span class="p">):</span>
+                <span class="n">kept</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">))</span>
+
+        <span class="n">y_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">classification_metrics</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">kept</span><span class="p">))</span> <span class="k">for</span> <span class="n">kept</span> <span class="ow">in</span> <span class="n">predictions</span><span class="p">]</span></div>
 
 </pre></div>
 

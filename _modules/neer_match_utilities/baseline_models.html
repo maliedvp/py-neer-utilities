@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.baseline_models &mdash; Neer Match Utilities 1.0.2 documentation</title>
+  <title>neer_match_utilities.baseline_models &mdash; Neer Match Utilities 1.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/extra.css?v=503a7970" />
@@ -15,7 +15,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=1ed6394b"></script>
+      <script src="../../_static/documentation_options.js?v=fc837d61"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -156,6 +156,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.SuggestMixin.suggest"><code class="docutils literal notranslate"><span class="pre">SuggestMixin.suggest()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.classification_metrics"><code class="docutils literal notranslate"><span class="pre">classification_metrics()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../baseline_training.html">Baseline Training</a><ul>
@@ -257,9 +258,20 @@
 <li class="toctree-l1"><a class="reference internal" href="../../similarity_features.html">Similarity Features</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.__init__"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.pairs"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.pairs()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.pairwise_similarity_dataframe"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.pairwise_similarity_dataframe()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__init__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__len__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__len__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.chunks"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.chunks()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.frame"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.frame()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.match_flags"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.match_flags()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.rows"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.rows()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.subsample_non_match_positions"><code class="docutils literal notranslate"><span class="pre">subsample_non_match_positions()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.subsample_non_matches"><code class="docutils literal notranslate"><span class="pre">subsample_non_matches()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.to_X_y"><code class="docutils literal notranslate"><span class="pre">to_X_y()</span></code></a></li>
 </ul>
@@ -271,6 +283,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../custom_similarities.html#neer_match_utilities.custom_similarities.CustomSimilarities.notzero"><code class="docutils literal notranslate"><span class="pre">CustomSimilarities.notzero()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../custom_similarities.html#neer_match_utilities.custom_similarities.register_similarities"><code class="docutils literal notranslate"><span class="pre">register_similarities()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -305,13 +318,17 @@
              
   <h1>Source code for neer_match_utilities.baseline_models</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">contextmanager</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">neer_match</span><span class="w"> </span><span class="kn">import</span> <span class="n">similarity_map</span> <span class="k">as</span> <span class="n">_sim</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">neer_match.similarity_map</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimilarityMap</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.custom_similarities</span><span class="w"> </span><span class="kn">import</span> <span class="n">CustomSimilarities</span>
-<span class="n">CustomSimilarities</span><span class="p">()</span>  <span class="c1"># monkey-patch once, globally</span>
+<span class="c1"># Monkey-patch once, globally. Saved models were trained on the rescaled fuzz</span>
+<span class="c1"># similarities, so predicting with a loaded one must not depend on the caller</span>
+<span class="c1"># remembering to call CustomSimilarities() first.</span>
+<span class="n">CustomSimilarities</span><span class="p">()</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.similarity_features</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimilarityFeatures</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.tools.sm_exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConvergenceWarning</span>
@@ -327,23 +344,74 @@
     <span class="n">matthews_corrcoef</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="c1"># Surpress certain warnings globally in this module</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
-<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">ConvergenceWarning</span><span class="p">)</span>
-<span class="n">np</span><span class="o">.</span><span class="n">seterr</span><span class="p">(</span><span class="n">over</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">divide</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">invalid</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
-<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">RuntimeWarning</span><span class="p">)</span>
+
+
+<span class="nd">@contextmanager</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_numerical_warnings_silenced</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Silence what fitting and scoring the statsmodels baselines routinely emits:</span>
+<span class="sd">    ConvergenceWarning from the regularized fallback, and RuntimeWarning for</span>
+<span class="sd">    overflow and division in the likelihood.</span>
+
+<span class="sd">    These filters used to be set at import, which silenced every RuntimeWarning</span>
+<span class="sd">    in the caller's own code as well. They now apply only within the methods</span>
+<span class="sd">    decorated with this.</span>
+<span class="sd">    """</span>
+    <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">(),</span> <span class="n">np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">over</span><span class="o">=</span><span class="s2">"ignore"</span><span class="p">,</span> <span class="n">divide</span><span class="o">=</span><span class="s2">"ignore"</span><span class="p">,</span> <span class="n">invalid</span><span class="o">=</span><span class="s2">"ignore"</span><span class="p">):</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">"ignore"</span><span class="p">,</span> <span class="n">ConvergenceWarning</span><span class="p">)</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">"ignore"</span><span class="p">,</span> <span class="ne">RuntimeWarning</span><span class="p">)</span>
+        <span class="k">yield</span>
+
+
+<div class="viewcode-block" id="classification_metrics">
+<a class="viewcode-back" href="../../baseline_models.html#neer_match_utilities.baseline_models.classification_metrics">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">classification_metrics</span><span class="p">(</span><span class="n">y_true</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Confusion counts and scores of binary predictions.</span>
+
+<span class="sd">    Shared by the baseline models' ``evaluate`` and by</span>
+<span class="sd">    :class:`~neer_match_utilities.baseline_training.BaselineTrainingPipe`, which</span>
+<span class="sd">    collects the predictions block by block rather than from one frame.</span>
+
+<span class="sd">    Returns a dict:</span>
+
+<span class="sd">    - TP, FP, TN, FN (integers)</span>
+<span class="sd">    - Accuracy, Recall, Precision, F1, MCC (floats)</span>
+<span class="sd">    """</span>
+    <span class="n">tn</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">tp</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+
+    <span class="n">acc</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">)</span>
+    <span class="n">prec</span> <span class="o">=</span> <span class="n">precision_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">,</span> <span class="n">zero_division</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">rec</span> <span class="o">=</span> <span class="n">recall_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">,</span> <span class="n">zero_division</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">f1</span> <span class="o">=</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">,</span> <span class="n">zero_division</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">mcc</span> <span class="o">=</span> <span class="n">matthews_corrcoef</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">)</span> <span class="k">if</span> <span class="n">tp</span> <span class="o">+</span> <span class="n">fp</span> <span class="o">+</span> <span class="n">tn</span> <span class="o">+</span> <span class="n">fn</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">"TP"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">tp</span><span class="p">),</span>
+        <span class="s2">"FP"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">fp</span><span class="p">),</span>
+        <span class="s2">"TN"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">tn</span><span class="p">),</span>
+        <span class="s2">"FN"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">fn</span><span class="p">),</span>
+        <span class="s2">"Accuracy"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">acc</span><span class="p">),</span>
+        <span class="s2">"Recall"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">rec</span><span class="p">),</span>
+        <span class="s2">"Precision"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">prec</span><span class="p">),</span>
+        <span class="s2">"F1"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">f1</span><span class="p">),</span>
+        <span class="s2">"MCC"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">mcc</span><span class="p">),</span>
+    <span class="p">}</span></div>
+
+
 
 <div class="viewcode-block" id="SuggestMixin">
 <a class="viewcode-back" href="../../baseline_models.html#neer_match_utilities.baseline_models.SuggestMixin">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SuggestMixin</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Adds a NeerMatch-like .suggest(left, right, count, verbose) API to baseline models.</span>
 
 <span class="sd">    Requires:</span>
 
 <span class="sd">    - self.predict_proba(df_pairs) implemented</span>
 <span class="sd">    - self.similarity_map set to a SimilarityMap (or dict) describing features to compute</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">similarity_map</span><span class="p">:</span> <span class="n">SimilarityMap</span> <span class="o">|</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># dynamically attached by loader</span>
 
@@ -358,19 +426,25 @@
         <span class="n">verbose</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
         <span class="n">left_id_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">right_id_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">pairs_per_chunk</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">250_000</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Return top-k candidate matches per left record (like neer_match DL models).</span>
 
 <span class="sd">        Output columns:</span>
 <span class="sd">          - left: integer row index into `left` (0..len(left)-1)</span>
 <span class="sd">          - right: integer row index into `right` (0..len(right)-1)</span>
 <span class="sd">          - prediction: match probability</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+
+<span class="sd">        Pairs are scored in blocks of whole left rows, at most ``pairs_per_chunk``</span>
+<span class="sd">        pairs (but at least one left row) at a time, so memory does not grow with</span>
+<span class="sd">        ``len(left) * len(right)``. The result does not depend on the block size,</span>
+<span class="sd">        up to floating-point rounding of the probabilities.</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">similarity_map</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Baseline model has no similarity_map attached. &quot;</span>
-                <span class="s2">&quot;Load it via ModelBaseline.load(...) or pass similarity_map when saving.&quot;</span>
+                <span class="s2">"Baseline model has no similarity_map attached. "</span>
+                <span class="s2">"Load it via ModelBaseline.load(...) or pass similarity_map when saving."</span>
             <span class="p">)</span>
 
         <span class="c1"># normalize similarity map to SimilarityMap object</span>
@@ -378,7 +452,7 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">smap</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
             <span class="n">smap</span> <span class="o">=</span> <span class="n">SimilarityMap</span><span class="p">(</span><span class="n">smap</span><span class="p">)</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">smap</span><span class="p">,</span> <span class="n">SimilarityMap</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;similarity_map must be a dict or SimilarityMap&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"similarity_map must be a dict or SimilarityMap"</span><span class="p">)</span>
 
         <span class="c1"># We want neer_match-like indices: 0..n-1</span>
         <span class="n">left_tmp</span> <span class="o">=</span> <span class="n">left</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -387,50 +461,57 @@
         <span class="c1"># pick ID cols (internal)</span>
         <span class="c1"># If user provides real IDs, keep them; otherwise use row index ids.</span>
         <span class="k">if</span> <span class="n">left_id_col</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">left_tmp</span><span class="p">[</span><span class="s2">&quot;_row_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">left_tmp</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
-            <span class="n">left_id_col</span> <span class="o">=</span> <span class="s2">&quot;_row_id&quot;</span>
+            <span class="n">left_tmp</span><span class="p">[</span><span class="s2">"_row_id"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">left_tmp</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+            <span class="n">left_id_col</span> <span class="o">=</span> <span class="s2">"_row_id"</span>
         <span class="k">if</span> <span class="n">right_id_col</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">right_tmp</span><span class="p">[</span><span class="s2">&quot;_row_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">right_tmp</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
-            <span class="n">right_id_col</span> <span class="o">=</span> <span class="s2">&quot;_row_id&quot;</span>
+            <span class="n">right_tmp</span><span class="p">[</span><span class="s2">"_row_id"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">right_tmp</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+            <span class="n">right_id_col</span> <span class="o">=</span> <span class="s2">"_row_id"</span>
 
         <span class="n">feats</span> <span class="o">=</span> <span class="n">SimilarityFeatures</span><span class="p">(</span><span class="n">similarity_map</span><span class="o">=</span><span class="n">smap</span><span class="p">)</span>
 
-        <span class="n">empty_matches</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;left&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;right&quot;</span><span class="p">:</span> <span class="p">[]})</span>
+        <span class="n">empty_matches</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"left"</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">"right"</span><span class="p">:</span> <span class="p">[]})</span>
 
-        <span class="n">df_pairs</span> <span class="o">=</span> <span class="n">feats</span><span class="o">.</span><span class="n">pairwise_similarity_dataframe</span><span class="p">(</span>
+        <span class="n">pairs</span> <span class="o">=</span> <span class="n">feats</span><span class="o">.</span><span class="n">pairs</span><span class="p">(</span>
             <span class="n">left</span><span class="o">=</span><span class="n">left_tmp</span><span class="p">,</span>
             <span class="n">right</span><span class="o">=</span><span class="n">right_tmp</span><span class="p">,</span>
             <span class="n">matches</span><span class="o">=</span><span class="n">empty_matches</span><span class="p">,</span>
             <span class="n">left_id_col</span><span class="o">=</span><span class="n">left_id_col</span><span class="p">,</span>
             <span class="n">right_id_col</span><span class="o">=</span><span class="n">right_id_col</span><span class="p">,</span>
-            <span class="n">match_col</span><span class="o">=</span><span class="s2">&quot;match&quot;</span><span class="p">,</span>
-            <span class="n">matches_id_left</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span>
-            <span class="n">matches_id_right</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span>
+            <span class="n">match_col</span><span class="o">=</span><span class="s2">"match"</span><span class="p">,</span>
+            <span class="n">matches_id_left</span><span class="o">=</span><span class="s2">"left"</span><span class="p">,</span>
+            <span class="n">matches_id_right</span><span class="o">=</span><span class="s2">"right"</span><span class="p">,</span>
             <span class="n">matches_are_indices</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="p">)</span>
-
-        <span class="n">proba</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">df_pairs</span><span class="p">)</span>
-        <span class="n">df_pairs</span><span class="p">[</span><span class="s2">&quot;prediction&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">proba</span>
 
         <span class="c1"># Identify the output ID columns produced by SimilarityFeatures</span>
         <span class="c1"># It may suffix _left/_right if names collide.</span>
         <span class="k">if</span> <span class="n">left_id_col</span> <span class="o">==</span> <span class="n">right_id_col</span><span class="p">:</span>
-            <span class="n">out_left</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">left_id_col</span><span class="si">}</span><span class="s2">_left&quot;</span>
-            <span class="n">out_right</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">right_id_col</span><span class="si">}</span><span class="s2">_right&quot;</span>
+            <span class="n">out_left</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">left_id_col</span><span class="si">}</span><span class="s2">_left"</span>
+            <span class="n">out_right</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">right_id_col</span><span class="si">}</span><span class="s2">_right"</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">out_left</span> <span class="o">=</span> <span class="n">left_id_col</span>
             <span class="n">out_right</span> <span class="o">=</span> <span class="n">right_id_col</span>
 
-        <span class="n">out</span> <span class="o">=</span> <span class="n">df_pairs</span><span class="p">[[</span><span class="n">out_left</span><span class="p">,</span> <span class="n">out_right</span><span class="p">,</span> <span class="s2">&quot;prediction&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
-            <span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="n">out_left</span><span class="p">:</span> <span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">out_right</span><span class="p">:</span> <span class="s2">&quot;right&quot;</span><span class="p">}</span>
-        <span class="p">)</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">top_k</span><span class="p">(</span><span class="n">out</span><span class="p">):</span>
+            <span class="c1"># Top-k per left. The sort is stable, so ties keep the pair order.</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s2">"left"</span><span class="p">,</span> <span class="s2">"prediction"</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">out</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"left"</span><span class="p">,</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
 
-        <span class="c1"># Top-k per left</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="s2">&quot;prediction&quot;</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">])</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">count</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># Keep each block's top-k only. The top-k of all pairs is among them, and</span>
+        <span class="c1"># repeating the selection over the kept rows finds it, ties included.</span>
+        <span class="n">kept</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">df_pairs</span> <span class="ow">in</span> <span class="n">pairs</span><span class="o">.</span><span class="n">chunks</span><span class="p">(</span><span class="n">pairs_per_chunk</span><span class="p">):</span>
+            <span class="n">df_pairs</span><span class="p">[</span><span class="s2">"prediction"</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">df_pairs</span><span class="p">)</span>
+            <span class="n">kept</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">top_k</span><span class="p">(</span>
+                <span class="n">df_pairs</span><span class="p">[[</span><span class="n">out_left</span><span class="p">,</span> <span class="n">out_right</span><span class="p">,</span> <span class="s2">"prediction"</span><span class="p">]]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+                    <span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="n">out_left</span><span class="p">:</span> <span class="s2">"left"</span><span class="p">,</span> <span class="n">out_right</span><span class="p">:</span> <span class="s2">"right"</span><span class="p">}</span>
+                <span class="p">)</span>
+            <span class="p">))</span>
+
+        <span class="n">out</span> <span class="o">=</span> <span class="n">top_k</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">kept</span><span class="p">))</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[baseline.suggest] left=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">left_tmp</span><span class="p">)</span><span class="si">}</span><span class="s2"> right=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">right_tmp</span><span class="p">)</span><span class="si">}</span><span class="s2"> pairs=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df_pairs</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[baseline.suggest] left=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">left_tmp</span><span class="p">)</span><span class="si">}</span><span class="s2"> right=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">right_tmp</span><span class="p">)</span><span class="si">}</span><span class="s2"> pairs=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">pairs</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">out</span></div>
 </div>
@@ -440,7 +521,7 @@
 <div class="viewcode-block" id="StatsmodelsInferenceMixin">
 <a class="viewcode-back" href="../../baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">StatsmodelsInferenceMixin</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Keeps a fitted model usable without its statsmodels ``Results`` object.</span>
 
 <span class="sd">    Two problems motivate this. First, a ``Results`` object holds a reference to its ``Model``,</span>
@@ -459,7 +540,7 @@
 <span class="sd">    ``predict_proba`` still delegates to the ``Results`` object whenever one is present, so</span>
 <span class="sd">    behavior is unchanged for freshly fitted models and for archives that load cleanly. The</span>
 <span class="sd">    pandas-free path engages only when the result is unavailable.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">summary_text_</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">coef_table_</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
@@ -469,11 +550,11 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_check_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">params_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is not fitted yet. Call `fit()` first.&quot;</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is not fitted yet. Call `fit()` first."</span>
             <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_reset_captured</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Discard artifacts of a previous fit, so a refit cannot be saved with stale ones.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Discard artifacts of a previous fit, so a refit cannot be saved with stale ones."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">params_</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">param_names_</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">coef_table_</span> <span class="o">=</span> <span class="kc">None</span>
@@ -481,13 +562,13 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_link</span><span class="p">(</span><span class="n">z</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Map the linear predictor to a probability. Implemented per model.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Map the linear predictor to a probability. Implemented per model."""</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_exog_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="n">names</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;index&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="s2">"index"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">names</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;exog_names&quot;</span><span class="p">,</span> <span class="p">[])</span>
+            <span class="n">names</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">"exog_names"</span><span class="p">,</span> <span class="p">[])</span>
         <span class="k">return</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">names</span><span class="p">]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_build_coef_table</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
@@ -495,31 +576,32 @@
         <span class="n">ci</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">conf_int</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
             <span class="p">{</span>
-                <span class="s2">&quot;coef&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span>
-                <span class="s2">&quot;std_err&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">bse</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span>
-                <span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">tvalues</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span>
-                <span class="s2">&quot;p_value&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">pvalues</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span>
-                <span class="s2">&quot;ci_lower&quot;</span><span class="p">:</span> <span class="n">ci</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span>
-                <span class="s2">&quot;ci_upper&quot;</span><span class="p">:</span> <span class="n">ci</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span>
+                <span class="s2">"coef"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span>
+                <span class="s2">"std_err"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">bse</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span>
+                <span class="s2">"z"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">tvalues</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span>
+                <span class="s2">"p_value"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">pvalues</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span>
+                <span class="s2">"ci_lower"</span><span class="p">:</span> <span class="n">ci</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span>
+                <span class="s2">"ci_upper"</span><span class="p">:</span> <span class="n">ci</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span>
             <span class="p">},</span>
             <span class="n">index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_exog_names</span><span class="p">(),</span>
         <span class="p">)</span>
 
 <div class="viewcode-block" id="StatsmodelsInferenceMixin.capture_inference">
 <a class="viewcode-back" href="../../baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.capture_inference">[docs]</a>
+    <span class="nd">@_numerical_warnings_silenced</span><span class="p">()</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">capture_inference</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Extract the fitted model into plain types, while the training data is still attached.</span>
 
 <span class="sd">        Stores the coefficient vector, the parameter names and the regression table. These are</span>
 <span class="sd">        what :class:`~neer_match_utilities.baseline_io.ModelBaseline` writes to ``meta.pkl``,</span>
 <span class="sd">        and what a reloaded model falls back on when the statsmodels pickle is unavailable.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">params_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is not fitted yet. Call `fit()` first.&quot;</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is not fitted yet. Call `fit()` first."</span>
             <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">param_names_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exog_names</span><span class="p">()</span>
@@ -528,7 +610,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">coef_table_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_coef_table</span><span class="p">()</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not capture the coefficient table before saving: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Could not capture the coefficient table before saving: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">summary_text_</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
@@ -539,29 +621,29 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_linear_predictor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Build the design matrix in *coefficient order* and return ``X @ params``.</span>
 
 <span class="sd">        Columns are selected by the stored parameter names rather than by re-deriving them</span>
 <span class="sd">        from ``feature_cols``, so the column order cannot drift out of step with the</span>
 <span class="sd">        coefficients.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">params_</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_names_</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> has neither a statsmodels result nor stored &quot;</span>
-                <span class="s2">&quot;coefficients; it cannot predict.&quot;</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> has neither a statsmodels result nor stored "</span>
+                <span class="s2">"coefficients; it cannot predict."</span>
             <span class="p">)</span>
 
-        <span class="n">missing</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_names_</span> <span class="k">if</span> <span class="n">n</span> <span class="o">!=</span> <span class="s2">&quot;const&quot;</span> <span class="ow">and</span> <span class="n">n</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+        <span class="n">missing</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_names_</span> <span class="k">if</span> <span class="n">n</span> <span class="o">!=</span> <span class="s2">"const"</span> <span class="ow">and</span> <span class="n">n</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Input is missing </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">missing</span><span class="p">)</span><span class="si">}</span><span class="s2"> feature column(s) required by the model, &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;e.g. </span><span class="si">{</span><span class="n">missing</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">"Input is missing </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">missing</span><span class="p">)</span><span class="si">}</span><span class="s2"> feature column(s) required by the model, "</span>
+                <span class="sa">f</span><span class="s2">"e.g. </span><span class="si">{</span><span class="n">missing</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span>
 
         <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;const&quot;</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"const"</span>
             <span class="k">else</span> <span class="n">df</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_names_</span>
         <span class="p">]</span>
@@ -569,25 +651,26 @@
 
 <div class="viewcode-block" id="StatsmodelsInferenceMixin.predict_proba">
 <a class="viewcode-back" href="../../baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.predict_proba">[docs]</a>
+    <span class="nd">@_numerical_warnings_silenced</span><span class="p">()</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">predict_proba</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-        <span class="n">feature_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;col_&quot;</span><span class="p">,</span>
+        <span class="n">feature_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"col_"</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Predict match probabilities.</span>
 
-<span class="sd">        Delegates to the statsmodels result when one is present. Otherwise applies the model&#39;s</span>
+<span class="sd">        Delegates to the statsmodels result when one is present. Otherwise applies the model's</span>
 <span class="sd">        link function to the linear predictor built from the stored coefficients, which gives</span>
 <span class="sd">        the same answer without requiring the pickled result.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_fitted</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">feature_cols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_cols</span> <span class="ow">or</span> <span class="nb">sorted</span><span class="p">(</span>
                 <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">feature_prefix</span><span class="p">)]</span>
             <span class="p">)</span>
-            <span class="n">X_sm</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">feature_cols</span><span class="p">],</span> <span class="n">has_constant</span><span class="o">=</span><span class="s2">&quot;add&quot;</span><span class="p">)</span>
+            <span class="n">X_sm</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">feature_cols</span><span class="p">],</span> <span class="n">has_constant</span><span class="o">=</span><span class="s2">"add"</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_sm</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_link</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_linear_predictor</span><span class="p">(</span><span class="n">df</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span></div>
@@ -595,8 +678,9 @@
 
 <div class="viewcode-block" id="StatsmodelsInferenceMixin.coefficients">
 <a class="viewcode-back" href="../../baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.coefficients">[docs]</a>
+    <span class="nd">@_numerical_warnings_silenced</span><span class="p">()</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">coefficients</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Coefficients, standard errors, z-statistics, p-values and confidence intervals.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Coefficients, standard errors, z-statistics, p-values and confidence intervals."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_fitted</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">coef_table_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -606,18 +690,19 @@
 
         <span class="c1"># Coefficients recovered without their standard errors (e.g. by the archive</span>
         <span class="c1"># migration tool). Report what is known rather than failing.</span>
-        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;coef&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">},</span> <span class="n">index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">param_names_</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"coef"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">},</span> <span class="n">index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">param_names_</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="StatsmodelsInferenceMixin.summary">
 <a class="viewcode-back" href="../../baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.summary">[docs]</a>
+    <span class="nd">@_numerical_warnings_silenced</span><span class="p">()</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">summary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        The regression table.</span>
 
 <span class="sd">        Returns the live statsmodels ``Summary`` while the result still carries its data, and</span>
 <span class="sd">        the summary captured at save time once it does not.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_fitted</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -637,17 +722,17 @@
 <a class="viewcode-back" href="../../baseline_models.html#neer_match_utilities.baseline_models.LogitMatchingModel">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">LogitMatchingModel</span><span class="p">(</span><span class="n">SuggestMixin</span><span class="p">,</span> <span class="n">StatsmodelsInferenceMixin</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Logistic regression baseline on similarity features using statsmodels.</span>
 
 <span class="sd">    This class is designed as an alternative to the DL/NS models in `neer_match`,</span>
-<span class="sd">    using statsmodels&#39; Logit on top of the similarity features produced by</span>
-<span class="sd">    `AlternativeModels`.</span>
+<span class="sd">    using statsmodels' Logit on top of the similarity features produced by</span>
+<span class="sd">    `SimilarityFeatures`.</span>
 
 <span class="sd">    It supports:</span>
 <span class="sd">    - evaluation with TP, FP, TN, FN, Accuracy, Recall, Precision, F1, MCC,</span>
 <span class="sd">    - full inference via `summary()`.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">result</span><span class="p">:</span> <span class="n">sm</span><span class="o">.</span><span class="n">discrete</span><span class="o">.</span><span class="n">discrete_model</span><span class="o">.</span><span class="n">BinaryResultsWrapper</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="kc">False</span>
@@ -656,26 +741,28 @@
 
 <div class="viewcode-block" id="LogitMatchingModel.fit">
 <a class="viewcode-back" href="../../baseline_models.html#neer_match_utilities.baseline_models.LogitMatchingModel.fit">[docs]</a>
+    <span class="nd">@_numerical_warnings_silenced</span><span class="p">()</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-        <span class="n">match_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;match&quot;</span><span class="p">,</span>
-        <span class="n">feature_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;col_&quot;</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;LogitMatchingModel&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="n">match_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"match"</span><span class="p">,</span>
+        <span class="n">feature_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"col_"</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"LogitMatchingModel"</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">        Fit logistic regression on a pairwise similarity DataFrame.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        df : pd.DataFrame</span>
-<span class="sd">            (Possibly subsampled) DataFrame produced by AlternativeModels.</span>
-<span class="sd">        match_col : str, default &quot;match&quot;</span>
+<span class="sd">            (Possibly subsampled) DataFrame produced by</span>
+<span class="sd">            SimilarityFeatures.pairwise_similarity_dataframe().</span>
+<span class="sd">        match_col : str, default "match"</span>
 <span class="sd">            Name of the binary target column.</span>
-<span class="sd">        feature_prefix : str, default &quot;col\_&quot;</span>
+<span class="sd">        feature_prefix : str, default "col\_"</span>
 <span class="sd">            Prefix of feature columns (similarity features).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">match_col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Match column &#39;</span><span class="si">{</span><span class="n">match_col</span><span class="si">}</span><span class="s2">&#39; not found in df.columns&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Match column '</span><span class="si">{</span><span class="n">match_col</span><span class="si">}</span><span class="s2">' not found in df.columns"</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_reset_captured</span><span class="p">()</span>
 
@@ -690,14 +777,14 @@
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">nonconstant_cols</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_cols</span><span class="p">):</span>
             <span class="c1"># Optional: you could log / print which columns were dropped</span>
             <span class="c1"># dropped = sorted(set(feature_cols) - set(nonconstant_cols))</span>
-            <span class="c1"># print(f&quot;Dropping constant features: {dropped}&quot;)</span>
+            <span class="c1"># print(f"Dropping constant features: {dropped}")</span>
             <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">nonconstant_cols</span><span class="p">]</span>
             <span class="n">feature_cols</span> <span class="o">=</span> <span class="n">nonconstant_cols</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">feature_cols</span> <span class="o">=</span> <span class="n">feature_cols</span>
 
         <span class="c1"># 3. Add constant for intercept term</span>
-        <span class="n">X_sm</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">has_constant</span><span class="o">=</span><span class="s2">&quot;add&quot;</span><span class="p">)</span>
+        <span class="n">X_sm</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">has_constant</span><span class="o">=</span><span class="s2">"add"</span><span class="p">)</span>
 
         <span class="c1"># 4. Fit classical MLE logit, with regularized fallback</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">Logit</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">X_sm</span><span class="p">)</span>
@@ -716,17 +803,17 @@
                         <span class="n">disp</span><span class="o">=</span><span class="mi">0</span>
                     <span class="p">)</span>
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[LogitMatchingModel] Used regularization alpha=</span><span class="si">{</span><span class="n">alpha</span><span class="si">}</span><span class="s2"> due to singular matrix&quot;</span><span class="p">)</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[LogitMatchingModel] Used regularization alpha=</span><span class="si">{</span><span class="n">alpha</span><span class="si">}</span><span class="s2"> due to singular matrix"</span><span class="p">)</span>
                         <span class="k">break</span>
                 <span class="k">except</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">LinAlgError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
                     <span class="k">continue</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-                    <span class="s2">&quot;Could not fit logit model even with strong regularization. Possible causes:</span><span class="se">\n</span><span class="s2">&quot;</span>
-                    <span class="s2">&quot;  - Perfect separation: One or more features perfectly predict matches</span><span class="se">\n</span><span class="s2">&quot;</span>
-                    <span class="s2">&quot;  - Multicollinearity: Features are linear combinations of each other</span><span class="se">\n</span><span class="s2">&quot;</span>
-                    <span class="s2">&quot;Try: (1) More aggressive feature selection, (2) Remove problematic features, &quot;</span>
-                    <span class="s2">&quot;(3) Increase training data size&quot;</span>
+                    <span class="s2">"Could not fit logit model even with strong regularization. Possible causes:</span><span class="se">\n</span><span class="s2">"</span>
+                    <span class="s2">"  - Perfect separation: One or more features perfectly predict matches</span><span class="se">\n</span><span class="s2">"</span>
+                    <span class="s2">"  - Multicollinearity: Features are linear combinations of each other</span><span class="se">\n</span><span class="s2">"</span>
+                    <span class="s2">"Try: (1) More aggressive feature selection, (2) Remove problematic features, "</span>
+                    <span class="s2">"(3) Increase training data size"</span>
                 <span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span></div>
@@ -734,18 +821,18 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_link</span><span class="p">(</span><span class="n">z</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Logistic CDF, matching ``sm.Logit.predict``.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Logistic CDF, matching ``sm.Logit.predict``."""</span>
         <span class="k">return</span> <span class="n">expit</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">evaluate</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-        <span class="n">match_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;match&quot;</span><span class="p">,</span>
-        <span class="n">feature_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;col_&quot;</span><span class="p">,</span>
+        <span class="n">match_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"match"</span><span class="p">,</span>
+        <span class="n">feature_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"col_"</span><span class="p">,</span>
         <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">match_col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Match column &#39;</span><span class="si">{</span><span class="n">match_col</span><span class="si">}</span><span class="s2">&#39; not found in DataFrame.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Match column '</span><span class="si">{</span><span class="n">match_col</span><span class="si">}</span><span class="s2">' not found in DataFrame."</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_fitted</span><span class="p">()</span>
 
@@ -753,25 +840,7 @@
         <span class="n">proba</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">feature_prefix</span><span class="o">=</span><span class="n">feature_prefix</span><span class="p">)</span>
         <span class="n">y_hat</span> <span class="o">=</span> <span class="p">(</span><span class="n">proba</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 
-        <span class="n">tn</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">tp</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-
-        <span class="n">acc</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">)</span>
-        <span class="n">prec</span> <span class="o">=</span> <span class="n">precision_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">,</span> <span class="n">zero_division</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">rec</span> <span class="o">=</span> <span class="n">recall_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">,</span> <span class="n">zero_division</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">f1</span> <span class="o">=</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">,</span> <span class="n">zero_division</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">mcc</span> <span class="o">=</span> <span class="n">matthews_corrcoef</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">)</span> <span class="k">if</span> <span class="n">tp</span> <span class="o">+</span> <span class="n">fp</span> <span class="o">+</span> <span class="n">tn</span> <span class="o">+</span> <span class="n">fn</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
-
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;TP&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">tp</span><span class="p">),</span>
-            <span class="s2">&quot;FP&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">fp</span><span class="p">),</span>
-            <span class="s2">&quot;TN&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">tn</span><span class="p">),</span>
-            <span class="s2">&quot;FN&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">fn</span><span class="p">),</span>
-            <span class="s2">&quot;Accuracy&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">acc</span><span class="p">),</span>
-            <span class="s2">&quot;Recall&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">rec</span><span class="p">),</span>
-            <span class="s2">&quot;Precision&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">prec</span><span class="p">),</span>
-            <span class="s2">&quot;F1&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">f1</span><span class="p">),</span>
-            <span class="s2">&quot;MCC&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">mcc</span><span class="p">),</span>
-        <span class="p">}</span></div>
+        <span class="k">return</span> <span class="n">classification_metrics</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">)</span></div>
 
 
 
@@ -779,11 +848,11 @@
 <a class="viewcode-back" href="../../baseline_models.html#neer_match_utilities.baseline_models.ProbitMatchingModel">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ProbitMatchingModel</span><span class="p">(</span><span class="n">SuggestMixin</span><span class="p">,</span> <span class="n">StatsmodelsInferenceMixin</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Probit regression baseline on similarity features using statsmodels.</span>
 
 <span class="sd">    Same interface as LogitMatchingModel, but using a normal CDF link.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">result</span><span class="p">:</span> <span class="n">sm</span><span class="o">.</span><span class="n">discrete</span><span class="o">.</span><span class="n">discrete_model</span><span class="o">.</span><span class="n">BinaryResultsWrapper</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="kc">False</span>
@@ -792,26 +861,28 @@
 
 <div class="viewcode-block" id="ProbitMatchingModel.fit">
 <a class="viewcode-back" href="../../baseline_models.html#neer_match_utilities.baseline_models.ProbitMatchingModel.fit">[docs]</a>
+    <span class="nd">@_numerical_warnings_silenced</span><span class="p">()</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-        <span class="n">match_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;match&quot;</span><span class="p">,</span>
-        <span class="n">feature_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;col_&quot;</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ProbitMatchingModel&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="n">match_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"match"</span><span class="p">,</span>
+        <span class="n">feature_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"col_"</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"ProbitMatchingModel"</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">        Fit probit regression on a pairwise similarity DataFrame.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        df : pd.DataFrame</span>
-<span class="sd">            (Possibly subsampled) DataFrame produced by AlternativeModels.</span>
-<span class="sd">        match_col : str, default &quot;match&quot;</span>
+<span class="sd">            (Possibly subsampled) DataFrame produced by</span>
+<span class="sd">            SimilarityFeatures.pairwise_similarity_dataframe().</span>
+<span class="sd">        match_col : str, default "match"</span>
 <span class="sd">            Name of the binary target column.</span>
-<span class="sd">        feature_prefix : str, default &quot;col\_&quot;</span>
+<span class="sd">        feature_prefix : str, default "col\_"</span>
 <span class="sd">            Prefix of feature columns (similarity features).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">match_col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Match column &#39;</span><span class="si">{</span><span class="n">match_col</span><span class="si">}</span><span class="s2">&#39; not found in df.columns&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Match column '</span><span class="si">{</span><span class="n">match_col</span><span class="si">}</span><span class="s2">' not found in df.columns"</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_reset_captured</span><span class="p">()</span>
 
@@ -830,7 +901,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">feature_cols</span> <span class="o">=</span> <span class="n">feature_cols</span>
 
         <span class="c1"># 3. Add constant for intercept term</span>
-        <span class="n">X_sm</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">has_constant</span><span class="o">=</span><span class="s2">&quot;add&quot;</span><span class="p">)</span>
+        <span class="n">X_sm</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">has_constant</span><span class="o">=</span><span class="s2">"add"</span><span class="p">)</span>
 
         <span class="c1"># 4. Probit with ridge regularization (helps with separation)</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">Probit</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">X_sm</span><span class="p">)</span>
@@ -846,17 +917,17 @@
                 <span class="p">)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">alpha</span> <span class="o">&gt;</span> <span class="mf">1e-4</span><span class="p">:</span>  <span class="c1"># Only print if we needed stronger regularization</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[ProbitMatchingModel] Used regularization alpha=</span><span class="si">{</span><span class="n">alpha</span><span class="si">}</span><span class="s2"> due to singular matrix&quot;</span><span class="p">)</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[ProbitMatchingModel] Used regularization alpha=</span><span class="si">{</span><span class="n">alpha</span><span class="si">}</span><span class="s2"> due to singular matrix"</span><span class="p">)</span>
                     <span class="k">break</span>
             <span class="k">except</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">LinAlgError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
                 <span class="k">continue</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-                <span class="s2">&quot;Could not fit probit model even with strong regularization. Possible causes:</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="s2">&quot;  - Perfect separation: One or more features perfectly predict matches</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="s2">&quot;  - Multicollinearity: Features are linear combinations of each other</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="s2">&quot;Try: (1) More aggressive feature selection, (2) Remove problematic features, &quot;</span>
-                <span class="s2">&quot;(3) Increase training data size&quot;</span>
+                <span class="s2">"Could not fit probit model even with strong regularization. Possible causes:</span><span class="se">\n</span><span class="s2">"</span>
+                <span class="s2">"  - Perfect separation: One or more features perfectly predict matches</span><span class="se">\n</span><span class="s2">"</span>
+                <span class="s2">"  - Multicollinearity: Features are linear combinations of each other</span><span class="se">\n</span><span class="s2">"</span>
+                <span class="s2">"Try: (1) More aggressive feature selection, (2) Remove problematic features, "</span>
+                <span class="s2">"(3) Increase training data size"</span>
             <span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span></div>
@@ -864,18 +935,18 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_link</span><span class="p">(</span><span class="n">z</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Standard normal CDF, matching ``sm.Probit.predict``.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Standard normal CDF, matching ``sm.Probit.predict``."""</span>
         <span class="k">return</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">evaluate</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-        <span class="n">match_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;match&quot;</span><span class="p">,</span>
-        <span class="n">feature_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;col_&quot;</span><span class="p">,</span>
+        <span class="n">match_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"match"</span><span class="p">,</span>
+        <span class="n">feature_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"col_"</span><span class="p">,</span>
         <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">match_col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Match column &#39;</span><span class="si">{</span><span class="n">match_col</span><span class="si">}</span><span class="s2">&#39; not found in DataFrame.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Match column '</span><span class="si">{</span><span class="n">match_col</span><span class="si">}</span><span class="s2">' not found in DataFrame."</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_fitted</span><span class="p">()</span>
 
@@ -883,25 +954,7 @@
         <span class="n">proba</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">feature_prefix</span><span class="o">=</span><span class="n">feature_prefix</span><span class="p">)</span>
         <span class="n">y_hat</span> <span class="o">=</span> <span class="p">(</span><span class="n">proba</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 
-        <span class="n">tn</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">tp</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-
-        <span class="n">acc</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">)</span>
-        <span class="n">prec</span> <span class="o">=</span> <span class="n">precision_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">,</span> <span class="n">zero_division</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">rec</span> <span class="o">=</span> <span class="n">recall_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">,</span> <span class="n">zero_division</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">f1</span> <span class="o">=</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">,</span> <span class="n">zero_division</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">mcc</span> <span class="o">=</span> <span class="n">matthews_corrcoef</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">)</span> <span class="k">if</span> <span class="n">tp</span> <span class="o">+</span> <span class="n">fp</span> <span class="o">+</span> <span class="n">tn</span> <span class="o">+</span> <span class="n">fn</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
-
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;TP&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">tp</span><span class="p">),</span>
-            <span class="s2">&quot;FP&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">fp</span><span class="p">),</span>
-            <span class="s2">&quot;TN&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">tn</span><span class="p">),</span>
-            <span class="s2">&quot;FN&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">fn</span><span class="p">),</span>
-            <span class="s2">&quot;Accuracy&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">acc</span><span class="p">),</span>
-            <span class="s2">&quot;Recall&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">rec</span><span class="p">),</span>
-            <span class="s2">&quot;Precision&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">prec</span><span class="p">),</span>
-            <span class="s2">&quot;F1&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">f1</span><span class="p">),</span>
-            <span class="s2">&quot;MCC&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">mcc</span><span class="p">),</span>
-        <span class="p">}</span></div>
+        <span class="k">return</span> <span class="n">classification_metrics</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">)</span></div>
 
 
 
@@ -909,12 +962,12 @@
 <a class="viewcode-back" href="../../baseline_models.html#neer_match_utilities.baseline_models.GradientBoostingModel">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">GradientBoostingModel</span><span class="p">(</span><span class="n">SuggestMixin</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Gradient boosting baseline on similarity features using scikit-learn.</span>
 
 <span class="sd">    Designed as an alternative to the DL/NS models in `neer_match`, using a</span>
 <span class="sd">    tree-based GradientBoostingClassifier on top of similarity features</span>
-<span class="sd">    produced by `AlternativeModels`.</span>
+<span class="sd">    produced by `SimilarityFeatures`.</span>
 
 <span class="sd">    It supports:</span>
 <span class="sd">    - evaluation with TP, FP, TN, FN, Accuracy, Recall, Precision, F1, MCC,</span>
@@ -924,7 +977,7 @@
 <span class="sd">    -----</span>
 <span class="sd">    - Unlike Logit/Probit, this model has no statistical inference (SE/p-values).</span>
 <span class="sd">    - Works well with nonlinearities and interactions in similarity features.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">model</span><span class="p">:</span> <span class="n">GradientBoostingClassifier</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
         <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">GradientBoostingClassifier</span><span class="p">(</span>
@@ -944,32 +997,33 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-        <span class="n">match_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;match&quot;</span><span class="p">,</span>
-        <span class="n">feature_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;col_&quot;</span><span class="p">,</span>
+        <span class="n">match_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"match"</span><span class="p">,</span>
+        <span class="n">feature_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"col_"</span><span class="p">,</span>
         <span class="n">use_class_weight</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;GradientBoostingModel&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"GradientBoostingModel"</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">        Fit gradient boosting on a pairwise similarity DataFrame.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        df : pd.DataFrame</span>
-<span class="sd">            (Possibly subsampled) DataFrame produced by AlternativeModels.</span>
-<span class="sd">        match_col : str, default &quot;match&quot;</span>
+<span class="sd">            (Possibly subsampled) DataFrame produced by</span>
+<span class="sd">            SimilarityFeatures.pairwise_similarity_dataframe().</span>
+<span class="sd">        match_col : str, default "match"</span>
 <span class="sd">            Name of the binary target column.</span>
-<span class="sd">        feature_prefix : str, default &quot;col\_&quot;</span>
+<span class="sd">        feature_prefix : str, default "col\_"</span>
 <span class="sd">            Prefix of feature columns (similarity features).</span>
 <span class="sd">        use_class_weight : bool, default False</span>
 <span class="sd">            If True, uses inverse-frequency sample weights to upweight matches.</span>
 <span class="sd">            Useful if you fit on a very imbalanced dataset.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">match_col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Match column &#39;</span><span class="si">{</span><span class="n">match_col</span><span class="si">}</span><span class="s2">&#39; not found in df.columns&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Match column '</span><span class="si">{</span><span class="n">match_col</span><span class="si">}</span><span class="s2">' not found in df.columns"</span><span class="p">)</span>
 
         <span class="c1"># 1. Select feature columns</span>
         <span class="n">feature_cols</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">feature_prefix</span><span class="p">)])</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">feature_cols</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No feature columns starting with </span><span class="si">{</span><span class="n">feature_prefix</span><span class="si">!r}</span><span class="s2"> found.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"No feature columns starting with </span><span class="si">{</span><span class="n">feature_prefix</span><span class="si">!r}</span><span class="s2"> found."</span><span class="p">)</span>
 
         <span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">feature_cols</span><span class="p">]</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">match_col</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
@@ -1002,21 +1056,21 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_check_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;estimators_&quot;</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;GradientBoostingModel is not fitted yet. Call `fit()` first.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">"estimators_"</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"GradientBoostingModel is not fitted yet. Call `fit()` first."</span><span class="p">)</span>
 
 <div class="viewcode-block" id="GradientBoostingModel.predict_proba">
 <a class="viewcode-back" href="../../baseline_models.html#neer_match_utilities.baseline_models.GradientBoostingModel.predict_proba">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">predict_proba</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-        <span class="n">feature_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;col_&quot;</span><span class="p">,</span>
+        <span class="n">feature_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"col_"</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Predict match probabilities for a pairwise similarity DataFrame.</span>
 
 <span class="sd">        Returns the probability for the positive class (match = 1).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_fitted</span><span class="p">()</span>
 
         <span class="n">feature_cols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_cols</span> <span class="ow">or</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">feature_prefix</span><span class="p">)])</span>
@@ -1030,20 +1084,20 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">evaluate</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-        <span class="n">match_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;match&quot;</span><span class="p">,</span>
-        <span class="n">feature_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;col_&quot;</span><span class="p">,</span>
+        <span class="n">match_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"match"</span><span class="p">,</span>
+        <span class="n">feature_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"col_"</span><span class="p">,</span>
         <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Evaluate the model on a pairwise similarity DataFrame.</span>
 
 <span class="sd">        Returns a dict:</span>
 
 <span class="sd">        - TP, FP, TN, FN (integers)</span>
 <span class="sd">        - Accuracy, Recall, Precision, F1, MCC (floats)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">match_col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Match column &#39;</span><span class="si">{</span><span class="n">match_col</span><span class="si">}</span><span class="s2">&#39; not found in DataFrame.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Match column '</span><span class="si">{</span><span class="n">match_col</span><span class="si">}</span><span class="s2">' not found in DataFrame."</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_fitted</span><span class="p">()</span>
 
@@ -1051,32 +1105,14 @@
         <span class="n">proba</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">feature_prefix</span><span class="o">=</span><span class="n">feature_prefix</span><span class="p">)</span>
         <span class="n">y_hat</span> <span class="o">=</span> <span class="p">(</span><span class="n">proba</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 
-        <span class="n">tn</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">tp</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-
-        <span class="n">acc</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">)</span>
-        <span class="n">prec</span> <span class="o">=</span> <span class="n">precision_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">,</span> <span class="n">zero_division</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">rec</span> <span class="o">=</span> <span class="n">recall_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">,</span> <span class="n">zero_division</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">f1</span> <span class="o">=</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">,</span> <span class="n">zero_division</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">mcc</span> <span class="o">=</span> <span class="n">matthews_corrcoef</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">tp</span> <span class="o">+</span> <span class="n">fp</span> <span class="o">+</span> <span class="n">tn</span> <span class="o">+</span> <span class="n">fn</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
-
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;TP&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">tp</span><span class="p">),</span>
-            <span class="s2">&quot;FP&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">fp</span><span class="p">),</span>
-            <span class="s2">&quot;TN&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">tn</span><span class="p">),</span>
-            <span class="s2">&quot;FN&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">fn</span><span class="p">),</span>
-            <span class="s2">&quot;Accuracy&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">acc</span><span class="p">),</span>
-            <span class="s2">&quot;Recall&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">rec</span><span class="p">),</span>
-            <span class="s2">&quot;Precision&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">prec</span><span class="p">),</span>
-            <span class="s2">&quot;F1&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">f1</span><span class="p">),</span>
-            <span class="s2">&quot;MCC&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">mcc</span><span class="p">),</span>
-        <span class="p">}</span></div>
+        <span class="k">return</span> <span class="n">classification_metrics</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="GradientBoostingModel.summary">
 <a class="viewcode-back" href="../../baseline_models.html#neer_match_utilities.baseline_models.GradientBoostingModel.summary">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return a simple &quot;summary&quot; as a DataFrame of feature importances.</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Return a simple "summary" as a DataFrame of feature importances.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1087,16 +1123,16 @@
 <span class="sd">        -------</span>
 <span class="sd">        pd.DataFrame</span>
 <span class="sd">            Columns: feature, importance</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_fitted</span><span class="p">()</span>
 
-        <span class="n">importances</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;feature_importances_&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">importances</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">"feature_importances_"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">importances</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Model does not expose feature_importances_.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Model does not expose feature_importances_."</span><span class="p">)</span>
 
         <span class="n">df_imp</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-            <span class="p">{</span><span class="s2">&quot;feature&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_cols</span><span class="p">,</span> <span class="s2">&quot;importance&quot;</span><span class="p">:</span> <span class="n">importances</span><span class="p">}</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;importance&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="p">{</span><span class="s2">"feature"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_cols</span><span class="p">,</span> <span class="s2">"importance"</span><span class="p">:</span> <span class="n">importances</span><span class="p">}</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">"importance"</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">df_imp</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">top_k</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
@@ -1106,27 +1142,35 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">best_threshold</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">df_val</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-        <span class="n">match_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;match&quot;</span><span class="p">,</span>
-        <span class="n">feature_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;col_&quot;</span><span class="p">,</span>
-        <span class="n">metric</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mcc&quot;</span><span class="p">,</span>
+        <span class="n">match_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"match"</span><span class="p">,</span>
+        <span class="n">feature_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"col_"</span><span class="p">,</span>
+        <span class="n">metric</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"mcc"</span><span class="p">,</span>
         <span class="n">thresholds</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">store_treshold</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">store_threshold</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">store_treshold</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">        Find the classification threshold that maximizes a metric on validation data.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        df_val : pd.DataFrame</span>
-<span class="sd">            Validation DataFrame produced by AlternativeModels.pairwise_similarity_dataframe().</span>
-<span class="sd">        match_col : str, default &quot;match&quot;</span>
+<span class="sd">            Validation DataFrame produced by SimilarityFeatures.pairwise_similarity_dataframe().</span>
+<span class="sd">        match_col : str, default "match"</span>
 <span class="sd">            Target column.</span>
-<span class="sd">        feature_prefix : str, default &quot;col\_&quot;</span>
+<span class="sd">        feature_prefix : str, default "col\_"</span>
 <span class="sd">            Feature column prefix.</span>
-<span class="sd">        metric : {&quot;mcc&quot;,&quot;f1&quot;}, default &quot;mcc&quot;</span>
+<span class="sd">        metric : {"mcc","f1"}, default "mcc"</span>
 <span class="sd">            Metric to maximize.</span>
 <span class="sd">        thresholds : np.ndarray or None</span>
 <span class="sd">            Threshold grid. If None, uses np.linspace(0.01, 0.99, 99).</span>
+<span class="sd">        store_threshold : bool, default True</span>
+<span class="sd">            If True, also store the chosen threshold on the model as</span>
+<span class="sd">            ``best_threshold_``, which ``ModelBaseline.save`` saves with it.</span>
+<span class="sd">        store_treshold : bool or None</span>
+<span class="sd">            Deprecated misspelling of ``store_threshold``, still accepted with a</span>
+<span class="sd">            FutureWarning.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -1134,14 +1178,37 @@
 <span class="sd">            Threshold achieving the best metric on df_val.</span>
 <span class="sd">        best_stats : dict</span>
 <span class="sd">            Evaluation dict (TP/FP/TN/FN/Accuracy/Recall/Precision/F1/MCC) at best_t.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_check_fitted</span><span class="p">()</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">store_treshold</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">"`store_treshold` is deprecated and will be removed in a future "</span>
+                <span class="s2">"release; use `store_threshold` instead."</span><span class="p">,</span>
+                <span class="ne">FutureWarning</span><span class="p">,</span>
+                <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">store_threshold</span> <span class="o">=</span> <span class="n">store_treshold</span>
 
-        <span class="k">if</span> <span class="n">thresholds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">thresholds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">,</span> <span class="mi">99</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_fitted</span><span class="p">()</span>
 
         <span class="n">y_true</span> <span class="o">=</span> <span class="n">df_val</span><span class="p">[</span><span class="n">match_col</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
         <span class="n">proba</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">df_val</span><span class="p">,</span> <span class="n">feature_prefix</span><span class="o">=</span><span class="n">feature_prefix</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_best_threshold_from_proba</span><span class="p">(</span>
+            <span class="n">y_true</span><span class="p">,</span> <span class="n">proba</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="n">metric</span><span class="p">,</span> <span class="n">thresholds</span><span class="o">=</span><span class="n">thresholds</span><span class="p">,</span> <span class="n">store_threshold</span><span class="o">=</span><span class="n">store_threshold</span>
+        <span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_best_threshold_from_proba</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">y_true</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">proba</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">metric</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"mcc"</span><span class="p">,</span>
+        <span class="n">thresholds</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">store_threshold</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""`best_threshold` on predictions already made, e.g. block by block."""</span>
+        <span class="k">if</span> <span class="n">thresholds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">thresholds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">,</span> <span class="mi">99</span><span class="p">)</span>
 
         <span class="n">best_t</span> <span class="o">=</span> <span class="mf">0.5</span>
         <span class="n">best_score</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
@@ -1151,27 +1218,21 @@
             <span class="n">y_hat</span> <span class="o">=</span> <span class="p">(</span><span class="n">proba</span> <span class="o">&gt;=</span> <span class="n">t</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 
             <span class="c1"># choose metric</span>
-            <span class="k">if</span> <span class="n">metric</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;f1&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">metric</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"f1"</span><span class="p">:</span>
                 <span class="n">score</span> <span class="o">=</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">,</span> <span class="n">zero_division</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">metric</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;mcc&quot;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">metric</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"mcc"</span><span class="p">:</span>
                 <span class="n">score</span> <span class="o">=</span> <span class="n">matthews_corrcoef</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;metric must be &#39;mcc&#39; or &#39;f1&#39;&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"metric must be 'mcc' or 'f1'"</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">score</span> <span class="o">&gt;</span> <span class="n">best_score</span><span class="p">:</span>
                 <span class="n">best_score</span> <span class="o">=</span> <span class="n">score</span>
                 <span class="n">best_t</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-                <span class="n">best_stats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span>
-                    <span class="n">df_val</span><span class="p">,</span>
-                    <span class="n">match_col</span><span class="o">=</span><span class="n">match_col</span><span class="p">,</span>
-                    <span class="n">feature_prefix</span><span class="o">=</span><span class="n">feature_prefix</span><span class="p">,</span>
-                    <span class="n">threshold</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">t</span><span class="p">),</span>
-                <span class="p">)</span>
-            <span class="k">if</span> <span class="n">store_treshold</span><span class="p">:</span>
+                <span class="n">best_stats</span> <span class="o">=</span> <span class="n">classification_metrics</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">store_threshold</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">best_threshold_</span> <span class="o">=</span> <span class="n">best_t</span>
 
         <span class="k">return</span> <span class="n">best_t</span><span class="p">,</span> <span class="n">best_stats</span></div>
-</div>
 
 </pre></div>
 

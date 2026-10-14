@@ -313,6 +313,7 @@ training_pipeline = BaselineTrainingPipe(
     mismatch_share_fit=1.0,
     # tune_threshold=False, # recommended for "gb"
     # tune_metric="mcc",
+    overwrite=True, # replace the model saved by a previous run
 )
 
 training_pipeline.execute()
@@ -321,4 +322,4 @@ training_pipeline.execute()
     Performance metrics saved to /Users/marli453/develop/py-neer-utilities/docs/source/_static/examples/demonstration_model/performance.csv
     Similarity map saved to /Users/marli453/develop/py-neer-utilities/docs/source/_static/examples/demonstration_model/similarity_map.dill
 
-    LogitMatchingModel(result=<statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x13225b510>, feature_cols=['col_city_city_levenshtein', 'col_company_name_company_name_jaro_winkler', 'col_company_name_company_name_levenshtein', 'col_company_name_company_name_partial_token_sort_ratio', 'col_industry_industry_jaro_winkler', 'col_industry_industry_levenshtein'])
+    LogitMatchingModel(result=<statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x12fd17710>, feature_cols=['col_city_city_levenshtein', 'col_company_name_company_name_jaro_winkler', 'col_company_name_company_name_levenshtein', 'col_company_name_company_name_partial_token_sort_ratio', 'col_industry_industry_jaro_winkler', 'col_industry_industry_levenshtein'])
