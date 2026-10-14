@@ -7,8 +7,12 @@ from tensorflow.keras import layers as _layers
 from graphviz import Digraph
 from typing import Dict, List
 
+import contextlib
+import io
 import typing
 import shutil
+
+import pandas as pd
 
 
 class Model:
@@ -494,3 +498,46 @@ class EpochEndSaver(tf.keras.callbacks.Callback):
             overwrite=True,
         )
 
+
+class ValidationMetrics(tf.keras.callbacks.Callback):
+    """
+    Score the model on validation data at the end of every epoch.
+
+    The metrics ``DLMatchingModel.evaluate`` returns for all validation record
+    pairs are added to the epoch's logs with a ``val_`` prefix (``val_F1``,
+    ``val_MCC``, ``val_Loss``, ...), where the history and later callbacks, such
+    as EarlyStopping, see them.
+
+    It calls ``evaluate`` on data frames, which every supported neer-match
+    version provides; Keras's own ``validation_data`` needs a newer neer-match.
+    """
+
+    def __init__(
+        self,
+        left: pd.DataFrame,
+        right: pd.DataFrame,
+        matches: pd.DataFrame,
+        batch_size: int = 1024,
+    ):
+        """
+        Parameters
+        ----------
+        left, right, matches : pd.DataFrame
+            The validation data, in the format the model is trained on.
+        batch_size : int
+            Record pairs per evaluation batch. Affects speed and memory only;
+            ``val_Loss`` is neer-match's loss summed over these batches.
+        """
+        super().__init__()
+        self.left, self.right, self.matches = left, right, matches
+        self.batch_size = batch_size
+
+    def on_epoch_end(self, epoch: int, logs=None):
+        # evaluate prints a progress bar on every call and takes no verbose flag
+        with contextlib.redirect_stdout(io.StringIO()):
+            metrics = self.model.evaluate(
+                self.left, self.right, self.matches,
+                batch_size=self.batch_size, mismatch_share=1.0,
+            )
+        if logs is not None:
+            logs.update({f"val_{name}": float(value) for name, value in metrics.items()})

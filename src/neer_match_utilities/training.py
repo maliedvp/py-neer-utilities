@@ -4,7 +4,7 @@ from .base import SuperClass
 from neer_match.similarity_map import SimilarityMap
 from neer_match.matching_model import DLMatchingModel
 from neer_match_utilities.baseline_io import ModelBaseline
-from neer_match_utilities.model import Model, EpochEndSaver
+from neer_match_utilities.model import Model, EpochEndSaver, ValidationMetrics
 
 import pandas as pd
 from datetime import datetime
@@ -554,6 +554,18 @@ class TrainingPipe:
         - Tuple: (left_test, right_test, matches_test)
         - Dict: {"left": left_test, "right": right_test, "matches": matches_test}
 
+    validation_data : tuple or dict, optional
+        Preprocessed validation data, in the same formats as `training_data`.
+        If given, the model is scored on all validation record pairs after every
+        epoch of both stages. The metrics are logged with a `val_` prefix (e.g.
+        `val_F1`, `val_MCC`) in the history and in `epoch_overview.csv`, and each
+        stage keeps the epoch with the highest `val_F1` instead of the highest
+        training F1. Defaults to `None`.
+
+    early_stopping_patience : int, optional
+        Requires `validation_data`. If given, a stage stops once `val_F1` has not
+        improved for this many epochs. Defaults to `None` (no early stopping).
+
     similarity_map : dict
         User-defined similarity configuration mapping variable names to similarity measures.
         Must follow the format accepted by `SimilarityMap`.
@@ -764,6 +776,8 @@ class TrainingPipe:
         testing_data,    # (left_test, right_test, matches_test)   OR dict with keys
         similarity_map: dict,
         *,
+        validation_data=None,  # same formats as training_data
+        early_stopping_patience: int | None = None,
         initial_feature_width_scales: int = 10,
         feature_depths: int = 2,
         initial_record_width_scale: int = 10,
@@ -866,14 +880,27 @@ class TrainingPipe:
         # Unpack user-supplied data
         self.left_train, self.right_train, self.matches_train = self._unpack_split(training_data)
         self.left_test, self.right_test, self.matches_test = self._unpack_split(testing_data)
+        self.validation_data = (
+            None if validation_data is None else self._unpack_split(validation_data)
+        )
+
+        if early_stopping_patience is not None and self.validation_data is None:
+            raise ValueError("early_stopping_patience requires validation_data.")
+        self.early_stopping_patience = early_stopping_patience
 
         # Basic sanity checks
-        for name, df, col in [
+        frames = [
             ("left_train", self.left_train, self.id_left_col),
             ("right_train", self.right_train, self.id_right_col),
             ("left_test", self.left_test, self.id_left_col),
             ("right_test", self.right_test, self.id_right_col),
-        ]:
+        ]
+        if self.validation_data is not None:
+            frames += [
+                ("left_validation", self.validation_data[0], self.id_left_col),
+                ("right_validation", self.validation_data[1], self.id_right_col),
+            ]
+        for name, df, col in frames:
             if col not in df.columns:
                 raise ValueError(f"{name} must include column '{col}'.")
 
@@ -951,6 +978,28 @@ class TrainingPipe:
         # Save, evaluate, export
         self._finalize_and_report()
 
+    @property
+    def _selection_metric(self) -> str:
+        """The epoch metric each stage maximizes to pick its best epoch."""
+        return "val_F1" if self.validation_data is not None else "f1"
+
+    def _stage_callbacks(self) -> list:
+        """
+        Callbacks for one stage's fit. Validation scoring comes first, so that
+        early stopping and the history see the val_ metrics it logs.
+        """
+        callbacks = []
+        if self.validation_data is not None:
+            callbacks.append(ValidationMetrics(*self.validation_data))
+        callbacks.append(EpochEndSaver(base_dir=self.base_dir, model_name=self.model_name))
+        if self.early_stopping_patience is not None:
+            callbacks.append(
+                tf.keras.callbacks.EarlyStopping(
+                    monitor="val_F1", mode="max", patience=self.early_stopping_patience
+                )
+            )
+        return callbacks
+
     # ---------- Rounds ----------
     def _round1(self, P: int):
         assert self.model is not None
@@ -979,11 +1028,10 @@ class TrainingPipe:
         if checkpoints.exists():
             shutil.rmtree(checkpoints)
 
-        saver = EpochEndSaver(base_dir=self.base_dir, model_name=self.model_name)
         history = self.model.fit(
             self.left_train, self.right_train, self.matches_train,
             epochs=self.epochs_1, batch_size=batch_size,
-            mismatch_share=self.mismatch_share_1, shuffle=True, callbacks=[saver]
+            mismatch_share=self.mismatch_share_1, shuffle=True, callbacks=self._stage_callbacks()
         )
 
         df_epoch = pd.DataFrame(history.history)
@@ -991,13 +1039,13 @@ class TrainingPipe:
         (self.base_dir / self.model_name / "checkpoints").mkdir(parents=True, exist_ok=True)
         df_epoch.to_csv(self.base_dir / self.model_name / "checkpoints" / "epoch_overview.csv", index=False)
 
-        best_row = df_epoch.loc[df_epoch["f1"].idxmax()]
+        best_row = df_epoch.loc[df_epoch[self._selection_metric].idxmax()]
         best_epoch = int(best_row["epoch"])
         best_epoch_str = f"{best_epoch:02d}"
 
         # Load best R1 model
         self.model = Model.load(self.base_dir / self.model_name / "checkpoints" / f"epoch_{best_epoch_str}")
-        print("[R1] best epoch:", best_epoch, "path:", self.base_dir / self.model_name / "checkpoints_stage_1" / f"epoch_{best_epoch_str}")
+        print(f"[R1] best epoch by {self._selection_metric}:", best_epoch, "path:", self.base_dir / self.model_name / "checkpoints_stage_1" / f"epoch_{best_epoch_str}")
 
         # Sanity-evaluate the loaded model before Round 2 training
         probe_loss = self._get_stage1_loss()
@@ -1086,11 +1134,10 @@ class TrainingPipe:
         if checkpoints.exists():
             shutil.rmtree(checkpoints)
 
-        saver = EpochEndSaver(base_dir=self.base_dir, model_name=self.model_name)
         history = self.model.fit(
             self.left_train, self.right_train, self.matches_train,
             epochs=self.epochs_2, batch_size=batch_size,
-            mismatch_share=self.mismatch_share_2, shuffle=True, callbacks=[saver]
+            mismatch_share=self.mismatch_share_2, shuffle=True, callbacks=self._stage_callbacks()
         )
 
         df_epoch = pd.DataFrame(history.history)
@@ -1098,11 +1145,11 @@ class TrainingPipe:
         (self.base_dir / self.model_name / "checkpoints").mkdir(parents=True, exist_ok=True)
         df_epoch.to_csv(self.base_dir / self.model_name / "checkpoints" / "epoch_overview.csv", index=False)
 
-        best_row = df_epoch.loc[df_epoch["f1"].idxmax()]
+        best_row = df_epoch.loc[df_epoch[self._selection_metric].idxmax()]
         best_epoch = int(best_row["epoch"])
         best_epoch_str = f"{best_epoch:02d}"
         self.model = Model.load(self.base_dir / self.model_name / "checkpoints" / f"epoch_{best_epoch_str}")
-        print("[R2] best epoch:", best_epoch, "path:", self.base_dir / self.model_name / "checkpoints_stage_2" / f"epoch_{best_epoch_str}")
+        print(f"[R2] best epoch by {self._selection_metric}:", best_epoch, "path:", self.base_dir / self.model_name / "checkpoints_stage_2" / f"epoch_{best_epoch_str}")
 
         # Re-compile for export/eval
         self.model.compile(loss=focal_loss(alpha=alpha, gamma=self.gamma), optimizer=opt_2)
