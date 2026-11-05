@@ -14,6 +14,7 @@ from neer_match_utilities.similarity_features import SimilarityFeatures
 import statsmodels.api as sm
 from statsmodels.tools.sm_exceptions import ConvergenceWarning
 from scipy import stats
+from scipy.linalg import qr
 from scipy.special import expit
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import (
@@ -77,6 +78,57 @@ def classification_metrics(y_true: np.ndarray, y_hat: np.ndarray) -> dict:
         "F1": float(f1),
         "MCC": float(mcc),
     }
+
+
+def _linearly_independent(X: pd.DataFrame) -> list[str]:
+    """
+    The columns of ``X`` that are not linear combinations of the others and an intercept.
+
+    Similarity features can depend on each other exactly. On one-word values,
+    ``token_sort_ratio`` and ``token_set_ratio`` are the same number, and on initials
+    every string similarity only tells whether two values are equal. With such columns
+    the matrix that statsmodels inverts is singular, and whether a fit fails then
+    depends on rounding. A dependent column carries nothing that the columns it is
+    made of do not, so dropping it leaves the fitted probabilities unchanged.
+
+    The columns are centered, so that combinations involving the intercept are found
+    too, and scaled to unit length. In a QR decomposition taken in column order, a
+    column's diagonal entry of R is the length of what it adds to the columns before
+    it; columns that add no more than rounding error are dropped. Of columns that
+    depend on each other, the first is therefore kept, and columns that differ from
+    a combination of others in even a few rows are kept as well. ``X`` must not
+    contain constant columns. The kept columns keep their order.
+    """
+    n_rows, n_columns = X.shape
+    if n_columns < 2 or n_rows <= n_columns:
+        return list(X.columns)  # too few rows to tell; leave it to statsmodels
+
+    A = X.to_numpy(dtype=float)
+    if not np.isfinite(A).all():
+        return list(X.columns)  # leave missing values for statsmodels to report
+
+    A = A - A.mean(axis=0)
+    A /= np.linalg.norm(A, axis=0)
+
+    # mode="raw" keeps Q in compact form, so no second matrix of A's size is built
+    _, R = qr(A, mode="raw", overwrite_a=True, check_finite=False)
+    added = np.abs(np.diag(R))
+    tolerance = n_rows * np.finfo(float).eps  # the columns have unit length
+
+    return [X.columns[i] for i in np.flatnonzero(added > tolerance)]
+
+
+def _drop_dependent_columns(X: pd.DataFrame, model_name: str) -> pd.DataFrame:
+    """``X`` without the columns :func:`_linearly_independent` finds dependent, reported."""
+    independent = _linearly_independent(X)
+    if len(independent) < X.shape[1]:
+        dropped = [c for c in X.columns if c not in set(independent)]
+        print(
+            f"[{model_name}] Dropped {len(dropped)} feature(s) that are linear "
+            f"combinations of others: {dropped}"
+        )
+        X = X[independent]
+    return X
 
 
 class SuggestMixin:
@@ -404,6 +456,11 @@ class LogitMatchingModel(SuggestMixin, StatsmodelsInferenceMixin):
         r"""
         Fit logistic regression on a pairwise similarity DataFrame.
 
+        Constant features, and features that are linear combinations of others,
+        are left out of the fit (the latter with a printed note). Neither adds
+        information, and both would make the matrix statsmodels inverts singular.
+        ``feature_cols`` lists the features the model uses.
+
         Parameters
         ----------
         df : pd.DataFrame
@@ -434,12 +491,17 @@ class LogitMatchingModel(SuggestMixin, StatsmodelsInferenceMixin):
             X = X[nonconstant_cols]
             feature_cols = nonconstant_cols
 
+        # 3. Drop columns that are linear combinations of others: they make the
+        #    Hessian singular and add no information
+        X = _drop_dependent_columns(X, "LogitMatchingModel")
+        feature_cols = list(X.columns)
+
         self.feature_cols = feature_cols
 
-        # 3. Add constant for intercept term
+        # 4. Add constant for intercept term
         X_sm = sm.add_constant(X, has_constant="add")
 
-        # 4. Fit classical MLE logit, with regularized fallback
+        # 5. Fit classical MLE logit, with regularized fallback
         model = sm.Logit(y, X_sm)
 
         try:
@@ -518,6 +580,11 @@ class ProbitMatchingModel(SuggestMixin, StatsmodelsInferenceMixin):
         r"""
         Fit probit regression on a pairwise similarity DataFrame.
 
+        Constant features, and features that are linear combinations of others,
+        are left out of the fit (the latter with a printed note). Neither adds
+        information, and both would make the matrix statsmodels inverts singular.
+        ``feature_cols`` lists the features the model uses.
+
         Parameters
         ----------
         df : pd.DataFrame
@@ -545,12 +612,17 @@ class ProbitMatchingModel(SuggestMixin, StatsmodelsInferenceMixin):
             X = X[nonconstant_cols]
             feature_cols = nonconstant_cols
 
+        # 3. Drop columns that are linear combinations of others: they make the
+        #    Hessian singular and add no information
+        X = _drop_dependent_columns(X, "ProbitMatchingModel")
+        feature_cols = list(X.columns)
+
         self.feature_cols = feature_cols
 
-        # 3. Add constant for intercept term
+        # 4. Add constant for intercept term
         X_sm = sm.add_constant(X, has_constant="add")
 
-        # 4. Probit with ridge regularization (helps with separation)
+        # 5. Probit with ridge regularization (helps with separation)
         model = sm.Probit(y, X_sm)
 
         # Try progressively stronger regularization until fitting succeeds
