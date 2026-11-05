@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.baseline_models &mdash; Neer Match Utilities 1.2.1 documentation</title>
+  <title>neer_match_utilities.baseline_models &mdash; Neer Match Utilities 1.2.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=ca842793"></script>
+      <script src="../../_static/documentation_options.js?v=fd7cadf9"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -339,6 +339,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.tools.sm_exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConvergenceWarning</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">qr</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.special</span><span class="w"> </span><span class="kn">import</span> <span class="n">expit</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">GradientBoostingClassifier</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
@@ -405,6 +406,57 @@
         <span class="s2">"MCC"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">mcc</span><span class="p">),</span>
     <span class="p">}</span></div>
 
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_linearly_independent</span><span class="p">(</span><span class="n">X</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The columns of ``X`` that are not linear combinations of the others and an intercept.</span>
+
+<span class="sd">    Similarity features can depend on each other exactly. On one-word values,</span>
+<span class="sd">    ``token_sort_ratio`` and ``token_set_ratio`` are the same number, and on initials</span>
+<span class="sd">    every string similarity only tells whether two values are equal. With such columns</span>
+<span class="sd">    the matrix that statsmodels inverts is singular, and whether a fit fails then</span>
+<span class="sd">    depends on rounding. A dependent column carries nothing that the columns it is</span>
+<span class="sd">    made of do not, so dropping it leaves the fitted probabilities unchanged.</span>
+
+<span class="sd">    The columns are centered, so that combinations involving the intercept are found</span>
+<span class="sd">    too, and scaled to unit length. In a QR decomposition taken in column order, a</span>
+<span class="sd">    column's diagonal entry of R is the length of what it adds to the columns before</span>
+<span class="sd">    it; columns that add no more than rounding error are dropped. Of columns that</span>
+<span class="sd">    depend on each other, the first is therefore kept, and columns that differ from</span>
+<span class="sd">    a combination of others in even a few rows are kept as well. ``X`` must not</span>
+<span class="sd">    contain constant columns. The kept columns keep their order.</span>
+<span class="sd">    """</span>
+    <span class="n">n_rows</span><span class="p">,</span> <span class="n">n_columns</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+    <span class="k">if</span> <span class="n">n_columns</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">n_rows</span> <span class="o">&lt;=</span> <span class="n">n_columns</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>  <span class="c1"># too few rows to tell; leave it to statsmodels</span>
+
+    <span class="n">A</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">A</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>  <span class="c1"># leave missing values for statsmodels to report</span>
+
+    <span class="n">A</span> <span class="o">=</span> <span class="n">A</span> <span class="o">-</span> <span class="n">A</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">A</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># mode="raw" keeps Q in compact form, so no second matrix of A's size is built</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">R</span> <span class="o">=</span> <span class="n">qr</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"raw"</span><span class="p">,</span> <span class="n">overwrite_a</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">check_finite</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">added</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">R</span><span class="p">))</span>
+    <span class="n">tolerance</span> <span class="o">=</span> <span class="n">n_rows</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span>  <span class="c1"># the columns have unit length</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">added</span> <span class="o">&gt;</span> <span class="n">tolerance</span><span class="p">)]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_drop_dependent_columns</span><span class="p">(</span><span class="n">X</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""``X`` without the columns :func:`_linearly_independent` finds dependent, reported."""</span>
+    <span class="n">independent</span> <span class="o">=</span> <span class="n">_linearly_independent</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">independent</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="n">dropped</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">independent</span><span class="p">)]</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"[</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">] Dropped </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dropped</span><span class="p">)</span><span class="si">}</span><span class="s2"> feature(s) that are linear "</span>
+            <span class="sa">f</span><span class="s2">"combinations of others: </span><span class="si">{</span><span class="n">dropped</span><span class="si">}</span><span class="s2">"</span>
+        <span class="p">)</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">independent</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">X</span>
 
 
 <div class="viewcode-block" id="SuggestMixin">
@@ -757,6 +809,11 @@
 <span class="w">        </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">        Fit logistic regression on a pairwise similarity DataFrame.</span>
 
+<span class="sd">        Constant features, and features that are linear combinations of others,</span>
+<span class="sd">        are left out of the fit (the latter with a printed note). Neither adds</span>
+<span class="sd">        information, and both would make the matrix statsmodels inverts singular.</span>
+<span class="sd">        ``feature_cols`` lists the features the model uses.</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        df : pd.DataFrame</span>
@@ -787,12 +844,17 @@
             <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">nonconstant_cols</span><span class="p">]</span>
             <span class="n">feature_cols</span> <span class="o">=</span> <span class="n">nonconstant_cols</span>
 
+        <span class="c1"># 3. Drop columns that are linear combinations of others: they make the</span>
+        <span class="c1">#    Hessian singular and add no information</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">_drop_dependent_columns</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="s2">"LogitMatchingModel"</span><span class="p">)</span>
+        <span class="n">feature_cols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">feature_cols</span> <span class="o">=</span> <span class="n">feature_cols</span>
 
-        <span class="c1"># 3. Add constant for intercept term</span>
+        <span class="c1"># 4. Add constant for intercept term</span>
         <span class="n">X_sm</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">has_constant</span><span class="o">=</span><span class="s2">"add"</span><span class="p">)</span>
 
-        <span class="c1"># 4. Fit classical MLE logit, with regularized fallback</span>
+        <span class="c1"># 5. Fit classical MLE logit, with regularized fallback</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">Logit</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">X_sm</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
@@ -877,6 +939,11 @@
 <span class="w">        </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">        Fit probit regression on a pairwise similarity DataFrame.</span>
 
+<span class="sd">        Constant features, and features that are linear combinations of others,</span>
+<span class="sd">        are left out of the fit (the latter with a printed note). Neither adds</span>
+<span class="sd">        information, and both would make the matrix statsmodels inverts singular.</span>
+<span class="sd">        ``feature_cols`` lists the features the model uses.</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        df : pd.DataFrame</span>
@@ -904,12 +971,17 @@
             <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">nonconstant_cols</span><span class="p">]</span>
             <span class="n">feature_cols</span> <span class="o">=</span> <span class="n">nonconstant_cols</span>
 
+        <span class="c1"># 3. Drop columns that are linear combinations of others: they make the</span>
+        <span class="c1">#    Hessian singular and add no information</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">_drop_dependent_columns</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="s2">"ProbitMatchingModel"</span><span class="p">)</span>
+        <span class="n">feature_cols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">feature_cols</span> <span class="o">=</span> <span class="n">feature_cols</span>
 
-        <span class="c1"># 3. Add constant for intercept term</span>
+        <span class="c1"># 4. Add constant for intercept term</span>
         <span class="n">X_sm</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">has_constant</span><span class="o">=</span><span class="s2">"add"</span><span class="p">)</span>
 
-        <span class="c1"># 4. Probit with ridge regularization (helps with separation)</span>
+        <span class="c1"># 5. Probit with ridge regularization (helps with separation)</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">Probit</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">X_sm</span><span class="p">)</span>
 
         <span class="c1"># Try progressively stronger regularization until fitting succeeds</span>
