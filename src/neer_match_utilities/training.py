@@ -566,6 +566,15 @@ class TrainingPipe:
         Requires `validation_data`. If given, a stage stops once `val_F1` has not
         improved for this many epochs. Defaults to `None` (no early stopping).
 
+    evaluation_batch_size : int, optional
+        Record pairs per batch wherever the pipeline scores pairs without
+        training on them: the validation pairs after each epoch, the check after
+        stage 1, and the final evaluation of all training and test pairs. The
+        confusion counts and the rates computed from them (F1, MCC, ...) do not
+        depend on it. `Loss` does: it is neer-match's loss summed over these
+        batches. Defaults to 1024; neer-match's own default of 16 makes the
+        final evaluation take many times longer.
+
     similarity_map : dict
         User-defined similarity configuration mapping variable names to similarity measures.
         Must follow the format accepted by `SimilarityMap`.
@@ -778,6 +787,7 @@ class TrainingPipe:
         *,
         validation_data=None,  # same formats as training_data
         early_stopping_patience: int | None = None,
+        evaluation_batch_size: int = 1024,
         initial_feature_width_scales: int = 10,
         feature_depths: int = 2,
         initial_record_width_scale: int = 10,
@@ -888,6 +898,14 @@ class TrainingPipe:
             raise ValueError("early_stopping_patience requires validation_data.")
         self.early_stopping_patience = early_stopping_patience
 
+        if (
+            not isinstance(evaluation_batch_size, int)
+            or isinstance(evaluation_batch_size, bool)
+            or evaluation_batch_size < 1
+        ):
+            raise ValueError("evaluation_batch_size must be a positive integer.")
+        self.evaluation_batch_size = evaluation_batch_size
+
         # Basic sanity checks
         frames = [
             ("left_train", self.left_train, self.id_left_col),
@@ -990,7 +1008,9 @@ class TrainingPipe:
         """
         callbacks = []
         if self.validation_data is not None:
-            callbacks.append(ValidationMetrics(*self.validation_data))
+            callbacks.append(
+                ValidationMetrics(*self.validation_data, batch_size=self.evaluation_batch_size)
+            )
         callbacks.append(EpochEndSaver(base_dir=self.base_dir, model_name=self.model_name))
         if self.early_stopping_patience is not None:
             callbacks.append(
@@ -1055,6 +1075,7 @@ class TrainingPipe:
             self.right_train,
             self.matches_train,
             mismatch_share=self.mismatch_share_1,
+            batch_size=self.evaluation_batch_size,
             verbose=0,
         )
         print("[R1->R2] probe metrics after load:", eval_probe)
@@ -1184,9 +1205,17 @@ class TrainingPipe:
             if not stage_ran and stale.exists():
                 shutil.rmtree(stale)
 
-        # Evaluate on supplied splits
-        perf_train = self.model.evaluate(self.left_train, self.right_train, self.matches_train, mismatch_share=1.0)
-        perf_test = self.model.evaluate(self.left_test, self.right_test, self.matches_test, mismatch_share=1.0)
+        # Evaluate on supplied splits. neer-match scores the batches one by one,
+        # in a loop that is not compiled, so the number of batches, not of
+        # pairs, sets how long this takes.
+        perf_train = self.model.evaluate(
+            self.left_train, self.right_train, self.matches_train,
+            mismatch_share=1.0, batch_size=self.evaluation_batch_size,
+        )
+        perf_test = self.model.evaluate(
+            self.left_test, self.right_test, self.matches_test,
+            mismatch_share=1.0, batch_size=self.evaluation_batch_size,
+        )
 
         # Export stats
         self.training_util.performance_statistics_export(
