@@ -717,6 +717,12 @@ class GradientBoostingModel(SuggestMixin):
       a leaf's hessian sum would fall below ``min_hessian_to_split``, and is
       tens of times faster. Pass ``model=GradientBoostingClassifier(...)`` for
       the earlier classifier; models saved with it still load.
+    - Its ``l2_regularization`` of 1 (version 1.2.7; 0 in 1.2.6) adds 1 to the
+      hessian sum each leaf value is divided by, as XGBoost's default
+      ``lambda`` does. Without it, leaves just above ``min_hessian_to_split``
+      still took huge steps on some splits, so that the training loss rose
+      again after a hundred rounds and the fit ended worse than it had been
+      (training F1 0.21 where 0.99 with it).
     """
 
     model: ClassifierMixin = field(
@@ -724,6 +730,7 @@ class GradientBoostingModel(SuggestMixin):
             max_iter=300,
             learning_rate=0.05,
             max_depth=3,
+            l2_regularization=1.0,
             early_stopping=False,
             random_state=42,
         )

@@ -59,6 +59,8 @@ def test_the_default_classifier_is_hist_gradient_boosting(fitted):
     model, df = fitted
 
     assert isinstance(model.model, HistGradientBoostingClassifier)
+    # without it, leaf values still ran away on some splits of real data
+    assert model.model.get_params()["l2_regularization"] == 1.0
     assert model.evaluate(df)["TP"] + model.evaluate(df)["FN"] == df["match"].sum()
     with pytest.raises(RuntimeError, match="permutation_importance"):
         model.summary()
