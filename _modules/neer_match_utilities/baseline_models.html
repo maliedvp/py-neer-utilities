@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.baseline_models &mdash; Neer Match Utilities 1.2.5 documentation</title>
+  <title>neer_match_utilities.baseline_models &mdash; Neer Match Utilities 1.2.6 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=36f53d34"></script>
+      <script src="../../_static/documentation_options.js?v=010db75e"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -244,6 +244,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../thresholds.html">Thresholds</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../thresholds.html#neer_match_utilities.thresholds.non_match_weight"><code class="docutils literal notranslate"><span class="pre">non_match_weight()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../thresholds.html#neer_match_utilities.thresholds.pair_labels"><code class="docutils literal notranslate"><span class="pre">pair_labels()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../thresholds.html#neer_match_utilities.thresholds.scores_at"><code class="docutils literal notranslate"><span class="pre">scores_at()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../thresholds.html#neer_match_utilities.thresholds.tune_threshold"><code class="docutils literal notranslate"><span class="pre">tune_threshold()</span></code></a></li>
@@ -349,7 +350,10 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">qr</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.special</span><span class="w"> </span><span class="kn">import</span> <span class="n">expit</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">GradientBoostingClassifier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClassifierMixin</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">GradientBoostingClassifier</span><span class="p">,</span> <span class="n">HistGradientBoostingClassifier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">NotFittedError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.utils.validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_is_fitted</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">confusion_matrix</span><span class="p">,</span>
     <span class="n">accuracy_score</span><span class="p">,</span>
@@ -1061,26 +1065,38 @@
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Gradient boosting baseline on similarity features using scikit-learn.</span>
 
-<span class="sd">    Designed as an alternative to the DL/NS models in `neer_match`, using a</span>
-<span class="sd">    tree-based GradientBoostingClassifier on top of similarity features</span>
+<span class="sd">    Designed as an alternative to the DL/NS models in `neer_match`, using</span>
+<span class="sd">    scikit-learn's HistGradientBoostingClassifier on top of similarity features</span>
 <span class="sd">    produced by `SimilarityFeatures`.</span>
 
 <span class="sd">    It supports:</span>
 <span class="sd">    - evaluation with TP, FP, TN, FN, Accuracy, Recall, Precision, F1, MCC,</span>
-<span class="sd">    - a simple `summary()` reporting feature importances.</span>
+<span class="sd">    - a simple `summary()` reporting feature importances, where the classifier</span>
+<span class="sd">      has them.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 <span class="sd">    - Unlike Logit/Probit, this model has no statistical inference (SE/p-values).</span>
 <span class="sd">    - Works well with nonlinearities and interactions in similarity features.</span>
+<span class="sd">    - Up to version 1.2.5 the default was GradientBoostingClassifier, with the</span>
+<span class="sd">      same 300 rounds, learning rate and depth. Its Newton step for a leaf</span>
+<span class="sd">      divides by the sum of p(1 - p) over the pairs in it. With matches as rare</span>
+<span class="sd">      as among all record pairs, the probabilities soon come close to 0 or 1,</span>
+<span class="sd">      and where matches and non-matches with the same similarities share a</span>
+<span class="sd">      leaf, that sum is close to zero: the leaf values, and the training loss,</span>
+<span class="sd">      grow without bound (to 1e+79 in tests on real data), and the predictions</span>
+<span class="sd">      collapse to 0 and 1. HistGradientBoostingClassifier does not split where</span>
+<span class="sd">      a leaf's hessian sum would fall below ``min_hessian_to_split``, and is</span>
+<span class="sd">      tens of times faster. Pass ``model=GradientBoostingClassifier(...)`` for</span>
+<span class="sd">      the earlier classifier; models saved with it still load.</span>
 <span class="sd">    """</span>
 
-    <span class="n">model</span><span class="p">:</span> <span class="n">GradientBoostingClassifier</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
-        <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">GradientBoostingClassifier</span><span class="p">(</span>
-            <span class="n">n_estimators</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+    <span class="n">model</span><span class="p">:</span> <span class="n">ClassifierMixin</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">HistGradientBoostingClassifier</span><span class="p">(</span>
+            <span class="n">max_iter</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
             <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
             <span class="n">max_depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-            <span class="n">subsample</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+            <span class="n">early_stopping</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="p">)</span>
@@ -1152,8 +1168,10 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_check_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">"estimators_"</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"GradientBoostingModel is not fitted yet. Call `fit()` first."</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">NotFittedError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"GradientBoostingModel is not fitted yet. Call `fit()` first."</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
 
 <div class="viewcode-block" id="GradientBoostingModel.predict_proba">
 <a class="viewcode-back" href="../../baseline_models.html#neer_match_utilities.baseline_models.GradientBoostingModel.predict_proba">[docs]</a>
@@ -1228,7 +1246,10 @@
 
         <span class="n">importances</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">"feature_importances_"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">importances</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Model does not expose feature_importances_."</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> has no impurity-based feature importances; "</span>
+                <span class="s2">"sklearn.inspection.permutation_importance computes importances on data."</span>
+            <span class="p">)</span>
 
         <span class="n">df_imp</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
             <span class="p">{</span><span class="s2">"feature"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_cols</span><span class="p">,</span> <span class="s2">"importance"</span><span class="p">:</span> <span class="n">importances</span><span class="p">}</span>

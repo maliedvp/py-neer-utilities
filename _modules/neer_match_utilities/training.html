@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.training &mdash; Neer Match Utilities 1.2.5 documentation</title>
+  <title>neer_match_utilities.training &mdash; Neer Match Utilities 1.2.6 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=36f53d34"></script>
+      <script src="../../_static/documentation_options.js?v=010db75e"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -244,6 +244,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../thresholds.html">Thresholds</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../thresholds.html#neer_match_utilities.thresholds.non_match_weight"><code class="docutils literal notranslate"><span class="pre">non_match_weight()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../thresholds.html#neer_match_utilities.thresholds.pair_labels"><code class="docutils literal notranslate"><span class="pre">pair_labels()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../thresholds.html#neer_match_utilities.thresholds.scores_at"><code class="docutils literal notranslate"><span class="pre">scores_at()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../thresholds.html#neer_match_utilities.thresholds.tune_threshold"><code class="docutils literal notranslate"><span class="pre">tune_threshold()</span></code></a></li>
@@ -956,6 +957,17 @@
 <span class="sd">    tune_metric : {'mcc', 'f1'}, optional</span>
 <span class="sd">        The validation score the threshold maximises. Defaults to `'mcc'`.</span>
 
+<span class="sd">    tune_match_share : 'train', float or None, optional</span>
+<span class="sd">        The share of matches the tuning weights the validation pairs to. Paired</span>
+<span class="sd">        record by record, a split of n records holds a share of about 1/n</span>
+<span class="sd">        matches, so that a small validation split holds far more than the</span>
+<span class="sd">        training or test pairs, and a threshold tuned on it as it is lets</span>
+<span class="sd">        through too many false positives. With `'train'` (the default), its</span>
+<span class="sd">        non-matches count as if the validation pairs had the training pairs'</span>
+<span class="sd">        share of matches; a float sets that share; None weights nothing, as up</span>
+<span class="sd">        to version 1.2.5. It applies to the `val_tuned_` scores, and so to the</span>
+<span class="sd">        choice of epochs, as well as to the final threshold.</span>
+
 <span class="sd">    evaluation_batch_size : int, optional</span>
 <span class="sd">        Record pairs per batch wherever the pipeline scores pairs without</span>
 <span class="sd">        training on them: the validation pairs after each epoch, the check after</span>
@@ -1191,6 +1203,7 @@
         <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
         <span class="n">tune_threshold</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">tune_metric</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"mcc"</span><span class="p">,</span>
+        <span class="n">tune_match_share</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="s2">"train"</span><span class="p">,</span>
         <span class="n">evaluation_batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">,</span>
         <span class="n">initial_feature_width_scales</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
         <span class="n">feature_depths</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
@@ -1320,6 +1333,18 @@
         <span class="c1"># Tuning needs validation pairs; without them the threshold stays fixed</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_tuning</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tune_threshold</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">validation_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
+        <span class="k">if</span> <span class="n">tune_match_share</span> <span class="o">==</span> <span class="s2">"train"</span><span class="p">:</span>
+            <span class="n">pairs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_tune_match_share</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matches_train</span><span class="p">)</span> <span class="o">/</span> <span class="n">pairs</span> <span class="k">if</span> <span class="n">pairs</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">elif</span> <span class="n">tune_match_share</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_tune_match_share</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tune_match_share</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tune_match_share</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span> \
+                <span class="ow">and</span> <span class="mf">0.0</span> <span class="o">&lt;</span> <span class="nb">float</span><span class="p">(</span><span class="n">tune_match_share</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_tune_match_share</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">tune_match_share</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"tune_match_share must be 'train', None or a share between 0 and 1."</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tune_match_share</span> <span class="o">=</span> <span class="n">tune_match_share</span>
+
         <span class="c1"># Basic sanity checks</span>
         <span class="n">frames</span> <span class="o">=</span> <span class="p">[</span>
             <span class="p">(</span><span class="s2">"left_train"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_left_col</span><span class="p">),</span>
@@ -1429,6 +1454,7 @@
             <span class="n">batch_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">evaluation_batch_size</span><span class="p">,</span>
             <span class="c1"># always tuned, as the collapse check needs the best threshold's MCC</span>
             <span class="n">tune_metric</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tune_metric</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tuning</span> <span class="k">else</span> <span class="s2">"mcc"</span><span class="p">,</span>
+            <span class="n">match_share</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_tune_match_share</span><span class="p">,</span>
         <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_warn_if_collapsed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stage</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">scores</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">history</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
@@ -1465,6 +1491,7 @@
                     <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">validation_data</span><span class="p">,</span>
                     <span class="n">batch_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">evaluation_batch_size</span><span class="p">,</span>
                     <span class="n">tune_metric</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tune_metric</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tuning</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="n">match_share</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_tune_match_share</span><span class="p">,</span>
                 <span class="p">)</span>
             <span class="p">)</span>
         <span class="n">callbacks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EpochEndSaver</span><span class="p">(</span><span class="n">base_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">))</span>

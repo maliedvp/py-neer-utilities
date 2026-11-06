@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Creating a Common Identifier (ID) &mdash; Neer Match Utilities 1.2.5 documentation</title>
+  <title>Creating a Common Identifier (ID) &mdash; Neer Match Utilities 1.2.6 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -17,7 +17,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=36f53d34"></script>
+      <script src="_static/documentation_options.js?v=010db75e"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -247,6 +247,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="thresholds.html">Thresholds</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="thresholds.html#neer_match_utilities.thresholds.non_match_weight"><code class="docutils literal notranslate"><span class="pre">non_match_weight()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="thresholds.html#neer_match_utilities.thresholds.pair_labels"><code class="docutils literal notranslate"><span class="pre">pair_labels()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="thresholds.html#neer_match_utilities.thresholds.scores_at"><code class="docutils literal notranslate"><span class="pre">scores_at()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="thresholds.html#neer_match_utilities.thresholds.tune_threshold"><code class="docutils literal notranslate"><span class="pre">tune_threshold()</span></code></a></li>
@@ -446,7 +447,7 @@ DataFrames vertically.</p>
 <span class="n">result</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Processing periods left-right at 2026-11-06 11:22:41.369902
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Processing periods left-right at 2026-11-06 13:07:30.609153
 </pre></div>
 </div>
 <div>
@@ -471,23 +472,23 @@ DataFrames vertically.</p>
 <tbody>
 <tr class="row-even"><td><p>0</p></td>
 <td><p>0</p></td>
-<td><p>498875c8-8e12-4e00-a105-c8b79a51d0ec</p></td>
+<td><p>b21cb516-b75c-492c-85d4-039fcfc7047f</p></td>
 </tr>
 <tr class="row-odd"><td><p>1</p></td>
 <td><p>1</p></td>
-<td><p>f3fc23fc-6fb6-46a7-8b71-47aa9de4bcd1</p></td>
+<td><p>49cac63a-4681-47cd-87f0-fbdec838e4ac</p></td>
 </tr>
 <tr class="row-even"><td><p>2</p></td>
 <td><p>2</p></td>
-<td><p>460a6ab6-ca2e-44f0-be6d-cf96dcf031f4</p></td>
+<td><p>24c3aed7-7785-4cf5-8ea2-745e63f327db</p></td>
 </tr>
 <tr class="row-odd"><td><p>3</p></td>
 <td><p>3</p></td>
-<td><p>91fefd06-2dfe-4370-836d-033e7da5495f</p></td>
+<td><p>78ca0844-3172-4c20-8b4c-4b9379b091a5</p></td>
 </tr>
 <tr class="row-even"><td><p>4</p></td>
 <td><p>4</p></td>
-<td><p>3f1d83fd-b73e-4590-a815-82bc79b35b71</p></td>
+<td><p>ebd87a55-594c-48f9-af75-344c15df00a5</p></td>
 </tr>
 </tbody>
 </table>
@@ -544,15 +545,15 @@ DataFrames vertically.</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>329</p></td>
-<td><p>3f1d83fd-b73e-4590-a815-82bc79b35b71</p></td>
+<tr class="row-even"><td><p>1257</p></td>
+<td><p>ebd87a55-594c-48f9-af75-344c15df00a5</p></td>
 <td><p>22ac99ae20</p></td>
 <td><p>left</p></td>
 <td><p>KAISERSTEINBRUCH-ACTIENGESELLSCHAFT IN LIQU. I…</p></td>
 <td><p>KÖLN</p></td>
 </tr>
-<tr class="row-odd"><td><p>330</p></td>
-<td><p>3f1d83fd-b73e-4590-a815-82bc79b35b71</p></td>
+<tr class="row-odd"><td><p>1258</p></td>
+<td><p>ebd87a55-594c-48f9-af75-344c15df00a5</p></td>
 <td><p>e9823a3073</p></td>
 <td><p>right</p></td>
 <td><p>KAISERSTEINBRUCH-ACTIENGESELLSCHAFT IN KÖLN,</p></td>

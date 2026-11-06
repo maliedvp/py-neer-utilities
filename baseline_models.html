@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Baseline Models &mdash; Neer Match Utilities 1.2.5 documentation</title>
+  <title>Baseline Models &mdash; Neer Match Utilities 1.2.6 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -17,7 +17,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=36f53d34"></script>
+      <script src="_static/documentation_options.js?v=010db75e"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -247,6 +247,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="thresholds.html">Thresholds</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="thresholds.html#neer_match_utilities.thresholds.non_match_weight"><code class="docutils literal notranslate"><span class="pre">non_match_weight()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="thresholds.html#neer_match_utilities.thresholds.pair_labels"><code class="docutils literal notranslate"><span class="pre">pair_labels()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="thresholds.html#neer_match_utilities.thresholds.scores_at"><code class="docutils literal notranslate"><span class="pre">scores_at()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="thresholds.html#neer_match_utilities.thresholds.tune_threshold"><code class="docutils literal notranslate"><span class="pre">tune_threshold()</span></code></a></li>
@@ -339,16 +340,30 @@
 <dt class="sig sig-object py" id="neer_match_utilities.baseline_models.GradientBoostingModel">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">neer_match_utilities.baseline_models.</span></span><span class="sig-name descname"><span class="pre">GradientBoostingModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/baseline_models.html#GradientBoostingModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.baseline_models.GradientBoostingModel" title="Link to this definition"></a></dt>
 <dd><p>Gradient boosting baseline on similarity features using scikit-learn.</p>
-<p>Designed as an alternative to the DL/NS models in <cite>neer_match</cite>, using a
-tree-based GradientBoostingClassifier on top of similarity features
+<p>Designed as an alternative to the DL/NS models in <cite>neer_match</cite>, using
+scikit-learn’s HistGradientBoostingClassifier on top of similarity features
 produced by <cite>SimilarityFeatures</cite>.</p>
 <p>It supports:
 - evaluation with TP, FP, TN, FN, Accuracy, Recall, Precision, F1, MCC,
-- a simple <cite>summary()</cite> reporting feature importances.</p>
+- a simple <cite>summary()</cite> reporting feature importances, where the classifier</p>
+<blockquote>
+<div><p>has them.</p>
+</div></blockquote>
 <p class="rubric">Notes</p>
 <ul class="simple">
 <li><p>Unlike Logit/Probit, this model has no statistical inference (SE/p-values).</p></li>
 <li><p>Works well with nonlinearities and interactions in similarity features.</p></li>
+<li><p>Up to version 1.2.5 the default was GradientBoostingClassifier, with the
+same 300 rounds, learning rate and depth. Its Newton step for a leaf
+divides by the sum of p(1 - p) over the pairs in it. With matches as rare
+as among all record pairs, the probabilities soon come close to 0 or 1,
+and where matches and non-matches with the same similarities share a
+leaf, that sum is close to zero: the leaf values, and the training loss,
+grow without bound (to 1e+79 in tests on real data), and the predictions
+collapse to 0 and 1. HistGradientBoostingClassifier does not split where
+a leaf’s hessian sum would fall below <code class="docutils literal notranslate"><span class="pre">min_hessian_to_split</span></code>, and is
+tens of times faster. Pass <code class="docutils literal notranslate"><span class="pre">model=GradientBoostingClassifier(...)</span></code> for
+the earlier classifier; models saved with it still load.</p></li>
 </ul>
 <dl class="py method">
 <dt class="sig sig-object py" id="neer_match_utilities.baseline_models.GradientBoostingModel.__init__">

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Alternative Classification Models &mdash; Neer Match Utilities 1.2.5 documentation</title>
+  <title>Alternative Classification Models &mdash; Neer Match Utilities 1.2.6 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -17,7 +17,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=36f53d34"></script>
+      <script src="_static/documentation_options.js?v=010db75e"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -247,6 +247,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="thresholds.html">Thresholds</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="thresholds.html#neer_match_utilities.thresholds.non_match_weight"><code class="docutils literal notranslate"><span class="pre">non_match_weight()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="thresholds.html#neer_match_utilities.thresholds.pair_labels"><code class="docutils literal notranslate"><span class="pre">pair_labels()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="thresholds.html#neer_match_utilities.thresholds.scores_at"><code class="docutils literal notranslate"><span class="pre">scores_at()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="thresholds.html#neer_match_utilities.thresholds.tune_threshold"><code class="docutils literal notranslate"><span class="pre">tune_threshold()</span></code></a></li>
@@ -425,8 +426,8 @@ cumulative normal distribution.</p>
 </section>
 <section id="gradient-boosting-model">
 <h3>Gradient Boosting Model<a class="headerlink" href="#gradient-boosting-model" title="Link to this heading"></a></h3>
-<p>Gradient Boosting using scikit-learn. More powerful but less
-interpretable.</p>
+<p>Gradient boosting with scikit-learn’s <code class="docutils literal notranslate"><span class="pre">HistGradientBoostingClassifier</span></code>.
+More powerful but less interpretable.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">training_pipeline</span> <span class="o">=</span> <span class="n">BaselineTrainingPipe</span><span class="p">(</span>
     <span class="n">model_name</span><span class="o">=</span><span class="s1">'my_gb_model'</span><span class="p">,</span>
     <span class="n">similarity_map</span><span class="o">=</span><span class="n">smap</span><span class="p">,</span>
@@ -460,6 +461,10 @@ interpretable.</p>
 <code class="docutils literal notranslate"><span class="pre">ModelBaseline.load</span></code>, <code class="docutils literal notranslate"><span class="pre">evaluate</span></code> and <code class="docutils literal notranslate"><span class="pre">GenerateID</span></code> use it unless you pass
 another one, and <code class="docutils literal notranslate"><span class="pre">performance.csv</span></code> reports it in its <code class="docutils literal notranslate"><span class="pre">threshold</span></code> column,
 as it reports 0.5 for Logit and Probit.</p>
+<p>Tune only on a validation split that holds enough pairs. Paired record
+by record, a split of n records holds about n matches among n² pairs:
+with a few dozen records, many thresholds score the same on it, and the
+one chosen need not do better on the test pairs than 0.5.</p>
 </section>
 </section>
 <section id="deep-learning-model-ann">
@@ -480,6 +485,7 @@ training with customizable loss functions.</p>
     <span class="n">early_stopping_patience</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>         <span class="c1"># stop a stage after 5 epochs without a better score</span>
     <span class="n">tune_threshold</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>               <span class="c1"># choose the threshold on the validation pairs (default)</span>
     <span class="n">tune_metric</span><span class="o">=</span><span class="s2">"mcc"</span><span class="p">,</span>                 <span class="c1"># "mcc" | "f1"</span>
+    <span class="n">tune_match_share</span><span class="o">=</span><span class="s2">"train"</span><span class="p">,</span>          <span class="c1"># weight validation non-matches to the training share (default)</span>
     <span class="n">threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>                     <span class="c1"># used where no threshold is tuned</span>
     <span class="n">evaluation_batch_size</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span>        <span class="c1"># pairs per batch when scoring without training</span>
 
@@ -555,6 +561,13 @@ evaluation, saved with it as <code class="docutils literal notranslate"><span cl
 <code class="docutils literal notranslate"><span class="pre">Model.load</span></code>; <code class="docutils literal notranslate"><span class="pre">performance.csv</span></code> reports it in its <code class="docutils literal notranslate"><span class="pre">threshold</span></code> column.
 With <code class="docutils literal notranslate"><span class="pre">tune_threshold=False</span></code>, the epochs are chosen by <code class="docutils literal notranslate"><span class="pre">val_F1</span></code> at
 <code class="docutils literal notranslate"><span class="pre">threshold</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tune_match_share</span></code> (default <code class="docutils literal notranslate"><span class="pre">&quot;train&quot;</span></code>): A small validation split holds
+a far larger share of matches than the training or test pairs (about
+1/n for n records), so that a threshold tuned on it as it is lets
+through too many false positives. By default the tuning counts its
+non-matches as if the validation pairs had the training pairs’ share
+of matches; a float sets that share, <code class="docutils literal notranslate"><span class="pre">None</span></code> turns the weighting off.
+As above, tune only on a validation split that holds enough pairs.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">early_stopping_patience</span></code>: Stops a stage once the score its epochs are
 chosen by has not improved for this many epochs. Requires
 <code class="docutils literal notranslate"><span class="pre">validation_data</span></code>.</p></li>

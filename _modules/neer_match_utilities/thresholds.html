@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.thresholds &mdash; Neer Match Utilities 1.2.5 documentation</title>
+  <title>neer_match_utilities.thresholds &mdash; Neer Match Utilities 1.2.6 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=36f53d34"></script>
+      <script src="../../_static/documentation_options.js?v=010db75e"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -244,6 +244,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../thresholds.html">Thresholds</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../thresholds.html#neer_match_utilities.thresholds.non_match_weight"><code class="docutils literal notranslate"><span class="pre">non_match_weight()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../thresholds.html#neer_match_utilities.thresholds.pair_labels"><code class="docutils literal notranslate"><span class="pre">pair_labels()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../thresholds.html#neer_match_utilities.thresholds.scores_at"><code class="docutils literal notranslate"><span class="pre">scores_at()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../thresholds.html#neer_match_utilities.thresholds.tune_threshold"><code class="docutils literal notranslate"><span class="pre">tune_threshold()</span></code></a></li>
@@ -394,15 +395,40 @@
     <span class="k">return</span> <span class="p">{</span><span class="s2">"Accuracy"</span><span class="p">:</span> <span class="n">accuracy</span><span class="p">,</span> <span class="s2">"Recall"</span><span class="p">:</span> <span class="n">recall</span><span class="p">,</span> <span class="s2">"Precision"</span><span class="p">:</span> <span class="n">precision</span><span class="p">,</span> <span class="s2">"F1"</span><span class="p">:</span> <span class="n">f1</span><span class="p">,</span> <span class="s2">"MCC"</span><span class="p">:</span> <span class="n">mcc</span><span class="p">}</span>
 
 
+<div class="viewcode-block" id="non_match_weight">
+<a class="viewcode-back" href="../../thresholds.html#neer_match_utilities.thresholds.non_match_weight">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">non_match_weight</span><span class="p">(</span><span class="n">labels</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">match_share</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The weight that gives the non-matches among ``labels`` the share of</span>
+<span class="sd">    matches ``match_share``: with it, the pairs count as if matches made up</span>
+<span class="sd">    that share of them.</span>
+
+<span class="sd">    Paired record by record, a split of n records with one match each has a</span>
+<span class="sd">    share of about 1/n, so that a small validation split holds a far larger</span>
+<span class="sd">    share of matches than the training or test pairs. A threshold chosen on it</span>
+<span class="sd">    then lets through more false positives than it seemed to.</span>
+<span class="sd">    """</span>
+    <span class="n">share</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">labels</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mf">0.0</span> <span class="o">&lt;</span> <span class="n">share</span> <span class="o">&lt;</span> <span class="mf">1.0</span> <span class="ow">and</span> <span class="mf">0.0</span> <span class="o">&lt;</span> <span class="n">match_share</span> <span class="o">&lt;</span> <span class="mf">1.0</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mf">1.0</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">share</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">share</span><span class="p">))</span> <span class="o">*</span> <span class="p">((</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">match_share</span><span class="p">)</span> <span class="o">/</span> <span class="n">match_share</span><span class="p">)</span></div>
+
+
+
 <div class="viewcode-block" id="scores_at">
 <a class="viewcode-back" href="../../thresholds.html#neer_match_utilities.thresholds.scores_at">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">scores_at</span><span class="p">(</span><span class="n">labels</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">probabilities</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">scores_at</span><span class="p">(</span>
+    <span class="n">labels</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">probabilities</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">non_match_weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    TP, FP, TN, FN, Accuracy, Recall, Precision, F1 and MCC at one threshold.</span>
-<span class="sd">    Precision, Recall, F1 and MCC are 0 where they are undefined.</span>
+<span class="sd">    Precision, Recall, F1 and MCC are 0 where they are undefined. The rates</span>
+<span class="sd">    count every non-match ``non_match_weight`` times; the counts are as they</span>
+<span class="sd">    are.</span>
 <span class="sd">    """</span>
     <span class="n">tp</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">tn</span><span class="p">,</span> <span class="n">fn</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">_counts</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">probabilities</span><span class="p">,</span> <span class="p">[</span><span class="n">threshold</span><span class="p">]))</span>
-    <span class="n">rates</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">_rates</span><span class="p">(</span><span class="n">tp</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">tn</span><span class="p">,</span> <span class="n">fn</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">non_match_weight</span><span class="p">)</span>
+    <span class="n">rates</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">_rates</span><span class="p">(</span><span class="n">tp</span><span class="p">,</span> <span class="n">fp</span> <span class="o">*</span> <span class="n">w</span><span class="p">,</span> <span class="n">tn</span> <span class="o">*</span> <span class="n">w</span><span class="p">,</span> <span class="n">fn</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
     <span class="k">return</span> <span class="p">{</span><span class="s2">"TP"</span><span class="p">:</span> <span class="n">tp</span><span class="p">,</span> <span class="s2">"FP"</span><span class="p">:</span> <span class="n">fp</span><span class="p">,</span> <span class="s2">"TN"</span><span class="p">:</span> <span class="n">tn</span><span class="p">,</span> <span class="s2">"FN"</span><span class="p">:</span> <span class="n">fn</span><span class="p">,</span> <span class="o">**</span><span class="n">rates</span><span class="p">}</span></div>
 
 
@@ -414,6 +440,7 @@
     <span class="n">probabilities</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">metric</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"mcc"</span><span class="p">,</span>
     <span class="n">thresholds</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">match_share</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    The threshold that maximises ``metric`` ('mcc' or 'f1'), with the scores</span>
@@ -421,14 +448,19 @@
 
 <span class="sd">    The thresholds tried are ``THRESHOLD_GRID``, 0.01 to 0.99 in steps of 0.01,</span>
 <span class="sd">    unless given. Of equally good thresholds the lowest wins, as in</span>
-<span class="sd">    ``GradientBoostingModel``'s tuning.</span>
+<span class="sd">    ``GradientBoostingModel``'s tuning. With ``match_share``, the non-matches</span>
+<span class="sd">    are weighted as if matches made up that share of the pairs (see</span>
+<span class="sd">    ``non_match_weight``), both in choosing the threshold and in the rates</span>
+<span class="sd">    returned; the counts are as they are.</span>
 <span class="sd">    """</span>
     <span class="k">if</span> <span class="n">metric</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">TUNE_METRICS</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"metric must be one of </span><span class="si">{</span><span class="n">TUNE_METRICS</span><span class="si">}</span><span class="s2">, not </span><span class="si">{</span><span class="n">metric</span><span class="si">!r}</span><span class="s2">."</span><span class="p">)</span>
     <span class="n">grid</span> <span class="o">=</span> <span class="n">THRESHOLD_GRID</span> <span class="k">if</span> <span class="n">thresholds</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">thresholds</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-    <span class="n">values</span> <span class="o">=</span> <span class="n">_rates</span><span class="p">(</span><span class="o">*</span><span class="n">_counts</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">probabilities</span><span class="p">,</span> <span class="n">grid</span><span class="p">))[</span><span class="n">metric</span><span class="o">.</span><span class="n">upper</span><span class="p">()]</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="k">if</span> <span class="n">match_share</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">non_match_weight</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">match_share</span><span class="p">)</span>
+    <span class="n">tp</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">tn</span><span class="p">,</span> <span class="n">fn</span> <span class="o">=</span> <span class="n">_counts</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">probabilities</span><span class="p">,</span> <span class="n">grid</span><span class="p">)</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">_rates</span><span class="p">(</span><span class="n">tp</span><span class="p">,</span> <span class="n">fp</span> <span class="o">*</span> <span class="n">w</span><span class="p">,</span> <span class="n">tn</span> <span class="o">*</span> <span class="n">w</span><span class="p">,</span> <span class="n">fn</span><span class="p">)[</span><span class="n">metric</span><span class="o">.</span><span class="n">upper</span><span class="p">()]</span>
     <span class="n">best</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">values</span><span class="p">))])</span>
-    <span class="k">return</span> <span class="n">best</span><span class="p">,</span> <span class="n">scores_at</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">probabilities</span><span class="p">,</span> <span class="n">best</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">best</span><span class="p">,</span> <span class="n">scores_at</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">probabilities</span><span class="p">,</span> <span class="n">best</span><span class="p">,</span> <span class="n">non_match_weight</span><span class="o">=</span><span class="n">w</span><span class="p">)</span></div>
 
 </pre></div>
 

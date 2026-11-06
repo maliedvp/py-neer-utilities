@@ -95,8 +95,8 @@ training_pipeline.execute()
 
 ### Gradient Boosting Model
 
-Gradient Boosting using scikit-learn. More powerful but less
-interpretable.
+Gradient boosting with scikit-learn’s `HistGradientBoostingClassifier`.
+More powerful but less interpretable.
 
 ``` python
 training_pipeline = BaselineTrainingPipe(
@@ -133,6 +133,11 @@ The tuned threshold is saved with the model as `best_threshold_`. After
 another one, and `performance.csv` reports it in its `threshold` column,
 as it reports 0.5 for Logit and Probit.
 
+Tune only on a validation split that holds enough pairs. Paired record
+by record, a split of n records holds about n matches among n² pairs:
+with a few dozen records, many thresholds score the same on it, and the
+one chosen need not do better on the test pairs than 0.5.
+
 ## Deep Learning Model (ANN)
 
 The neural network model uses `TrainingPipe` and supports two-stage
@@ -153,6 +158,7 @@ training_pipeline = TrainingPipe(
     early_stopping_patience=5,         # stop a stage after 5 epochs without a better score
     tune_threshold=True,               # choose the threshold on the validation pairs (default)
     tune_metric="mcc",                 # "mcc" | "f1"
+    tune_match_share="train",          # weight validation non-matches to the training share (default)
     threshold=0.5,                     # used where no threshold is tuned
     evaluation_batch_size=1024,        # pairs per batch when scoring without training
 
@@ -228,6 +234,13 @@ training_pipeline.execute()
   `Model.load`; `performance.csv` reports it in its `threshold` column.
   With `tune_threshold=False`, the epochs are chosen by `val_F1` at
   `threshold`.
+- `tune_match_share` (default `"train"`): A small validation split holds
+  a far larger share of matches than the training or test pairs (about
+  1/n for n records), so that a threshold tuned on it as it is lets
+  through too many false positives. By default the tuning counts its
+  non-matches as if the validation pairs had the training pairs’ share
+  of matches; a float sets that share, `None` turns the weighting off.
+  As above, tune only on a validation split that holds enough pairs.
 - `early_stopping_patience`: Stops a stage once the score its epochs are
   chosen by has not improved for this many epochs. Requires
   `validation_data`.
