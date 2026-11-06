@@ -379,6 +379,7 @@ class FeatureSelectionResult:
         - cv: Number of cross-validation folds
         - n_features_in: Number of input features
         - n_features_selected: Number of features selected
+        - C_grid: The C values tried, by l1_ratio
         - solver: The solver of the elastic-net fits
         - did_fallback: Whether fallback to original map occurred
     """
@@ -435,8 +436,14 @@ class FeatureSelector:
     l1_ratios : tuple, default=(0.8, 0.9, 1.0)
         L1 penalty ratios to try. 1.0 = pure Lasso, 0.0 = pure Ridge.
     Cs : int or Iterable[float], default=20
-        Regularization strengths to try. If int, generates `Cs` values
-        logarithmically spaced from 0.01 to 1000. Higher C = less regularization.
+        Regularization strengths to try. If int, that many values per
+        l1_ratio, logarithmically spaced from the C at which the penalty sets
+        every coefficient to zero, computed from the training pairs, to 100,000
+        times it (see ``_make_Cs_grid``); up to version 1.2.4, from 0.01 to
+        1000 whatever the data. Pass ``np.logspace(-2, 3, 20)`` for that range.
+        Higher C = less regularization. If the best C is the smallest or the
+        largest tried, a warning says so: the best penalty may then lie outside
+        the range.
     class_weight : str or None, default='balanced'
         Class weighting strategy. 'balanced' adjusts weights inversely proportional
         to class frequencies, recommended for imbalanced data.
@@ -496,6 +503,10 @@ class FeatureSelector:
     >>> print(result.updated_similarity_map)
     {'name': ['jaro_winkler'], 'address': ['levenshtein']}
     """
+
+    # An int Cs spans this many powers of ten of C, up from the C at which the
+    # penalty sets every coefficient to zero
+    C_GRID_DECADES = 5
 
     def __init__(
         self,
@@ -560,25 +571,52 @@ class FeatureSelector:
         self.preferred_separators = preferred_separators
         self.pairs_per_chunk = pairs_per_chunk
 
-    def _make_Cs_grid(self) -> np.ndarray:
+    def _make_Cs_grid(self, X: np.ndarray, y: np.ndarray) -> dict:
         """
-        Generate grid of regularization parameter values for cross-validation.
+        Regularization strengths to try in cross-validation, by l1_ratio.
+
+        With ``Cs`` an int, a path of that many C values per l1_ratio, as glmnet
+        builds one: logarithmically spaced from the C at which the L1 penalty
+        sets every coefficient to zero, computed from the data, to
+        ``10**C_GRID_DECADES`` times it. How strongly a given C penalises
+        depends on the number and weights of the pairs, as scikit-learn's
+        objective multiplies C with the sum of their losses, so that a fixed
+        range of C suits one data size only. Otherwise the C values given, for
+        every l1_ratio.
+
+        Parameters
+        ----------
+        X : np.ndarray
+            The standardised features of all training pairs.
+        y : np.ndarray
+            Their labels.
 
         Returns
         -------
-        np.ndarray
-            Array of C values to try during cross-validation.
-            If Cs was specified as an int, returns logarithmically spaced values
-            from 0.01 to 1000. Otherwise returns the provided values.
-
-        Notes
-        -----
-        Higher C values mean less regularization (more features kept).
-        Lower C values mean stronger regularization (more aggressive dropping).
+        dict
+            The C values by l1_ratio, ascending. Higher C means less
+            regularization, so that more features are kept.
         """
-        if isinstance(self.Cs, int):
-            return np.logspace(-2, 3, self.Cs)
-        return np.asarray(list(self.Cs), dtype=float)
+        if not isinstance(self.Cs, int):
+            given = np.sort(np.asarray(list(self.Cs), dtype=float))
+            return {l1: given for l1 in self.l1_ratios}
+
+        # The gradient of the weighted log loss at the intercept-only model:
+        # every coefficient stays zero as long as the L1 weight
+        # l1_ratio / (C * sum(w)) is at least its largest entry
+        weights = compute_sample_weight(self.class_weight, y)
+        a = weights / weights.sum()
+        largest = float(np.abs(X.T @ (a * (float(a @ y) - y))).max(initial=0.0))
+        if not largest > 0.0:
+            # no feature varies with the labels: the range of version 1.2.4
+            return {l1: np.logspace(-2, 3, self.Cs) for l1 in self.l1_ratios}
+
+        grids = {}
+        for l1 in self.l1_ratios:
+            # without an L1 part nothing is ever zero; take a small one, as glmnet does
+            C_zero = max(l1, 1e-3) / (weights.sum() * largest)
+            grids[l1] = C_zero * np.logspace(0, self.C_GRID_DECADES, self.Cs)
+        return grids
 
     def _drop_correlated_features(self, X: pd.DataFrame, y: np.ndarray) -> pd.DataFrame:
         """
@@ -853,8 +891,10 @@ class FeatureSelector:
 
         # Step 5 (Stage 2): Elastic net cross-validation
         # Build parameter grid for exhaustive search
-        Cs_grid = self._make_Cs_grid()
+        Cs_grid = self._make_Cs_grid(X_scaled, y)
         l1_grid = list(self.l1_ratios)
+        for l1, grid in Cs_grid.items():
+            print(f"[FeatureSelector] l1_ratio={l1}: {len(grid)} C values from {grid[0]:.3g} to {grid[-1]:.3g}")
 
         skf = StratifiedKFold(n_splits=self.cv, shuffle=True, random_state=self.random_state)
         scorer = get_scorer(self.scoring)
@@ -921,7 +961,7 @@ class FeatureSelector:
             """newton-cd: train and evaluate all C values of one l1_ratio on one CV fold."""
             X_tr, X_va, y_tr, y_va = fold(fold_idx)
             with _fit_warnings_silenced():
-                models = newton_path(X_tr, y_tr, l1_ratio, Cs_grid)
+                models = newton_path(X_tr, y_tr, l1_ratio, Cs_grid[l1_ratio])
                 return [
                     (l1_ratio, C, fold_idx, float(scorer(clf, X_va, y_va)))
                     for C, clf in models.items()
@@ -931,7 +971,7 @@ class FeatureSelector:
         if self.solver == "saga":
             tasks = [
                 delayed(fit_and_score)(l1, C, k)
-                for l1 in l1_grid for C in Cs_grid for k in range(self.cv)
+                for l1 in l1_grid for C in Cs_grid[l1] for k in range(self.cv)
             ]
             unit = "fit"
         else:
@@ -962,6 +1002,14 @@ class FeatureSelector:
         best_score = mean_scores[best_params]
 
         print(f"[FeatureSelector] Stage 2 - Best params: l1_ratio={best_l1}, C={best_C}, score={best_score:.6f}")
+        if len(Cs_grid[best_l1]) > 1 and best_C in (Cs_grid[best_l1][0], Cs_grid[best_l1][-1]):
+            end = "smallest" if best_C == Cs_grid[best_l1][0] else "largest"
+            message = (
+                f"[FeatureSelector] The best C, {best_C:.3g}, is the {end} tried for "
+                f"l1_ratio={best_l1}: the best penalty may lie outside the range of Cs."
+            )
+            print(message)
+            warnings.warn(message, UserWarning, stacklevel=2)
 
         # Step 6: Refit final model on full training set with best parameters;
         # newton-cd along the path of C values up to the best one
@@ -969,7 +1017,7 @@ class FeatureSelector:
             if self.solver == "saga":
                 final_model = saga_fit(X_scaled, y, best_l1, best_C, final=True)
             else:
-                path = [C for C in Cs_grid if C <= best_C]
+                path = [C for C in Cs_grid[best_l1] if C <= best_C]
                 final_model = newton_path(X_scaled, y, best_l1, path)[best_C]
 
         coef = pd.Series(final_model.coef_.ravel(), index=feature_columns)
@@ -1008,6 +1056,7 @@ class FeatureSelector:
             "cv": self.cv,
             "l1_ratios": self.l1_ratios,
             "Cs": self.Cs,
+            "C_grid": {l1: grid.tolist() for l1, grid in Cs_grid.items()},
             "class_weight": self.class_weight,
             "solver": self.solver,
             "n_features_in": int(len(feature_columns)),

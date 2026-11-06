@@ -122,12 +122,45 @@ def make_selector(**kwargs):
     left = pd.DataFrame({"id": range(30), "name": names, "city": rng.choice(["x", "y"], 30)})
     right = pd.DataFrame({"id": range(30), "name": [n[:-1] + "q" for n in names], "city": left["city"]})
     matches = pd.DataFrame({"left": range(30), "right": range(30)})
+    settings = {"cv": 2, "Cs": 3, "l1_ratios": (0.9,), "n_jobs": 1, **kwargs}
     return FeatureSelector(
         {"name": ["levenshtein", "jaro_winkler"], "city": ["levenshtein"]},
         (left, right, matches),
-        cv=2, Cs=3, l1_ratios=(0.9,), n_jobs=1,
-        **kwargs,
+        **settings,
     )
+
+
+@pytest.mark.parametrize("l1_ratio", [0.8, 1.0])
+def test_the_c_grid_starts_where_every_coefficient_is_zero(l1_ratio):
+    X, y, w = problem(n=2000)
+    grid = make_selector(l1_ratios=(l1_ratio,), Cs=20)._make_Cs_grid(X, y)[l1_ratio]
+
+    assert len(grid) == 20
+    assert grid[-1] / grid[0] == pytest.approx(10 ** FeatureSelector.C_GRID_DECADES)
+    _, at_start, _, _ = fit_elastic_net_logistic(X, y, w, grid[0], l1_ratio)
+    _, just_above, _, _ = fit_elastic_net_logistic(X, y, w, grid[0] * 1.05, l1_ratio)
+    assert (at_start == 0).all()
+    assert (just_above != 0).any()
+
+
+def test_c_values_given_are_used_for_every_l1_ratio():
+    X, y, _ = problem()
+    grids = make_selector(l1_ratios=(0.8, 1.0), Cs=[10.0, 0.1, 1.0])._make_Cs_grid(X, y)
+
+    assert {l1: g.tolist() for l1, g in grids.items()} == {0.8: [0.1, 1.0, 10.0], 1.0: [0.1, 1.0, 10.0]}
+
+
+def test_a_best_c_at_the_end_of_the_grid_is_reported():
+    # the weakest penalty of this grid fits the easy example best
+    with pytest.warns(UserWarning, match="largest tried"):
+        make_selector(Cs=[1e-6, 1e-5, 1e3]).execute()
+
+
+def test_the_grid_is_reported():
+    result = make_selector().execute()
+
+    assert list(result.meta["C_grid"]) == [0.9]
+    assert len(result.meta["C_grid"][0.9]) == 3
 
 
 @pytest.mark.parametrize("solver", ["newton-cd", "saga"])
