@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.prepare &mdash; Neer Match Utilities 1.2.7 documentation</title>
+  <title>neer_match_utilities.prepare &mdash; Neer Match Utilities 1.2.8 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=a5753347"></script>
+      <script src="../../_static/documentation_options.js?v=4d6f9085"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -463,7 +463,29 @@
         <span class="n">unique_lemmas</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">lemmas</span><span class="p">))</span>
         <span class="k">return</span> <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">unique_lemmas</span><span class="p">)</span></div>
 
-    
+
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_to_number</span><span class="p">(</span><span class="n">column</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">fill_na</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        A column as numbers, for ``format``'s ``to_numeric``.</span>
+
+<span class="sd">        Numbers stay as they are, signs and exponents included. A string that</span>
+<span class="sd">        is not a number keeps only its digits and dots ('1.5 km' becomes 1.5);</span>
+<span class="sd">        one that is still not a number then is missing. With ``fill_na``, the</span>
+<span class="sd">        missing values become 0.</span>
+<span class="sd">        """</span>
+        <span class="n">numbers</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">column</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">"coerce"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">is_numeric_dtype</span><span class="p">(</span><span class="n">column</span><span class="p">):</span>
+            <span class="n">digits</span> <span class="o">=</span> <span class="n">column</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">"string"</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">r</span><span class="s2">"[^\d\.]"</span><span class="p">,</span> <span class="s2">""</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">numbers</span> <span class="o">=</span> <span class="n">numbers</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">digits</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">"coerce"</span><span class="p">))</span>
+        <span class="n">numbers</span> <span class="o">=</span> <span class="n">numbers</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+        <span class="c1"># After the conversion: pandas 3 keeps a missing value missing through</span>
+        <span class="c1"># astype(str), where pandas 2 made it 'nan' and so a string to fill</span>
+        <span class="k">if</span> <span class="n">fill_na</span><span class="p">:</span>
+            <span class="n">numbers</span> <span class="o">=</span> <span class="n">numbers</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">numbers</span>
+
 
 <div class="viewcode-block" id="Prepare.format">
 <a class="viewcode-back" href="../../prepare.html#neer_match_utilities.prepare.Prepare.format">[docs]</a>
@@ -486,10 +508,12 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        fill_numeric_na : bool, optional</span>
-<span class="sd">            If True, fills missing numeric values with `0` before conversion to numeric dtype.</span>
-<span class="sd">            Default is False.</span>
+<span class="sd">            If True, the columns in `to_numeric` get `0` where a value is</span>
+<span class="sd">            missing or no number. Default is False.</span>
 <span class="sd">        to_numeric : list, optional</span>
-<span class="sd">            A list of column names to be converted to numeric dtype.</span>
+<span class="sd">            A list of column names to be converted to numbers (float). Numbers</span>
+<span class="sd">            stay as they are; of a string that is no number only its digits</span>
+<span class="sd">            and dots are kept ('1.5 km' becomes 1.5).</span>
 <span class="sd">            Default is an empty list.</span>
 <span class="sd">        fill_string_na : bool, optional</span>
 <span class="sd">            If True, fills missing string values with empty strings.</span>
@@ -543,8 +567,8 @@
 
 <span class="sd">            Notes</span>
 <span class="sd">            -----</span>
-<span class="sd">            - Columns specified in `to_numeric` are converted to numeric dtype after </span>
-<span class="sd">              removing non-numeric characters and optionally filling missing values.</span>
+<span class="sd">            - Columns specified in `to_numeric` are converted to numbers, with</span>
+<span class="sd">              missing values optionally filled with 0 (see `_to_number`).</span>
 <span class="sd">            - Non-numeric columns are converted to strings, with missing values </span>
 <span class="sd">              optionally replaced by empty strings or left as NaN.</span>
 <span class="sd">            - If `capitalize` is True, string columns are converted to uppercase.</span>
@@ -562,14 +586,8 @@
             <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
                 <span class="c1"># Convert to numeric if included in to_numeric argument</span>
                 <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">to_numeric</span><span class="p">:</span>
-                    <span class="c1"># remove non-numeric characters</span>
-                    <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">r</span><span class="s1">'[^\d\.]'</span><span class="p">,</span><span class="s1">''</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-                    <span class="c1"># fill NaNs with 0 if specified</span>
-                    <span class="k">if</span> <span class="n">fill_numeric_na</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-                        <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">r</span><span class="s1">''</span><span class="p">,</span><span class="s1">'0'</span><span class="p">,</span><span class="n">regex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-                    <span class="c1"># convert to numeric dtype</span>
-                    <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">'coerce'</span><span class="p">)</span>
-                    
+                    <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_to_number</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">fill_na</span><span class="o">=</span><span class="n">fill_numeric_na</span><span class="p">)</span>
+
                 <span class="c1"># If not, convert to string while replacing nans with empty strings</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">fill_string_na</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>

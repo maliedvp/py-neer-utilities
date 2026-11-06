@@ -3,22 +3,22 @@
 Dep. Variable:                      y   No. Observations:               119716
 Model:                          Logit   Df Residuals:                   119709
 Method:                           MLE   Df Model:                            6
-Date:                Fri, 06 Nov 2026   Pseudo R-squ.:                  0.9291
-Time:                        13:58:23   Log-Likelihood:                -167.83
+Date:                Fri, 06 Nov 2026   Pseudo R-squ.:                  0.9124
+Time:                        17:04:22   Log-Likelihood:                -207.45
 converged:                       True   LL-Null:                       -2368.4
 Covariance Type:            nonrobust   LLR p-value:                     0.000
 ==========================================================================================================================
                                                              coef    std err          z      P>|z|      [0.025      0.975]
 --------------------------------------------------------------------------------------------------------------------------
-const                                                    -27.2377      2.304    -11.822      0.000     -31.753     -22.722
-col_city_city_levenshtein                                  2.7989      0.429      6.526      0.000       1.958       3.640
-col_company_name_company_name_jaro_winkler                11.6414      2.315      5.028      0.000       7.103      16.180
-col_company_name_company_name_levenshtein                  4.0686      1.539      2.643      0.008       1.052       7.086
-col_company_name_company_name_partial_token_sort_ratio    14.0586      1.981      7.096      0.000      10.176      17.942
-col_industry_industry_jaro_winkler                         0.6466      3.405      0.190      0.849      -6.028       7.321
-col_industry_industry_levenshtein                          2.9447      1.958      1.504      0.133      -0.894       6.783
+const                                                    -29.1722      2.276    -12.817      0.000     -33.633     -24.711
+col_city_city_levenshtein                                  3.0542      0.394      7.753      0.000       2.282       3.826
+col_company_name_company_name_jaro_winkler                12.3812      2.159      5.734      0.000       8.149      16.613
+col_company_name_company_name_levenshtein                  1.4821      1.348      1.100      0.271      -1.159       4.123
+col_company_name_company_name_partial_token_sort_ratio    14.8135      1.720      8.613      0.000      11.442      18.185
+col_industry_industry_jaro_winkler                         4.5863      3.030      1.513      0.130      -1.353      10.526
+col_industry_industry_levenshtein                          0.9395      1.767      0.532      0.595      -2.524       4.403
 ==========================================================================================================================
 
-Possibly complete quasi-separation: A fraction 0.90 of observations can be
+Possibly complete quasi-separation: A fraction 0.89 of observations can be
 perfectly predicted. This might indicate that there is complete
 quasi-separation. In this case some parameters will not be identified.
