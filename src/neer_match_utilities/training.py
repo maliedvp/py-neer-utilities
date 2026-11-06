@@ -597,6 +597,17 @@ class TrainingPipe:
     tune_metric : {'mcc', 'f1'}, optional
         The validation score the threshold maximises. Defaults to `'mcc'`.
 
+    tune_match_share : 'train', float or None, optional
+        The share of matches the tuning weights the validation pairs to. Paired
+        record by record, a split of n records holds a share of about 1/n
+        matches, so that a small validation split holds far more than the
+        training or test pairs, and a threshold tuned on it as it is lets
+        through too many false positives. With `'train'` (the default), its
+        non-matches count as if the validation pairs had the training pairs'
+        share of matches; a float sets that share; None weights nothing, as up
+        to version 1.2.5. It applies to the `val_tuned_` scores, and so to the
+        choice of epochs, as well as to the final threshold.
+
     evaluation_batch_size : int, optional
         Record pairs per batch wherever the pipeline scores pairs without
         training on them: the validation pairs after each epoch, the check after
@@ -821,6 +832,7 @@ class TrainingPipe:
         threshold: float = 0.5,
         tune_threshold: bool = True,
         tune_metric: str = "mcc",
+        tune_match_share: float | str | None = "train",
         evaluation_batch_size: int = 1024,
         initial_feature_width_scales: int = 10,
         feature_depths: int = 2,
@@ -950,6 +962,18 @@ class TrainingPipe:
         # Tuning needs validation pairs; without them the threshold stays fixed
         self._tuning = self.tune_threshold and self.validation_data is not None
 
+        if tune_match_share == "train":
+            pairs = len(self.left_train) * len(self.right_train)
+            self._tune_match_share = len(self.matches_train) / pairs if pairs else None
+        elif tune_match_share is None:
+            self._tune_match_share = None
+        elif isinstance(tune_match_share, (int, float)) and not isinstance(tune_match_share, bool) \
+                and 0.0 < float(tune_match_share) < 1.0:
+            self._tune_match_share = float(tune_match_share)
+        else:
+            raise ValueError("tune_match_share must be 'train', None or a share between 0 and 1.")
+        self.tune_match_share = tune_match_share
+
         # Basic sanity checks
         frames = [
             ("left_train", self.left_train, self.id_left_col),
@@ -1058,6 +1082,7 @@ class TrainingPipe:
             batch_size=self.evaluation_batch_size,
             # always tuned, as the collapse check needs the best threshold's MCC
             tune_metric=self.tune_metric if self._tuning else "mcc",
+            match_share=self._tune_match_share,
         )
 
     def _warn_if_collapsed(self, stage: str, scores: dict | None = None, history: pd.DataFrame | None = None):
@@ -1094,6 +1119,7 @@ class TrainingPipe:
                     *self.validation_data,
                     batch_size=self.evaluation_batch_size,
                     tune_metric=self.tune_metric if self._tuning else None,
+                    match_share=self._tune_match_share,
                 )
             )
         callbacks.append(EpochEndSaver(base_dir=self.base_dir, model_name=self.model_name))

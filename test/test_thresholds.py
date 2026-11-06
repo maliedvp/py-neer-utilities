@@ -79,6 +79,32 @@ def test_tuning_chooses_as_gradient_boosting_does(metric):
     assert {k: scores[k] for k in expected} == pytest.approx(expected)
 
 
+def weighting_example(seed=0):
+    """A fifth of the pairs are matches, as in a small validation split."""
+    rng = np.random.default_rng(seed)
+    labels = (rng.random(2000) < 0.2).astype(int)
+    probabilities = np.clip(np.where(labels == 1, rng.normal(0.65, 0.15, 2000), rng.normal(0.35, 0.15, 2000)), 0, 1)
+    return labels, probabilities.astype(np.float32)
+
+
+def test_weighting_to_the_pairs_own_share_changes_nothing():
+    labels, probabilities = weighting_example()
+
+    assert tune_threshold(labels, probabilities, match_share=labels.mean()) == pytest.approx(
+        tune_threshold(labels, probabilities)
+    )
+
+
+def test_weighting_to_a_smaller_share_raises_the_threshold():
+    labels, probabilities = weighting_example()
+    unweighted, _ = tune_threshold(labels, probabilities)
+    weighted, scores = tune_threshold(labels, probabilities, match_share=0.01)
+
+    # every non-match now counts about 25 times: false positives cost more
+    assert weighted > unweighted
+    assert scores["TP"] + scores["FN"] == labels.sum()  # the counts are as they are
+
+
 def test_undefined_rates_are_zero():
     scores = scores_at(np.array([1, 0, 0]), np.array([0.1, 0.2, 0.3]), 0.5)
 
@@ -185,9 +211,37 @@ def test_a_collapsed_model_is_reported(run_dir, monkeypatch):
         make_pipe(validation_data=make_data("z")).execute()
 
 
+def tuned_shares(monkeypatch):
+    """Record the match_share of every threshold tuning."""
+    import neer_match_utilities.model as model_module
+    shares, original = [], model_module.tune_threshold
+
+    def spy(*args, match_share=None, **kwargs):
+        shares.append(match_share)
+        return original(*args, match_share=match_share, **kwargs)
+    monkeypatch.setattr(model_module, "tune_threshold", spy)
+    return shares
+
+
+@pytest.mark.parametrize("setting, expected", [("train", 6 / 36), (None, None), (0.01, 0.01)])
+def test_tuning_weights_to_the_training_share(run_dir, monkeypatch, setting, expected):
+    shares = tuned_shares(monkeypatch)
+
+    make_pipe(validation_data=make_data("z"), tune_match_share=setting).execute()
+
+    # each epoch, the check after stage 1 and the final threshold
+    assert len(shares) == 4
+    assert set(shares) == {expected}
+
+
 @pytest.mark.parametrize(
     "kwargs, match",
-    [({"threshold": 1.0}, "threshold"), ({"tune_metric": "auc"}, "tune_metric")],
+    [
+        ({"threshold": 1.0}, "threshold"),
+        ({"tune_metric": "auc"}, "tune_metric"),
+        ({"tune_match_share": 1.5}, "tune_match_share"),
+        ({"tune_match_share": "test"}, "tune_match_share"),
+    ],
 )
 def test_invalid_threshold_settings_are_rejected(kwargs, match):
     with pytest.raises(ValueError, match=match):

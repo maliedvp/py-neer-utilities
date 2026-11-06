@@ -526,6 +526,7 @@ def validation_scores(
     matches: pd.DataFrame,
     batch_size: int = 1024,
     tune_metric: str | None = None,
+    match_share: float | None = None,
 ) -> tuple[dict, np.ndarray]:
     """
     Score a model on all record pairs of validation data.
@@ -540,7 +541,10 @@ def validation_scores(
     - With ``tune_metric`` ('mcc' or 'f1'): ``val_threshold``, the threshold
       that maximises it (see :func:`~neer_match_utilities.thresholds.tune_threshold`),
       and ``val_tuned_F1``, ``val_tuned_MCC``, ``val_tuned_Precision`` and
-      ``val_tuned_Recall`` at that threshold.
+      ``val_tuned_Recall`` at that threshold. With ``match_share``, the
+      non-matches count as if matches made up that share of the pairs, both
+      in choosing the threshold and in these four scores (see
+      :func:`~neer_match_utilities.thresholds.non_match_weight`).
     """
     probabilities = np.asarray(
         model.predict(left, right, batch_size=batch_size, verbose=0), dtype=np.float32
@@ -558,7 +562,9 @@ def validation_scores(
         scores["val_Loss"] = float(tf.reduce_mean(value))
 
     if tune_metric is not None:
-        tuned_threshold, tuned = tune_threshold(labels, probabilities, tune_metric)
+        tuned_threshold, tuned = tune_threshold(
+            labels, probabilities, tune_metric, match_share=match_share
+        )
         scores["val_threshold"] = tuned_threshold
         for name in ("F1", "MCC", "Precision", "Recall"):
             scores[f"val_tuned_{name}"] = tuned[name]
@@ -586,6 +592,7 @@ class ValidationMetrics(tf.keras.callbacks.Callback):
         matches: pd.DataFrame,
         batch_size: int = 1024,
         tune_metric: str | None = None,
+        match_share: float | None = None,
     ):
         """
         Parameters
@@ -597,16 +604,21 @@ class ValidationMetrics(tf.keras.callbacks.Callback):
         tune_metric : {'mcc', 'f1'} or None
             If given, each epoch is also scored at the threshold that
             maximises this metric on the validation pairs.
+        match_share : float or None
+            If given, that threshold is chosen, and scored, with the
+            non-matches weighted as if matches made up this share of the pairs.
         """
         super().__init__()
         self.left, self.right, self.matches = left, right, matches
         self.batch_size = batch_size
         self.tune_metric = tune_metric
+        self.match_share = match_share
 
     def on_epoch_end(self, epoch: int, logs=None):
         scores, _ = validation_scores(
             self.model, self.left, self.right, self.matches,
             batch_size=self.batch_size, tune_metric=self.tune_metric,
+            match_share=self.match_share,
         )
         if logs is not None:
             logs.update(scores)
