@@ -456,6 +456,10 @@ interpretable.</p>
 <span class="n">training_pipeline</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
 </pre></div>
 </div>
+<p>The tuned threshold is saved with the model as <code class="docutils literal notranslate"><span class="pre">best_threshold_</span></code>. After
+<code class="docutils literal notranslate"><span class="pre">ModelBaseline.load</span></code>, <code class="docutils literal notranslate"><span class="pre">evaluate</span></code> and <code class="docutils literal notranslate"><span class="pre">GenerateID</span></code> use it unless you pass
+another one, and <code class="docutils literal notranslate"><span class="pre">performance.csv</span></code> reports it in its <code class="docutils literal notranslate"><span class="pre">threshold</span></code> column,
+as it reports 0.5 for Logit and Probit.</p>
 </section>
 </section>
 <section id="deep-learning-model-ann">
@@ -473,7 +477,11 @@ training with customizable loss functions.</p>
 
     <span class="c1"># Optional: validation data, scored after every epoch</span>
     <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="n">left_validation</span><span class="p">,</span> <span class="n">right_validation</span><span class="p">,</span> <span class="n">matches_validation</span><span class="p">),</span>
-    <span class="n">early_stopping_patience</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>         <span class="c1"># stop a stage after 5 epochs without a better val_F1</span>
+    <span class="n">early_stopping_patience</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>         <span class="c1"># stop a stage after 5 epochs without a better score</span>
+    <span class="n">tune_threshold</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>               <span class="c1"># choose the threshold on the validation pairs (default)</span>
+    <span class="n">tune_metric</span><span class="o">=</span><span class="s2">"mcc"</span><span class="p">,</span>                 <span class="c1"># "mcc" | "f1"</span>
+    <span class="n">threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>                     <span class="c1"># used where no threshold is tuned</span>
+    <span class="n">evaluation_batch_size</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span>        <span class="c1"># pairs per batch when scoring without training</span>
 
     <span class="c1"># ID columns</span>
     <span class="n">id_left_col</span><span class="o">=</span><span class="s2">"company_id"</span><span class="p">,</span>
@@ -519,6 +527,10 @@ networks. Higher values create wider networks.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">initial_record_width_scale</span></code>: Controls the width of the final
 record-comparison network.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">record_depth</span></code>: Number of layers in the record network.</p></li>
+<li><p>Keep the layers wide. With small width scales (e.g. 2) and several
+layers, hidden layers of two ReLU units often die and cut fields, or
+the whole network, off from the data; the pipeline warns when a model
+has collapsed this way. The defaults (10, 2, 10, 4) avoid it.</p></li>
 </ul>
 <p><strong>Training Stages:</strong></p>
 <ul class="simple">
@@ -531,12 +543,24 @@ examples.</p></li>
 <p><strong>Validation:</strong></p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">validation_data</span></code>: If given, the model is scored on all validation
-pairs after every epoch, the metrics are logged as <code class="docutils literal notranslate"><span class="pre">val_F1</span></code>,
-<code class="docutils literal notranslate"><span class="pre">val_MCC</span></code>, etc. in the history and in <code class="docutils literal notranslate"><span class="pre">epoch_overview.csv</span></code>, and each
-stage keeps the epoch with the highest <code class="docutils literal notranslate"><span class="pre">val_F1</span></code> instead of the highest
-training F1.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">early_stopping_patience</span></code>: Stops a stage once <code class="docutils literal notranslate"><span class="pre">val_F1</span></code> has not
-improved for this many epochs. Requires <code class="docutils literal notranslate"><span class="pre">validation_data</span></code>.</p></li>
+pairs after every epoch, and the scores are logged as <code class="docutils literal notranslate"><span class="pre">val_F1</span></code>,
+<code class="docutils literal notranslate"><span class="pre">val_MCC</span></code>, etc. in the history and in <code class="docutils literal notranslate"><span class="pre">epoch_overview.csv</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tune_threshold</span></code> (default <code class="docutils literal notranslate"><span class="pre">True</span></code>): Each epoch is also scored at the
+threshold that maximises <code class="docutils literal notranslate"><span class="pre">tune_metric</span></code> on the validation pairs
+(<code class="docutils literal notranslate"><span class="pre">val_threshold</span></code>, <code class="docutils literal notranslate"><span class="pre">val_tuned_MCC</span></code>), and each stage keeps the epoch
+with the highest such score. Stage 2 counts stage 1’s model as its
+epoch 0 and keeps it unless one of its own epochs scores higher. The
+final model’s threshold is tuned the same way, used in its final
+evaluation, saved with it as <code class="docutils literal notranslate"><span class="pre">best_threshold_</span></code> and restored by
+<code class="docutils literal notranslate"><span class="pre">Model.load</span></code>; <code class="docutils literal notranslate"><span class="pre">performance.csv</span></code> reports it in its <code class="docutils literal notranslate"><span class="pre">threshold</span></code> column.
+With <code class="docutils literal notranslate"><span class="pre">tune_threshold=False</span></code>, the epochs are chosen by <code class="docutils literal notranslate"><span class="pre">val_F1</span></code> at
+<code class="docutils literal notranslate"><span class="pre">threshold</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">early_stopping_patience</span></code>: Stops a stage once the score its epochs are
+chosen by has not improved for this many epochs. Requires
+<code class="docutils literal notranslate"><span class="pre">validation_data</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">evaluation_batch_size</span></code>: Pairs per batch wherever the pipeline scores
+pairs without training on them. It affects speed and memory, not the
+scores.</p></li>
 </ul>
 <p><strong>Sampling:</strong></p>
 <ul class="simple">

@@ -439,7 +439,12 @@ regularization.</p></li>
 <li><p><strong>Stage 2 — Elastic net regularization</strong>: Fits a penalized logistic
 regression (L1/L2 mix) with cross-validation to select features that
 contribute unique predictive information. Features with zero or
-near-zero coefficients are dropped.</p></li>
+near-zero coefficients are dropped. The fits take proximal Newton
+steps (<code class="docutils literal notranslate"><span class="pre">solver=&quot;newton-cd&quot;</span></code>, the default since version 1.2.4) and
+reach the elastic net’s solution within seconds, even for hundreds
+of thousands of pairs. <code class="docutils literal notranslate"><span class="pre">solver=&quot;saga&quot;</span></code>, the solver up to version
+1.2.3, typically stops at its iteration limit far from that solution
+when matches are rare; it is kept to reproduce earlier results.</p></li>
 </ol>
 <p>The selector is designed for the extreme class imbalance typical in
 entity matching, where true matches are rare relative to non-matches.</p>
@@ -466,6 +471,7 @@ entity matching, where true matches are rare relative to non-matches.</p>
     <span class="n">Cs</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>                       <span class="c1"># number of regularization strengths to search</span>
     <span class="n">class_weight</span><span class="o">=</span><span class="s2">"balanced"</span><span class="p">,</span>     <span class="c1"># adjust for class imbalance</span>
     <span class="n">min_coef_threshold</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>     <span class="c1"># drop features with |coefficient| below this</span>
+    <span class="n">solver</span><span class="o">=</span><span class="s2">"newton-cd"</span><span class="p">,</span>          <span class="c1"># the default; "saga" was the solver up to 1.2.3</span>
 
     <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
     <span class="n">n_jobs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>

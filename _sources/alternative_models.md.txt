@@ -128,6 +128,11 @@ training_pipeline = BaselineTrainingPipe(
 training_pipeline.execute()
 ```
 
+The tuned threshold is saved with the model as `best_threshold_`. After
+`ModelBaseline.load`, `evaluate` and `GenerateID` use it unless you pass
+another one, and `performance.csv` reports it in its `threshold` column,
+as it reports 0.5 for Logit and Probit.
+
 ## Deep Learning Model (ANN)
 
 The neural network model uses `TrainingPipe` and supports two-stage
@@ -145,7 +150,11 @@ training_pipeline = TrainingPipe(
 
     # Optional: validation data, scored after every epoch
     validation_data=(left_validation, right_validation, matches_validation),
-    early_stopping_patience=5,         # stop a stage after 5 epochs without a better val_F1
+    early_stopping_patience=5,         # stop a stage after 5 epochs without a better score
+    tune_threshold=True,               # choose the threshold on the validation pairs (default)
+    tune_metric="mcc",                 # "mcc" | "f1"
+    threshold=0.5,                     # used where no threshold is tuned
+    evaluation_batch_size=1024,        # pairs per batch when scoring without training
 
     # ID columns
     id_left_col="company_id",
@@ -191,6 +200,10 @@ training_pipeline.execute()
 - `initial_record_width_scale`: Controls the width of the final
   record-comparison network.
 - `record_depth`: Number of layers in the record network.
+- Keep the layers wide. With small width scales (e.g. 2) and several
+  layers, hidden layers of two ReLU units often die and cut fields, or
+  the whole network, off from the data; the pipeline warns when a model
+  has collapsed this way. The defaults (10, 2, 10, 4) avoid it.
 
 **Training Stages:**
 
@@ -203,12 +216,24 @@ training_pipeline.execute()
 **Validation:**
 
 - `validation_data`: If given, the model is scored on all validation
-  pairs after every epoch, the metrics are logged as `val_F1`,
-  `val_MCC`, etc. in the history and in `epoch_overview.csv`, and each
-  stage keeps the epoch with the highest `val_F1` instead of the highest
-  training F1.
-- `early_stopping_patience`: Stops a stage once `val_F1` has not
-  improved for this many epochs. Requires `validation_data`.
+  pairs after every epoch, and the scores are logged as `val_F1`,
+  `val_MCC`, etc. in the history and in `epoch_overview.csv`.
+- `tune_threshold` (default `True`): Each epoch is also scored at the
+  threshold that maximises `tune_metric` on the validation pairs
+  (`val_threshold`, `val_tuned_MCC`), and each stage keeps the epoch
+  with the highest such score. Stage 2 counts stage 1’s model as its
+  epoch 0 and keeps it unless one of its own epochs scores higher. The
+  final model’s threshold is tuned the same way, used in its final
+  evaluation, saved with it as `best_threshold_` and restored by
+  `Model.load`; `performance.csv` reports it in its `threshold` column.
+  With `tune_threshold=False`, the epochs are chosen by `val_F1` at
+  `threshold`.
+- `early_stopping_patience`: Stops a stage once the score its epochs are
+  chosen by has not improved for this many epochs. Requires
+  `validation_data`.
+- `evaluation_batch_size`: Pairs per batch wherever the pipeline scores
+  pairs without training on them. It affects speed and memory, not the
+  scores.
 
 **Sampling:**
 

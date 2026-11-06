@@ -939,8 +939,10 @@ can run:</p>
 <p>Subsequently, we need to split the data into training and test sets,
 each consisting of three DataFrames. The training ratio is given by
 <span class="math notranslate nohighlight">\(\text{training_ratio} = 1 - (\text{test_ratio} + \text{validation_ratio})\)</span>.
-Note that since validation is not implemented yet, you can set
-<span class="math notranslate nohighlight">\(\text{validation_ratio} = 0\)</span>.</p>
+A validation split is needed only where a model is tuned on it: gradient
+boosting and the neural network choose their classification threshold on
+it, and the neural network also its best epochs. The Logit model of this
+tutorial needs none, so we set <span class="math notranslate nohighlight">\(\text{validation_ratio} = 0\)</span>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.split</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_test_train</span>
 
 <span class="n">left_train</span><span class="p">,</span> <span class="n">right_train</span><span class="p">,</span> <span class="n">matches_train</span><span class="p">,</span> <span class="n">left_validation</span><span class="p">,</span> <span class="n">right_validation</span><span class="p">,</span> <span class="n">matches_validation</span><span class="p">,</span> <span class="n">left_test</span><span class="p">,</span> <span class="n">right_test</span><span class="p">,</span> <span class="n">matches_test</span> <span class="o">=</span> <span class="n">split_test_train</span><span class="p">(</span>
@@ -974,7 +976,7 @@ Probit, or GradientBoost) follow a similar syntax and are covered in
     <span class="c1"># matches_id_right="right",</span>
     <span class="n">model_kind</span><span class="o">=</span><span class="s2">"logit"</span><span class="p">,</span> <span class="c1"># "logit" | "probit" | "gb"</span>
     <span class="n">mismatch_share_fit</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
-    <span class="c1"># tune_threshold=False, # recommended for "gb"</span>
+    <span class="c1"># tune_threshold=True, # the default; only "gb" tunes, on validation_data</span>
     <span class="c1"># tune_metric="mcc",</span>
     <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="c1"># replace the model saved by a previous run</span>
 <span class="p">)</span>
@@ -985,7 +987,7 @@ Probit, or GradientBoost) follow a similar syntax and are covered in
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Performance metrics saved to /Users/marli453/develop/py-neer-utilities/docs/source/_static/examples/demonstration_model/performance.csv
 Similarity map saved to /Users/marli453/develop/py-neer-utilities/docs/source/_static/examples/demonstration_model/similarity_map.dill
 
-LogitMatchingModel(result=&lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x131b9e1d0&gt;, feature_cols=['col_city_city_levenshtein', 'col_company_name_company_name_jaro_winkler', 'col_company_name_company_name_levenshtein', 'col_company_name_company_name_partial_token_sort_ratio', 'col_industry_industry_jaro_winkler', 'col_industry_industry_levenshtein'])
+LogitMatchingModel(result=&lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x133533210&gt;, feature_cols=['col_city_city_levenshtein', 'col_company_name_company_name_jaro_winkler', 'col_company_name_company_name_levenshtein', 'col_company_name_company_name_partial_token_sort_ratio', 'col_industry_industry_jaro_winkler', 'col_industry_industry_levenshtein'])
 </pre></div>
 </div>
 </section>
