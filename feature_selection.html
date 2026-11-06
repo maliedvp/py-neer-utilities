@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Feature Selection &mdash; Neer Match Utilities 1.2.4 documentation</title>
+  <title>Feature Selection &mdash; Neer Match Utilities 1.2.5 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -17,7 +17,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=928db92d"></script>
+      <script src="_static/documentation_options.js?v=36f53d34"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -406,6 +406,7 @@ Useful for understanding feature importance.</p>
 - cv: Number of cross-validation folds
 - n_features_in: Number of input features
 - n_features_selected: Number of features selected
+- C_grid: The C values tried, by l1_ratio
 - solver: The solver of the elastic-net fits
 - did_fallback: Whether fallback to original map occurred</p>
 <dl class="field-list simple">
@@ -458,8 +459,14 @@ index labels are. If False, treat as entity IDs.</p></li>
 is recommended.</p></li>
 <li><p><strong>cv</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of cross-validation folds.</p></li>
 <li><p><strong>l1_ratios</strong> (<em>tuple</em><em>, </em><em>default=</em><em>(</em><em>0.8</em><em>, </em><em>0.9</em><em>, </em><em>1.0</em><em>)</em>) – L1 penalty ratios to try. 1.0 = pure Lasso, 0.0 = pure Ridge.</p></li>
-<li><p><strong>Cs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]]</span>) – Regularization strengths to try. If int, generates <cite>Cs</cite> values
-logarithmically spaced from 0.01 to 1000. Higher C = less regularization.</p></li>
+<li><p><strong>Cs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]]</span>) – Regularization strengths to try. If int, that many values per
+l1_ratio, logarithmically spaced from the C at which the penalty sets
+every coefficient to zero, computed from the training pairs, to 100,000
+times it (see <code class="docutils literal notranslate"><span class="pre">_make_Cs_grid</span></code>); up to version 1.2.4, from 0.01 to
+1000 whatever the data. Pass <code class="docutils literal notranslate"><span class="pre">np.logspace(-2,</span> <span class="pre">3,</span> <span class="pre">20)</span></code> for that range.
+Higher C = less regularization. If the best C is the smallest or the
+largest tried, a warning says so: the best penalty may then lie outside
+the range.</p></li>
 <li><p><strong>class_weight</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Class weighting strategy. ‘balanced’ adjusts weights inversely proportional
 to class frequencies, recommended for imbalanced data.</p></li>
 <li><p><strong>solver</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – How the elastic-net fits are computed. Both minimise the objective of

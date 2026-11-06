@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Additional Functionalities &mdash; Neer Match Utilities 1.2.4 documentation</title>
+  <title>Additional Functionalities &mdash; Neer Match Utilities 1.2.5 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -17,7 +17,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=928db92d"></script>
+      <script src="_static/documentation_options.js?v=36f53d34"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -468,7 +468,7 @@ entity matching, where true matches are rare relative to non-matches.</p>
     <span class="c1"># Stage 2: Elastic net</span>
     <span class="n">scoring</span><span class="o">=</span><span class="s2">"average_precision"</span><span class="p">,</span> <span class="c1"># metric for CV; recommended for imbalanced data</span>
     <span class="n">cv</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>                        <span class="c1"># number of cross-validation folds</span>
-    <span class="n">Cs</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>                       <span class="c1"># number of regularization strengths to search</span>
+    <span class="n">Cs</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>                       <span class="c1"># C values, from the one that drops every feature to 10^5 times it</span>
     <span class="n">class_weight</span><span class="o">=</span><span class="s2">"balanced"</span><span class="p">,</span>     <span class="c1"># adjust for class imbalance</span>
     <span class="n">min_coef_threshold</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>     <span class="c1"># drop features with |coefficient| below this</span>
     <span class="n">solver</span><span class="o">=</span><span class="s2">"newton-cd"</span><span class="p">,</span>          <span class="c1"># the default; "saga" was the solver up to 1.2.3</span>

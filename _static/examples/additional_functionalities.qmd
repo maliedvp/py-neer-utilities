@@ -99,7 +99,7 @@ fs = FeatureSelector(
     # Stage 2: Elastic net
     scoring="average_precision", # metric for CV; recommended for imbalanced data
     cv=2,                        # number of cross-validation folds
-    Cs=20,                       # number of regularization strengths to search
+    Cs=20,                       # C values, from the one that drops every feature to 10^5 times it
     class_weight="balanced",     # adjust for class imbalance
     min_coef_threshold=0.01,     # drop features with |coefficient| below this
     solver="newton-cd",          # the default; "saga" was the solver up to 1.2.3
