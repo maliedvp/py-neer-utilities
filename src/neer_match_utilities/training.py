@@ -4,7 +4,8 @@ from .base import SuperClass
 from neer_match.similarity_map import SimilarityMap
 from neer_match.matching_model import DLMatchingModel
 from neer_match_utilities.baseline_io import ModelBaseline
-from neer_match_utilities.model import Model, EpochEndSaver, ValidationMetrics
+from neer_match_utilities.model import Model, EpochEndSaver, ValidationMetrics, validation_scores
+from neer_match_utilities.thresholds import TUNE_METRICS
 
 import pandas as pd
 from datetime import datetime
@@ -17,6 +18,7 @@ import tensorflow.keras.backend as K
 import tensorflow as tf
 import math
 import pickle
+import warnings
 
 
 
@@ -273,6 +275,12 @@ def focal_loss(alpha=0.99, gamma=1.5):
         raise ValueError("Parameter `alpha` must be in the range [0, 1].")
 
     def loss(y_true, y_pred):
+        # One value per pair. neer-match's evaluate passes labels of shape (n,)
+        # and predictions of shape (n, 1), which would otherwise broadcast to
+        # all n * n label-prediction combinations; Keras aligns them in fit.
+        y_true = tf.reshape(tf.cast(y_true, tf.float32), (-1,))
+        y_pred = tf.reshape(tf.cast(y_pred, tf.float32), (-1,))
+
         # numerical safety
         eps = K.epsilon()
         y_pred = K.clip(y_pred, eps, 1.0 - eps)
@@ -358,8 +366,10 @@ def soft_f1_loss(epsilon: float = 1e-7):
         raise ValueError("`epsilon` must be strictly positive.")
 
     def loss(y_true, y_pred):
-        y_true = tf.cast(y_true, tf.float32)
-        y_pred = tf.clip_by_value(tf.cast(y_pred, tf.float32), epsilon, 1.0 - epsilon)
+        # One value per pair, as in focal_loss: (n,) and (n, 1) would broadcast
+        y_true = tf.reshape(tf.cast(y_true, tf.float32), (-1,))
+        y_pred = tf.reshape(tf.cast(y_pred, tf.float32), (-1,))
+        y_pred = tf.clip_by_value(y_pred, epsilon, 1.0 - epsilon)
 
         # Soft counts
         tp = tf.reduce_sum(y_pred * y_true)
@@ -557,14 +567,35 @@ class TrainingPipe:
     validation_data : tuple or dict, optional
         Preprocessed validation data, in the same formats as `training_data`.
         If given, the model is scored on all validation record pairs after every
-        epoch of both stages. The metrics are logged with a `val_` prefix (e.g.
+        epoch of both stages. The scores are logged with a `val_` prefix (e.g.
         `val_F1`, `val_MCC`) in the history and in `epoch_overview.csv`, and each
-        stage keeps the epoch with the highest `val_F1` instead of the highest
-        training F1. Defaults to `None`.
+        stage keeps its best epoch by them rather than by the training F1:
+        with `tune_threshold`, by `val_tuned_MCC` (or `val_tuned_F1`), the
+        score at the threshold that maximises it in that epoch; otherwise by
+        `val_F1`. Stage 2 also counts the model it starts from, stage 1's best,
+        as its epoch 0 and keeps it if no epoch of its own does better.
+        Defaults to `None`.
 
     early_stopping_patience : int, optional
-        Requires `validation_data`. If given, a stage stops once `val_F1` has not
-        improved for this many epochs. Defaults to `None` (no early stopping).
+        Requires `validation_data`. If given, a stage stops once the score its
+        best epoch is chosen by has not improved for this many epochs.
+        Defaults to `None` (no early stopping).
+
+    threshold : float, optional
+        Probability from which a pair counts as a match, wherever none is
+        tuned: in training, and in the final evaluation without
+        `validation_data` or with `tune_threshold=False`. Defaults to 0.5.
+
+    tune_threshold : bool, optional
+        Whether to choose the threshold on the validation pairs, where
+        `validation_data` is given: in every epoch, to rank the epochs, and for
+        the final model, as `GradientBoostingModel` does. The final model's
+        threshold is saved with it as `best_threshold_`, used in its final
+        evaluation and written to the `threshold` column of `performance.csv`;
+        `Model.load` restores it. Defaults to `True`.
+
+    tune_metric : {'mcc', 'f1'}, optional
+        The validation score the threshold maximises. Defaults to `'mcc'`.
 
     evaluation_batch_size : int, optional
         Record pairs per batch wherever the pipeline scores pairs without
@@ -787,6 +818,9 @@ class TrainingPipe:
         *,
         validation_data=None,  # same formats as training_data
         early_stopping_patience: int | None = None,
+        threshold: float = 0.5,
+        tune_threshold: bool = True,
+        tune_metric: str = "mcc",
         evaluation_batch_size: int = 1024,
         initial_feature_width_scales: int = 10,
         feature_depths: int = 2,
@@ -906,6 +940,16 @@ class TrainingPipe:
             raise ValueError("evaluation_batch_size must be a positive integer.")
         self.evaluation_batch_size = evaluation_batch_size
 
+        if not 0.0 < float(threshold) < 1.0:
+            raise ValueError("threshold must lie strictly between 0 and 1.")
+        self.threshold = float(threshold)
+        if tune_metric not in TUNE_METRICS:
+            raise ValueError(f"tune_metric must be one of {TUNE_METRICS}, not {tune_metric!r}.")
+        self.tune_metric = tune_metric
+        self.tune_threshold = bool(tune_threshold)
+        # Tuning needs validation pairs; without them the threshold stays fixed
+        self._tuning = self.tune_threshold and self.validation_data is not None
+
         # Basic sanity checks
         frames = [
             ("left_train", self.left_train, self.id_left_col),
@@ -971,7 +1015,7 @@ class TrainingPipe:
             self.WARMUP_MISMATCH_SHARE,
             desired_pos_per_batch=self.no_tm_pbatch,
         )
-        self.model.compile()
+        self.model.compile(threshold=self.threshold)
         self.model.fit(
             self.left_train,
             self.right_train,
@@ -984,6 +1028,10 @@ class TrainingPipe:
 
         # Count params
         P = self.count_trainable_params(self.model)
+
+        # Set by stage 1 for stage 2: the validation scores and the checkpoint
+        # of its chosen model
+        self._stage1_scores, self._stage1_best = None, None
 
         # Round 1 (optional)
         if self.stage_1:
@@ -999,7 +1047,40 @@ class TrainingPipe:
     @property
     def _selection_metric(self) -> str:
         """The epoch metric each stage maximizes to pick its best epoch."""
-        return "val_F1" if self.validation_data is not None else "f1"
+        if self.validation_data is None:
+            return "f1"
+        return f"val_tuned_{self.tune_metric.upper()}" if self._tuning else "val_F1"
+
+    def _validation_scores(self) -> tuple[dict, np.ndarray]:
+        """The current model's scores on all validation pairs, and its predictions."""
+        return validation_scores(
+            self.model, *self.validation_data,
+            batch_size=self.evaluation_batch_size,
+            # always tuned, as the collapse check needs the best threshold's MCC
+            tune_metric=self.tune_metric if self._tuning else "mcc",
+        )
+
+    def _warn_if_collapsed(self, stage: str, scores: dict | None = None, history: pd.DataFrame | None = None):
+        """
+        Warn when a stage's chosen model does not tell matches from non-matches:
+        no threshold gives the validation pairs a positive MCC, or, without
+        validation data, no epoch predicted a single training match.
+        """
+        if scores is not None:
+            collapsed = not scores["val_tuned_MCC"] > 0
+            what = "no threshold separates any validation matches from the non-matches"
+        else:
+            collapsed = not history["f1"].max() > 0
+            what = f"no epoch predicted a single training match at threshold {self.threshold}"
+        if collapsed:
+            warnings.warn(
+                f"[TrainingPipe] {stage}: {what}. The network has probably collapsed to "
+                "predicting about the same probability for every pair, as networks whose "
+                "hidden layers are only a few units wide often do; wider layers "
+                "(initial_feature_width_scales, initial_record_width_scale) prevent it.",
+                RuntimeWarning,
+                stacklevel=3,
+            )
 
     def _stage_callbacks(self) -> list:
         """
@@ -1009,13 +1090,17 @@ class TrainingPipe:
         callbacks = []
         if self.validation_data is not None:
             callbacks.append(
-                ValidationMetrics(*self.validation_data, batch_size=self.evaluation_batch_size)
+                ValidationMetrics(
+                    *self.validation_data,
+                    batch_size=self.evaluation_batch_size,
+                    tune_metric=self.tune_metric if self._tuning else None,
+                )
             )
         callbacks.append(EpochEndSaver(base_dir=self.base_dir, model_name=self.model_name))
         if self.early_stopping_patience is not None:
             callbacks.append(
                 tf.keras.callbacks.EarlyStopping(
-                    monitor="val_F1", mode="max", patience=self.early_stopping_patience
+                    monitor=self._selection_metric, mode="max", patience=self.early_stopping_patience
                 )
             )
         return callbacks
@@ -1040,7 +1125,7 @@ class TrainingPipe:
         opt_1 = tf.keras.optimizers.AdamW(learning_rate=lr_sched_1, weight_decay=wd_1, clipnorm=1.0)
 
         loss_1 = self._get_stage1_loss()
-        self.model.compile(loss=loss_1, optimizer=opt_1)
+        self.model.compile(loss=loss_1, optimizer=opt_1, threshold=self.threshold)
 
         # Start from an empty checkpoints/, so that epochs left by an interrupted
         # run are not renamed into checkpoints_stage_1/ along with this run's
@@ -1067,18 +1152,30 @@ class TrainingPipe:
         self.model = Model.load(self.base_dir / self.model_name / "checkpoints" / f"epoch_{best_epoch_str}")
         print(f"[R1] best epoch by {self._selection_metric}:", best_epoch, "path:", self.base_dir / self.model_name / "checkpoints_stage_1" / f"epoch_{best_epoch_str}")
 
-        # Sanity-evaluate the loaded model before Round 2 training
+        # Compiled with stage 1's loss, so that it can be evaluated (dummy optimizer)
         probe_loss = self._get_stage1_loss()
-        self.model.compile(loss=probe_loss, optimizer=tf.keras.optimizers.Adam())  # dummy opt
-        eval_probe = self.model.evaluate(
-            self.left_train,
-            self.right_train,
-            self.matches_train,
-            mismatch_share=self.mismatch_share_1,
-            batch_size=self.evaluation_batch_size,
-            verbose=0,
+        self.model.compile(
+            loss=probe_loss, optimizer=tf.keras.optimizers.Adam(), threshold=self.threshold
         )
-        print("[R1->R2] probe metrics after load:", eval_probe)
+
+        if self.validation_data is not None:
+            # The loaded model's validation scores: a check that loading worked,
+            # and stage 2's epoch 0, the model it starts from
+            self._stage1_scores, _ = self._validation_scores()
+            print("[R1->R2] validation scores after load:", self._stage1_scores)
+            self._warn_if_collapsed("Stage 1", scores=self._stage1_scores)
+        else:
+            # Sanity-evaluate the loaded model before Round 2 training
+            eval_probe = self.model.evaluate(
+                self.left_train,
+                self.right_train,
+                self.matches_train,
+                mismatch_share=self.mismatch_share_1,
+                batch_size=self.evaluation_batch_size,
+                verbose=0,
+            )
+            print("[R1->R2] probe metrics after load:", eval_probe)
+            self._warn_if_collapsed("Stage 1", history=df_epoch)
 
         # Preserve Round 1 checkpoints
         old_path = self.base_dir / self.model_name / "checkpoints"
@@ -1087,6 +1184,7 @@ class TrainingPipe:
             if new_path.exists():
                 shutil.rmtree(new_path)  # left by an earlier run
             old_path.rename(new_path)
+        self._stage1_best = new_path / f"epoch_{best_epoch_str}"
 
     def _get_stage1_loss(self):
         """
@@ -1147,7 +1245,9 @@ class TrainingPipe:
         wd_2 = self._suggest_weight_decay_adamw(batch_size, P, peak_lr_2)
         opt_2 = tf.keras.optimizers.AdamW(learning_rate=lr_sched_2, weight_decay=wd_2, clipnorm=1.0)
 
-        self.model.compile(loss=focal_loss(alpha=alpha, gamma=self.gamma), optimizer=opt_2)
+        self.model.compile(
+            loss=focal_loss(alpha=alpha, gamma=self.gamma), optimizer=opt_2, threshold=self.threshold
+        )
 
         # Start from an empty checkpoints/, so that epochs left by an interrupted
         # run are not renamed into checkpoints_stage_2/ along with this run's
@@ -1163,17 +1263,32 @@ class TrainingPipe:
 
         df_epoch = pd.DataFrame(history.history)
         df_epoch["epoch"] = pd.Series(history.epoch, dtype=int) + 1
+
+        # Stage 1's best model, the one this stage started from, is its epoch 0:
+        # stage 2 keeps it unless one of its own epochs scores higher
+        stage1_scores = self._stage1_scores if self.stage_1 else None
+        if stage1_scores is not None:
+            df_epoch = pd.concat(
+                [pd.DataFrame([{**stage1_scores, "epoch": 0}]), df_epoch], ignore_index=True
+            )
+
         (self.base_dir / self.model_name / "checkpoints").mkdir(parents=True, exist_ok=True)
         df_epoch.to_csv(self.base_dir / self.model_name / "checkpoints" / "epoch_overview.csv", index=False)
 
         best_row = df_epoch.loc[df_epoch[self._selection_metric].idxmax()]
         best_epoch = int(best_row["epoch"])
         best_epoch_str = f"{best_epoch:02d}"
-        self.model = Model.load(self.base_dir / self.model_name / "checkpoints" / f"epoch_{best_epoch_str}")
-        print(f"[R2] best epoch by {self._selection_metric}:", best_epoch, "path:", self.base_dir / self.model_name / "checkpoints_stage_2" / f"epoch_{best_epoch_str}")
+        if best_epoch == 0:
+            self.model = Model.load(self._stage1_best)
+            print(f"[R2] best epoch by {self._selection_metric}:", best_epoch, "path:", self._stage1_best, "(stage 1's model)")
+        else:
+            self.model = Model.load(self.base_dir / self.model_name / "checkpoints" / f"epoch_{best_epoch_str}")
+            print(f"[R2] best epoch by {self._selection_metric}:", best_epoch, "path:", self.base_dir / self.model_name / "checkpoints_stage_2" / f"epoch_{best_epoch_str}")
 
         # Re-compile for export/eval
-        self.model.compile(loss=focal_loss(alpha=alpha, gamma=self.gamma), optimizer=opt_2)
+        self.model.compile(
+            loss=focal_loss(alpha=alpha, gamma=self.gamma), optimizer=opt_2, threshold=self.threshold
+        )
 
         # Re-name checkpoints folder
         old_path = self.base_dir / self.model_name / "checkpoints"
@@ -1187,7 +1302,26 @@ class TrainingPipe:
     def _finalize_and_report(self):
         assert self.model is not None and self.training_util is not None
 
-        # Save the final bundle
+        # The final model's threshold: tuned on the validation pairs, as each
+        # epoch's was, or the fixed one
+        threshold, self.model.best_threshold_ = self.threshold, None
+        if self.validation_data is not None:
+            scores, _ = self._validation_scores()
+            if self._tuning:
+                threshold = self.model.best_threshold_ = scores["val_threshold"]
+                metric = self.tune_metric.upper()
+                print(
+                    f"[TrainingPipe] threshold tuned on the validation pairs by {metric}: "
+                    f"{threshold:.2f} (validation {metric} {scores[f'val_tuned_{metric}']:.4f} "
+                    f"at it, {scores[f'val_{metric}']:.4f} at {self.threshold})"
+                )
+            if not self.stage_1 or self.stage_2:
+                self._warn_if_collapsed("Final model", scores=scores)
+        self.model.compile(
+            loss=self.model.loss, optimizer=self.model.optimizer, threshold=threshold
+        )
+
+        # Save the final bundle, with the threshold
         Model.save(
             model=self.model, target_directory=self.base_dir, name=self.model_name,
             save_architecture=self.save_architecture, overwrite=self.overwrite,
@@ -1216,6 +1350,7 @@ class TrainingPipe:
             self.left_test, self.right_test, self.matches_test,
             mismatch_share=1.0, batch_size=self.evaluation_batch_size,
         )
+        perf_train["threshold"] = perf_test["threshold"] = threshold
 
         # Export stats
         self.training_util.performance_statistics_export(

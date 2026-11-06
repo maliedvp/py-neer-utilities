@@ -143,6 +143,16 @@ class SuggestMixin:
 
     similarity_map: SimilarityMap | dict | None = None  # dynamically attached by loader
 
+    def _resolve_threshold(self, threshold: float | None) -> float:
+        """
+        The threshold ``evaluate`` applies: the one passed, else the one tuned
+        and saved with the model (``best_threshold_``), else 0.5.
+        """
+        if threshold is not None:
+            return float(threshold)
+        tuned = getattr(self, "best_threshold_", None)
+        return 0.5 if tuned is None else float(tuned)
+
     def suggest(
         self,
         left: pd.DataFrame,
@@ -543,7 +553,7 @@ class LogitMatchingModel(SuggestMixin, StatsmodelsInferenceMixin):
         df: pd.DataFrame,
         match_col: str = "match",
         feature_prefix: str = "col_",
-        threshold: float = 0.5,
+        threshold: float | None = None,
     ) -> dict:
         if match_col not in df.columns:
             raise KeyError(f"Match column '{match_col}' not found in DataFrame.")
@@ -552,7 +562,7 @@ class LogitMatchingModel(SuggestMixin, StatsmodelsInferenceMixin):
 
         y_true = df[match_col].to_numpy().astype(int)
         proba = self.predict_proba(df, feature_prefix=feature_prefix)
-        y_hat = (proba >= threshold).astype(int)
+        y_hat = (proba >= self._resolve_threshold(threshold)).astype(int)
 
         return classification_metrics(y_true, y_hat)
 
@@ -661,7 +671,7 @@ class ProbitMatchingModel(SuggestMixin, StatsmodelsInferenceMixin):
         df: pd.DataFrame,
         match_col: str = "match",
         feature_prefix: str = "col_",
-        threshold: float = 0.5,
+        threshold: float | None = None,
     ) -> dict:
         if match_col not in df.columns:
             raise KeyError(f"Match column '{match_col}' not found in DataFrame.")
@@ -670,7 +680,7 @@ class ProbitMatchingModel(SuggestMixin, StatsmodelsInferenceMixin):
 
         y_true = df[match_col].to_numpy().astype(int)
         proba = self.predict_proba(df, feature_prefix=feature_prefix)
-        y_hat = (proba >= threshold).astype(int)
+        y_hat = (proba >= self._resolve_threshold(threshold)).astype(int)
 
         return classification_metrics(y_true, y_hat)
 
@@ -793,10 +803,14 @@ class GradientBoostingModel(SuggestMixin):
         df: pd.DataFrame,
         match_col: str = "match",
         feature_prefix: str = "col_",
-        threshold: float = 0.5,
+        threshold: float | None = None,
     ) -> dict:
         """
         Evaluate the model on a pairwise similarity DataFrame.
+
+        A pair counts as a match from ``threshold`` on; without one, from the
+        threshold tuned and saved with the model (``best_threshold_``), and
+        from 0.5 if there is none.
 
         Returns a dict:
 
@@ -810,7 +824,7 @@ class GradientBoostingModel(SuggestMixin):
 
         y_true = df[match_col].to_numpy().astype(int)
         proba = self.predict_proba(df, feature_prefix=feature_prefix)
-        y_hat = (proba >= threshold).astype(int)
+        y_hat = (proba >= self._resolve_threshold(threshold)).astype(int)
 
         return classification_metrics(y_true, y_hat)
 

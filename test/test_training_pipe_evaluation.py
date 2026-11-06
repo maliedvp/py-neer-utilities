@@ -34,14 +34,19 @@ def run_dir(tmp_path, monkeypatch):
 
 
 def test_every_evaluation_uses_evaluation_batch_size(run_dir, monkeypatch):
-    original = DLMatchingModel.evaluate
-    sizes = []
+    calls = []
 
-    def spy(self, left=None, *args, **kwargs):
-        if isinstance(left, pd.DataFrame):  # the pipeline's calls, not Keras's
-            sizes.append(kwargs.get("batch_size"))
-        return original(self, left, *args, **kwargs)
-    monkeypatch.setattr(DLMatchingModel, "evaluate", spy)
+    def spy_on(name):
+        original = getattr(DLMatchingModel, name)
+
+        def spy(self, left=None, *args, **kwargs):
+            if isinstance(left, pd.DataFrame):  # the pipeline's calls, not Keras's
+                calls.append((name, kwargs.get("batch_size")))
+            return original(self, left, *args, **kwargs)
+        monkeypatch.setattr(DLMatchingModel, name, spy)
+
+    spy_on("evaluate")
+    spy_on("predict")
 
     make_pipe(
         validation_data=make_data("z"),
@@ -49,9 +54,10 @@ def test_every_evaluation_uses_evaluation_batch_size(run_dir, monkeypatch):
         evaluation_batch_size=5,
     ).execute()
 
-    # validation after stage 1's epoch, the check after stage 1, validation after
-    # stage 2's epoch, and the final evaluation of the training and test pairs
-    assert sizes == [5] * 5
+    # The validation pairs after stage 1's epoch, after loading stage 1's model,
+    # after stage 2's epoch and for the final threshold; then the final
+    # evaluation of the training and test pairs
+    assert calls == [("predict", 5)] * 4 + [("evaluate", 5)] * 2
 
 
 def test_scores_do_not_depend_on_evaluation_batch_size(run_dir):

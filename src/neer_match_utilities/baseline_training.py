@@ -261,8 +261,10 @@ class BaselineTrainingPipe:
                 model=model,
                 model_name=self.model_name,
                 target_directory=base_dir,
-                evaluation_train=metrics_train,
-                evaluation_test=metrics_test,
+                # with the threshold the predictions were made at, as the
+                # deep learning pipeline writes it
+                evaluation_train={**metrics_train, "threshold": chosen_t},
+                evaluation_test={**metrics_test, "threshold": chosen_t},
                 # The model was already written in step 5. Saving it again here would
                 # overwrite that meta.pkl with one built from a different call.
                 export_model=False,

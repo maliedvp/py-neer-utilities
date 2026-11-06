@@ -62,11 +62,11 @@ def test_validation_metrics_are_logged_each_epoch(run_dir):
     assert len(overview) == 2
 
 
-def test_best_epoch_is_chosen_by_validation_f1(run_dir, monkeypatch):
+def test_without_tuning_the_best_epoch_is_chosen_by_validation_f1(run_dir, monkeypatch):
     scripted_val_f1(monkeypatch, [0.2, 0.9, 0.4])
     loaded = loaded_epochs(monkeypatch)
 
-    stage_1_pipe(epochs=3, validation_data=make_data("y")).execute()
+    stage_1_pipe(epochs=3, validation_data=make_data("y"), tune_threshold=False).execute()
 
     assert loaded[0] == "epoch_02"
 
@@ -75,7 +75,9 @@ def test_early_stopping_ends_a_stage(run_dir, monkeypatch):
     scripted_val_f1(monkeypatch, [0.9, 0.5, 0.4, 0.3, 0.2])
     loaded = loaded_epochs(monkeypatch)
 
-    stage_1_pipe(epochs=5, validation_data=make_data("y"), early_stopping_patience=1).execute()
+    stage_1_pipe(
+        epochs=5, validation_data=make_data("y"), early_stopping_patience=1, tune_threshold=False
+    ).execute()
 
     overview = pd.read_csv(run_dir / "checkpoints_stage_1" / "epoch_overview.csv")
     assert len(overview) == 2  # no improvement in epoch 2, so it stops there

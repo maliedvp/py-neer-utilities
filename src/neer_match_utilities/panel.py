@@ -331,6 +331,10 @@ class SetupData:
         return left, right, dfm
 
 
+# GenerateID's default prediction_threshold: the model's tuned threshold, else 0.9
+_TUNED_OR_0_9 = object()
+
+
 class GenerateID:
     """
     A class to generate and harmonize unique IDs across time periods for panel data.
@@ -356,7 +360,7 @@ class GenerateID:
         time_var: str, 
         model, 
         similarity_map: Union[dict, "SimilarityMap", None] = None, 
-        prediction_threshold: float | None = 0.9,
+        prediction_threshold: float | None | object = _TUNED_OR_0_9,
         subgroups: List[str] = None,
         relation: str = 'm:m'
     ):
@@ -377,8 +381,13 @@ class GenerateID:
             A model object with a `suggest` method.
         similarity_map : dict
             A dictionary of similarity functions for columns.
-        prediction_threshold : float, optional
-            Threshold for predictions. Defaults to 0.9.
+        prediction_threshold : float or None, optional
+            Probability from which a suggested pair counts as a match. By
+            default the threshold tuned and saved with the model
+            (``best_threshold_``, as TrainingPipe and BaselineTrainingPipe's
+            gradient boosting tune it), else 0.9. None takes the tuned
+            threshold too, else 0.9 for a similarity map given as a
+            SimilarityMap and 0.5 otherwise.
         relation : str, optional
             Relationship between observations in cross sectional data. Default is 'm:m'
         """
@@ -396,9 +405,11 @@ class GenerateID:
         # Use the provided similarity_map, or if not provided, take the model's own similarity_map.
         self.similarity_map = similarity_map if similarity_map is not None else getattr(model, "similarity_map", None)
     
-        # Resolve default prediction_threshold if None
-        if prediction_threshold is None:
-            bt = getattr(model, "best_threshold_", None)
+        # Resolve the default: the model's tuned threshold, if it has one
+        bt = getattr(model, "best_threshold_", None)
+        if prediction_threshold is _TUNED_OR_0_9:
+            self.prediction_threshold = 0.9 if bt is None else float(bt)
+        elif prediction_threshold is None:
             if bt is not None:
                 self.prediction_threshold = float(bt)
             else:

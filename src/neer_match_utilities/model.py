@@ -7,10 +7,12 @@ from tensorflow.keras import layers as _layers
 from graphviz import Digraph
 from typing import Dict, List
 
-import contextlib
-import io
 import typing
 import shutil
+
+import numpy as np
+
+from neer_match_utilities.thresholds import pair_labels, scores_at, tune_threshold
 
 import pandas as pd
 
@@ -95,8 +97,13 @@ class Model:
             "record_depth": model.record_pair_network.record_depth,
         }
 
-        # Save a composite dictionary containing both similarity info and model parameters.
-        composite_save = {"similarity_info": composite_similarity_info, "model_params": model_params}
+        # Save a composite dictionary containing both similarity info and model
+        # parameters, and the classification threshold TrainingPipe tuned, if any
+        composite_save = {
+            "similarity_info": composite_similarity_info,
+            "model_params": model_params,
+            "best_threshold": getattr(model, "best_threshold_", None),
+        }
         with open(target_directory / "model_info.pkl", "wb") as f:
             pickle.dump(composite_save, f)
         # --- End composite info saving ---
@@ -160,7 +167,9 @@ class Model:
         Returns
         -------
         DLMatchingModel or NSMatchingModel
-            The loaded model.
+            The loaded model. A DLMatchingModel carries the threshold tuned by
+            TrainingPipe as ``best_threshold_`` (None if none was tuned) and,
+            if there is one, is compiled with it.
         """
 
         model_directory = Path(model_directory) / "model"
@@ -213,6 +222,17 @@ class Model:
                     optimizer_config = pickle.load(f)
                 optimizer_class = getattr(tf.keras.optimizers, optimizer_config["class_name"])
                 model.optimizer = optimizer_class.from_config(optimizer_config["config"])
+
+            # A model saved with a tuned threshold comes back compiled with it,
+            # so that evaluate uses it. neer-match's compile sets the threshold
+            # to 0.5 unless it is passed: compile it again with
+            # threshold=model.best_threshold_.
+            model.best_threshold_ = composite_save.get("best_threshold")
+            if model.best_threshold_ is not None:
+                model.compile(
+                    optimizer=getattr(model, "optimizer", None),
+                    threshold=model.best_threshold_,
+                )
         elif (model_directory / "record_pair_network.weights.h5").exists():
             model = NSMatchingModel(similarity_map_instance)
             model.compile()
@@ -499,17 +519,64 @@ class EpochEndSaver(tf.keras.callbacks.Callback):
         )
 
 
+def validation_scores(
+    model: DLMatchingModel,
+    left: pd.DataFrame,
+    right: pd.DataFrame,
+    matches: pd.DataFrame,
+    batch_size: int = 1024,
+    tune_metric: str | None = None,
+) -> tuple[dict, np.ndarray]:
+    """
+    Score a model on all record pairs of validation data.
+
+    Returns the scores, keyed as an epoch's logs are, and the predicted
+    probabilities of all pairs, left record by left record:
+
+    - ``val_TP`` ... ``val_MCC``: at the model's threshold, 0.5 unless it was
+      compiled with another. Precision, Recall, F1 and MCC are 0 where they are
+      undefined.
+    - ``val_Loss``: the model's loss on all pairs at once.
+    - With ``tune_metric`` ('mcc' or 'f1'): ``val_threshold``, the threshold
+      that maximises it (see :func:`~neer_match_utilities.thresholds.tune_threshold`),
+      and ``val_tuned_F1``, ``val_tuned_MCC``, ``val_tuned_Precision`` and
+      ``val_tuned_Recall`` at that threshold.
+    """
+    probabilities = np.asarray(
+        model.predict(left, right, batch_size=batch_size, verbose=0), dtype=np.float32
+    ).ravel()
+    labels = pair_labels(matches, len(left), len(right))
+
+    threshold = float(getattr(model, "_threshold", 0.5))
+    scores = {f"val_{name}": value for name, value in scores_at(labels, probabilities, threshold).items()}
+
+    loss = getattr(model, "loss", None)
+    if callable(loss):
+        value = loss(
+            tf.constant(labels, dtype=tf.float32), tf.constant(probabilities, dtype=tf.float32)
+        )
+        scores["val_Loss"] = float(tf.reduce_mean(value))
+
+    if tune_metric is not None:
+        tuned_threshold, tuned = tune_threshold(labels, probabilities, tune_metric)
+        scores["val_threshold"] = tuned_threshold
+        for name in ("F1", "MCC", "Precision", "Recall"):
+            scores[f"val_tuned_{name}"] = tuned[name]
+
+    return scores, probabilities
+
+
 class ValidationMetrics(tf.keras.callbacks.Callback):
     """
     Score the model on validation data at the end of every epoch.
 
-    The metrics ``DLMatchingModel.evaluate`` returns for all validation record
-    pairs are added to the epoch's logs with a ``val_`` prefix (``val_F1``,
-    ``val_MCC``, ``val_Loss``, ...), where the history and later callbacks, such
-    as EarlyStopping, see them.
+    The scores of :func:`validation_scores` on all validation record pairs are
+    added to the epoch's logs (``val_F1``, ``val_MCC``, ``val_Loss``, ...;
+    with ``tune_metric`` also ``val_threshold`` and ``val_tuned_MCC``, ...),
+    where the history and later callbacks, such as EarlyStopping, see them.
 
-    It calls ``evaluate`` on data frames, which every supported neer-match
-    version provides; Keras's own ``validation_data`` needs a newer neer-match.
+    It predicts from data frames, which every supported neer-match version
+    provides; Keras's own ``validation_data`` needs a newer neer-match.
     """
 
     def __init__(
@@ -518,6 +585,7 @@ class ValidationMetrics(tf.keras.callbacks.Callback):
         right: pd.DataFrame,
         matches: pd.DataFrame,
         batch_size: int = 1024,
+        tune_metric: str | None = None,
     ):
         """
         Parameters
@@ -525,19 +593,20 @@ class ValidationMetrics(tf.keras.callbacks.Callback):
         left, right, matches : pd.DataFrame
             The validation data, in the format the model is trained on.
         batch_size : int
-            Record pairs per evaluation batch. Affects speed and memory only;
-            ``val_Loss`` is neer-match's loss summed over these batches.
+            Record pairs per prediction batch. Affects speed and memory only.
+        tune_metric : {'mcc', 'f1'} or None
+            If given, each epoch is also scored at the threshold that
+            maximises this metric on the validation pairs.
         """
         super().__init__()
         self.left, self.right, self.matches = left, right, matches
         self.batch_size = batch_size
+        self.tune_metric = tune_metric
 
     def on_epoch_end(self, epoch: int, logs=None):
-        # evaluate prints a progress bar on every call and takes no verbose flag
-        with contextlib.redirect_stdout(io.StringIO()):
-            metrics = self.model.evaluate(
-                self.left, self.right, self.matches,
-                batch_size=self.batch_size, mismatch_share=1.0,
-            )
+        scores, _ = validation_scores(
+            self.model, self.left, self.right, self.matches,
+            batch_size=self.batch_size, tune_metric=self.tune_metric,
+        )
         if logs is not None:
-            logs.update({f"val_{name}": float(value) for name, value in metrics.items()})
+            logs.update(scores)
