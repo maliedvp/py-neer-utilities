@@ -26,6 +26,8 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import get_scorer
+from sklearn.utils.class_weight import compute_sample_weight
+from scipy.special import expit
 from joblib import Parallel, delayed
 
 import warnings
@@ -88,6 +90,271 @@ def tqdm_joblib(tqdm_object):
         joblib.parallel.BatchCompletionCallBack = old_callback
         tqdm_object.close()
 
+
+def _optimality_violation(
+    grad_intercept: float, grad: np.ndarray, beta: np.ndarray, lam1: float, lam2: float
+) -> float:
+    """
+    Largest violation of the optimality conditions of the elastic-net problem,
+    0 at its solution: the gradient of the intercept is zero, a coefficient
+    that is not zero balances its penalty, and one at zero has a gradient no
+    larger than the L1 weight.
+    """
+    nonzero = beta != 0
+    violation = np.where(
+        nonzero,
+        np.abs(grad + lam2 * beta + lam1 * np.sign(beta)),
+        np.maximum(np.abs(grad) - lam1, 0.0),
+    )
+    return max(abs(grad_intercept), float(violation.max(initial=0.0)))
+
+
+def _solve_l1_quadratic(
+    Q: np.ndarray, b: np.ndarray, lam1: float, penalized: np.ndarray, z: np.ndarray
+) -> np.ndarray:
+    """
+    Minimise ``0.5 * z'Qz - b'z + lam1 * sum(|z_j| for penalised j)`` exactly,
+    for positive semidefinite Q, starting from z: feature-sign search (Lee,
+    Battle, Raina and Ng, "Efficient sparse coding algorithms", 2007).
+
+    It keeps the coordinates that are not zero (and the unpenalised ones) with
+    their signs, solves the quadratic on them in closed form, and moves to the
+    best point on the way there, stopping where a coordinate reaches zero; a
+    zero coordinate whose gradient exceeds lam1 enters one at a time. It ends
+    where the optimality conditions hold to rounding error. With a few dozen
+    coordinates each step is a small linear system, where coordinate descent
+    needs many sweeps over strongly correlated features.
+    """
+    m = len(b)
+    z = np.array(z, dtype=float)
+    penalized = np.asarray(penalized, dtype=bool)
+    tol = 1e-11 * (np.abs(b).max(initial=0.0) + lam1) + 1e-300
+
+    def value(v: np.ndarray) -> float:
+        return float(0.5 * v @ (Q @ v) - b @ v + lam1 * np.abs(v[penalized]).sum())
+
+    def coordinate_sweep(v: np.ndarray) -> np.ndarray:
+        """One sweep of exact coordinate minimisation: never raises the value."""
+        v = v.copy()
+        for j in range(m):
+            if Q[j, j] <= 0.0:
+                continue
+            u = b[j] - Q[j] @ v + Q[j, j] * v[j]
+            if penalized[j]:
+                v[j] = np.sign(u) * max(abs(u) - lam1, 0.0) / Q[j, j]
+            else:
+                v[j] = u / Q[j, j]
+        return v
+
+    sign = np.where(penalized, np.sign(z), 0.0)
+    current = value(z)
+    for _ in range(20 * m + 20):
+        grad = Q @ z - b
+        free = ~penalized | (sign != 0)
+        if np.abs(grad[free] + lam1 * sign[free]).max(initial=0.0) <= tol:
+            # optimal on the free coordinates: should a zero one enter?
+            excess = np.where(penalized & (sign == 0), np.abs(grad) - lam1, -np.inf)
+            j = int(np.argmax(excess))
+            if not excess[j] > tol:
+                return z
+            sign[j] = -np.sign(grad[j])
+            free[j] = True
+
+        # The minimiser of the quadratic on the free coordinates, at their signs
+        idx = np.flatnonzero(free)
+        Q_ff, rhs = Q[np.ix_(idx, idx)], b[idx] - lam1 * sign[idx]
+        try:
+            solution = np.linalg.solve(Q_ff, rhs)
+        except np.linalg.LinAlgError:
+            solution = np.linalg.lstsq(Q_ff, rhs, rcond=None)[0]
+        target = np.zeros(m)
+        target[idx] = solution
+
+        # The best of the target and the points where a coordinate reaches zero
+        crossings = {1.0: []}
+        for k in idx:
+            if penalized[k] and z[k] != 0.0 and np.sign(target[k]) != np.sign(z[k]):
+                crossings.setdefault(z[k] / (z[k] - target[k]), []).append(k)
+        best, best_value = None, current
+        for t, zeroed in crossings.items():
+            candidate = z + t * (target - z)
+            candidate[zeroed] = 0.0
+            v = value(candidate)
+            if v < best_value:
+                best, best_value = candidate, v
+        if best is None:
+            # rounding left no descent along the segment: a coordinate sweep
+            # still finds one, unless z is already as good as it gets
+            best = coordinate_sweep(z)
+            best_value = value(best)
+            if not best_value < current:
+                return z
+        z, current = best, best_value
+        sign = np.where(penalized, np.sign(z), 0.0)
+    return z
+
+
+def fit_elastic_net_logistic(
+    X: np.ndarray,
+    y: np.ndarray,
+    sample_weight: np.ndarray,
+    C: float,
+    l1_ratio: float,
+    *,
+    tol: float = 1e-9,
+    max_iter: int = 100,
+    intercept_init: float | None = None,
+    coef_init: np.ndarray | None = None,
+) -> tuple[float, np.ndarray, int, bool]:
+    """
+    Elastic-net logistic regression by proximal Newton steps, as glmnet fits it.
+
+    It minimises the objective of scikit-learn's
+    ``LogisticRegression(l1_ratio=l1_ratio, C=C)`` with an unpenalised intercept,
+
+        C * sum_i w_i * logloss_i + (1 - l1_ratio) / 2 * ||beta||^2 + l1_ratio * ||beta||_1,
+
+    divided by ``C * sum(w)``, which leaves the solution unchanged. Each step
+    solves the penalised quadratic approximation of the loss exactly
+    (``_solve_l1_quadratic``) and is shortened until the objective falls. It is
+    meant for many record pairs and few features: every step costs one pass
+    over the pairs per feature pair, ``n * p**2``, and it converges in tens of
+    steps, where saga needs thousands of passes to converge when the class
+    weights are as uneven as matches make them. Started from the solution for
+    a stronger penalty (``intercept_init``, ``coef_init``), as along a path of
+    C values, it needs only a few.
+
+    Parameters
+    ----------
+    X : np.ndarray of shape (n, p)
+        Features, ideally standardised.
+    y : np.ndarray of shape (n,)
+        Labels, 0 or 1.
+    sample_weight : np.ndarray of shape (n,)
+        Positive weight of each pair, such as class weights.
+    C, l1_ratio : float
+        As in scikit-learn's LogisticRegression.
+    tol : float, default=1e-9
+        The fit stops once ``_optimality_violation``, measured on the objective
+        divided by ``C * sum(w)``, is below it.
+    max_iter : int, default=100
+        Most Newton steps. The fit also stops, unconverged, once a step no
+        longer lowers the objective measurably.
+    intercept_init, coef_init : optional
+        Where to start; by default from the intercept-only model. The solution
+        does not depend on it.
+
+    Returns
+    -------
+    intercept, coef, n_iter, converged
+    """
+    X = np.asarray(X, dtype=float)
+    y = np.asarray(y, dtype=float)
+    n, p = X.shape
+    s = np.asarray(sample_weight, dtype=float)
+    a = s / s.sum()
+    lam1 = l1_ratio / (C * s.sum())
+    lam2 = (1.0 - l1_ratio) / (C * s.sum())
+
+    def objective(intercept: float, beta: np.ndarray) -> float:
+        eta = intercept + X @ beta
+        return float(
+            a @ (np.logaddexp(0.0, eta) - y * eta)
+            + 0.5 * lam2 * beta @ beta
+            + lam1 * np.abs(beta).sum()
+        )
+
+    def penalty(beta: np.ndarray) -> float:
+        return 0.5 * lam2 * float(beta @ beta) + lam1 * float(np.abs(beta).sum())
+
+    # Start from the given point, or from the intercept-only model
+    theta = np.zeros(p + 1)  # [intercept, beta]
+    if coef_init is not None:
+        theta[1:] = np.asarray(coef_init, dtype=float)
+    if intercept_init is not None:
+        theta[0] = float(intercept_init)
+    else:
+        share = float(a @ y)
+        theta[0] = np.log(share / (1.0 - share))
+    f = objective(theta[0], theta[1:])
+
+    # The quadratic model's L1 term covers the coefficients, not the intercept
+    penalized = np.ones(p + 1, dtype=bool)
+    penalized[0] = False
+    ridge = np.full(p + 1, lam2)
+    ridge[0] = 0.0
+
+    converged, n_iter, stalled = False, 0, 0
+    while True:
+        mu = expit(theta[0] + X @ theta[1:])
+        residual = a * (mu - y)
+        grad = np.concatenate([[residual.sum()], X.T @ residual])
+        if _optimality_violation(grad[0], grad[1:], theta[1:], lam1, lam2) < tol:
+            converged = True
+            break
+        if n_iter >= max_iter or stalled >= 3:
+            break
+        n_iter += 1
+
+        # Hessian of the loss, [intercept, beta] by [intercept, beta]
+        w = a * mu * (1.0 - mu)
+        Xw = X * w[:, None]
+        H = np.empty((p + 1, p + 1))
+        H[0, 0] = w.sum()
+        H[0, 1:] = H[1:, 0] = Xw.sum(axis=0)
+        H[1:, 1:] = Xw.T @ X
+        del Xw
+
+        # The penalised quadratic model around theta, in the point z it moves to:
+        # grad'(z - theta) + (z - theta)'H(z - theta)/2 + penalty(z), which is
+        # z'(H + ridge)z/2 - (H theta - grad)'z + lam1 * |z| up to a constant
+        new = _solve_l1_quadratic(
+            H + np.diag(ridge), H @ theta - grad, lam1, penalized, theta
+        )
+
+        # Shorten the step until the objective falls enough
+        direction = new - theta
+        decrease = grad @ direction + penalty(new[1:]) - penalty(theta[1:])
+        if not decrease < 0.0:
+            break  # no descent left at this precision
+        length = 1.0
+        while True:
+            candidate = theta + length * direction
+            f_candidate = objective(candidate[0], candidate[1:])
+            if f_candidate <= f + 1e-4 * length * decrease:
+                break
+            length *= 0.5
+            if length < 1e-10:
+                candidate = None
+                break
+        if candidate is None:
+            break
+        # Count the steps that no longer lower the objective beyond rounding
+        stalled = stalled + 1 if f - f_candidate <= 1e-13 * abs(f) else 0
+        theta, f = candidate, f_candidate
+
+    if not converged:
+        warnings.warn(
+            f"The elastic-net fit stopped after {n_iter} Newton steps before "
+            f"reaching tol={tol}.",
+            ConvergenceWarning,
+        )
+    return float(theta[0]), theta[1:].copy(), n_iter, converged
+
+
+def _as_logistic_regression(intercept, coef, classes, **params) -> LogisticRegression:
+    """
+    A fitted scikit-learn LogisticRegression holding these coefficients, so that
+    scorers and later code can use it like one fitted by scikit-learn.
+    """
+    model = LogisticRegression(**params)
+    model.classes_ = np.asarray(classes)
+    model.coef_ = np.asarray(coef, dtype=float).reshape(1, -1)
+    model.intercept_ = np.array([intercept], dtype=float)
+    model.n_features_in_ = model.coef_.shape[1]
+    return model
+
+
 @dataclass
 class FeatureSelectionResult:
     """
@@ -112,6 +379,7 @@ class FeatureSelectionResult:
         - cv: Number of cross-validation folds
         - n_features_in: Number of input features
         - n_features_selected: Number of features selected
+        - solver: The solver of the elastic-net fits
         - did_fallback: Whether fallback to original map occurred
     """
     updated_similarity_map: SimilarityMapDict
@@ -172,8 +440,20 @@ class FeatureSelector:
     class_weight : str or None, default='balanced'
         Class weighting strategy. 'balanced' adjusts weights inversely proportional
         to class frequencies, recommended for imbalanced data.
+    solver : {'newton-cd', 'saga'}, default='newton-cd'
+        How the elastic-net fits are computed. Both minimise the objective of
+        scikit-learn's LogisticRegression. 'newton-cd' takes proximal Newton
+        steps (``fit_elastic_net_logistic``) and converges in about ten of
+        them, a second or so on a hundred thousand pairs of tens of features.
+        'saga', used up to version 1.2.3, is scikit-learn's stochastic solver:
+        with the uneven class weights of matches it typically stops at
+        ``max_iter`` far from the solution, after many minutes, so that its
+        selection depends on where it stopped. Kept to reproduce earlier
+        results.
     max_iter : int, default=5000
-        Maximum iterations for elastic net solver.
+        Most iterations of each cross-validation fit: Newton steps for
+        'newton-cd', which needs far fewer, epochs for 'saga'. The final fit
+        of 'saga' takes up to 20,000.
     random_state : int, default=42
         Random seed for reproducibility.
     n_jobs : int, default=-1
@@ -236,6 +516,7 @@ class FeatureSelector:
         l1_ratios = (0.8, 0.9, 1.0),
         Cs: int | Iterable[float] = 20,
         class_weight: Optional[str] = "balanced",  # consider "balanced" if match class is rare
+        solver: str = "newton-cd",  # or "saga", the solver up to version 1.2.3
         max_iter: int = 5000,
         random_state: int = 42,
         n_jobs: int = -1,
@@ -267,6 +548,9 @@ class FeatureSelector:
         self.Cs = Cs
 
         self.class_weight = class_weight
+        if solver not in ("newton-cd", "saga"):
+            raise ValueError(f"solver must be 'newton-cd' or 'saga', not {solver!r}.")
+        self.solver = solver
         self.max_iter = max_iter
         self.random_state = random_state
         self.n_jobs = n_jobs
@@ -582,41 +866,87 @@ class FeatureSelector:
         for k, (_, val_idx) in enumerate(skf.split(X_scaled, y)):
             fold_of[val_idx] = k
 
-        def fit_and_score(l1_ratio: float, C: float, fold_idx: int):
-            """Train and evaluate one configuration on one CV fold."""
-            # The indices skf.split yields: both sorted, train the complement
-            in_fold = fold_of == fold_idx
-            train_idx, val_idx = np.flatnonzero(~in_fold), np.flatnonzero(in_fold)
-            X_tr, X_va = X_scaled[train_idx], X_scaled[val_idx]
-            y_tr, y_va = y[train_idx], y[val_idx]
+        classes = np.unique(y)
 
+        def saga_fit(X_fit, y_fit, l1_ratio: float, C: float, final: bool) -> LogisticRegression:
+            """One fit by scikit-learn's saga, the solver up to version 1.2.3."""
             # l1_ratio alone selects the elastic-net penalty; passing
             # penalty= is deprecated in scikit-learn 1.8 and removed in 1.10
             clf = LogisticRegression(
                 solver="saga",
                 l1_ratio=l1_ratio,
                 C=C,
-                max_iter=self.max_iter,
-                tol=1e-2,
+                max_iter=20000 if final else self.max_iter,
+                tol=1e-3 if final else 1e-2,
                 class_weight=self.class_weight,
                 random_state=self.random_state,
             )
-            with _fit_warnings_silenced():
-                clf.fit(X_tr, y_tr)
-                score = scorer(clf, X_va, y_va)
-            return (l1_ratio, C, fold_idx, float(score))
+            return clf.fit(X_fit, y_fit)
 
-        # Generate all parameter × fold combinations
-        tasks = [(l1, C, k) for l1 in l1_grid for C in Cs_grid for k in range(self.cv)]
-        total_fits = len(tasks)
+        def newton_path(X_fit, y_fit, l1_ratio: float, Cs) -> dict:
+            """
+            Fits at the given C values, as fitted LogisticRegressions by C: the
+            strongest penalty first, each fit started from the one before, as
+            glmnet computes a path. The solutions do not depend on the order.
+            """
+            # The weights LogisticRegression derives from class_weight
+            weights = compute_sample_weight(self.class_weight, y_fit)
+            models, intercept, coef = {}, None, None
+            for C in sorted(Cs):
+                intercept, coef, _, _ = fit_elastic_net_logistic(
+                    X_fit, y_fit, weights, C, l1_ratio, max_iter=self.max_iter,
+                    intercept_init=intercept, coef_init=coef,
+                )
+                models[C] = _as_logistic_regression(
+                    intercept, coef, classes, l1_ratio=l1_ratio, C=C, class_weight=self.class_weight
+                )
+            return models
+
+        def fold(fold_idx: int):
+            """Training and validation part of one CV fold."""
+            # The indices skf.split yields: both sorted, train the complement
+            in_fold = fold_of == fold_idx
+            train_idx, val_idx = np.flatnonzero(~in_fold), np.flatnonzero(in_fold)
+            return X_scaled[train_idx], X_scaled[val_idx], y[train_idx], y[val_idx]
+
+        def fit_and_score(l1_ratio: float, C: float, fold_idx: int) -> list:
+            """saga: train and evaluate one configuration on one CV fold."""
+            X_tr, X_va, y_tr, y_va = fold(fold_idx)
+            with _fit_warnings_silenced():
+                clf = saga_fit(X_tr, y_tr, l1_ratio, C, final=False)
+                score = scorer(clf, X_va, y_va)
+            return [(l1_ratio, C, fold_idx, float(score))]
+
+        def path_and_score(l1_ratio: float, fold_idx: int) -> list:
+            """newton-cd: train and evaluate all C values of one l1_ratio on one CV fold."""
+            X_tr, X_va, y_tr, y_va = fold(fold_idx)
+            with _fit_warnings_silenced():
+                models = newton_path(X_tr, y_tr, l1_ratio, Cs_grid)
+                return [
+                    (l1_ratio, C, fold_idx, float(scorer(clf, X_va, y_va)))
+                    for C, clf in models.items()
+                ]
+
+        # One task per fit for saga; for newton-cd one per path of C values
+        if self.solver == "saga":
+            tasks = [
+                delayed(fit_and_score)(l1, C, k)
+                for l1 in l1_grid for C in Cs_grid for k in range(self.cv)
+            ]
+            unit = "fit"
+        else:
+            tasks = [delayed(path_and_score)(l1, k) for l1 in l1_grid for k in range(self.cv)]
+            unit = "path"
 
         # Execute parallel CV with progress bar
-        pbar = tqdm(total=total_fits, desc="[FeatureSelector] CV fits", unit="fit") if tqdm is not None else None
+        pbar = tqdm(total=len(tasks), desc=f"[FeatureSelector] CV {unit}s", unit=unit) if tqdm is not None else None
 
         with tqdm_joblib(pbar):
-            results = Parallel(n_jobs=self.n_jobs, prefer="processes")(
-                delayed(fit_and_score)(l1, C, k) for (l1, C, k) in tasks
-            )
+            results = [
+                result
+                for task_results in Parallel(n_jobs=self.n_jobs, prefer="processes")(tasks)
+                for result in task_results
+            ]
 
         # Aggregate cross-validation scores
         scores = {}
@@ -633,18 +963,14 @@ class FeatureSelector:
 
         print(f"[FeatureSelector] Stage 2 - Best params: l1_ratio={best_l1}, C={best_C}, score={best_score:.6f}")
 
-        # Step 6: Refit final model on full training set with best parameters
-        final_model = LogisticRegression(
-            solver="saga",
-            l1_ratio=best_l1,
-            C=best_C,
-            max_iter=20000,
-            tol=1e-3,
-            class_weight=self.class_weight,
-            random_state=self.random_state,
-        )
+        # Step 6: Refit final model on full training set with best parameters;
+        # newton-cd along the path of C values up to the best one
         with _fit_warnings_silenced():
-            final_model.fit(X_scaled, y)
+            if self.solver == "saga":
+                final_model = saga_fit(X_scaled, y, best_l1, best_C, final=True)
+            else:
+                path = [C for C in Cs_grid if C <= best_C]
+                final_model = newton_path(X_scaled, y, best_l1, path)[best_C]
 
         coef = pd.Series(final_model.coef_.ravel(), index=feature_columns)
 
@@ -683,6 +1009,7 @@ class FeatureSelector:
             "l1_ratios": self.l1_ratios,
             "Cs": self.Cs,
             "class_weight": self.class_weight,
+            "solver": self.solver,
             "n_features_in": int(len(feature_columns)),
             "n_features_selected": int(len(selected_feature_columns)),
         }
