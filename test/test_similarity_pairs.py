@@ -116,8 +116,11 @@ def test_pipeline_does_not_depend_on_chunk_size(tmp_path, model_kind):
             pairs_per_chunk=pairs_per_chunk,
         )
         model = pipe.execute()
+        test_pairs = SimilarityFeatures(SimilarityMap(SMAP)).pairwise_similarity_dataframe(
+            *make_data(seed=2), "id", "id"
+        )
         fitted = (
-            model.model.feature_importances_.tolist() if model_kind == "gb"
+            model.predict_proba(test_pairs).tolist() if model_kind == "gb"
             else np.asarray(model.result.params).tolist()
         )
         return pipe.metrics_train_, pipe.metrics_test_, pipe.metrics_val_, pipe.best_threshold_, fitted
@@ -129,7 +132,7 @@ def test_pipeline_does_not_depend_on_chunk_size(tmp_path, model_kind):
 def test_suggest_does_not_depend_on_chunk_size(ids):
     left, right, matches = make_data()
     model = GradientBoostingModel()
-    model.model.set_params(n_estimators=20)
+    model.model.set_params(max_iter=20)
     model.fit(SimilarityFeatures(SimilarityMap(SMAP)).pairwise_similarity_dataframe(
         left, right, matches, "id", "id"
     ))

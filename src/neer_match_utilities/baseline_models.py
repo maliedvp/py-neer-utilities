@@ -16,7 +16,10 @@ from statsmodels.tools.sm_exceptions import ConvergenceWarning
 from scipy import stats
 from scipy.linalg import qr
 from scipy.special import expit
-from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.base import ClassifierMixin
+from sklearn.ensemble import GradientBoostingClassifier, HistGradientBoostingClassifier
+from sklearn.exceptions import NotFittedError
+from sklearn.utils.validation import check_is_fitted
 from sklearn.metrics import (
     confusion_matrix,
     accuracy_score,
@@ -690,26 +693,38 @@ class GradientBoostingModel(SuggestMixin):
     """
     Gradient boosting baseline on similarity features using scikit-learn.
 
-    Designed as an alternative to the DL/NS models in `neer_match`, using a
-    tree-based GradientBoostingClassifier on top of similarity features
+    Designed as an alternative to the DL/NS models in `neer_match`, using
+    scikit-learn's HistGradientBoostingClassifier on top of similarity features
     produced by `SimilarityFeatures`.
 
     It supports:
     - evaluation with TP, FP, TN, FN, Accuracy, Recall, Precision, F1, MCC,
-    - a simple `summary()` reporting feature importances.
+    - a simple `summary()` reporting feature importances, where the classifier
+      has them.
 
     Notes
     -----
     - Unlike Logit/Probit, this model has no statistical inference (SE/p-values).
     - Works well with nonlinearities and interactions in similarity features.
+    - Up to version 1.2.5 the default was GradientBoostingClassifier, with the
+      same 300 rounds, learning rate and depth. Its Newton step for a leaf
+      divides by the sum of p(1 - p) over the pairs in it. With matches as rare
+      as among all record pairs, the probabilities soon come close to 0 or 1,
+      and where matches and non-matches with the same similarities share a
+      leaf, that sum is close to zero: the leaf values, and the training loss,
+      grow without bound (to 1e+79 in tests on real data), and the predictions
+      collapse to 0 and 1. HistGradientBoostingClassifier does not split where
+      a leaf's hessian sum would fall below ``min_hessian_to_split``, and is
+      tens of times faster. Pass ``model=GradientBoostingClassifier(...)`` for
+      the earlier classifier; models saved with it still load.
     """
 
-    model: GradientBoostingClassifier = field(
-        default_factory=lambda: GradientBoostingClassifier(
-            n_estimators=300,
+    model: ClassifierMixin = field(
+        default_factory=lambda: HistGradientBoostingClassifier(
+            max_iter=300,
             learning_rate=0.05,
             max_depth=3,
-            subsample=1.0,
+            early_stopping=False,
             random_state=42,
         )
     )
@@ -778,8 +793,10 @@ class GradientBoostingModel(SuggestMixin):
         return self
 
     def _check_fitted(self):
-        if not hasattr(self.model, "estimators_"):
-            raise RuntimeError("GradientBoostingModel is not fitted yet. Call `fit()` first.")
+        try:
+            check_is_fitted(self.model)
+        except NotFittedError:
+            raise RuntimeError("GradientBoostingModel is not fitted yet. Call `fit()` first.") from None
 
     def predict_proba(
         self,
@@ -846,7 +863,10 @@ class GradientBoostingModel(SuggestMixin):
 
         importances = getattr(self.model, "feature_importances_", None)
         if importances is None:
-            raise RuntimeError("Model does not expose feature_importances_.")
+            raise RuntimeError(
+                f"{type(self.model).__name__} has no impurity-based feature importances; "
+                "sklearn.inspection.permutation_importance computes importances on data."
+            )
 
         df_imp = pd.DataFrame(
             {"feature": self.feature_cols, "importance": importances}

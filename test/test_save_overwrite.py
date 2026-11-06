@@ -40,7 +40,7 @@ def gb_model():
         "match": [0, 1] * 20,
     })
     model = GradientBoostingModel()
-    model.model.set_params(n_estimators=5)
+    model.model.set_params(max_iter=5)
     return model.fit(df)
 
 
