@@ -273,8 +273,10 @@ matches.head()
 Subsequently, we need to split the data into training and test sets,
 each consisting of three DataFrames. The training ratio is given by
 $\text{training_ratio} = 1 - (\text{test_ratio} + \text{validation_ratio})$.
-Note that since validation is not implemented yet, you can set
-$\text{validation_ratio} = 0$.
+A validation split is needed only where a model is tuned on it: gradient
+boosting and the neural network choose their classification threshold on
+it, and the neural network also its best epochs. The Logit model of this
+tutorial needs none, so we set $\text{validation_ratio} = 0$.
 
 ``` python
 from neer_match_utilities.split import split_test_train
@@ -311,7 +313,7 @@ training_pipeline = BaselineTrainingPipe(
     # matches_id_right="right",
     model_kind="logit", # "logit" | "probit" | "gb"
     mismatch_share_fit=1.0,
-    # tune_threshold=False, # recommended for "gb"
+    # tune_threshold=True, # the default; only "gb" tunes, on validation_data
     # tune_metric="mcc",
     overwrite=True, # replace the model saved by a previous run
 )
@@ -322,4 +324,4 @@ training_pipeline.execute()
     Performance metrics saved to /Users/marli453/develop/py-neer-utilities/docs/source/_static/examples/demonstration_model/performance.csv
     Similarity map saved to /Users/marli453/develop/py-neer-utilities/docs/source/_static/examples/demonstration_model/similarity_map.dill
 
-    LogitMatchingModel(result=<statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x131b9e1d0>, feature_cols=['col_city_city_levenshtein', 'col_company_name_company_name_jaro_winkler', 'col_company_name_company_name_levenshtein', 'col_company_name_company_name_partial_token_sort_ratio', 'col_industry_industry_jaro_winkler', 'col_industry_industry_levenshtein'])
+    LogitMatchingModel(result=<statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x133533210>, feature_cols=['col_city_city_levenshtein', 'col_company_name_company_name_jaro_winkler', 'col_company_name_company_name_levenshtein', 'col_company_name_company_name_partial_token_sort_ratio', 'col_industry_industry_jaro_winkler', 'col_industry_industry_levenshtein'])

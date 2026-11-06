@@ -149,8 +149,10 @@ matches.head()
 Subsequently, we need to split the data into training and test sets,
 each consisting of three DataFrames. The training ratio is given by
 $\text{training_ratio} = 1 - (\text{test_ratio} + \text{validation_ratio})$.
-Note that since validation is not implemented yet, you can set
-$\text{validation_ratio} = 0$.
+A validation split is needed only where a model is tuned on it: gradient
+boosting and the neural network choose their classification threshold on
+it, and the neural network also its best epochs. The Logit model of this
+tutorial needs none, so we set $\text{validation_ratio} = 0$.
 
 ```{python}
 from neer_match_utilities.split import split_test_train
@@ -185,7 +187,7 @@ training_pipeline = BaselineTrainingPipe(
     # matches_id_right="right",
     model_kind="logit", # "logit" | "probit" | "gb"
     mismatch_share_fit=1.0,
-    # tune_threshold=False, # recommended for "gb"
+    # tune_threshold=True, # the default; only "gb" tunes, on validation_data
     # tune_metric="mcc",
     overwrite=True, # replace the model saved by a previous run
 )

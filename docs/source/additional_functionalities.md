@@ -113,7 +113,12 @@ informative subset. It uses a two-stage procedure:
 2.  **Stage 2 — Elastic net regularization**: Fits a penalized logistic
     regression (L1/L2 mix) with cross-validation to select features that
     contribute unique predictive information. Features with zero or
-    near-zero coefficients are dropped.
+    near-zero coefficients are dropped. The fits take proximal Newton
+    steps (`solver="newton-cd"`, the default since version 1.2.4) and
+    reach the elastic net’s solution within seconds, even for hundreds
+    of thousands of pairs. `solver="saga"`, the solver up to version
+    1.2.3, typically stops at its iteration limit far from that solution
+    when matches are rare; it is kept to reproduce earlier results.
 
 The selector is designed for the extreme class imbalance typical in
 entity matching, where true matches are rare relative to non-matches.
@@ -142,6 +147,7 @@ fs = FeatureSelector(
     Cs=20,                       # number of regularization strengths to search
     class_weight="balanced",     # adjust for class imbalance
     min_coef_threshold=0.01,     # drop features with |coefficient| below this
+    solver="newton-cd",          # the default; "saga" was the solver up to 1.2.3
 
     random_state=42,
     n_jobs=4,
