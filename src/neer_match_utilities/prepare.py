@@ -118,7 +118,29 @@ class Prepare(SuperClass):
 
         unique_lemmas = list(dict.fromkeys(lemmas))
         return ' '.join(unique_lemmas)
-    
+
+
+    @staticmethod
+    def _to_number(column: pd.Series, fill_na: bool) -> pd.Series:
+        """
+        A column as numbers, for ``format``'s ``to_numeric``.
+
+        Numbers stay as they are, signs and exponents included. A string that
+        is not a number keeps only its digits and dots ('1.5 km' becomes 1.5);
+        one that is still not a number then is missing. With ``fill_na``, the
+        missing values become 0.
+        """
+        numbers = pd.to_numeric(column, errors="coerce")
+        if not pd.api.types.is_numeric_dtype(column):
+            digits = column.astype("string").str.replace(r"[^\d\.]", "", regex=True)
+            numbers = numbers.fillna(pd.to_numeric(digits, errors="coerce"))
+        numbers = numbers.astype(float)
+        # After the conversion: pandas 3 keeps a missing value missing through
+        # astype(str), where pandas 2 made it 'nan' and so a string to fill
+        if fill_na:
+            numbers = numbers.fillna(0.0)
+        return numbers
+
 
     def format(
             self, 
@@ -139,10 +161,12 @@ class Prepare(SuperClass):
         Parameters
         ----------
         fill_numeric_na : bool, optional
-            If True, fills missing numeric values with `0` before conversion to numeric dtype.
-            Default is False.
+            If True, the columns in `to_numeric` get `0` where a value is
+            missing or no number. Default is False.
         to_numeric : list, optional
-            A list of column names to be converted to numeric dtype.
+            A list of column names to be converted to numbers (float). Numbers
+            stay as they are; of a string that is no number only its digits
+            and dots are kept ('1.5 km' becomes 1.5).
             Default is an empty list.
         fill_string_na : bool, optional
             If True, fills missing string values with empty strings.
@@ -196,8 +220,8 @@ class Prepare(SuperClass):
 
             Notes
             -----
-            - Columns specified in `to_numeric` are converted to numeric dtype after 
-              removing non-numeric characters and optionally filling missing values.
+            - Columns specified in `to_numeric` are converted to numbers, with
+              missing values optionally filled with 0 (see `_to_number`).
             - Non-numeric columns are converted to strings, with missing values 
               optionally replaced by empty strings or left as NaN.
             - If `capitalize` is True, string columns are converted to uppercase.
@@ -215,14 +239,8 @@ class Prepare(SuperClass):
             for col in columns:
                 # Convert to numeric if included in to_numeric argument
                 if col in to_numeric:
-                    # remove non-numeric characters
-                    df[col] = df[col].astype(str).str.replace(r'[^\d\.]','', regex=True)
-                    # fill NaNs with 0 if specified
-                    if fill_numeric_na == True:
-                        df[col] = df[col].replace(r'','0',regex=True)
-                    # convert to numeric dtype
-                    df[col] = pd.to_numeric(df[col], errors='coerce')
-                    
+                    df[col] = self._to_number(df[col], fill_na=fill_numeric_na)
+
                 # If not, convert to string while replacing nans with empty strings
                 else:
                     if fill_string_na == True:

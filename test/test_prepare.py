@@ -105,3 +105,38 @@ def test_prepare_format(sample_data):
 
     # Check that NaN values remain in string columns when fill_string_na=False
     assert df_left_processed['name'].isna().max() == True, "NaN values should remain in string columns if fill_string_na=False"
+
+
+def test_to_numeric_fills_missing_numbers():
+    """fill_numeric_na fills the missing values of a float column, under pandas 2 and 3 alike."""
+    left = pd.DataFrame({"id": [1, 2, 3], "x": [1.5, np.nan, 3.0]})
+    right = pd.DataFrame({"id": [1, 2, 3], "x": [np.nan, None, 2.0]})
+    prepare = Prepare(similarity_map={"x": ["euclidean"]}, df_left=left, df_right=right, id_left="id", id_right="id")
+    filled_left, filled_right = prepare.format(fill_numeric_na=True, to_numeric=["x"])
+    assert filled_left["x"].tolist() == [1.5, 0.0, 3.0]
+    assert filled_right["x"].tolist() == [0.0, 0.0, 2.0]
+    kept_left, kept_right = prepare.format(fill_numeric_na=False, to_numeric=["x"])
+    assert kept_left["x"].isna().tolist() == [False, True, False]
+    assert kept_right["x"].isna().tolist() == [True, True, False]
+
+
+def test_to_numeric_keeps_signs_and_exponents():
+    """Numbers, and strings that are numbers, keep their sign and exponent."""
+    left = pd.DataFrame({"id": [1, 2, 3, 4], "x": [-73.98, 1e-05, 2.5e-07, 12.0]})
+    right = pd.DataFrame({"id": [1, 2, 3, 4], "x": ["-73.98", "1e-05", " 4 ", "+3"]})
+    prepare = Prepare(similarity_map={"x": ["euclidean"]}, df_left=left, df_right=right, id_left="id", id_right="id")
+    out_left, out_right = prepare.format(fill_numeric_na=True, to_numeric=["x"])
+    assert out_left["x"].tolist() == [-73.98, 1e-05, 2.5e-07, 12.0]
+    assert out_right["x"].tolist() == [-73.98, 1e-05, 4.0, 3.0]
+
+
+def test_to_numeric_cleans_strings_that_are_no_numbers():
+    """Of a string that is no number only the digits and dots count; one with none is missing or 0."""
+    left = pd.DataFrame({"id": [1, 2, 3, 4], "x": ["1.5 km", "1200 inhabitants", "N/A", None]})
+    right = pd.DataFrame({"id": [1, 2, 3, 4], "x": [1.0, 2.0, 3.0, 4.0]})
+    prepare = Prepare(similarity_map={"x": ["euclidean"]}, df_left=left, df_right=right, id_left="id", id_right="id")
+    filled, _ = prepare.format(fill_numeric_na=True, to_numeric=["x"])
+    assert filled["x"].tolist() == [1.5, 1200.0, 0.0, 0.0]
+    kept, _ = prepare.format(fill_numeric_na=False, to_numeric=["x"])
+    assert kept["x"].tolist()[:2] == [1.5, 1200.0]
+    assert kept["x"].isna().tolist() == [False, False, True, True]
