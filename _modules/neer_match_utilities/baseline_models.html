@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.baseline_models &mdash; Neer Match Utilities 1.2.6 documentation</title>
+  <title>neer_match_utilities.baseline_models &mdash; Neer Match Utilities 1.2.7 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=010db75e"></script>
+      <script src="../../_static/documentation_options.js?v=a5753347"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -1089,6 +1089,12 @@
 <span class="sd">      a leaf's hessian sum would fall below ``min_hessian_to_split``, and is</span>
 <span class="sd">      tens of times faster. Pass ``model=GradientBoostingClassifier(...)`` for</span>
 <span class="sd">      the earlier classifier; models saved with it still load.</span>
+<span class="sd">    - Its ``l2_regularization`` of 1 (version 1.2.7; 0 in 1.2.6) adds 1 to the</span>
+<span class="sd">      hessian sum each leaf value is divided by, as XGBoost's default</span>
+<span class="sd">      ``lambda`` does. Without it, leaves just above ``min_hessian_to_split``</span>
+<span class="sd">      still took huge steps on some splits, so that the training loss rose</span>
+<span class="sd">      again after a hundred rounds and the fit ended worse than it had been</span>
+<span class="sd">      (training F1 0.21 where 0.99 with it).</span>
 <span class="sd">    """</span>
 
     <span class="n">model</span><span class="p">:</span> <span class="n">ClassifierMixin</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
@@ -1096,6 +1102,7 @@
             <span class="n">max_iter</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
             <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
             <span class="n">max_depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+            <span class="n">l2_regularization</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
             <span class="n">early_stopping</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
         <span class="p">)</span>

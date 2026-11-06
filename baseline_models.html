@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Baseline Models &mdash; Neer Match Utilities 1.2.6 documentation</title>
+  <title>Baseline Models &mdash; Neer Match Utilities 1.2.7 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -17,7 +17,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=010db75e"></script>
+      <script src="_static/documentation_options.js?v=a5753347"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -364,6 +364,12 @@ collapse to 0 and 1. HistGradientBoostingClassifier does not split where
 a leaf’s hessian sum would fall below <code class="docutils literal notranslate"><span class="pre">min_hessian_to_split</span></code>, and is
 tens of times faster. Pass <code class="docutils literal notranslate"><span class="pre">model=GradientBoostingClassifier(...)</span></code> for
 the earlier classifier; models saved with it still load.</p></li>
+<li><p>Its <code class="docutils literal notranslate"><span class="pre">l2_regularization</span></code> of 1 (version 1.2.7; 0 in 1.2.6) adds 1 to the
+hessian sum each leaf value is divided by, as XGBoost’s default
+<code class="docutils literal notranslate"><span class="pre">lambda</span></code> does. Without it, leaves just above <code class="docutils literal notranslate"><span class="pre">min_hessian_to_split</span></code>
+still took huge steps on some splits, so that the training loss rose
+again after a hundred rounds and the fit ended worse than it had been
+(training F1 0.21 where 0.99 with it).</p></li>
 </ul>
 <dl class="py method">
 <dt class="sig sig-object py" id="neer_match_utilities.baseline_models.GradientBoostingModel.__init__">
