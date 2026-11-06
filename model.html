@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Model &mdash; Neer Match Utilities 1.2.2 documentation</title>
+  <title>Model &mdash; Neer Match Utilities 1.2.4 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -17,7 +17,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=fd7cadf9"></script>
+      <script src="_static/documentation_options.js?v=928db92d"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -132,6 +132,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.model.ValidationMetrics.on_epoch_end"><code class="docutils literal notranslate"><span class="pre">ValidationMetrics.on_epoch_end()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.model.validation_scores"><code class="docutils literal notranslate"><span class="pre">validation_scores()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="baseline_models.html">Baseline Models</a><ul>
@@ -245,6 +246,12 @@
 <li class="toctree-l2"><a class="reference internal" href="training.html#neer_match_utilities.training.soft_f1_loss"><code class="docutils literal notranslate"><span class="pre">soft_f1_loss()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="thresholds.html">Thresholds</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="thresholds.html#neer_match_utilities.thresholds.pair_labels"><code class="docutils literal notranslate"><span class="pre">pair_labels()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thresholds.html#neer_match_utilities.thresholds.scores_at"><code class="docutils literal notranslate"><span class="pre">scores_at()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thresholds.html#neer_match_utilities.thresholds.tune_threshold"><code class="docutils literal notranslate"><span class="pre">tune_threshold()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="feature_selection.html">Feature Selection</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult"><code class="docutils literal notranslate"><span class="pre">FeatureSelectionResult</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult.updated_similarity_map"><code class="docutils literal notranslate"><span class="pre">FeatureSelectionResult.updated_similarity_map</span></code></a></li>
@@ -261,6 +268,7 @@
 <li class="toctree-l3"><a class="reference internal" href="feature_selection.html#neer_match_utilities.feature_selection.FeatureSelector.execute"><code class="docutils literal notranslate"><span class="pre">FeatureSelector.execute()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="feature_selection.html#neer_match_utilities.feature_selection.fit_elastic_net_logistic"><code class="docutils literal notranslate"><span class="pre">fit_elastic_net_logistic()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="feature_selection.html#neer_match_utilities.feature_selection.tqdm_joblib"><code class="docutils literal notranslate"><span class="pre">tqdm_joblib()</span></code></a></li>
 </ul>
 </li>
@@ -381,7 +389,9 @@ weights and optimizer state are pickled as per your spec.</p>
 <dd class="field-odd"><p><strong>model_directory</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></span>) – The directory containing the saved model.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The loaded model.</p>
+<dd class="field-even"><p>The loaded model. A DLMatchingModel carries the threshold tuned by
+TrainingPipe as <code class="docutils literal notranslate"><span class="pre">best_threshold_</span></code> (None if none was tuned) and,
+if there is one, is compiled with it.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">DLMatchingModel</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">NSMatchingModel</span></code>]</span></p>
@@ -418,25 +428,26 @@ False, in which case an existing model raises <code class="docutils literal notr
 
 <dl class="py class">
 <dt class="sig sig-object py" id="neer_match_utilities.model.ValidationMetrics">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">neer_match_utilities.model.</span></span><span class="sig-name descname"><span class="pre">ValidationMetrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1024</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/model.html#ValidationMetrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.model.ValidationMetrics" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">neer_match_utilities.model.</span></span><span class="sig-name descname"><span class="pre">ValidationMetrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1024</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tune_metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/model.html#ValidationMetrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.model.ValidationMetrics" title="Link to this definition"></a></dt>
 <dd><p>Score the model on validation data at the end of every epoch.</p>
-<p>The metrics <code class="docutils literal notranslate"><span class="pre">DLMatchingModel.evaluate</span></code> returns for all validation record
-pairs are added to the epoch’s logs with a <code class="docutils literal notranslate"><span class="pre">val_</span></code> prefix (<code class="docutils literal notranslate"><span class="pre">val_F1</span></code>,
-<code class="docutils literal notranslate"><span class="pre">val_MCC</span></code>, <code class="docutils literal notranslate"><span class="pre">val_Loss</span></code>, …), where the history and later callbacks, such
-as EarlyStopping, see them.</p>
-<p>It calls <code class="docutils literal notranslate"><span class="pre">evaluate</span></code> on data frames, which every supported neer-match
-version provides; Keras’s own <code class="docutils literal notranslate"><span class="pre">validation_data</span></code> needs a newer neer-match.</p>
+<p>The scores of <a class="reference internal" href="#neer_match_utilities.model.validation_scores" title="neer_match_utilities.model.validation_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">validation_scores()</span></code></a> on all validation record pairs are
+added to the epoch’s logs (<code class="docutils literal notranslate"><span class="pre">val_F1</span></code>, <code class="docutils literal notranslate"><span class="pre">val_MCC</span></code>, <code class="docutils literal notranslate"><span class="pre">val_Loss</span></code>, …;
+with <code class="docutils literal notranslate"><span class="pre">tune_metric</span></code> also <code class="docutils literal notranslate"><span class="pre">val_threshold</span></code> and <code class="docutils literal notranslate"><span class="pre">val_tuned_MCC</span></code>, …),
+where the history and later callbacks, such as EarlyStopping, see them.</p>
+<p>It predicts from data frames, which every supported neer-match version
+provides; Keras’s own <code class="docutils literal notranslate"><span class="pre">validation_data</span></code> needs a newer neer-match.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="neer_match_utilities.model.ValidationMetrics.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1024</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/model.html#ValidationMetrics.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.model.ValidationMetrics.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1024</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tune_metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/model.html#ValidationMetrics.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.model.ValidationMetrics.__init__" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>left</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – The validation data, in the format the model is trained on.</p></li>
 <li><p><strong>right</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – The validation data, in the format the model is trained on.</p></li>
 <li><p><strong>matches</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – The validation data, in the format the model is trained on.</p></li>
-<li><p><strong>batch_size</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Record pairs per evaluation batch. Affects speed and memory only;
-<code class="docutils literal notranslate"><span class="pre">val_Loss</span></code> is neer-match’s loss summed over these batches.</p></li>
+<li><p><strong>batch_size</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Record pairs per prediction batch. Affects speed and memory only.</p></li>
+<li><p><strong>tune_metric</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <span class="highlight sphinx_autodoc_typehints-value"><code class="xref py py-obj docutils literal notranslate"><span class="kc"><span class="pre">None</span></span></code></span></span>) – If given, each epoch is also scored at the threshold that
+maximises this metric on the validation pairs.</p></li>
 </ul>
 </dd>
 </dl>
@@ -462,6 +473,29 @@ the <cite>Model</cite>’s metrics are returned. Example:
 </dl>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="neer_match_utilities.model.validation_scores">
+<span class="sig-prename descclassname"><span class="pre">neer_match_utilities.model.</span></span><span class="sig-name descname"><span class="pre">validation_scores</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1024</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tune_metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/model.html#validation_scores"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.model.validation_scores" title="Link to this definition"></a></dt>
+<dd><p>Score a model on all record pairs of validation data.</p>
+<p>Returns the scores, keyed as an epoch’s logs are, and the predicted
+probabilities of all pairs, left record by left record:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">val_TP</span></code> … <code class="docutils literal notranslate"><span class="pre">val_MCC</span></code>: at the model’s threshold, 0.5 unless it was
+compiled with another. Precision, Recall, F1 and MCC are 0 where they are
+undefined.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">val_Loss</span></code>: the model’s loss on all pairs at once.</p></li>
+<li><p>With <code class="docutils literal notranslate"><span class="pre">tune_metric</span></code> (‘mcc’ or ‘f1’): <code class="docutils literal notranslate"><span class="pre">val_threshold</span></code>, the threshold
+that maximises it (see <a class="reference internal" href="thresholds.html#neer_match_utilities.thresholds.tune_threshold" title="neer_match_utilities.thresholds.tune_threshold"><code class="xref py py-func docutils literal notranslate"><span class="pre">tune_threshold()</span></code></a>),
+and <code class="docutils literal notranslate"><span class="pre">val_tuned_F1</span></code>, <code class="docutils literal notranslate"><span class="pre">val_tuned_MCC</span></code>, <code class="docutils literal notranslate"><span class="pre">val_tuned_Precision</span></code> and
+<code class="docutils literal notranslate"><span class="pre">val_tuned_Recall</span></code> at that threshold.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <ul class="simple">

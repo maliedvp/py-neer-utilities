@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.panel &mdash; Neer Match Utilities 1.2.2 documentation</title>
+  <title>neer_match_utilities.panel &mdash; Neer Match Utilities 1.2.4 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=fd7cadf9"></script>
+      <script src="../../_static/documentation_options.js?v=928db92d"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -129,6 +129,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../model.html#neer_match_utilities.model.ValidationMetrics.on_epoch_end"><code class="docutils literal notranslate"><span class="pre">ValidationMetrics.on_epoch_end()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../model.html#neer_match_utilities.model.validation_scores"><code class="docutils literal notranslate"><span class="pre">validation_scores()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../baseline_models.html">Baseline Models</a><ul>
@@ -242,6 +243,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../../training.html#neer_match_utilities.training.soft_f1_loss"><code class="docutils literal notranslate"><span class="pre">soft_f1_loss()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../thresholds.html">Thresholds</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../thresholds.html#neer_match_utilities.thresholds.pair_labels"><code class="docutils literal notranslate"><span class="pre">pair_labels()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../thresholds.html#neer_match_utilities.thresholds.scores_at"><code class="docutils literal notranslate"><span class="pre">scores_at()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../thresholds.html#neer_match_utilities.thresholds.tune_threshold"><code class="docutils literal notranslate"><span class="pre">tune_threshold()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../feature_selection.html">Feature Selection</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult"><code class="docutils literal notranslate"><span class="pre">FeatureSelectionResult</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult.updated_similarity_map"><code class="docutils literal notranslate"><span class="pre">FeatureSelectionResult.updated_similarity_map</span></code></a></li>
@@ -258,6 +265,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../feature_selection.html#neer_match_utilities.feature_selection.FeatureSelector.execute"><code class="docutils literal notranslate"><span class="pre">FeatureSelector.execute()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../feature_selection.html#neer_match_utilities.feature_selection.fit_elastic_net_logistic"><code class="docutils literal notranslate"><span class="pre">fit_elastic_net_logistic()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../feature_selection.html#neer_match_utilities.feature_selection.tqdm_joblib"><code class="docutils literal notranslate"><span class="pre">tqdm_joblib()</span></code></a></li>
 </ul>
 </li>
@@ -677,6 +685,10 @@
 
 
 
+<span class="c1"># GenerateID's default prediction_threshold: the model's tuned threshold, else 0.9</span>
+<span class="n">_TUNED_OR_0_9</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
+
+
 <div class="viewcode-block" id="GenerateID">
 <a class="viewcode-back" href="../../panel.html#neer_match_utilities.panel.GenerateID">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">GenerateID</span><span class="p">:</span>
@@ -706,7 +718,7 @@
         <span class="n">time_var</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
         <span class="n">model</span><span class="p">,</span> 
         <span class="n">similarity_map</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="s2">"SimilarityMap"</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
-        <span class="n">prediction_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="mf">0.9</span><span class="p">,</span>
+        <span class="n">prediction_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">|</span> <span class="nb">object</span> <span class="o">=</span> <span class="n">_TUNED_OR_0_9</span><span class="p">,</span>
         <span class="n">subgroups</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'m:m'</span>
     <span class="p">):</span>
@@ -727,8 +739,13 @@
 <span class="sd">            A model object with a `suggest` method.</span>
 <span class="sd">        similarity_map : dict</span>
 <span class="sd">            A dictionary of similarity functions for columns.</span>
-<span class="sd">        prediction_threshold : float, optional</span>
-<span class="sd">            Threshold for predictions. Defaults to 0.9.</span>
+<span class="sd">        prediction_threshold : float or None, optional</span>
+<span class="sd">            Probability from which a suggested pair counts as a match. By</span>
+<span class="sd">            default the threshold tuned and saved with the model</span>
+<span class="sd">            (``best_threshold_``, as TrainingPipe and BaselineTrainingPipe's</span>
+<span class="sd">            gradient boosting tune it), else 0.9. None takes the tuned</span>
+<span class="sd">            threshold too, else 0.9 for a similarity map given as a</span>
+<span class="sd">            SimilarityMap and 0.5 otherwise.</span>
 <span class="sd">        relation : str, optional</span>
 <span class="sd">            Relationship between observations in cross sectional data. Default is 'm:m'</span>
 <span class="sd">        """</span>
@@ -746,9 +763,11 @@
         <span class="c1"># Use the provided similarity_map, or if not provided, take the model's own similarity_map.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">similarity_map</span> <span class="o">=</span> <span class="n">similarity_map</span> <span class="k">if</span> <span class="n">similarity_map</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"similarity_map"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     
-        <span class="c1"># Resolve default prediction_threshold if None</span>
-        <span class="k">if</span> <span class="n">prediction_threshold</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">bt</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"best_threshold_"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="c1"># Resolve the default: the model's tuned threshold, if it has one</span>
+        <span class="n">bt</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"best_threshold_"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">prediction_threshold</span> <span class="ow">is</span> <span class="n">_TUNED_OR_0_9</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">prediction_threshold</span> <span class="o">=</span> <span class="mf">0.9</span> <span class="k">if</span> <span class="n">bt</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">bt</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">prediction_threshold</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">bt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">prediction_threshold</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">bt</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>

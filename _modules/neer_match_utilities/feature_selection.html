@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.feature_selection &mdash; Neer Match Utilities 1.2.2 documentation</title>
+  <title>neer_match_utilities.feature_selection &mdash; Neer Match Utilities 1.2.4 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=fd7cadf9"></script>
+      <script src="../../_static/documentation_options.js?v=928db92d"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -129,6 +129,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../model.html#neer_match_utilities.model.ValidationMetrics.on_epoch_end"><code class="docutils literal notranslate"><span class="pre">ValidationMetrics.on_epoch_end()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../model.html#neer_match_utilities.model.validation_scores"><code class="docutils literal notranslate"><span class="pre">validation_scores()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../baseline_models.html">Baseline Models</a><ul>
@@ -242,6 +243,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../../training.html#neer_match_utilities.training.soft_f1_loss"><code class="docutils literal notranslate"><span class="pre">soft_f1_loss()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../thresholds.html">Thresholds</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../thresholds.html#neer_match_utilities.thresholds.pair_labels"><code class="docutils literal notranslate"><span class="pre">pair_labels()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../thresholds.html#neer_match_utilities.thresholds.scores_at"><code class="docutils literal notranslate"><span class="pre">scores_at()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../thresholds.html#neer_match_utilities.thresholds.tune_threshold"><code class="docutils literal notranslate"><span class="pre">tune_threshold()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../feature_selection.html">Feature Selection</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult"><code class="docutils literal notranslate"><span class="pre">FeatureSelectionResult</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult.updated_similarity_map"><code class="docutils literal notranslate"><span class="pre">FeatureSelectionResult.updated_similarity_map</span></code></a></li>
@@ -258,6 +265,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../feature_selection.html#neer_match_utilities.feature_selection.FeatureSelector.execute"><code class="docutils literal notranslate"><span class="pre">FeatureSelector.execute()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../feature_selection.html#neer_match_utilities.feature_selection.fit_elastic_net_logistic"><code class="docutils literal notranslate"><span class="pre">fit_elastic_net_logistic()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../feature_selection.html#neer_match_utilities.feature_selection.tqdm_joblib"><code class="docutils literal notranslate"><span class="pre">tqdm_joblib()</span></code></a></li>
 </ul>
 </li>
@@ -351,6 +359,8 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogisticRegression</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">StratifiedKFold</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_scorer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.utils.class_weight</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_sample_weight</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.special</span><span class="w"> </span><span class="kn">import</span> <span class="n">expit</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">joblib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
@@ -416,6 +426,274 @@
         <span class="n">tqdm_object</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_optimality_violation</span><span class="p">(</span>
+    <span class="n">grad_intercept</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">grad</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">beta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">lam1</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lam2</span><span class="p">:</span> <span class="nb">float</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Largest violation of the optimality conditions of the elastic-net problem,</span>
+<span class="sd">    0 at its solution: the gradient of the intercept is zero, a coefficient</span>
+<span class="sd">    that is not zero balances its penalty, and one at zero has a gradient no</span>
+<span class="sd">    larger than the L1 weight.</span>
+<span class="sd">    """</span>
+    <span class="n">nonzero</span> <span class="o">=</span> <span class="n">beta</span> <span class="o">!=</span> <span class="mi">0</span>
+    <span class="n">violation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+        <span class="n">nonzero</span><span class="p">,</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">grad</span> <span class="o">+</span> <span class="n">lam2</span> <span class="o">*</span> <span class="n">beta</span> <span class="o">+</span> <span class="n">lam1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">beta</span><span class="p">)),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">grad</span><span class="p">)</span> <span class="o">-</span> <span class="n">lam1</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">grad_intercept</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">violation</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">initial</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_solve_l1_quadratic</span><span class="p">(</span>
+    <span class="n">Q</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">lam1</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">penalized</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Minimise ``0.5 * z'Qz - b'z + lam1 * sum(|z_j| for penalised j)`` exactly,</span>
+<span class="sd">    for positive semidefinite Q, starting from z: feature-sign search (Lee,</span>
+<span class="sd">    Battle, Raina and Ng, "Efficient sparse coding algorithms", 2007).</span>
+
+<span class="sd">    It keeps the coordinates that are not zero (and the unpenalised ones) with</span>
+<span class="sd">    their signs, solves the quadratic on them in closed form, and moves to the</span>
+<span class="sd">    best point on the way there, stopping where a coordinate reaches zero; a</span>
+<span class="sd">    zero coordinate whose gradient exceeds lam1 enters one at a time. It ends</span>
+<span class="sd">    where the optimality conditions hold to rounding error. With a few dozen</span>
+<span class="sd">    coordinates each step is a small linear system, where coordinate descent</span>
+<span class="sd">    needs many sweeps over strongly correlated features.</span>
+<span class="sd">    """</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">penalized</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">penalized</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+    <span class="n">tol</span> <span class="o">=</span> <span class="mf">1e-11</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">initial</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span> <span class="o">+</span> <span class="n">lam1</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1e-300</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">value</span><span class="p">(</span><span class="n">v</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">v</span> <span class="o">@</span> <span class="p">(</span><span class="n">Q</span> <span class="o">@</span> <span class="n">v</span><span class="p">)</span> <span class="o">-</span> <span class="n">b</span> <span class="o">@</span> <span class="n">v</span> <span class="o">+</span> <span class="n">lam1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="n">penalized</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">coordinate_sweep</span><span class="p">(</span><span class="n">v</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""One sweep of exact coordinate minimisation: never raises the value."""</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">Q</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">u</span> <span class="o">=</span> <span class="n">b</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">Q</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">@</span> <span class="n">v</span> <span class="o">+</span> <span class="n">Q</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">v</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">penalized</span><span class="p">[</span><span class="n">j</span><span class="p">]:</span>
+                <span class="n">v</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">-</span> <span class="n">lam1</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">/</span> <span class="n">Q</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">v</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">u</span> <span class="o">/</span> <span class="n">Q</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">v</span>
+
+    <span class="n">sign</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">penalized</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">z</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">current</span> <span class="o">=</span> <span class="n">value</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span> <span class="o">*</span> <span class="n">m</span> <span class="o">+</span> <span class="mi">20</span><span class="p">):</span>
+        <span class="n">grad</span> <span class="o">=</span> <span class="n">Q</span> <span class="o">@</span> <span class="n">z</span> <span class="o">-</span> <span class="n">b</span>
+        <span class="n">free</span> <span class="o">=</span> <span class="o">~</span><span class="n">penalized</span> <span class="o">|</span> <span class="p">(</span><span class="n">sign</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">grad</span><span class="p">[</span><span class="n">free</span><span class="p">]</span> <span class="o">+</span> <span class="n">lam1</span> <span class="o">*</span> <span class="n">sign</span><span class="p">[</span><span class="n">free</span><span class="p">])</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">initial</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">tol</span><span class="p">:</span>
+            <span class="c1"># optimal on the free coordinates: should a zero one enter?</span>
+            <span class="n">excess</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">penalized</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">sign</span> <span class="o">==</span> <span class="mi">0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">grad</span><span class="p">)</span> <span class="o">-</span> <span class="n">lam1</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">excess</span><span class="p">))</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">excess</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">tol</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">z</span>
+            <span class="n">sign</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">grad</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+            <span class="n">free</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># The minimiser of the quadratic on the free coordinates, at their signs</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">free</span><span class="p">)</span>
+        <span class="n">Q_ff</span><span class="p">,</span> <span class="n">rhs</span> <span class="o">=</span> <span class="n">Q</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">idx</span><span class="p">)],</span> <span class="n">b</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">-</span> <span class="n">lam1</span> <span class="o">*</span> <span class="n">sign</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">solution</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">Q_ff</span><span class="p">,</span> <span class="n">rhs</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">LinAlgError</span><span class="p">:</span>
+            <span class="n">solution</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">Q_ff</span><span class="p">,</span> <span class="n">rhs</span><span class="p">,</span> <span class="n">rcond</span><span class="o">=</span><span class="kc">None</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+        <span class="n">target</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">solution</span>
+
+        <span class="c1"># The best of the target and the points where a coordinate reaches zero</span>
+        <span class="n">crossings</span> <span class="o">=</span> <span class="p">{</span><span class="mf">1.0</span><span class="p">:</span> <span class="p">[]}</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">penalized</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="ow">and</span> <span class="n">z</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">!=</span> <span class="mf">0.0</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">target</span><span class="p">[</span><span class="n">k</span><span class="p">])</span> <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="n">k</span><span class="p">]):</span>
+                <span class="n">crossings</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">-</span> <span class="n">target</span><span class="p">[</span><span class="n">k</span><span class="p">]),</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+        <span class="n">best</span><span class="p">,</span> <span class="n">best_value</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">current</span>
+        <span class="k">for</span> <span class="n">t</span><span class="p">,</span> <span class="n">zeroed</span> <span class="ow">in</span> <span class="n">crossings</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">candidate</span> <span class="o">=</span> <span class="n">z</span> <span class="o">+</span> <span class="n">t</span> <span class="o">*</span> <span class="p">(</span><span class="n">target</span> <span class="o">-</span> <span class="n">z</span><span class="p">)</span>
+            <span class="n">candidate</span><span class="p">[</span><span class="n">zeroed</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">value</span><span class="p">(</span><span class="n">candidate</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="n">best_value</span><span class="p">:</span>
+                <span class="n">best</span><span class="p">,</span> <span class="n">best_value</span> <span class="o">=</span> <span class="n">candidate</span><span class="p">,</span> <span class="n">v</span>
+        <span class="k">if</span> <span class="n">best</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># rounding left no descent along the segment: a coordinate sweep</span>
+            <span class="c1"># still finds one, unless z is already as good as it gets</span>
+            <span class="n">best</span> <span class="o">=</span> <span class="n">coordinate_sweep</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+            <span class="n">best_value</span> <span class="o">=</span> <span class="n">value</span><span class="p">(</span><span class="n">best</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">best_value</span> <span class="o">&lt;</span> <span class="n">current</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">z</span>
+        <span class="n">z</span><span class="p">,</span> <span class="n">current</span> <span class="o">=</span> <span class="n">best</span><span class="p">,</span> <span class="n">best_value</span>
+        <span class="n">sign</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">penalized</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">z</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">z</span>
+
+
+<div class="viewcode-block" id="fit_elastic_net_logistic">
+<a class="viewcode-back" href="../../feature_selection.html#neer_match_utilities.feature_selection.fit_elastic_net_logistic">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">fit_elastic_net_logistic</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">sample_weight</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">C</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">l1_ratio</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-9</span><span class="p">,</span>
+    <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="n">intercept_init</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">coef_init</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Elastic-net logistic regression by proximal Newton steps, as glmnet fits it.</span>
+
+<span class="sd">    It minimises the objective of scikit-learn's</span>
+<span class="sd">    ``LogisticRegression(l1_ratio=l1_ratio, C=C)`` with an unpenalised intercept,</span>
+
+<span class="sd">        C * sum_i w_i * logloss_i + (1 - l1_ratio) / 2 * ||beta||^2 + l1_ratio * ||beta||_1,</span>
+
+<span class="sd">    divided by ``C * sum(w)``, which leaves the solution unchanged. Each step</span>
+<span class="sd">    solves the penalised quadratic approximation of the loss exactly</span>
+<span class="sd">    (``_solve_l1_quadratic``) and is shortened until the objective falls. It is</span>
+<span class="sd">    meant for many record pairs and few features: every step costs one pass</span>
+<span class="sd">    over the pairs per feature pair, ``n * p**2``, and it converges in tens of</span>
+<span class="sd">    steps, where saga needs thousands of passes to converge when the class</span>
+<span class="sd">    weights are as uneven as matches make them. Started from the solution for</span>
+<span class="sd">    a stronger penalty (``intercept_init``, ``coef_init``), as along a path of</span>
+<span class="sd">    C values, it needs only a few.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X : np.ndarray of shape (n, p)</span>
+<span class="sd">        Features, ideally standardised.</span>
+<span class="sd">    y : np.ndarray of shape (n,)</span>
+<span class="sd">        Labels, 0 or 1.</span>
+<span class="sd">    sample_weight : np.ndarray of shape (n,)</span>
+<span class="sd">        Positive weight of each pair, such as class weights.</span>
+<span class="sd">    C, l1_ratio : float</span>
+<span class="sd">        As in scikit-learn's LogisticRegression.</span>
+<span class="sd">    tol : float, default=1e-9</span>
+<span class="sd">        The fit stops once ``_optimality_violation``, measured on the objective</span>
+<span class="sd">        divided by ``C * sum(w)``, is below it.</span>
+<span class="sd">    max_iter : int, default=100</span>
+<span class="sd">        Most Newton steps. The fit also stops, unconverged, once a step no</span>
+<span class="sd">        longer lowers the objective measurably.</span>
+<span class="sd">    intercept_init, coef_init : optional</span>
+<span class="sd">        Where to start; by default from the intercept-only model. The solution</span>
+<span class="sd">        does not depend on it.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    intercept, coef, n_iter, converged</span>
+<span class="sd">    """</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">n</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">sample_weight</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">s</span> <span class="o">/</span> <span class="n">s</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="n">lam1</span> <span class="o">=</span> <span class="n">l1_ratio</span> <span class="o">/</span> <span class="p">(</span><span class="n">C</span> <span class="o">*</span> <span class="n">s</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+    <span class="n">lam2</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">l1_ratio</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">C</span> <span class="o">*</span> <span class="n">s</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">objective</span><span class="p">(</span><span class="n">intercept</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">beta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="n">eta</span> <span class="o">=</span> <span class="n">intercept</span> <span class="o">+</span> <span class="n">X</span> <span class="o">@</span> <span class="n">beta</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span>
+            <span class="n">a</span> <span class="o">@</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logaddexp</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">eta</span><span class="p">)</span> <span class="o">-</span> <span class="n">y</span> <span class="o">*</span> <span class="n">eta</span><span class="p">)</span>
+            <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">lam2</span> <span class="o">*</span> <span class="n">beta</span> <span class="o">@</span> <span class="n">beta</span>
+            <span class="o">+</span> <span class="n">lam1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">beta</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">penalty</span><span class="p">(</span><span class="n">beta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">lam2</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">beta</span> <span class="o">@</span> <span class="n">beta</span><span class="p">)</span> <span class="o">+</span> <span class="n">lam1</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">beta</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+
+    <span class="c1"># Start from the given point, or from the intercept-only model</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># [intercept, beta]</span>
+    <span class="k">if</span> <span class="n">coef_init</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">theta</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">coef_init</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">intercept_init</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">theta</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">intercept_init</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">share</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">a</span> <span class="o">@</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">theta</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">share</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">share</span><span class="p">))</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">objective</span><span class="p">(</span><span class="n">theta</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">theta</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+    <span class="c1"># The quadratic model's L1 term covers the coefficients, not the intercept</span>
+    <span class="n">penalized</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+    <span class="n">penalized</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">ridge</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">lam2</span><span class="p">)</span>
+    <span class="n">ridge</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+    <span class="n">converged</span><span class="p">,</span> <span class="n">n_iter</span><span class="p">,</span> <span class="n">stalled</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">mu</span> <span class="o">=</span> <span class="n">expit</span><span class="p">(</span><span class="n">theta</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">X</span> <span class="o">@</span> <span class="n">theta</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+        <span class="n">residual</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="p">(</span><span class="n">mu</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">grad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([[</span><span class="n">residual</span><span class="o">.</span><span class="n">sum</span><span class="p">()],</span> <span class="n">X</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">residual</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">_optimality_violation</span><span class="p">(</span><span class="n">grad</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">grad</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">theta</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">lam1</span><span class="p">,</span> <span class="n">lam2</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">tol</span><span class="p">:</span>
+            <span class="n">converged</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">break</span>
+        <span class="k">if</span> <span class="n">n_iter</span> <span class="o">&gt;=</span> <span class="n">max_iter</span> <span class="ow">or</span> <span class="n">stalled</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="n">n_iter</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="c1"># Hessian of the loss, [intercept, beta] by [intercept, beta]</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="n">mu</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">Xw</span> <span class="o">=</span> <span class="n">X</span> <span class="o">*</span> <span class="n">w</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">p</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">p</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">H</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="n">H</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">H</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">Xw</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">H</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">Xw</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">X</span>
+        <span class="k">del</span> <span class="n">Xw</span>
+
+        <span class="c1"># The penalised quadratic model around theta, in the point z it moves to:</span>
+        <span class="c1"># grad'(z - theta) + (z - theta)'H(z - theta)/2 + penalty(z), which is</span>
+        <span class="c1"># z'(H + ridge)z/2 - (H theta - grad)'z + lam1 * |z| up to a constant</span>
+        <span class="n">new</span> <span class="o">=</span> <span class="n">_solve_l1_quadratic</span><span class="p">(</span>
+            <span class="n">H</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">ridge</span><span class="p">),</span> <span class="n">H</span> <span class="o">@</span> <span class="n">theta</span> <span class="o">-</span> <span class="n">grad</span><span class="p">,</span> <span class="n">lam1</span><span class="p">,</span> <span class="n">penalized</span><span class="p">,</span> <span class="n">theta</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Shorten the step until the objective falls enough</span>
+        <span class="n">direction</span> <span class="o">=</span> <span class="n">new</span> <span class="o">-</span> <span class="n">theta</span>
+        <span class="n">decrease</span> <span class="o">=</span> <span class="n">grad</span> <span class="o">@</span> <span class="n">direction</span> <span class="o">+</span> <span class="n">penalty</span><span class="p">(</span><span class="n">new</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span> <span class="o">-</span> <span class="n">penalty</span><span class="p">(</span><span class="n">theta</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">decrease</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">break</span>  <span class="c1"># no descent left at this precision</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">candidate</span> <span class="o">=</span> <span class="n">theta</span> <span class="o">+</span> <span class="n">length</span> <span class="o">*</span> <span class="n">direction</span>
+            <span class="n">f_candidate</span> <span class="o">=</span> <span class="n">objective</span><span class="p">(</span><span class="n">candidate</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">candidate</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+            <span class="k">if</span> <span class="n">f_candidate</span> <span class="o">&lt;=</span> <span class="n">f</span> <span class="o">+</span> <span class="mf">1e-4</span> <span class="o">*</span> <span class="n">length</span> <span class="o">*</span> <span class="n">decrease</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="n">length</span> <span class="o">*=</span> <span class="mf">0.5</span>
+            <span class="k">if</span> <span class="n">length</span> <span class="o">&lt;</span> <span class="mf">1e-10</span><span class="p">:</span>
+                <span class="n">candidate</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">break</span>
+        <span class="k">if</span> <span class="n">candidate</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="c1"># Count the steps that no longer lower the objective beyond rounding</span>
+        <span class="n">stalled</span> <span class="o">=</span> <span class="n">stalled</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">f</span> <span class="o">-</span> <span class="n">f_candidate</span> <span class="o">&lt;=</span> <span class="mf">1e-13</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="n">theta</span><span class="p">,</span> <span class="n">f</span> <span class="o">=</span> <span class="n">candidate</span><span class="p">,</span> <span class="n">f_candidate</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">converged</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"The elastic-net fit stopped after </span><span class="si">{</span><span class="n">n_iter</span><span class="si">}</span><span class="s2"> Newton steps before "</span>
+            <span class="sa">f</span><span class="s2">"reaching tol=</span><span class="si">{</span><span class="n">tol</span><span class="si">}</span><span class="s2">."</span><span class="p">,</span>
+            <span class="n">ConvergenceWarning</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">theta</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">theta</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">n_iter</span><span class="p">,</span> <span class="n">converged</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_as_logistic_regression</span><span class="p">(</span><span class="n">intercept</span><span class="p">,</span> <span class="n">coef</span><span class="p">,</span> <span class="n">classes</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LogisticRegression</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    A fitted scikit-learn LogisticRegression holding these coefficients, so that</span>
+<span class="sd">    scorers and later code can use it like one fitted by scikit-learn.</span>
+<span class="sd">    """</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">classes</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">coef_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">coef</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">intercept_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">intercept</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">n_features_in_</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">coef_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">model</span>
+
+
 <div class="viewcode-block" id="FeatureSelectionResult">
 <a class="viewcode-back" href="../../feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult">[docs]</a>
 <span class="nd">@dataclass</span>
@@ -442,6 +720,7 @@
 <span class="sd">        - cv: Number of cross-validation folds</span>
 <span class="sd">        - n_features_in: Number of input features</span>
 <span class="sd">        - n_features_selected: Number of features selected</span>
+<span class="sd">        - solver: The solver of the elastic-net fits</span>
 <span class="sd">        - did_fallback: Whether fallback to original map occurred</span>
 <span class="sd">    """</span>
     <span class="n">updated_similarity_map</span><span class="p">:</span> <span class="n">SimilarityMapDict</span>
@@ -505,8 +784,20 @@
 <span class="sd">    class_weight : str or None, default='balanced'</span>
 <span class="sd">        Class weighting strategy. 'balanced' adjusts weights inversely proportional</span>
 <span class="sd">        to class frequencies, recommended for imbalanced data.</span>
+<span class="sd">    solver : {'newton-cd', 'saga'}, default='newton-cd'</span>
+<span class="sd">        How the elastic-net fits are computed. Both minimise the objective of</span>
+<span class="sd">        scikit-learn's LogisticRegression. 'newton-cd' takes proximal Newton</span>
+<span class="sd">        steps (``fit_elastic_net_logistic``) and converges in about ten of</span>
+<span class="sd">        them, a second or so on a hundred thousand pairs of tens of features.</span>
+<span class="sd">        'saga', used up to version 1.2.3, is scikit-learn's stochastic solver:</span>
+<span class="sd">        with the uneven class weights of matches it typically stops at</span>
+<span class="sd">        ``max_iter`` far from the solution, after many minutes, so that its</span>
+<span class="sd">        selection depends on where it stopped. Kept to reproduce earlier</span>
+<span class="sd">        results.</span>
 <span class="sd">    max_iter : int, default=5000</span>
-<span class="sd">        Maximum iterations for elastic net solver.</span>
+<span class="sd">        Most iterations of each cross-validation fit: Newton steps for</span>
+<span class="sd">        'newton-cd', which needs far fewer, epochs for 'saga'. The final fit</span>
+<span class="sd">        of 'saga' takes up to 20,000.</span>
 <span class="sd">    random_state : int, default=42</span>
 <span class="sd">        Random seed for reproducibility.</span>
 <span class="sd">    n_jobs : int, default=-1</span>
@@ -571,6 +862,7 @@
         <span class="n">l1_ratios</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
         <span class="n">Cs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
         <span class="n">class_weight</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"balanced"</span><span class="p">,</span>  <span class="c1"># consider "balanced" if match class is rare</span>
+        <span class="n">solver</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"newton-cd"</span><span class="p">,</span>  <span class="c1"># or "saga", the solver up to version 1.2.3</span>
         <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">,</span>
         <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span>
         <span class="n">n_jobs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
@@ -602,6 +894,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">Cs</span> <span class="o">=</span> <span class="n">Cs</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">class_weight</span> <span class="o">=</span> <span class="n">class_weight</span>
+        <span class="k">if</span> <span class="n">solver</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"newton-cd"</span><span class="p">,</span> <span class="s2">"saga"</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"solver must be 'newton-cd' or 'saga', not </span><span class="si">{</span><span class="n">solver</span><span class="si">!r}</span><span class="s2">."</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">solver</span> <span class="o">=</span> <span class="n">solver</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span> <span class="o">=</span> <span class="n">max_iter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="n">n_jobs</span>
@@ -920,41 +1215,87 @@
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">val_idx</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">skf</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X_scaled</span><span class="p">,</span> <span class="n">y</span><span class="p">)):</span>
             <span class="n">fold_of</span><span class="p">[</span><span class="n">val_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">k</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">fit_and_score</span><span class="p">(</span><span class="n">l1_ratio</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">C</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fold_idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-<span class="w">            </span><span class="sd">"""Train and evaluate one configuration on one CV fold."""</span>
-            <span class="c1"># The indices skf.split yields: both sorted, train the complement</span>
-            <span class="n">in_fold</span> <span class="o">=</span> <span class="n">fold_of</span> <span class="o">==</span> <span class="n">fold_idx</span>
-            <span class="n">train_idx</span><span class="p">,</span> <span class="n">val_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="o">~</span><span class="n">in_fold</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">in_fold</span><span class="p">)</span>
-            <span class="n">X_tr</span><span class="p">,</span> <span class="n">X_va</span> <span class="o">=</span> <span class="n">X_scaled</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">X_scaled</span><span class="p">[</span><span class="n">val_idx</span><span class="p">]</span>
-            <span class="n">y_tr</span><span class="p">,</span> <span class="n">y_va</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">val_idx</span><span class="p">]</span>
+        <span class="n">classes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
 
+        <span class="k">def</span><span class="w"> </span><span class="nf">saga_fit</span><span class="p">(</span><span class="n">X_fit</span><span class="p">,</span> <span class="n">y_fit</span><span class="p">,</span> <span class="n">l1_ratio</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">C</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">final</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LogisticRegression</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">"""One fit by scikit-learn's saga, the solver up to version 1.2.3."""</span>
             <span class="c1"># l1_ratio alone selects the elastic-net penalty; passing</span>
             <span class="c1"># penalty= is deprecated in scikit-learn 1.8 and removed in 1.10</span>
             <span class="n">clf</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span>
                 <span class="n">solver</span><span class="o">=</span><span class="s2">"saga"</span><span class="p">,</span>
                 <span class="n">l1_ratio</span><span class="o">=</span><span class="n">l1_ratio</span><span class="p">,</span>
                 <span class="n">C</span><span class="o">=</span><span class="n">C</span><span class="p">,</span>
-                <span class="n">max_iter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span><span class="p">,</span>
-                <span class="n">tol</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">,</span>
+                <span class="n">max_iter</span><span class="o">=</span><span class="mi">20000</span> <span class="k">if</span> <span class="n">final</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span><span class="p">,</span>
+                <span class="n">tol</span><span class="o">=</span><span class="mf">1e-3</span> <span class="k">if</span> <span class="n">final</span> <span class="k">else</span> <span class="mf">1e-2</span><span class="p">,</span>
                 <span class="n">class_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">class_weight</span><span class="p">,</span>
                 <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">,</span>
             <span class="p">)</span>
-            <span class="k">with</span> <span class="n">_fit_warnings_silenced</span><span class="p">():</span>
-                <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_tr</span><span class="p">,</span> <span class="n">y_tr</span><span class="p">)</span>
-                <span class="n">score</span> <span class="o">=</span> <span class="n">scorer</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">X_va</span><span class="p">,</span> <span class="n">y_va</span><span class="p">)</span>
-            <span class="k">return</span> <span class="p">(</span><span class="n">l1_ratio</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">fold_idx</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">score</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_fit</span><span class="p">,</span> <span class="n">y_fit</span><span class="p">)</span>
 
-        <span class="c1"># Generate all parameter × fold combinations</span>
-        <span class="n">tasks</span> <span class="o">=</span> <span class="p">[(</span><span class="n">l1</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">l1</span> <span class="ow">in</span> <span class="n">l1_grid</span> <span class="k">for</span> <span class="n">C</span> <span class="ow">in</span> <span class="n">Cs_grid</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cv</span><span class="p">)]</span>
-        <span class="n">total_fits</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tasks</span><span class="p">)</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">newton_path</span><span class="p">(</span><span class="n">X_fit</span><span class="p">,</span> <span class="n">y_fit</span><span class="p">,</span> <span class="n">l1_ratio</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">Cs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">"""</span>
+<span class="sd">            Fits at the given C values, as fitted LogisticRegressions by C: the</span>
+<span class="sd">            strongest penalty first, each fit started from the one before, as</span>
+<span class="sd">            glmnet computes a path. The solutions do not depend on the order.</span>
+<span class="sd">            """</span>
+            <span class="c1"># The weights LogisticRegression derives from class_weight</span>
+            <span class="n">weights</span> <span class="o">=</span> <span class="n">compute_sample_weight</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">class_weight</span><span class="p">,</span> <span class="n">y_fit</span><span class="p">)</span>
+            <span class="n">models</span><span class="p">,</span> <span class="n">intercept</span><span class="p">,</span> <span class="n">coef</span> <span class="o">=</span> <span class="p">{},</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+            <span class="k">for</span> <span class="n">C</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">Cs</span><span class="p">):</span>
+                <span class="n">intercept</span><span class="p">,</span> <span class="n">coef</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">fit_elastic_net_logistic</span><span class="p">(</span>
+                    <span class="n">X_fit</span><span class="p">,</span> <span class="n">y_fit</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">l1_ratio</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span><span class="p">,</span>
+                    <span class="n">intercept_init</span><span class="o">=</span><span class="n">intercept</span><span class="p">,</span> <span class="n">coef_init</span><span class="o">=</span><span class="n">coef</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">models</span><span class="p">[</span><span class="n">C</span><span class="p">]</span> <span class="o">=</span> <span class="n">_as_logistic_regression</span><span class="p">(</span>
+                    <span class="n">intercept</span><span class="p">,</span> <span class="n">coef</span><span class="p">,</span> <span class="n">classes</span><span class="p">,</span> <span class="n">l1_ratio</span><span class="o">=</span><span class="n">l1_ratio</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">C</span><span class="p">,</span> <span class="n">class_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">class_weight</span>
+                <span class="p">)</span>
+            <span class="k">return</span> <span class="n">models</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">fold</span><span class="p">(</span><span class="n">fold_idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">"""Training and validation part of one CV fold."""</span>
+            <span class="c1"># The indices skf.split yields: both sorted, train the complement</span>
+            <span class="n">in_fold</span> <span class="o">=</span> <span class="n">fold_of</span> <span class="o">==</span> <span class="n">fold_idx</span>
+            <span class="n">train_idx</span><span class="p">,</span> <span class="n">val_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="o">~</span><span class="n">in_fold</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">in_fold</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">X_scaled</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">X_scaled</span><span class="p">[</span><span class="n">val_idx</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">val_idx</span><span class="p">]</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">fit_and_score</span><span class="p">(</span><span class="n">l1_ratio</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">C</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fold_idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">"""saga: train and evaluate one configuration on one CV fold."""</span>
+            <span class="n">X_tr</span><span class="p">,</span> <span class="n">X_va</span><span class="p">,</span> <span class="n">y_tr</span><span class="p">,</span> <span class="n">y_va</span> <span class="o">=</span> <span class="n">fold</span><span class="p">(</span><span class="n">fold_idx</span><span class="p">)</span>
+            <span class="k">with</span> <span class="n">_fit_warnings_silenced</span><span class="p">():</span>
+                <span class="n">clf</span> <span class="o">=</span> <span class="n">saga_fit</span><span class="p">(</span><span class="n">X_tr</span><span class="p">,</span> <span class="n">y_tr</span><span class="p">,</span> <span class="n">l1_ratio</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">final</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">score</span> <span class="o">=</span> <span class="n">scorer</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">X_va</span><span class="p">,</span> <span class="n">y_va</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">[(</span><span class="n">l1_ratio</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">fold_idx</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">score</span><span class="p">))]</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">path_and_score</span><span class="p">(</span><span class="n">l1_ratio</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fold_idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">"""newton-cd: train and evaluate all C values of one l1_ratio on one CV fold."""</span>
+            <span class="n">X_tr</span><span class="p">,</span> <span class="n">X_va</span><span class="p">,</span> <span class="n">y_tr</span><span class="p">,</span> <span class="n">y_va</span> <span class="o">=</span> <span class="n">fold</span><span class="p">(</span><span class="n">fold_idx</span><span class="p">)</span>
+            <span class="k">with</span> <span class="n">_fit_warnings_silenced</span><span class="p">():</span>
+                <span class="n">models</span> <span class="o">=</span> <span class="n">newton_path</span><span class="p">(</span><span class="n">X_tr</span><span class="p">,</span> <span class="n">y_tr</span><span class="p">,</span> <span class="n">l1_ratio</span><span class="p">,</span> <span class="n">Cs_grid</span><span class="p">)</span>
+                <span class="k">return</span> <span class="p">[</span>
+                    <span class="p">(</span><span class="n">l1_ratio</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">fold_idx</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">scorer</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">X_va</span><span class="p">,</span> <span class="n">y_va</span><span class="p">)))</span>
+                    <span class="k">for</span> <span class="n">C</span><span class="p">,</span> <span class="n">clf</span> <span class="ow">in</span> <span class="n">models</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="p">]</span>
+
+        <span class="c1"># One task per fit for saga; for newton-cd one per path of C values</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span> <span class="o">==</span> <span class="s2">"saga"</span><span class="p">:</span>
+            <span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">delayed</span><span class="p">(</span><span class="n">fit_and_score</span><span class="p">)(</span><span class="n">l1</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">l1</span> <span class="ow">in</span> <span class="n">l1_grid</span> <span class="k">for</span> <span class="n">C</span> <span class="ow">in</span> <span class="n">Cs_grid</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cv</span><span class="p">)</span>
+            <span class="p">]</span>
+            <span class="n">unit</span> <span class="o">=</span> <span class="s2">"fit"</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span><span class="n">delayed</span><span class="p">(</span><span class="n">path_and_score</span><span class="p">)(</span><span class="n">l1</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">l1</span> <span class="ow">in</span> <span class="n">l1_grid</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cv</span><span class="p">)]</span>
+            <span class="n">unit</span> <span class="o">=</span> <span class="s2">"path"</span>
 
         <span class="c1"># Execute parallel CV with progress bar</span>
-        <span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="n">total_fits</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">"[FeatureSelector] CV fits"</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">"fit"</span><span class="p">)</span> <span class="k">if</span> <span class="n">tqdm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">tasks</span><span class="p">),</span> <span class="n">desc</span><span class="o">=</span><span class="sa">f</span><span class="s2">"[FeatureSelector] CV </span><span class="si">{</span><span class="n">unit</span><span class="si">}</span><span class="s2">s"</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">unit</span><span class="p">)</span> <span class="k">if</span> <span class="n">tqdm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
 
         <span class="k">with</span> <span class="n">tqdm_joblib</span><span class="p">(</span><span class="n">pbar</span><span class="p">):</span>
-            <span class="n">results</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">prefer</span><span class="o">=</span><span class="s2">"processes"</span><span class="p">)(</span>
-                <span class="n">delayed</span><span class="p">(</span><span class="n">fit_and_score</span><span class="p">)(</span><span class="n">l1</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">l1</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="ow">in</span> <span class="n">tasks</span>
-            <span class="p">)</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">result</span>
+                <span class="k">for</span> <span class="n">task_results</span> <span class="ow">in</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">prefer</span><span class="o">=</span><span class="s2">"processes"</span><span class="p">)(</span><span class="n">tasks</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">task_results</span>
+            <span class="p">]</span>
 
         <span class="c1"># Aggregate cross-validation scores</span>
         <span class="n">scores</span> <span class="o">=</span> <span class="p">{}</span>
@@ -971,18 +1312,14 @@
 
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[FeatureSelector] Stage 2 - Best params: l1_ratio=</span><span class="si">{</span><span class="n">best_l1</span><span class="si">}</span><span class="s2">, C=</span><span class="si">{</span><span class="n">best_C</span><span class="si">}</span><span class="s2">, score=</span><span class="si">{</span><span class="n">best_score</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-        <span class="c1"># Step 6: Refit final model on full training set with best parameters</span>
-        <span class="n">final_model</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span>
-            <span class="n">solver</span><span class="o">=</span><span class="s2">"saga"</span><span class="p">,</span>
-            <span class="n">l1_ratio</span><span class="o">=</span><span class="n">best_l1</span><span class="p">,</span>
-            <span class="n">C</span><span class="o">=</span><span class="n">best_C</span><span class="p">,</span>
-            <span class="n">max_iter</span><span class="o">=</span><span class="mi">20000</span><span class="p">,</span>
-            <span class="n">tol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>
-            <span class="n">class_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">class_weight</span><span class="p">,</span>
-            <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">,</span>
-        <span class="p">)</span>
+        <span class="c1"># Step 6: Refit final model on full training set with best parameters;</span>
+        <span class="c1"># newton-cd along the path of C values up to the best one</span>
         <span class="k">with</span> <span class="n">_fit_warnings_silenced</span><span class="p">():</span>
-            <span class="n">final_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_scaled</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span> <span class="o">==</span> <span class="s2">"saga"</span><span class="p">:</span>
+                <span class="n">final_model</span> <span class="o">=</span> <span class="n">saga_fit</span><span class="p">(</span><span class="n">X_scaled</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">best_l1</span><span class="p">,</span> <span class="n">best_C</span><span class="p">,</span> <span class="n">final</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">path</span> <span class="o">=</span> <span class="p">[</span><span class="n">C</span> <span class="k">for</span> <span class="n">C</span> <span class="ow">in</span> <span class="n">Cs_grid</span> <span class="k">if</span> <span class="n">C</span> <span class="o">&lt;=</span> <span class="n">best_C</span><span class="p">]</span>
+                <span class="n">final_model</span> <span class="o">=</span> <span class="n">newton_path</span><span class="p">(</span><span class="n">X_scaled</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">best_l1</span><span class="p">,</span> <span class="n">path</span><span class="p">)[</span><span class="n">best_C</span><span class="p">]</span>
 
         <span class="n">coef</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">final_model</span><span class="o">.</span><span class="n">coef_</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">index</span><span class="o">=</span><span class="n">feature_columns</span><span class="p">)</span>
 
@@ -1021,6 +1358,7 @@
             <span class="s2">"l1_ratios"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">l1_ratios</span><span class="p">,</span>
             <span class="s2">"Cs"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Cs</span><span class="p">,</span>
             <span class="s2">"class_weight"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_weight</span><span class="p">,</span>
+            <span class="s2">"solver"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="p">,</span>
             <span class="s2">"n_features_in"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">feature_columns</span><span class="p">)),</span>
             <span class="s2">"n_features_selected"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">selected_feature_columns</span><span class="p">)),</span>
         <span class="p">}</span>

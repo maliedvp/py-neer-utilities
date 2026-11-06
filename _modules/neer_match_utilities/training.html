@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.training &mdash; Neer Match Utilities 1.2.2 documentation</title>
+  <title>neer_match_utilities.training &mdash; Neer Match Utilities 1.2.4 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=fd7cadf9"></script>
+      <script src="../../_static/documentation_options.js?v=928db92d"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -129,6 +129,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../model.html#neer_match_utilities.model.ValidationMetrics.on_epoch_end"><code class="docutils literal notranslate"><span class="pre">ValidationMetrics.on_epoch_end()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../model.html#neer_match_utilities.model.validation_scores"><code class="docutils literal notranslate"><span class="pre">validation_scores()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../baseline_models.html">Baseline Models</a><ul>
@@ -242,6 +243,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../../training.html#neer_match_utilities.training.soft_f1_loss"><code class="docutils literal notranslate"><span class="pre">soft_f1_loss()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../thresholds.html">Thresholds</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../thresholds.html#neer_match_utilities.thresholds.pair_labels"><code class="docutils literal notranslate"><span class="pre">pair_labels()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../thresholds.html#neer_match_utilities.thresholds.scores_at"><code class="docutils literal notranslate"><span class="pre">scores_at()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../thresholds.html#neer_match_utilities.thresholds.tune_threshold"><code class="docutils literal notranslate"><span class="pre">tune_threshold()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../feature_selection.html">Feature Selection</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult"><code class="docutils literal notranslate"><span class="pre">FeatureSelectionResult</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult.updated_similarity_map"><code class="docutils literal notranslate"><span class="pre">FeatureSelectionResult.updated_similarity_map</span></code></a></li>
@@ -258,6 +265,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../feature_selection.html#neer_match_utilities.feature_selection.FeatureSelector.execute"><code class="docutils literal notranslate"><span class="pre">FeatureSelector.execute()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../feature_selection.html#neer_match_utilities.feature_selection.fit_elastic_net_logistic"><code class="docutils literal notranslate"><span class="pre">fit_elastic_net_logistic()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../feature_selection.html#neer_match_utilities.feature_selection.tqdm_joblib"><code class="docutils literal notranslate"><span class="pre">tqdm_joblib()</span></code></a></li>
 </ul>
 </li>
@@ -329,7 +337,8 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">neer_match.similarity_map</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimilarityMap</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">neer_match.matching_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">DLMatchingModel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.baseline_io</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelBaseline</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">EpochEndSaver</span><span class="p">,</span> <span class="n">ValidationMetrics</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">EpochEndSaver</span><span class="p">,</span> <span class="n">ValidationMetrics</span><span class="p">,</span> <span class="n">validation_scores</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.thresholds</span><span class="w"> </span><span class="kn">import</span> <span class="n">TUNE_METRICS</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
@@ -342,6 +351,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
 
 
@@ -612,6 +622,12 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Parameter `alpha` must be in the range [0, 1]."</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">loss</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+        <span class="c1"># One value per pair. neer-match's evaluate passes labels of shape (n,)</span>
+        <span class="c1"># and predictions of shape (n, 1), which would otherwise broadcast to</span>
+        <span class="c1"># all n * n label-prediction combinations; Keras aligns them in fit.</span>
+        <span class="n">y_true</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,))</span>
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,))</span>
+
         <span class="c1"># numerical safety</span>
         <span class="n">eps</span> <span class="o">=</span> <span class="n">K</span><span class="o">.</span><span class="n">epsilon</span><span class="p">()</span>
         <span class="n">y_pred</span> <span class="o">=</span> <span class="n">K</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">eps</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">eps</span><span class="p">)</span>
@@ -700,8 +716,10 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"`epsilon` must be strictly positive."</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">loss</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
-        <span class="n">y_true</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">clip_by_value</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">epsilon</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">epsilon</span><span class="p">)</span>
+        <span class="c1"># One value per pair, as in focal_loss: (n,) and (n, 1) would broadcast</span>
+        <span class="n">y_true</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,))</span>
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,))</span>
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">clip_by_value</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">epsilon</span><span class="p">)</span>
 
         <span class="c1"># Soft counts</span>
         <span class="n">tp</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">y_pred</span> <span class="o">*</span> <span class="n">y_true</span><span class="p">)</span>
@@ -908,14 +926,44 @@
 <span class="sd">    validation_data : tuple or dict, optional</span>
 <span class="sd">        Preprocessed validation data, in the same formats as `training_data`.</span>
 <span class="sd">        If given, the model is scored on all validation record pairs after every</span>
-<span class="sd">        epoch of both stages. The metrics are logged with a `val_` prefix (e.g.</span>
+<span class="sd">        epoch of both stages. The scores are logged with a `val_` prefix (e.g.</span>
 <span class="sd">        `val_F1`, `val_MCC`) in the history and in `epoch_overview.csv`, and each</span>
-<span class="sd">        stage keeps the epoch with the highest `val_F1` instead of the highest</span>
-<span class="sd">        training F1. Defaults to `None`.</span>
+<span class="sd">        stage keeps its best epoch by them rather than by the training F1:</span>
+<span class="sd">        with `tune_threshold`, by `val_tuned_MCC` (or `val_tuned_F1`), the</span>
+<span class="sd">        score at the threshold that maximises it in that epoch; otherwise by</span>
+<span class="sd">        `val_F1`. Stage 2 also counts the model it starts from, stage 1's best,</span>
+<span class="sd">        as its epoch 0 and keeps it if no epoch of its own does better.</span>
+<span class="sd">        Defaults to `None`.</span>
 
 <span class="sd">    early_stopping_patience : int, optional</span>
-<span class="sd">        Requires `validation_data`. If given, a stage stops once `val_F1` has not</span>
-<span class="sd">        improved for this many epochs. Defaults to `None` (no early stopping).</span>
+<span class="sd">        Requires `validation_data`. If given, a stage stops once the score its</span>
+<span class="sd">        best epoch is chosen by has not improved for this many epochs.</span>
+<span class="sd">        Defaults to `None` (no early stopping).</span>
+
+<span class="sd">    threshold : float, optional</span>
+<span class="sd">        Probability from which a pair counts as a match, wherever none is</span>
+<span class="sd">        tuned: in training, and in the final evaluation without</span>
+<span class="sd">        `validation_data` or with `tune_threshold=False`. Defaults to 0.5.</span>
+
+<span class="sd">    tune_threshold : bool, optional</span>
+<span class="sd">        Whether to choose the threshold on the validation pairs, where</span>
+<span class="sd">        `validation_data` is given: in every epoch, to rank the epochs, and for</span>
+<span class="sd">        the final model, as `GradientBoostingModel` does. The final model's</span>
+<span class="sd">        threshold is saved with it as `best_threshold_`, used in its final</span>
+<span class="sd">        evaluation and written to the `threshold` column of `performance.csv`;</span>
+<span class="sd">        `Model.load` restores it. Defaults to `True`.</span>
+
+<span class="sd">    tune_metric : {'mcc', 'f1'}, optional</span>
+<span class="sd">        The validation score the threshold maximises. Defaults to `'mcc'`.</span>
+
+<span class="sd">    evaluation_batch_size : int, optional</span>
+<span class="sd">        Record pairs per batch wherever the pipeline scores pairs without</span>
+<span class="sd">        training on them: the validation pairs after each epoch, the check after</span>
+<span class="sd">        stage 1, and the final evaluation of all training and test pairs. The</span>
+<span class="sd">        confusion counts and the rates computed from them (F1, MCC, ...) do not</span>
+<span class="sd">        depend on it. `Loss` does: it is neer-match's loss summed over these</span>
+<span class="sd">        batches. Defaults to 1024; neer-match's own default of 16 makes the</span>
+<span class="sd">        final evaluation take many times longer.</span>
 
 <span class="sd">    similarity_map : dict</span>
 <span class="sd">        User-defined similarity configuration mapping variable names to similarity measures.</span>
@@ -1140,6 +1188,10 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">validation_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># same formats as training_data</span>
         <span class="n">early_stopping_patience</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">tune_threshold</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">tune_metric</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"mcc"</span><span class="p">,</span>
+        <span class="n">evaluation_batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">,</span>
         <span class="n">initial_feature_width_scales</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
         <span class="n">feature_depths</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
         <span class="n">initial_record_width_scale</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
@@ -1250,6 +1302,24 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"early_stopping_patience requires validation_data."</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">early_stopping_patience</span> <span class="o">=</span> <span class="n">early_stopping_patience</span>
 
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">evaluation_batch_size</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+            <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">evaluation_batch_size</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span>
+            <span class="ow">or</span> <span class="n">evaluation_batch_size</span> <span class="o">&lt;</span> <span class="mi">1</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"evaluation_batch_size must be a positive integer."</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">evaluation_batch_size</span> <span class="o">=</span> <span class="n">evaluation_batch_size</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="mf">0.0</span> <span class="o">&lt;</span> <span class="nb">float</span><span class="p">(</span><span class="n">threshold</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"threshold must lie strictly between 0 and 1."</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">threshold</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">tune_metric</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">TUNE_METRICS</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"tune_metric must be one of </span><span class="si">{</span><span class="n">TUNE_METRICS</span><span class="si">}</span><span class="s2">, not </span><span class="si">{</span><span class="n">tune_metric</span><span class="si">!r}</span><span class="s2">."</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tune_metric</span> <span class="o">=</span> <span class="n">tune_metric</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tune_threshold</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">tune_threshold</span><span class="p">)</span>
+        <span class="c1"># Tuning needs validation pairs; without them the threshold stays fixed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tuning</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tune_threshold</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">validation_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
         <span class="c1"># Basic sanity checks</span>
         <span class="n">frames</span> <span class="o">=</span> <span class="p">[</span>
             <span class="p">(</span><span class="s2">"left_train"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_left_col</span><span class="p">),</span>
@@ -1316,7 +1386,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">WARMUP_MISMATCH_SHARE</span><span class="p">,</span>
             <span class="n">desired_pos_per_batch</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">no_tm_pbatch</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">threshold</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">,</span>
@@ -1329,6 +1399,10 @@
 
         <span class="c1"># Count params</span>
         <span class="n">P</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">count_trainable_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+
+        <span class="c1"># Set by stage 1 for stage 2: the validation scores and the checkpoint</span>
+        <span class="c1"># of its chosen model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_stage1_scores</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stage1_best</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
 
         <span class="c1"># Round 1 (optional)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage_1</span><span class="p">:</span>
@@ -1344,7 +1418,40 @@
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_selection_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""The epoch metric each stage maximizes to pick its best epoch."""</span>
-        <span class="k">return</span> <span class="s2">"val_F1"</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">validation_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">"f1"</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">validation_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">"f1"</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"val_tuned_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tune_metric</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tuning</span> <span class="k">else</span> <span class="s2">"val_F1"</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validation_scores</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""The current model's scores on all validation pairs, and its predictions."""</span>
+        <span class="k">return</span> <span class="n">validation_scores</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">validation_data</span><span class="p">,</span>
+            <span class="n">batch_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">evaluation_batch_size</span><span class="p">,</span>
+            <span class="c1"># always tuned, as the collapse check needs the best threshold's MCC</span>
+            <span class="n">tune_metric</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tune_metric</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tuning</span> <span class="k">else</span> <span class="s2">"mcc"</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_warn_if_collapsed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stage</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">scores</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">history</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Warn when a stage's chosen model does not tell matches from non-matches:</span>
+<span class="sd">        no threshold gives the validation pairs a positive MCC, or, without</span>
+<span class="sd">        validation data, no epoch predicted a single training match.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">scores</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">collapsed</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">scores</span><span class="p">[</span><span class="s2">"val_tuned_MCC"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span>
+            <span class="n">what</span> <span class="o">=</span> <span class="s2">"no threshold separates any validation matches from the non-matches"</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">collapsed</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">history</span><span class="p">[</span><span class="s2">"f1"</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span>
+            <span class="n">what</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"no epoch predicted a single training match at threshold </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="si">}</span><span class="s2">"</span>
+        <span class="k">if</span> <span class="n">collapsed</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"[TrainingPipe] </span><span class="si">{</span><span class="n">stage</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">what</span><span class="si">}</span><span class="s2">. The network has probably collapsed to "</span>
+                <span class="s2">"predicting about the same probability for every pair, as networks whose "</span>
+                <span class="s2">"hidden layers are only a few units wide often do; wider layers "</span>
+                <span class="s2">"(initial_feature_width_scales, initial_record_width_scale) prevent it."</span><span class="p">,</span>
+                <span class="ne">RuntimeWarning</span><span class="p">,</span>
+                <span class="n">stacklevel</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+            <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_stage_callbacks</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
@@ -1353,12 +1460,18 @@
 <span class="sd">        """</span>
         <span class="n">callbacks</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">validation_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">callbacks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ValidationMetrics</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">validation_data</span><span class="p">))</span>
+            <span class="n">callbacks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">ValidationMetrics</span><span class="p">(</span>
+                    <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">validation_data</span><span class="p">,</span>
+                    <span class="n">batch_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">evaluation_batch_size</span><span class="p">,</span>
+                    <span class="n">tune_metric</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tune_metric</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tuning</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
         <span class="n">callbacks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EpochEndSaver</span><span class="p">(</span><span class="n">base_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">))</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">early_stopping_patience</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">callbacks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">callbacks</span><span class="o">.</span><span class="n">EarlyStopping</span><span class="p">(</span>
-                    <span class="n">monitor</span><span class="o">=</span><span class="s2">"val_F1"</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"max"</span><span class="p">,</span> <span class="n">patience</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">early_stopping_patience</span>
+                    <span class="n">monitor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_selection_metric</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"max"</span><span class="p">,</span> <span class="n">patience</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">early_stopping_patience</span>
                 <span class="p">)</span>
             <span class="p">)</span>
         <span class="k">return</span> <span class="n">callbacks</span>
@@ -1383,7 +1496,7 @@
         <span class="n">opt_1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">AdamW</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">lr_sched_1</span><span class="p">,</span> <span class="n">weight_decay</span><span class="o">=</span><span class="n">wd_1</span><span class="p">,</span> <span class="n">clipnorm</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
 
         <span class="n">loss_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_stage1_loss</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">loss_1</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">opt_1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">loss_1</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">opt_1</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">)</span>
 
         <span class="c1"># Start from an empty checkpoints/, so that epochs left by an interrupted</span>
         <span class="c1"># run are not renamed into checkpoints_stage_1/ along with this run's</span>
@@ -1410,17 +1523,30 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">"checkpoints"</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"epoch_</span><span class="si">{</span><span class="n">best_epoch_str</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[R1] best epoch by </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_selection_metric</span><span class="si">}</span><span class="s2">:"</span><span class="p">,</span> <span class="n">best_epoch</span><span class="p">,</span> <span class="s2">"path:"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">"checkpoints_stage_1"</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"epoch_</span><span class="si">{</span><span class="n">best_epoch_str</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-        <span class="c1"># Sanity-evaluate the loaded model before Round 2 training</span>
+        <span class="c1"># Compiled with stage 1's loss, so that it can be evaluated (dummy optimizer)</span>
         <span class="n">probe_loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_stage1_loss</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">probe_loss</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">Adam</span><span class="p">())</span>  <span class="c1"># dummy opt</span>
-        <span class="n">eval_probe</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">matches_train</span><span class="p">,</span>
-            <span class="n">mismatch_share</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mismatch_share_1</span><span class="p">,</span>
-            <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+            <span class="n">loss</span><span class="o">=</span><span class="n">probe_loss</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">Adam</span><span class="p">(),</span> <span class="n">threshold</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">threshold</span>
         <span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"[R1-&gt;R2] probe metrics after load:"</span><span class="p">,</span> <span class="n">eval_probe</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">validation_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># The loaded model's validation scores: a check that loading worked,</span>
+            <span class="c1"># and stage 2's epoch 0, the model it starts from</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_stage1_scores</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validation_scores</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"[R1-&gt;R2] validation scores after load:"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stage1_scores</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_warn_if_collapsed</span><span class="p">(</span><span class="s2">"Stage 1"</span><span class="p">,</span> <span class="n">scores</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_stage1_scores</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Sanity-evaluate the loaded model before Round 2 training</span>
+            <span class="n">eval_probe</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">matches_train</span><span class="p">,</span>
+                <span class="n">mismatch_share</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mismatch_share_1</span><span class="p">,</span>
+                <span class="n">batch_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">evaluation_batch_size</span><span class="p">,</span>
+                <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"[R1-&gt;R2] probe metrics after load:"</span><span class="p">,</span> <span class="n">eval_probe</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_warn_if_collapsed</span><span class="p">(</span><span class="s2">"Stage 1"</span><span class="p">,</span> <span class="n">history</span><span class="o">=</span><span class="n">df_epoch</span><span class="p">)</span>
 
         <span class="c1"># Preserve Round 1 checkpoints</span>
         <span class="n">old_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">"checkpoints"</span>
@@ -1429,6 +1555,7 @@
             <span class="k">if</span> <span class="n">new_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
                 <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">new_path</span><span class="p">)</span>  <span class="c1"># left by an earlier run</span>
             <span class="n">old_path</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">new_path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_stage1_best</span> <span class="o">=</span> <span class="n">new_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"epoch_</span><span class="si">{</span><span class="n">best_epoch_str</span><span class="si">}</span><span class="s2">"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_stage1_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
@@ -1489,7 +1616,9 @@
         <span class="n">wd_2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_suggest_weight_decay_adamw</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">peak_lr_2</span><span class="p">)</span>
         <span class="n">opt_2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">AdamW</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">lr_sched_2</span><span class="p">,</span> <span class="n">weight_decay</span><span class="o">=</span><span class="n">wd_2</span><span class="p">,</span> <span class="n">clipnorm</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">focal_loss</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">gamma</span><span class="p">),</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">opt_2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+            <span class="n">loss</span><span class="o">=</span><span class="n">focal_loss</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">gamma</span><span class="p">),</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">opt_2</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">threshold</span>
+        <span class="p">)</span>
 
         <span class="c1"># Start from an empty checkpoints/, so that epochs left by an interrupted</span>
         <span class="c1"># run are not renamed into checkpoints_stage_2/ along with this run's</span>
@@ -1505,17 +1634,32 @@
 
         <span class="n">df_epoch</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">history</span><span class="o">.</span><span class="n">history</span><span class="p">)</span>
         <span class="n">df_epoch</span><span class="p">[</span><span class="s2">"epoch"</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">history</span><span class="o">.</span><span class="n">epoch</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+
+        <span class="c1"># Stage 1's best model, the one this stage started from, is its epoch 0:</span>
+        <span class="c1"># stage 2 keeps it unless one of its own epochs scores higher</span>
+        <span class="n">stage1_scores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stage1_scores</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage_1</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">stage1_scores</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">df_epoch</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([{</span><span class="o">**</span><span class="n">stage1_scores</span><span class="p">,</span> <span class="s2">"epoch"</span><span class="p">:</span> <span class="mi">0</span><span class="p">}]),</span> <span class="n">df_epoch</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
+
         <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">"checkpoints"</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">df_epoch</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">"checkpoints"</span> <span class="o">/</span> <span class="s2">"epoch_overview.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="n">best_row</span> <span class="o">=</span> <span class="n">df_epoch</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_epoch</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_selection_metric</span><span class="p">]</span><span class="o">.</span><span class="n">idxmax</span><span class="p">()]</span>
         <span class="n">best_epoch</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">best_row</span><span class="p">[</span><span class="s2">"epoch"</span><span class="p">])</span>
         <span class="n">best_epoch_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">best_epoch</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">"</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">"checkpoints"</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"epoch_</span><span class="si">{</span><span class="n">best_epoch_str</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[R2] best epoch by </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_selection_metric</span><span class="si">}</span><span class="s2">:"</span><span class="p">,</span> <span class="n">best_epoch</span><span class="p">,</span> <span class="s2">"path:"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">"checkpoints_stage_2"</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"epoch_</span><span class="si">{</span><span class="n">best_epoch_str</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">best_epoch</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stage1_best</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[R2] best epoch by </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_selection_metric</span><span class="si">}</span><span class="s2">:"</span><span class="p">,</span> <span class="n">best_epoch</span><span class="p">,</span> <span class="s2">"path:"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stage1_best</span><span class="p">,</span> <span class="s2">"(stage 1's model)"</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">"checkpoints"</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"epoch_</span><span class="si">{</span><span class="n">best_epoch_str</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[R2] best epoch by </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_selection_metric</span><span class="si">}</span><span class="s2">:"</span><span class="p">,</span> <span class="n">best_epoch</span><span class="p">,</span> <span class="s2">"path:"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">"checkpoints_stage_2"</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"epoch_</span><span class="si">{</span><span class="n">best_epoch_str</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="c1"># Re-compile for export/eval</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">focal_loss</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">gamma</span><span class="p">),</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">opt_2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+            <span class="n">loss</span><span class="o">=</span><span class="n">focal_loss</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">gamma</span><span class="p">),</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">opt_2</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">threshold</span>
+        <span class="p">)</span>
 
         <span class="c1"># Re-name checkpoints folder</span>
         <span class="n">old_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">/</span> <span class="s2">"checkpoints"</span>
@@ -1529,7 +1673,26 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_finalize_and_report</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">training_util</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
-        <span class="c1"># Save the final bundle</span>
+        <span class="c1"># The final model's threshold: tuned on the validation pairs, as each</span>
+        <span class="c1"># epoch's was, or the fixed one</span>
+        <span class="n">threshold</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">best_threshold_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">,</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">validation_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">scores</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validation_scores</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tuning</span><span class="p">:</span>
+                <span class="n">threshold</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">best_threshold_</span> <span class="o">=</span> <span class="n">scores</span><span class="p">[</span><span class="s2">"val_threshold"</span><span class="p">]</span>
+                <span class="n">metric</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tune_metric</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"[TrainingPipe] threshold tuned on the validation pairs by </span><span class="si">{</span><span class="n">metric</span><span class="si">}</span><span class="s2">: "</span>
+                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">threshold</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> (validation </span><span class="si">{</span><span class="n">metric</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">scores</span><span class="p">[</span><span class="sa">f</span><span class="s1">'val_tuned_</span><span class="si">{</span><span class="n">metric</span><span class="si">}</span><span class="s1">'</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> "</span>
+                    <span class="sa">f</span><span class="s2">"at it, </span><span class="si">{</span><span class="n">scores</span><span class="p">[</span><span class="sa">f</span><span class="s1">'val_</span><span class="si">{</span><span class="n">metric</span><span class="si">}</span><span class="s1">'</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> at </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="si">}</span><span class="s2">)"</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage_1</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage_2</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_warn_if_collapsed</span><span class="p">(</span><span class="s2">"Final model"</span><span class="p">,</span> <span class="n">scores</span><span class="o">=</span><span class="n">scores</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+            <span class="n">loss</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">loss</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="n">threshold</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Save the final bundle, with the threshold</span>
         <span class="n">Model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span>
             <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">target_directory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span>
             <span class="n">save_architecture</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">save_architecture</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">overwrite</span><span class="p">,</span>
@@ -1547,9 +1710,18 @@
             <span class="k">if</span> <span class="ow">not</span> <span class="n">stage_ran</span> <span class="ow">and</span> <span class="n">stale</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
                 <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">stale</span><span class="p">)</span>
 
-        <span class="c1"># Evaluate on supplied splits</span>
-        <span class="n">perf_train</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matches_train</span><span class="p">,</span> <span class="n">mismatch_share</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
-        <span class="n">perf_test</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left_test</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_test</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matches_test</span><span class="p">,</span> <span class="n">mismatch_share</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+        <span class="c1"># Evaluate on supplied splits. neer-match scores the batches one by one,</span>
+        <span class="c1"># in a loop that is not compiled, so the number of batches, not of</span>
+        <span class="c1"># pairs, sets how long this takes.</span>
+        <span class="n">perf_train</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">left_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matches_train</span><span class="p">,</span>
+            <span class="n">mismatch_share</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">evaluation_batch_size</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">perf_test</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">left_test</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_test</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matches_test</span><span class="p">,</span>
+            <span class="n">mismatch_share</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">evaluation_batch_size</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">perf_train</span><span class="p">[</span><span class="s2">"threshold"</span><span class="p">]</span> <span class="o">=</span> <span class="n">perf_test</span><span class="p">[</span><span class="s2">"threshold"</span><span class="p">]</span> <span class="o">=</span> <span class="n">threshold</span>
 
         <span class="c1"># Export stats</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">training_util</span><span class="o">.</span><span class="n">performance_statistics_export</span><span class="p">(</span>

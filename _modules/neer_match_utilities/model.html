@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.model &mdash; Neer Match Utilities 1.2.2 documentation</title>
+  <title>neer_match_utilities.model &mdash; Neer Match Utilities 1.2.4 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=fd7cadf9"></script>
+      <script src="../../_static/documentation_options.js?v=928db92d"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -129,6 +129,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../model.html#neer_match_utilities.model.ValidationMetrics.on_epoch_end"><code class="docutils literal notranslate"><span class="pre">ValidationMetrics.on_epoch_end()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../model.html#neer_match_utilities.model.validation_scores"><code class="docutils literal notranslate"><span class="pre">validation_scores()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../baseline_models.html">Baseline Models</a><ul>
@@ -242,6 +243,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../../training.html#neer_match_utilities.training.soft_f1_loss"><code class="docutils literal notranslate"><span class="pre">soft_f1_loss()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../thresholds.html">Thresholds</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../thresholds.html#neer_match_utilities.thresholds.pair_labels"><code class="docutils literal notranslate"><span class="pre">pair_labels()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../thresholds.html#neer_match_utilities.thresholds.scores_at"><code class="docutils literal notranslate"><span class="pre">scores_at()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../thresholds.html#neer_match_utilities.thresholds.tune_threshold"><code class="docutils literal notranslate"><span class="pre">tune_threshold()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../feature_selection.html">Feature Selection</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult"><code class="docutils literal notranslate"><span class="pre">FeatureSelectionResult</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult.updated_similarity_map"><code class="docutils literal notranslate"><span class="pre">FeatureSelectionResult.updated_similarity_map</span></code></a></li>
@@ -258,6 +265,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../feature_selection.html#neer_match_utilities.feature_selection.FeatureSelector.execute"><code class="docutils literal notranslate"><span class="pre">FeatureSelector.execute()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../feature_selection.html#neer_match_utilities.feature_selection.fit_elastic_net_logistic"><code class="docutils literal notranslate"><span class="pre">fit_elastic_net_logistic()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../feature_selection.html#neer_match_utilities.feature_selection.tqdm_joblib"><code class="docutils literal notranslate"><span class="pre">tqdm_joblib()</span></code></a></li>
 </ul>
 </li>
@@ -332,10 +340,12 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">graphviz</span><span class="w"> </span><span class="kn">import</span> <span class="n">Digraph</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">contextlib</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">typing</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.thresholds</span><span class="w"> </span><span class="kn">import</span> <span class="n">pair_labels</span><span class="p">,</span> <span class="n">scores_at</span><span class="p">,</span> <span class="n">tune_threshold</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
@@ -424,8 +434,13 @@
             <span class="s2">"record_depth"</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">record_pair_network</span><span class="o">.</span><span class="n">record_depth</span><span class="p">,</span>
         <span class="p">}</span>
 
-        <span class="c1"># Save a composite dictionary containing both similarity info and model parameters.</span>
-        <span class="n">composite_save</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"similarity_info"</span><span class="p">:</span> <span class="n">composite_similarity_info</span><span class="p">,</span> <span class="s2">"model_params"</span><span class="p">:</span> <span class="n">model_params</span><span class="p">}</span>
+        <span class="c1"># Save a composite dictionary containing both similarity info and model</span>
+        <span class="c1"># parameters, and the classification threshold TrainingPipe tuned, if any</span>
+        <span class="n">composite_save</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"similarity_info"</span><span class="p">:</span> <span class="n">composite_similarity_info</span><span class="p">,</span>
+            <span class="s2">"model_params"</span><span class="p">:</span> <span class="n">model_params</span><span class="p">,</span>
+            <span class="s2">"best_threshold"</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"best_threshold_"</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="p">}</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">target_directory</span> <span class="o">/</span> <span class="s2">"model_info.pkl"</span><span class="p">,</span> <span class="s2">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">composite_save</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
         <span class="c1"># --- End composite info saving ---</span>
@@ -492,7 +507,9 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        DLMatchingModel or NSMatchingModel</span>
-<span class="sd">            The loaded model.</span>
+<span class="sd">            The loaded model. A DLMatchingModel carries the threshold tuned by</span>
+<span class="sd">            TrainingPipe as ``best_threshold_`` (None if none was tuned) and,</span>
+<span class="sd">            if there is one, is compiled with it.</span>
 <span class="sd">        """</span>
 
         <span class="n">model_directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">model_directory</span><span class="p">)</span> <span class="o">/</span> <span class="s2">"model"</span>
@@ -545,6 +562,17 @@
                     <span class="n">optimizer_config</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
                 <span class="n">optimizer_class</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="p">,</span> <span class="n">optimizer_config</span><span class="p">[</span><span class="s2">"class_name"</span><span class="p">])</span>
                 <span class="n">model</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">optimizer_class</span><span class="o">.</span><span class="n">from_config</span><span class="p">(</span><span class="n">optimizer_config</span><span class="p">[</span><span class="s2">"config"</span><span class="p">])</span>
+
+            <span class="c1"># A model saved with a tuned threshold comes back compiled with it,</span>
+            <span class="c1"># so that evaluate uses it. neer-match's compile sets the threshold</span>
+            <span class="c1"># to 0.5 unless it is passed: compile it again with</span>
+            <span class="c1"># threshold=model.best_threshold_.</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">best_threshold_</span> <span class="o">=</span> <span class="n">composite_save</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"best_threshold"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">best_threshold_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+                    <span class="n">optimizer</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"optimizer"</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                    <span class="n">threshold</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">best_threshold_</span><span class="p">,</span>
+                <span class="p">)</span>
         <span class="k">elif</span> <span class="p">(</span><span class="n">model_directory</span> <span class="o">/</span> <span class="s2">"record_pair_network.weights.h5"</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
             <span class="n">model</span> <span class="o">=</span> <span class="n">NSMatchingModel</span><span class="p">(</span><span class="n">similarity_map_instance</span><span class="p">)</span>
             <span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
@@ -842,19 +870,69 @@
 
 
 
+<div class="viewcode-block" id="validation_scores">
+<a class="viewcode-back" href="../../model.html#neer_match_utilities.model.validation_scores">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">validation_scores</span><span class="p">(</span>
+    <span class="n">model</span><span class="p">:</span> <span class="n">DLMatchingModel</span><span class="p">,</span>
+    <span class="n">left</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">right</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">matches</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">,</span>
+    <span class="n">tune_metric</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Score a model on all record pairs of validation data.</span>
+
+<span class="sd">    Returns the scores, keyed as an epoch's logs are, and the predicted</span>
+<span class="sd">    probabilities of all pairs, left record by left record:</span>
+
+<span class="sd">    - ``val_TP`` ... ``val_MCC``: at the model's threshold, 0.5 unless it was</span>
+<span class="sd">      compiled with another. Precision, Recall, F1 and MCC are 0 where they are</span>
+<span class="sd">      undefined.</span>
+<span class="sd">    - ``val_Loss``: the model's loss on all pairs at once.</span>
+<span class="sd">    - With ``tune_metric`` ('mcc' or 'f1'): ``val_threshold``, the threshold</span>
+<span class="sd">      that maximises it (see :func:`~neer_match_utilities.thresholds.tune_threshold`),</span>
+<span class="sd">      and ``val_tuned_F1``, ``val_tuned_MCC``, ``val_tuned_Precision`` and</span>
+<span class="sd">      ``val_tuned_Recall`` at that threshold.</span>
+<span class="sd">    """</span>
+    <span class="n">probabilities</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">pair_labels</span><span class="p">(</span><span class="n">matches</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">right</span><span class="p">))</span>
+
+    <span class="n">threshold</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"_threshold"</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="p">{</span><span class="sa">f</span><span class="s2">"val_</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">:</span> <span class="n">value</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">scores_at</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">probabilities</span><span class="p">,</span> <span class="n">threshold</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+    <span class="n">loss</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"loss"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">loss</span><span class="p">):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">loss</span><span class="p">(</span>
+            <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">probabilities</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">scores</span><span class="p">[</span><span class="s2">"val_Loss"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">tune_metric</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">tuned_threshold</span><span class="p">,</span> <span class="n">tuned</span> <span class="o">=</span> <span class="n">tune_threshold</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">probabilities</span><span class="p">,</span> <span class="n">tune_metric</span><span class="p">)</span>
+        <span class="n">scores</span><span class="p">[</span><span class="s2">"val_threshold"</span><span class="p">]</span> <span class="o">=</span> <span class="n">tuned_threshold</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"F1"</span><span class="p">,</span> <span class="s2">"MCC"</span><span class="p">,</span> <span class="s2">"Precision"</span><span class="p">,</span> <span class="s2">"Recall"</span><span class="p">):</span>
+            <span class="n">scores</span><span class="p">[</span><span class="sa">f</span><span class="s2">"val_tuned_</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">tuned</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">scores</span><span class="p">,</span> <span class="n">probabilities</span></div>
+
+
+
 <div class="viewcode-block" id="ValidationMetrics">
 <a class="viewcode-back" href="../../model.html#neer_match_utilities.model.ValidationMetrics">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ValidationMetrics</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">callbacks</span><span class="o">.</span><span class="n">Callback</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Score the model on validation data at the end of every epoch.</span>
 
-<span class="sd">    The metrics ``DLMatchingModel.evaluate`` returns for all validation record</span>
-<span class="sd">    pairs are added to the epoch's logs with a ``val_`` prefix (``val_F1``,</span>
-<span class="sd">    ``val_MCC``, ``val_Loss``, ...), where the history and later callbacks, such</span>
-<span class="sd">    as EarlyStopping, see them.</span>
+<span class="sd">    The scores of :func:`validation_scores` on all validation record pairs are</span>
+<span class="sd">    added to the epoch's logs (``val_F1``, ``val_MCC``, ``val_Loss``, ...;</span>
+<span class="sd">    with ``tune_metric`` also ``val_threshold`` and ``val_tuned_MCC``, ...),</span>
+<span class="sd">    where the history and later callbacks, such as EarlyStopping, see them.</span>
 
-<span class="sd">    It calls ``evaluate`` on data frames, which every supported neer-match</span>
-<span class="sd">    version provides; Keras's own ``validation_data`` needs a newer neer-match.</span>
+<span class="sd">    It predicts from data frames, which every supported neer-match version</span>
+<span class="sd">    provides; Keras's own ``validation_data`` needs a newer neer-match.</span>
 <span class="sd">    """</span>
 
 <div class="viewcode-block" id="ValidationMetrics.__init__">
@@ -865,6 +943,7 @@
         <span class="n">right</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
         <span class="n">matches</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
         <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">,</span>
+        <span class="n">tune_metric</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Parameters</span>
@@ -872,25 +951,26 @@
 <span class="sd">        left, right, matches : pd.DataFrame</span>
 <span class="sd">            The validation data, in the format the model is trained on.</span>
 <span class="sd">        batch_size : int</span>
-<span class="sd">            Record pairs per evaluation batch. Affects speed and memory only;</span>
-<span class="sd">            ``val_Loss`` is neer-match's loss summed over these batches.</span>
+<span class="sd">            Record pairs per prediction batch. Affects speed and memory only.</span>
+<span class="sd">        tune_metric : {'mcc', 'f1'} or None</span>
+<span class="sd">            If given, each epoch is also scored at the threshold that</span>
+<span class="sd">            maximises this metric on the validation pairs.</span>
 <span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matches</span> <span class="o">=</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">matches</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="n">batch_size</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="n">batch_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tune_metric</span> <span class="o">=</span> <span class="n">tune_metric</span></div>
 
 
 <div class="viewcode-block" id="ValidationMetrics.on_epoch_end">
 <a class="viewcode-back" href="../../model.html#neer_match_utilities.model.ValidationMetrics.on_epoch_end">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">on_epoch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">logs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="c1"># evaluate prints a progress bar on every call and takes no verbose flag</span>
-        <span class="k">with</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">redirect_stdout</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">()):</span>
-            <span class="n">metrics</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matches</span><span class="p">,</span>
-                <span class="n">batch_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">mismatch_share</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
-            <span class="p">)</span>
+        <span class="n">scores</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">validation_scores</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matches</span><span class="p">,</span>
+            <span class="n">batch_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">tune_metric</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tune_metric</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="n">logs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">logs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="sa">f</span><span class="s2">"val_</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">metrics</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span></div>
+            <span class="n">logs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span></div>
 </div>
 
 </pre></div>

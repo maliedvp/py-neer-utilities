@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; Neer Match Utilities 1.2.2 documentation</title>
+  <title>Index &mdash; Neer Match Utilities 1.2.4 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=fd7cadf9"></script>
+      <script src="_static/documentation_options.js?v=928db92d"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -129,6 +129,7 @@
 <li class="toctree-l3"><a class="reference internal" href="model.html#neer_match_utilities.model.ValidationMetrics.on_epoch_end"><code class="docutils literal notranslate"><span class="pre">ValidationMetrics.on_epoch_end()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="model.html#neer_match_utilities.model.validation_scores"><code class="docutils literal notranslate"><span class="pre">validation_scores()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="baseline_models.html">Baseline Models</a><ul>
@@ -242,6 +243,12 @@
 <li class="toctree-l2"><a class="reference internal" href="training.html#neer_match_utilities.training.soft_f1_loss"><code class="docutils literal notranslate"><span class="pre">soft_f1_loss()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="thresholds.html">Thresholds</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="thresholds.html#neer_match_utilities.thresholds.pair_labels"><code class="docutils literal notranslate"><span class="pre">pair_labels()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thresholds.html#neer_match_utilities.thresholds.scores_at"><code class="docutils literal notranslate"><span class="pre">scores_at()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thresholds.html#neer_match_utilities.thresholds.tune_threshold"><code class="docutils literal notranslate"><span class="pre">tune_threshold()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="feature_selection.html">Feature Selection</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult"><code class="docutils literal notranslate"><span class="pre">FeatureSelectionResult</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult.updated_similarity_map"><code class="docutils literal notranslate"><span class="pre">FeatureSelectionResult.updated_similarity_map</span></code></a></li>
@@ -258,6 +265,7 @@
 <li class="toctree-l3"><a class="reference internal" href="feature_selection.html#neer_match_utilities.feature_selection.FeatureSelector.execute"><code class="docutils literal notranslate"><span class="pre">FeatureSelector.execute()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="feature_selection.html#neer_match_utilities.feature_selection.fit_elastic_net_logistic"><code class="docutils literal notranslate"><span class="pre">fit_elastic_net_logistic()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="feature_selection.html#neer_match_utilities.feature_selection.tqdm_joblib"><code class="docutils literal notranslate"><span class="pre">tqdm_joblib()</span></code></a></li>
 </ul>
 </li>
@@ -493,6 +501,8 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="feature_selection.html#neer_match_utilities.feature_selection.fit_elastic_net_logistic">fit_elastic_net_logistic() (in module neer_match_utilities.feature_selection)</a>
+</li>
       <li><a href="training.html#neer_match_utilities.training.focal_loss">focal_loss() (in module neer_match_utilities.training)</a>
 </li>
       <li><a href="prepare.html#neer_match_utilities.prepare.Prepare.format">format() (neer_match_utilities.prepare.Prepare method)</a>
@@ -585,6 +595,8 @@
 </li>
         <li><a href="split.html#module-neer_match_utilities.split">neer_match_utilities.split</a>
 </li>
+        <li><a href="thresholds.html#module-neer_match_utilities.thresholds">neer_match_utilities.thresholds</a>
+</li>
         <li><a href="training.html#module-neer_match_utilities.training">neer_match_utilities.training</a>
 </li>
       </ul></li>
@@ -674,6 +686,13 @@
 </li>
       </ul></li>
       <li>
+    neer_match_utilities.thresholds
+
+      <ul>
+        <li><a href="thresholds.html#module-neer_match_utilities.thresholds">module</a>
+</li>
+      </ul></li>
+      <li>
     neer_match_utilities.training
 
       <ul>
@@ -702,16 +721,18 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="thresholds.html#neer_match_utilities.thresholds.pair_labels">pair_labels() (in module neer_match_utilities.thresholds)</a>
+</li>
       <li><a href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.pairs">pairs() (neer_match_utilities.similarity_features.SimilarityFeatures method)</a>
 </li>
       <li><a href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.pairwise_similarity_dataframe">pairwise_similarity_dataframe() (neer_match_utilities.similarity_features.SimilarityFeatures method)</a>
 </li>
       <li><a href="panel.html#neer_match_utilities.panel.SetupData.panel_preparation">panel_preparation() (neer_match_utilities.panel.SetupData method)</a>
 </li>
-      <li><a href="training.html#neer_match_utilities.training.Training.performance_statistics_export">performance_statistics_export() (neer_match_utilities.training.Training method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="training.html#neer_match_utilities.training.Training.performance_statistics_export">performance_statistics_export() (neer_match_utilities.training.Training method)</a>
+</li>
       <li><a href="baseline_models.html#neer_match_utilities.baseline_models.GradientBoostingModel.predict_proba">predict_proba() (neer_match_utilities.baseline_models.GradientBoostingModel method)</a>
 
       <ul>
@@ -748,6 +769,8 @@
         <li><a href="model.html#neer_match_utilities.model.Model.save">(neer_match_utilities.model.Model static method)</a>
 </li>
       </ul></li>
+      <li><a href="thresholds.html#neer_match_utilities.thresholds.scores_at">scores_at() (in module neer_match_utilities.thresholds)</a>
+</li>
       <li><a href="feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult.selected_feature_columns">selected_feature_columns (neer_match_utilities.feature_selection.FeatureSelectionResult attribute)</a>
 </li>
       <li><a href="feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult.selected_pairs">selected_pairs (neer_match_utilities.feature_selection.FeatureSelectionResult attribute)</a>
@@ -762,10 +785,10 @@
 </li>
       <li><a href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs">SimilarityPairs (class in neer_match_utilities.similarity_features)</a>
 </li>
-      <li><a href="training.html#neer_match_utilities.training.soft_f1_loss">soft_f1_loss() (in module neer_match_utilities.training)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="training.html#neer_match_utilities.training.soft_f1_loss">soft_f1_loss() (in module neer_match_utilities.training)</a>
+</li>
       <li><a href="split.html#neer_match_utilities.split.split_test_train">split_test_train() (in module neer_match_utilities.split)</a>
 </li>
       <li><a href="split.html#neer_match_utilities.split.SplitError">SplitError</a>
@@ -798,13 +821,15 @@
 </li>
       <li><a href="feature_selection.html#neer_match_utilities.feature_selection.tqdm_joblib">tqdm_joblib() (in module neer_match_utilities.feature_selection)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="training.html#neer_match_utilities.training.Training">Training (class in neer_match_utilities.training)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="training.html#neer_match_utilities.training.TrainingPipe">TrainingPipe (class in neer_match_utilities.training)</a>
 </li>
       <li><a href="training.html#neer_match_utilities.training.TrainingPipe.WarmupCosine">TrainingPipe.WarmupCosine (class in neer_match_utilities.training)</a>
+</li>
+      <li><a href="thresholds.html#neer_match_utilities.thresholds.tune_threshold">tune_threshold() (in module neer_match_utilities.thresholds)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -819,6 +844,10 @@
 
 <h2 id="V">V</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="model.html#neer_match_utilities.model.validation_scores">validation_scores() (in module neer_match_utilities.model)</a>
+</li>
+  </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="model.html#neer_match_utilities.model.ValidationMetrics">ValidationMetrics (class in neer_match_utilities.model)</a>
 </li>
