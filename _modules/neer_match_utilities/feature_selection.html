@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.feature_selection &mdash; Neer Match Utilities 1.2.9 documentation</title>
+  <title>neer_match_utilities.feature_selection &mdash; Neer Match Utilities 1.2.10 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=e917149c"></script>
+      <script src="../../_static/documentation_options.js?v=12f20e84"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -724,7 +724,8 @@
 <span class="sd">        - n_features_selected: Number of features selected</span>
 <span class="sd">        - C_grid: The C values tried, by l1_ratio</span>
 <span class="sd">        - solver: The solver of the elastic-net fits</span>
-<span class="sd">        - did_fallback: Whether fallback to original map occurred</span>
+<span class="sd">        - did_fallback: Whether fallback to original map occurred: no feature</span>
+<span class="sd">          was selected, or none varied in the training data</span>
 <span class="sd">    """</span>
     <span class="n">updated_similarity_map</span><span class="p">:</span> <span class="n">SimilarityMapDict</span>
     <span class="n">selected_feature_columns</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
@@ -1141,14 +1142,17 @@
 <span class="sd">        -------</span>
 <span class="sd">        FeatureSelectionResult</span>
 <span class="sd">            Object containing the updated similarity map, selected features,</span>
-<span class="sd">            coefficients, and metadata about the selection process.</span>
+<span class="sd">            coefficients, and metadata about the selection process. If the</span>
+<span class="sd">            elastic net selects no feature, or no feature varies in the training</span>
+<span class="sd">            data (up to version 1.2.9 the latter raised a ValueError), the</span>
+<span class="sd">            updated map is the input map and ``meta["did_fallback"]`` is True.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        ValueError</span>
 <span class="sd">            If the method is not 'elastic_net', or if no usable features remain</span>
-<span class="sd">            after cleaning or correlation filtering, or if there are too few</span>
-<span class="sd">            positive examples for cross-validation.</span>
+<span class="sd">            after correlation filtering, or if there are too few positive</span>
+<span class="sd">            examples for cross-validation.</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
@@ -1224,7 +1228,31 @@
             <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">nunique</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"After cleaning, no usable similarity feature columns remain."</span><span class="p">)</span>
+            <span class="c1"># No feature varies in the training data, so there is nothing to</span>
+            <span class="c1"># select from. Keep the input map, as when the elastic net selects</span>
+            <span class="c1"># no feature: a model fit on it has only its intercept.</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"[FeatureSelector] No feature varies in the training data; "</span>
+                  <span class="s2">"the input map is kept."</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"[FeatureSelector] did_fallback=True"</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">FeatureSelectionResult</span><span class="p">(</span>
+                <span class="n">updated_similarity_map</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">similarity_map</span><span class="p">),</span>
+                <span class="n">selected_feature_columns</span><span class="o">=</span><span class="p">[],</span>
+                <span class="n">selected_pairs</span><span class="o">=</span><span class="p">[(</span><span class="n">var</span><span class="p">,</span> <span class="n">sim</span><span class="p">)</span> <span class="k">for</span> <span class="n">var</span><span class="p">,</span> <span class="n">sims</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">similarity_map</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">for</span> <span class="n">sim</span> <span class="ow">in</span> <span class="n">sims</span><span class="p">],</span>
+                <span class="n">coef_by_feature</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span>
+                <span class="n">meta</span><span class="o">=</span><span class="p">{</span>
+                    <span class="s2">"method"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span><span class="p">,</span>
+                    <span class="s2">"scoring"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">scoring</span><span class="p">,</span>
+                    <span class="s2">"cv"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv</span><span class="p">,</span>
+                    <span class="s2">"l1_ratios"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">l1_ratios</span><span class="p">,</span>
+                    <span class="s2">"Cs"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Cs</span><span class="p">,</span>
+                    <span class="s2">"C_grid"</span><span class="p">:</span> <span class="p">{},</span>
+                    <span class="s2">"class_weight"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_weight</span><span class="p">,</span>
+                    <span class="s2">"solver"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="p">,</span>
+                    <span class="s2">"n_features_in"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                    <span class="s2">"n_features_selected"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                    <span class="s2">"did_fallback"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">)</span>
 
         <span class="c1"># Diagnostic: print top feature correlations</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_print_correlation_summary</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
