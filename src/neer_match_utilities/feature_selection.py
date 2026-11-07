@@ -363,12 +363,13 @@ class FeatureSelectionResult:
     Attributes
     ----------
     updated_similarity_map : Dict[str, List[str]]
-        Reduced similarity map containing only selected features.
-        Keys are variable names, values are lists of similarity concept names.
+        Reduced similarity map containing only selected features. Keys are
+        those of the input map (a column, or 'left~right' for two columns of
+        different names), values are lists of similarity concept names.
     selected_feature_columns : List[str]
-        Names of selected feature columns in the format 'col_{var}_{var}_{similarity}'.
+        Names of selected feature columns in the format 'col_{left}_{right}_{similarity}'.
     selected_pairs : List[Tuple[str, str]]
-        List of (variable, similarity_concept) tuples that were selected.
+        List of (key, similarity_concept) tuples that were selected.
     coef_by_feature : pd.Series
         Coefficients from the final elastic net model, sorted by absolute value.
         Useful for understanding feature importance.
@@ -473,8 +474,9 @@ class FeatureSelector:
         correlation > threshold are candidates for removal. Example: 0.95.
         If None, Stage 1 is skipped.
     always_keep : Dict[str, List[str]] or None, default=None
-        Features to always retain regardless of selection results.
-        Example: {'surname': ['jaro_winkler']} always keeps surname jaro_winkler.
+        Features to always retain regardless of selection results, by key of
+        the similarity map. Example: {'surname': ['jaro_winkler']} always keeps
+        surname jaro_winkler.
     preferred_separators : tuple, default=('__', '|', ':', '-', '_')
         Separators to try when parsing feature names (internal use).
     pairs_per_chunk : int, default=250_000
@@ -739,22 +741,25 @@ class FeatureSelector:
         Parameters
         ----------
         selected_cols : list[str]
-            List of selected feature column names (format: 'col_{var}_{var}_{similarity}').
+            List of selected feature column names (format: 'col_{left}_{right}_{similarity}').
 
         Returns
         -------
         dict[str, list[str]]
-            Updated similarity map containing only selected features.
-            Variables with no selected features are excluded.
+            Updated similarity map containing only selected features, under
+            the keys of the input map. Keys with no selected features are
+            excluded.
         """
         selected_set = set(selected_cols)
         selected: dict[str, set[str]] = {}
 
-        # Parse feature names to extract (variable, similarity) pairs
-        for lcol, rcol, sim in SimilarityMap(self.similarity_map):
-            col_name = f"col_{lcol}_{rcol}_{sim}"
-            if col_name in selected_set:
-                selected.setdefault(lcol, set()).add(sim)
+        # The similarities selected per key of the map. A key "left~right"
+        # compares two columns of different names, so the selection is kept per
+        # key, not per left column: two keys may share their left column.
+        for key, sims in self.similarity_map.items():
+            for lcol, rcol, sim in SimilarityMap({key: sims}):
+                if f"col_{lcol}_{rcol}_{sim}" in selected_set:
+                    selected.setdefault(key, set()).add(sim)
 
         # Merge in features marked as always_keep
         for var, sims in (self.always_keep or {}).items():
