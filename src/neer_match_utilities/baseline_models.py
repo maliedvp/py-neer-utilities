@@ -397,9 +397,15 @@ class StatsmodelsInferenceMixin:
         self._check_fitted()
 
         if self.result is not None:
-            feature_cols = self.feature_cols or sorted(
-                [c for c in df.columns if c.startswith(feature_prefix)]
-            )
+            # An empty feature_cols means one of two things. A model whose training
+            # data had no feature that varies has only its intercept: it uses no
+            # column. A model loaded from an archive that did not store
+            # feature_cols has more coefficients, and takes the frame's feature
+            # columns. Taking them for the former too gave the design matrix more
+            # columns than the model has coefficients.
+            feature_cols = self.feature_cols
+            if not feature_cols and np.size(self.result.params) > 1:
+                feature_cols = sorted(c for c in df.columns if c.startswith(feature_prefix))
             X_sm = sm.add_constant(df[feature_cols], has_constant="add")
             return np.asarray(self.result.predict(X_sm))
 
@@ -472,7 +478,9 @@ class LogitMatchingModel(SuggestMixin, StatsmodelsInferenceMixin):
         Constant features, and features that are linear combinations of others,
         are left out of the fit (the latter with a printed note). Neither adds
         information, and both would make the matrix statsmodels inverts singular.
-        ``feature_cols`` lists the features the model uses.
+        ``feature_cols`` lists the features the model uses. If no feature varies,
+        it is empty and the model has only its intercept: it gives every pair
+        the same probability, about the share of matches in ``df``.
 
         Parameters
         ----------
@@ -508,6 +516,11 @@ class LogitMatchingModel(SuggestMixin, StatsmodelsInferenceMixin):
         #    Hessian singular and add no information
         X = _drop_dependent_columns(X, "LogitMatchingModel")
         feature_cols = list(X.columns)
+        if not feature_cols:
+            print(
+                "[LogitMatchingModel] No feature varies in the training data; the model "
+                "has only its intercept and gives every pair the same probability."
+            )
 
         self.feature_cols = feature_cols
 
@@ -596,7 +609,9 @@ class ProbitMatchingModel(SuggestMixin, StatsmodelsInferenceMixin):
         Constant features, and features that are linear combinations of others,
         are left out of the fit (the latter with a printed note). Neither adds
         information, and both would make the matrix statsmodels inverts singular.
-        ``feature_cols`` lists the features the model uses.
+        ``feature_cols`` lists the features the model uses. If no feature varies,
+        it is empty and the model has only its intercept: it gives every pair
+        the same probability, about the share of matches in ``df``.
 
         Parameters
         ----------
@@ -629,6 +644,11 @@ class ProbitMatchingModel(SuggestMixin, StatsmodelsInferenceMixin):
         #    Hessian singular and add no information
         X = _drop_dependent_columns(X, "ProbitMatchingModel")
         feature_cols = list(X.columns)
+        if not feature_cols:
+            print(
+                "[ProbitMatchingModel] No feature varies in the training data; the model "
+                "has only its intercept and gives every pair the same probability."
+            )
 
         self.feature_cols = feature_cols
 

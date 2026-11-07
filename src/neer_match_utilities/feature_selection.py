@@ -382,7 +382,8 @@ class FeatureSelectionResult:
         - n_features_selected: Number of features selected
         - C_grid: The C values tried, by l1_ratio
         - solver: The solver of the elastic-net fits
-        - did_fallback: Whether fallback to original map occurred
+        - did_fallback: Whether fallback to original map occurred: no feature
+          was selected, or none varied in the training data
     """
     updated_similarity_map: SimilarityMapDict
     selected_feature_columns: List[str]
@@ -791,14 +792,17 @@ class FeatureSelector:
         -------
         FeatureSelectionResult
             Object containing the updated similarity map, selected features,
-            coefficients, and metadata about the selection process.
+            coefficients, and metadata about the selection process. If the
+            elastic net selects no feature, or no feature varies in the training
+            data (up to version 1.2.9 the latter raised a ValueError), the
+            updated map is the input map and ``meta["did_fallback"]`` is True.
 
         Raises
         ------
         ValueError
             If the method is not 'elastic_net', or if no usable features remain
-            after cleaning or correlation filtering, or if there are too few
-            positive examples for cross-validation.
+            after correlation filtering, or if there are too few positive
+            examples for cross-validation.
 
         Notes
         -----
@@ -874,7 +878,31 @@ class FeatureSelector:
             X = X.loc[:, nunique > 1]
 
         if X.shape[1] == 0:
-            raise ValueError("After cleaning, no usable similarity feature columns remain.")
+            # No feature varies in the training data, so there is nothing to
+            # select from. Keep the input map, as when the elastic net selects
+            # no feature: a model fit on it has only its intercept.
+            print("[FeatureSelector] No feature varies in the training data; "
+                  "the input map is kept.")
+            print("[FeatureSelector] did_fallback=True")
+            return FeatureSelectionResult(
+                updated_similarity_map=dict(self.similarity_map),
+                selected_feature_columns=[],
+                selected_pairs=[(var, sim) for var, sims in self.similarity_map.items() for sim in sims],
+                coef_by_feature=pd.Series(dtype=float),
+                meta={
+                    "method": self.method,
+                    "scoring": self.scoring,
+                    "cv": self.cv,
+                    "l1_ratios": self.l1_ratios,
+                    "Cs": self.Cs,
+                    "C_grid": {},
+                    "class_weight": self.class_weight,
+                    "solver": self.solver,
+                    "n_features_in": 0,
+                    "n_features_selected": 0,
+                    "did_fallback": True,
+                },
+            )
 
         # Diagnostic: print top feature correlations
         self._print_correlation_summary(X)
