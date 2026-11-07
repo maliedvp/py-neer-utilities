@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Feature Selection &mdash; Neer Match Utilities 1.2.8 documentation</title>
+  <title>Feature Selection &mdash; Neer Match Utilities 1.2.9 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -17,7 +17,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=4d6f9085"></script>
+      <script src="_static/documentation_options.js?v=e917149c"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -355,8 +355,9 @@ common in entity matching tasks where true matches are rare.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="neer_match_utilities.feature_selection.FeatureSelectionResult.updated_similarity_map">
 <span class="sig-name descname"><span class="pre">updated_similarity_map</span></span><a class="headerlink" href="#neer_match_utilities.feature_selection.FeatureSelectionResult.updated_similarity_map" title="Link to this definition"></a></dt>
-<dd><p>Reduced similarity map containing only selected features.
-Keys are variable names, values are lists of similarity concept names.</p>
+<dd><p>Reduced similarity map containing only selected features. Keys are
+those of the input map (a column, or ‘left~right’ for two columns of
+different names), values are lists of similarity concept names.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Dict[str, List[str]]</p>
@@ -367,7 +368,7 @@ Keys are variable names, values are lists of similarity concept names.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="neer_match_utilities.feature_selection.FeatureSelectionResult.selected_feature_columns">
 <span class="sig-name descname"><span class="pre">selected_feature_columns</span></span><a class="headerlink" href="#neer_match_utilities.feature_selection.FeatureSelectionResult.selected_feature_columns" title="Link to this definition"></a></dt>
-<dd><p>Names of selected feature columns in the format ‘col_{var}_{var}_{similarity}’.</p>
+<dd><p>Names of selected feature columns in the format ‘col_{left}_{right}_{similarity}’.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>List[str]</p>
@@ -378,7 +379,7 @@ Keys are variable names, values are lists of similarity concept names.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="neer_match_utilities.feature_selection.FeatureSelectionResult.selected_pairs">
 <span class="sig-name descname"><span class="pre">selected_pairs</span></span><a class="headerlink" href="#neer_match_utilities.feature_selection.FeatureSelectionResult.selected_pairs" title="Link to this definition"></a></dt>
-<dd><p>List of (variable, similarity_concept) tuples that were selected.</p>
+<dd><p>List of (key, similarity_concept) tuples that were selected.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>List[Tuple[str, str]]</p>
@@ -489,8 +490,9 @@ abs(coef) &lt; threshold are dropped. Set to 0.0 to keep all non-zero features.<
 <li><p><strong>max_correlation</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span>) – Correlation threshold for Stage 1 filtering. Features with pairwise
 correlation &gt; threshold are candidates for removal. Example: 0.95.
 If None, Stage 1 is skipped.</p></li>
-<li><p><strong>always_keep</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]]</span>) – Features to always retain regardless of selection results.
-Example: {‘surname’: [‘jaro_winkler’]} always keeps surname jaro_winkler.</p></li>
+<li><p><strong>always_keep</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]]</span>) – Features to always retain regardless of selection results, by key of
+the similarity map. Example: {‘surname’: [‘jaro_winkler’]} always keeps
+surname jaro_winkler.</p></li>
 <li><p><strong>preferred_separators</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code>]</span>) – Separators to try when parsing feature names (internal use).</p></li>
 <li><p><strong>pairs_per_chunk</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of pairs whose similarity features are computed at a time. Only the
 feature columns are kept, so memory grows with 8 bytes per feature and

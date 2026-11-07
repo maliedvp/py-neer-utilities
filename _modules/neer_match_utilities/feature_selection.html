@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.feature_selection &mdash; Neer Match Utilities 1.2.8 documentation</title>
+  <title>neer_match_utilities.feature_selection &mdash; Neer Match Utilities 1.2.9 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=4d6f9085"></script>
+      <script src="../../_static/documentation_options.js?v=e917149c"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -705,12 +705,13 @@
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    updated_similarity_map : Dict[str, List[str]]</span>
-<span class="sd">        Reduced similarity map containing only selected features.</span>
-<span class="sd">        Keys are variable names, values are lists of similarity concept names.</span>
+<span class="sd">        Reduced similarity map containing only selected features. Keys are</span>
+<span class="sd">        those of the input map (a column, or 'left~right' for two columns of</span>
+<span class="sd">        different names), values are lists of similarity concept names.</span>
 <span class="sd">    selected_feature_columns : List[str]</span>
-<span class="sd">        Names of selected feature columns in the format 'col_{var}_{var}_{similarity}'.</span>
+<span class="sd">        Names of selected feature columns in the format 'col_{left}_{right}_{similarity}'.</span>
 <span class="sd">    selected_pairs : List[Tuple[str, str]]</span>
-<span class="sd">        List of (variable, similarity_concept) tuples that were selected.</span>
+<span class="sd">        List of (key, similarity_concept) tuples that were selected.</span>
 <span class="sd">    coef_by_feature : pd.Series</span>
 <span class="sd">        Coefficients from the final elastic net model, sorted by absolute value.</span>
 <span class="sd">        Useful for understanding feature importance.</span>
@@ -818,8 +819,9 @@
 <span class="sd">        correlation &gt; threshold are candidates for removal. Example: 0.95.</span>
 <span class="sd">        If None, Stage 1 is skipped.</span>
 <span class="sd">    always_keep : Dict[str, List[str]] or None, default=None</span>
-<span class="sd">        Features to always retain regardless of selection results.</span>
-<span class="sd">        Example: {'surname': ['jaro_winkler']} always keeps surname jaro_winkler.</span>
+<span class="sd">        Features to always retain regardless of selection results, by key of</span>
+<span class="sd">        the similarity map. Example: {'surname': ['jaro_winkler']} always keeps</span>
+<span class="sd">        surname jaro_winkler.</span>
 <span class="sd">    preferred_separators : tuple, default=('__', '|', ':', '-', '_')</span>
 <span class="sd">        Separators to try when parsing feature names (internal use).</span>
 <span class="sd">    pairs_per_chunk : int, default=250_000</span>
@@ -1087,22 +1089,25 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        selected_cols : list[str]</span>
-<span class="sd">            List of selected feature column names (format: 'col_{var}_{var}_{similarity}').</span>
+<span class="sd">            List of selected feature column names (format: 'col_{left}_{right}_{similarity}').</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        dict[str, list[str]]</span>
-<span class="sd">            Updated similarity map containing only selected features.</span>
-<span class="sd">            Variables with no selected features are excluded.</span>
+<span class="sd">            Updated similarity map containing only selected features, under</span>
+<span class="sd">            the keys of the input map. Keys with no selected features are</span>
+<span class="sd">            excluded.</span>
 <span class="sd">        """</span>
         <span class="n">selected_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">selected_cols</span><span class="p">)</span>
         <span class="n">selected</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
 
-        <span class="c1"># Parse feature names to extract (variable, similarity) pairs</span>
-        <span class="k">for</span> <span class="n">lcol</span><span class="p">,</span> <span class="n">rcol</span><span class="p">,</span> <span class="n">sim</span> <span class="ow">in</span> <span class="n">SimilarityMap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">similarity_map</span><span class="p">):</span>
-            <span class="n">col_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"col_</span><span class="si">{</span><span class="n">lcol</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">rcol</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">sim</span><span class="si">}</span><span class="s2">"</span>
-            <span class="k">if</span> <span class="n">col_name</span> <span class="ow">in</span> <span class="n">selected_set</span><span class="p">:</span>
-                <span class="n">selected</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">lcol</span><span class="p">,</span> <span class="nb">set</span><span class="p">())</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">sim</span><span class="p">)</span>
+        <span class="c1"># The similarities selected per key of the map. A key "left~right"</span>
+        <span class="c1"># compares two columns of different names, so the selection is kept per</span>
+        <span class="c1"># key, not per left column: two keys may share their left column.</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">sims</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">similarity_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">lcol</span><span class="p">,</span> <span class="n">rcol</span><span class="p">,</span> <span class="n">sim</span> <span class="ow">in</span> <span class="n">SimilarityMap</span><span class="p">({</span><span class="n">key</span><span class="p">:</span> <span class="n">sims</span><span class="p">}):</span>
+                <span class="k">if</span> <span class="sa">f</span><span class="s2">"col_</span><span class="si">{</span><span class="n">lcol</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">rcol</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">sim</span><span class="si">}</span><span class="s2">"</span> <span class="ow">in</span> <span class="n">selected_set</span><span class="p">:</span>
+                    <span class="n">selected</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">set</span><span class="p">())</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">sim</span><span class="p">)</span>
 
         <span class="c1"># Merge in features marked as always_keep</span>
         <span class="k">for</span> <span class="n">var</span><span class="p">,</span> <span class="n">sims</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">always_keep</span> <span class="ow">or</span> <span class="p">{})</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
