@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.split &mdash; Neer Match Utilities 1.2.10 documentation</title>
+  <title>neer_match_utilities.split &mdash; Neer Match Utilities 1.2.11 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=12f20e84"></script>
+      <script src="../../_static/documentation_options.js?v=b68a8a9d"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -343,9 +343,38 @@
 
 
 
+<span class="k">def</span><span class="w"> </span><span class="nf">_match_components</span><span class="p">(</span><span class="n">matches</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Labels every row of `matches` with its connected component.</span>
+
+<span class="sd">    Two rows belong to the same component if they share a left or a right</span>
+<span class="sd">    record, directly or through other rows. Components are numbered in the</span>
+<span class="sd">    order in which they first appear in `matches`.</span>
+<span class="sd">    """</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">find</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+        <span class="n">parent</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">parent</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">!=</span> <span class="n">node</span><span class="p">:</span>
+            <span class="n">parent</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="n">parent</span><span class="p">[</span><span class="n">parent</span><span class="p">[</span><span class="n">node</span><span class="p">]]</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="n">parent</span><span class="p">[</span><span class="n">node</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">node</span>
+
+    <span class="k">for</span> <span class="n">l</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">matches</span><span class="p">[</span><span class="s1">'left'</span><span class="p">],</span> <span class="n">matches</span><span class="p">[</span><span class="s1">'right'</span><span class="p">]):</span>
+        <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">find</span><span class="p">((</span><span class="s1">'l'</span><span class="p">,</span> <span class="n">l</span><span class="p">)),</span> <span class="n">find</span><span class="p">((</span><span class="s1">'r'</span><span class="p">,</span> <span class="n">r</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">a</span> <span class="o">!=</span> <span class="n">b</span><span class="p">:</span>
+            <span class="n">parent</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">=</span> <span class="n">b</span>
+
+    <span class="n">labels</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">labels</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">find</span><span class="p">((</span><span class="s1">'l'</span><span class="p">,</span> <span class="n">l</span><span class="p">)),</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">))</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">[</span><span class="s1">'left'</span><span class="p">]],</span>
+        <span class="n">index</span><span class="o">=</span><span class="n">matches</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
 <div class="viewcode-block" id="split_test_train">
 <a class="viewcode-back" href="../../split.html#neer_match_utilities.split.split_test_train">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">split_test_train</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">matches</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">test_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,</span> <span class="n">validation_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">split_test_train</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">matches</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">test_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,</span> <span class="n">validation_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">keep_components</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Splits datasets into training, validation, and testing subsets.</span>
 
@@ -370,6 +399,18 @@
 <span class="sd">        reproducible split, which is required to re-create a training run. If</span>
 <span class="sd">        None (default), the split is drawn from unseeded entropy and differs on</span>
 <span class="sd">        every call.</span>
+<span class="sd">    keep_components : bool, optional</span>
+<span class="sd">        If False (default), the match pairs are drawn one by one. If True, pairs</span>
+<span class="sd">        that share a left or a right record, directly or through other pairs,</span>
+<span class="sd">        stay in the same subset. Use it when one entity has several pairs, for</span>
+<span class="sd">        example links along a chain of volumes (1922 -&gt; 1925 -&gt; 1926) completed</span>
+<span class="sd">        by `SetupData.data_preparation_cs`: drawn one by one, the pairs of a</span>
+<span class="sd">        chain end up in different subsets, and inside a subset a true match</span>
+<span class="sd">        whose pair went to another subset counts as a non-match. Whole groups</span>
+<span class="sd">        fill the test subset, then the validation subset, in random order, so</span>
+<span class="sd">        these two can exceed their requested size by less than one group; the</span>
+<span class="sd">        training subset takes the rest. No left or right record then appears</span>
+<span class="sd">        in two subsets.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -409,6 +450,35 @@
     <span class="c1"># remains reproducible from `random_state`.</span>
     <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
 
+    <span class="k">if</span> <span class="n">keep_components</span><span class="p">:</span>
+        <span class="n">component</span> <span class="o">=</span> <span class="n">_match_components</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span>
+        <span class="n">sizes</span> <span class="o">=</span> <span class="n">component</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+        <span class="n">targets</span> <span class="o">=</span> <span class="p">(</span><span class="n">matches_test_count</span><span class="p">,</span> <span class="n">matches_validation_count</span><span class="p">)</span>
+        <span class="n">filled</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">part_of</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">sizes</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">rng</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sizes</span><span class="p">))]:</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">filled</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">targets</span><span class="p">[</span><span class="n">k</span><span class="p">]),</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">part_of</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">k</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">filled</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">+=</span> <span class="n">sizes</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
+        <span class="n">part</span> <span class="o">=</span> <span class="n">component</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">part_of</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">take</span><span class="p">(</span><span class="n">k</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">"""Returns the matches of subset k and their rows in `left` and `right`."""</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="n">matches</span><span class="p">[</span><span class="n">part</span> <span class="o">==</span> <span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">l</span> <span class="o">=</span> <span class="n">left</span><span class="p">[</span><span class="n">left</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="s1">'left'</span><span class="p">])]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">right</span><span class="p">[</span><span class="n">right</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="s1">'right'</span><span class="p">])]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">m</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">r</span>
+
+        <span class="n">matches_test</span><span class="p">,</span> <span class="n">left_test</span><span class="p">,</span> <span class="n">right_test</span> <span class="o">=</span> <span class="n">take</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">matches_validation</span><span class="p">,</span> <span class="n">left_validation</span><span class="p">,</span> <span class="n">right_validation</span> <span class="o">=</span> <span class="n">take</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">matches_train</span><span class="p">,</span> <span class="n">left_train</span><span class="p">,</span> <span class="n">right_train</span> <span class="o">=</span> <span class="n">take</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_finish</span><span class="p">(</span>
+            <span class="n">left_train</span><span class="p">,</span> <span class="n">right_train</span><span class="p">,</span> <span class="n">matches_train</span><span class="p">,</span>
+            <span class="n">left_validation</span><span class="p">,</span> <span class="n">right_validation</span><span class="p">,</span> <span class="n">matches_validation</span><span class="p">,</span>
+            <span class="n">left_test</span><span class="p">,</span> <span class="n">right_test</span><span class="p">,</span> <span class="n">matches_test</span><span class="p">,</span>
+        <span class="p">)</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">subsets</span><span class="p">(</span><span class="n">matches_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">matches_exclude_index</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""Generates random subsets for matches DataFrame and corresponding rows in `left` and `right`."""</span>
         <span class="n">m</span> <span class="o">=</span> <span class="n">matches</span><span class="p">[</span><span class="o">~</span><span class="n">matches</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">matches_exclude_index</span><span class="p">)]</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">matches_count</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -433,6 +503,21 @@
         <span class="n">matches_exclude_index</span><span class="o">=</span><span class="n">matches_exclude_index</span>
     <span class="p">)</span>
 
+    <span class="k">return</span> <span class="n">_finish</span><span class="p">(</span>
+        <span class="n">left_train</span><span class="p">,</span> <span class="n">right_train</span><span class="p">,</span> <span class="n">matches_train</span><span class="p">,</span>
+        <span class="n">left_validation</span><span class="p">,</span> <span class="n">right_validation</span><span class="p">,</span> <span class="n">matches_validation</span><span class="p">,</span>
+        <span class="n">left_test</span><span class="p">,</span> <span class="n">right_test</span><span class="p">,</span> <span class="n">matches_test</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_finish</span><span class="p">(</span><span class="n">left_train</span><span class="p">,</span> <span class="n">right_train</span><span class="p">,</span> <span class="n">matches_train</span><span class="p">,</span>
+            <span class="n">left_validation</span><span class="p">,</span> <span class="n">right_validation</span><span class="p">,</span> <span class="n">matches_validation</span><span class="p">,</span>
+            <span class="n">left_test</span><span class="p">,</span> <span class="n">right_test</span><span class="p">,</span> <span class="n">matches_test</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Re-indexes the subsets of `split_test_train` and maps their matches to the</span>
+<span class="sd">    new positions; the original row labels are kept in `index_original`.</span>
+<span class="sd">    """</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">process_dataset</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Processes a single dataset by adding an 'index_original' column,</span>
@@ -478,8 +563,7 @@
     <span class="p">)</span>
 
 
-    <span class="k">return</span> <span class="n">left_train</span><span class="p">,</span> <span class="n">right_train</span><span class="p">,</span> <span class="n">matches_train</span><span class="p">,</span> <span class="n">left_validation</span><span class="p">,</span> <span class="n">right_validation</span><span class="p">,</span> <span class="n">matches_validation</span><span class="p">,</span> <span class="n">left_test</span><span class="p">,</span> <span class="n">right_test</span><span class="p">,</span> <span class="n">matches_test</span></div>
-
+    <span class="k">return</span> <span class="n">left_train</span><span class="p">,</span> <span class="n">right_train</span><span class="p">,</span> <span class="n">matches_train</span><span class="p">,</span> <span class="n">left_validation</span><span class="p">,</span> <span class="n">right_validation</span><span class="p">,</span> <span class="n">matches_validation</span><span class="p">,</span> <span class="n">left_test</span><span class="p">,</span> <span class="n">right_test</span><span class="p">,</span> <span class="n">matches_test</span>
 </pre></div>
 
            </div>

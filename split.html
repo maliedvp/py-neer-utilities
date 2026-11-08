@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Split &mdash; Neer Match Utilities 1.2.10 documentation</title>
+  <title>Split &mdash; Neer Match Utilities 1.2.11 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -17,7 +17,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=12f20e84"></script>
+      <script src="_static/documentation_options.js?v=b68a8a9d"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -344,7 +344,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="neer_match_utilities.split.split_test_train">
-<span class="sig-prename descclassname"><span class="pre">neer_match_utilities.split.</span></span><span class="sig-name descname"><span class="pre">split_test_train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validation_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/split.html#split_test_train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.split.split_test_train" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">neer_match_utilities.split.</span></span><span class="sig-name descname"><span class="pre">split_test_train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validation_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/split.html#split_test_train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.split.split_test_train" title="Link to this definition"></a></dt>
 <dd><p>Splits datasets into training, validation, and testing subsets.</p>
 <p>This function ensures that only observations from <cite>left</cite> and <cite>right</cite> that are referenced
 in the <cite>matches</cite> DataFrame are included in the split process.</p>
@@ -361,6 +361,17 @@ It must include columns ‘left’ and ‘right’, referencing indices in <cite
 reproducible split, which is required to re-create a training run. If
 None (default), the split is drawn from unseeded entropy and differs on
 every call.</p></li>
+<li><p><strong>keep_components</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – If False (default), the match pairs are drawn one by one. If True, pairs
+that share a left or a right record, directly or through other pairs,
+stay in the same subset. Use it when one entity has several pairs, for
+example links along a chain of volumes (1922 -&gt; 1925 -&gt; 1926) completed
+by <cite>SetupData.data_preparation_cs</cite>: drawn one by one, the pairs of a
+chain end up in different subsets, and inside a subset a true match
+whose pair went to another subset counts as a non-match. Whole groups
+fill the test subset, then the validation subset, in random order, so
+these two can exceed their requested size by less than one group; the
+training subset takes the rest. No left or right record then appears
+in two subsets.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>

@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.panel &mdash; Neer Match Utilities 1.2.10 documentation</title>
+  <title>neer_match_utilities.panel &mdash; Neer Match Utilities 1.2.11 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=12f20e84"></script>
+      <script src="../../_static/documentation_options.js?v=b68a8a9d"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -604,6 +604,13 @@
 <span class="sd">        It then extracts the subset of the panel data corresponding to the matched IDs,</span>
 <span class="sd">        and finally sorts the left and right DataFrames according to the unique identifier.</span>
 
+<span class="sd">        The returned matches hold every pair of left x right whose two records</span>
+<span class="sd">        belong to the same group: a record that sits in both left and right is</span>
+<span class="sd">        paired with itself, and a pair whose records both sit in left and in</span>
+<span class="sd">        right is listed in both orientations (since 1.2.11). When groups have</span>
+<span class="sd">        more than two records, split them with</span>
+<span class="sd">        `split_test_train(..., keep_components=True)`.</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        df_panel : pd.DataFrame</span>
@@ -680,6 +687,24 @@
         <span class="n">dfm</span><span class="p">[</span><span class="s1">'left'</span><span class="p">]</span> <span class="o">=</span> <span class="n">dfm</span><span class="p">[</span><span class="s1">'left'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">stabile_dtype</span><span class="p">)</span>
         <span class="n">dfm</span><span class="p">[</span><span class="s1">'right'</span><span class="p">]</span> <span class="o">=</span> <span class="n">dfm</span><span class="p">[</span><span class="s1">'right'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">stabile_dtype</span><span class="p">)</span>
 
+        <span class="c1"># drop_repetitions kept one orientation of every pair. When both records</span>
+        <span class="c1"># of a pair (a, b) sit in left and in right, (b, a) is a match as well:</span>
+        <span class="c1"># in a chain A -&gt; B -&gt; C -&gt; D, C is in left (C -&gt; D) and B in right</span>
+        <span class="c1"># (A -&gt; B), so (C, B) belongs to the matches next to (B, C). Rows are</span>
+        <span class="c1"># appended in the order of dfm so that the result stays reproducible.</span>
+        <span class="n">left_ids</span><span class="p">,</span> <span class="n">right_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">left</span><span class="p">[</span><span class="n">unique_id</span><span class="p">]),</span> <span class="nb">set</span><span class="p">(</span><span class="n">right</span><span class="p">[</span><span class="n">unique_id</span><span class="p">])</span>
+        <span class="n">listed</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">dfm</span><span class="p">[</span><span class="s1">'left'</span><span class="p">],</span> <span class="n">dfm</span><span class="p">[</span><span class="s1">'right'</span><span class="p">]))</span>
+        <span class="n">reverse</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">l</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">dfm</span><span class="p">[</span><span class="s1">'left'</span><span class="p">],</span> <span class="n">dfm</span><span class="p">[</span><span class="s1">'right'</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">listed</span> <span class="ow">and</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">left_ids</span> <span class="ow">and</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">right_ids</span><span class="p">:</span>
+                <span class="n">listed</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">r</span><span class="p">,</span> <span class="n">l</span><span class="p">))</span>
+                <span class="n">reverse</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">r</span><span class="p">,</span> <span class="n">l</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">reverse</span><span class="p">:</span>
+            <span class="n">dfm</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">dfm</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">reverse</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'left'</span><span class="p">,</span> <span class="s1">'right'</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">stabile_dtype</span><span class="p">)],</span>
+                <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">dfm</span></div>
 </div>

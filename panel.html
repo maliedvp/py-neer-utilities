@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Panel &mdash; Neer Match Utilities 1.2.10 documentation</title>
+  <title>Panel &mdash; Neer Match Utilities 1.2.11 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -17,7 +17,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=12f20e84"></script>
+      <script src="_static/documentation_options.js?v=b68a8a9d"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -601,6 +601,12 @@ dropping duplicates.</p></li>
 then prepares match pairs by adjusting overlaps and dropping duplicate pairs.
 It then extracts the subset of the panel data corresponding to the matched IDs,
 and finally sorts the left and right DataFrames according to the unique identifier.</p>
+<p>The returned matches hold every pair of left x right whose two records
+belong to the same group: a record that sits in both left and right is
+paired with itself, and a pair whose records both sit in left and in
+right is listed in both orientations (since 1.2.11). When groups have
+more than two records, split them with
+<cite>split_test_train(…, keep_components=True)</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
