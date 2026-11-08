@@ -47,8 +47,10 @@ def example_1():
             {"id": [2, 4, 6], "col": ["b", "d", "f"]}
         ),
         "matches": [(1, 2), (2, 3), (3, 4), (5, 6)],
+        # 2 and 3 sit in left and in right, so (3, 2) is a match next to (2, 3):
+        # left 3 against right 2 is a pair of its own (since 1.2.11).
         "expected_df_matches": pd.DataFrame(
-            {"left": [1,1,1,2,2,3,5,2,3], "right": [2,3,4,3,4,4,6,2,3]}
+            {"left": [1,1,1,2,2,3,5,2,3,3], "right": [2,3,4,3,4,4,6,2,3,2]}
         ),
     }
 
@@ -95,3 +97,21 @@ def test_example_1(example_1):
             assert duplicated_matches==0
 
 
+
+
+@pytest.mark.parametrize("length", [2, 3, 4, 5, 6])
+def test_chain_complete(length):
+    """A chain A -> B -> ... across volumes: every pair of left x right is a match.
+
+    The records in the middle sit in left and in right. Up to 1.2.10, pairs
+    against the direction of time (left C against right B in a chain of four)
+    were missing and so counted as non-matches."""
+    ids = [chr(65 + i) for i in range(length)]
+    df = pd.DataFrame({"id": ids})
+    matches = list(zip(ids[:-1], ids[1:]))
+    left, right, m = SetupData(matches=matches).data_preparation_cs(
+        df_left=df[df["id"].isin(ids[:-1])], df_right=df[df["id"].isin(ids[1:])], unique_id="id"
+    )
+    assert left["id"].tolist() == ids[:-1] and right["id"].tolist() == ids[1:]
+    assert set(zip(m["left"], m["right"])) == {(a, b) for a in ids[:-1] for b in ids[1:]}
+    assert not m.duplicated().any()

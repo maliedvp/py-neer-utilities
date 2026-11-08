@@ -251,6 +251,13 @@ class SetupData:
         It then extracts the subset of the panel data corresponding to the matched IDs,
         and finally sorts the left and right DataFrames according to the unique identifier.
 
+        The returned matches hold every pair of left x right whose two records
+        belong to the same group: a record that sits in both left and right is
+        paired with itself, and a pair whose records both sit in left and in
+        right is listed in both orientations (since 1.2.11). When groups have
+        more than two records, split them with
+        `split_test_train(..., keep_components=True)`.
+
         Parameters
         ----------
         df_panel : pd.DataFrame
@@ -327,6 +334,24 @@ class SetupData:
         dfm['left'] = dfm['left'].astype(stabile_dtype)
         dfm['right'] = dfm['right'].astype(stabile_dtype)
 
+        # drop_repetitions kept one orientation of every pair. When both records
+        # of a pair (a, b) sit in left and in right, (b, a) is a match as well:
+        # in a chain A -> B -> C -> D, C is in left (C -> D) and B in right
+        # (A -> B), so (C, B) belongs to the matches next to (B, C). Rows are
+        # appended in the order of dfm so that the result stays reproducible.
+        left_ids, right_ids = set(left[unique_id]), set(right[unique_id])
+        listed = set(zip(dfm['left'], dfm['right']))
+        reverse = []
+        for l, r in zip(dfm['left'], dfm['right']):
+            if (r, l) not in listed and r in left_ids and l in right_ids:
+                listed.add((r, l))
+                reverse.append((r, l))
+        if reverse:
+            dfm = pd.concat(
+                [dfm, pd.DataFrame(reverse, columns=['left', 'right']).astype(stabile_dtype)],
+                axis=0,
+                ignore_index=True
+            )
 
         return left, right, dfm
 

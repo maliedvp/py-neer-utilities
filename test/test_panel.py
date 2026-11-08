@@ -93,10 +93,12 @@ def example_4():
             }
         ),
         "matches": [(1, 8)],
+        # 2 and 7 sit in left and in right, so (7, 2) is a match next to (2, 7)
+        # (since 1.2.11).
         "expected_df_matches": pd.DataFrame(
             {
-                "left": [1, 1, 1, 2, 2, 3, 7, 5, 2, 7],
-                "right": [2, 7, 8, 7, 8, 4, 8, 6, 2, 7],
+                "left": [1, 1, 1, 2, 2, 3, 7, 5, 2, 7, 7],
+                "right": [2, 7, 8, 7, 8, 4, 8, 6, 2, 7, 2],
             }
         ),
     }
@@ -174,7 +176,7 @@ def test_example_4(example_4):
     print(df_matches)
 
     # Assert number of length of matches
-    assert len(example_4["expected_df_matches"]) == len(df_matches) == 10
+    assert len(example_4["expected_df_matches"]) == len(df_matches) == 11
 
     # assert identical matches (after re-ordering)
     pd.testing.assert_frame_equal(

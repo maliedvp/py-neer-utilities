@@ -6,7 +6,36 @@ class SplitError(Exception):
     pass
 
 
-def split_test_train(left: pd.DataFrame, right: pd.DataFrame, matches: pd.DataFrame, test_ratio: float = 0.3, validation_ratio: float = 0.1, random_state: int | None = None):
+def _match_components(matches: pd.DataFrame) -> pd.Series:
+    """
+    Labels every row of `matches` with its connected component.
+
+    Two rows belong to the same component if they share a left or a right
+    record, directly or through other rows. Components are numbered in the
+    order in which they first appear in `matches`.
+    """
+    parent = {}
+
+    def find(node):
+        parent.setdefault(node, node)
+        while parent[node] != node:
+            parent[node] = parent[parent[node]]
+            node = parent[node]
+        return node
+
+    for l, r in zip(matches['left'], matches['right']):
+        a, b = find(('l', l)), find(('r', r))
+        if a != b:
+            parent[a] = b
+
+    labels = {}
+    return pd.Series(
+        [labels.setdefault(find(('l', l)), len(labels)) for l in matches['left']],
+        index=matches.index,
+    )
+
+
+def split_test_train(left: pd.DataFrame, right: pd.DataFrame, matches: pd.DataFrame, test_ratio: float = 0.3, validation_ratio: float = 0.1, random_state: int | None = None, keep_components: bool = False):
     """
     Splits datasets into training, validation, and testing subsets.
 
@@ -31,6 +60,18 @@ def split_test_train(left: pd.DataFrame, right: pd.DataFrame, matches: pd.DataFr
         reproducible split, which is required to re-create a training run. If
         None (default), the split is drawn from unseeded entropy and differs on
         every call.
+    keep_components : bool, optional
+        If False (default), the match pairs are drawn one by one. If True, pairs
+        that share a left or a right record, directly or through other pairs,
+        stay in the same subset. Use it when one entity has several pairs, for
+        example links along a chain of volumes (1922 -> 1925 -> 1926) completed
+        by `SetupData.data_preparation_cs`: drawn one by one, the pairs of a
+        chain end up in different subsets, and inside a subset a true match
+        whose pair went to another subset counts as a non-match. Whole groups
+        fill the test subset, then the validation subset, in random order, so
+        these two can exceed their requested size by less than one group; the
+        training subset takes the rest. No left or right record then appears
+        in two subsets.
 
     Returns
     -------
@@ -70,6 +111,35 @@ def split_test_train(left: pd.DataFrame, right: pd.DataFrame, matches: pd.DataFr
     # remains reproducible from `random_state`.
     rng = np.random.default_rng(random_state)
 
+    if keep_components:
+        component = _match_components(matches)
+        sizes = component.value_counts(sort=False).sort_index()
+        targets = (matches_test_count, matches_validation_count)
+        filled = [0, 0]
+        part_of = {}
+        for c in sizes.index[rng.permutation(len(sizes))]:
+            k = next((k for k in (0, 1) if filled[k] < targets[k]), 2)
+            part_of[c] = k
+            if k < 2:
+                filled[k] += sizes[c]
+        part = component.map(part_of)
+
+        def take(k: int):
+            """Returns the matches of subset k and their rows in `left` and `right`."""
+            m = matches[part == k].copy()
+            l = left[left.index.isin(m['left'])].copy()
+            r = right[right.index.isin(m['right'])].copy()
+            return m, l, r
+
+        matches_test, left_test, right_test = take(0)
+        matches_validation, left_validation, right_validation = take(1)
+        matches_train, left_train, right_train = take(2)
+        return _finish(
+            left_train, right_train, matches_train,
+            left_validation, right_validation, matches_validation,
+            left_test, right_test, matches_test,
+        )
+
     def subsets(matches_count: int, matches_exclude_index: list):
         """Generates random subsets for matches DataFrame and corresponding rows in `left` and `right`."""
         m = matches[~matches.index.isin(matches_exclude_index)].sample(n=matches_count, random_state=rng).copy()
@@ -94,6 +164,20 @@ def split_test_train(left: pd.DataFrame, right: pd.DataFrame, matches: pd.DataFr
         matches_exclude_index=matches_exclude_index
     )
 
+    return _finish(
+        left_train, right_train, matches_train,
+        left_validation, right_validation, matches_validation,
+        left_test, right_test, matches_test,
+    )
+
+
+def _finish(left_train, right_train, matches_train,
+            left_validation, right_validation, matches_validation,
+            left_test, right_test, matches_test):
+    """
+    Re-indexes the subsets of `split_test_train` and maps their matches to the
+    new positions; the original row labels are kept in `index_original`.
+    """
     def process_dataset(df):
         """
         Processes a single dataset by adding an 'index_original' column,
