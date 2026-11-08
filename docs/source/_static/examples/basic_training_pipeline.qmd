@@ -200,3 +200,23 @@ training_pipeline = BaselineTrainingPipe(
 
 training_pipeline.execute()
 ```
+
+### Blocking
+
+By default, the model is fitted and evaluated on all pairs of left x right.
+With `blocking`, it sees only candidate pairs, e.g. records of the same city:
+
+```python
+from neer_match_utilities.blocking import Blocking
+
+BaselineTrainingPipe(..., blocking=Blocking(exact=["city"]))
+```
+
+A rule can also require numbers to lie close (`within={"birth_year": 2}`)
+or strings to be similar (`min_similarity={"last_name": 0.7}`). The
+non-matches for fitting then come from the candidates only. A true match
+that the rule excludes counts as missed, so the reported metrics describe
+blocking and model together; `performance.csv` adds the number of pairs,
+of candidates and the share of true matches among them (`BlockingRecall`).
+The same rule can be passed to `FeatureSelector`, to a model's `suggest`
+and to `GenerateID`.

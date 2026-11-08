@@ -39,6 +39,7 @@ except ImportError:
     tqdm = None
 
 from neer_match_utilities.similarity_features import SimilarityFeatures
+from neer_match_utilities.blocking import candidate_pairs
 from neer_match.similarity_map import SimilarityMap
 
 
@@ -484,6 +485,10 @@ class FeatureSelector:
         Number of pairs whose similarity features are computed at a time. Only the
         feature columns are kept, so memory grows with 8 bytes per feature and
         pair rather than with the full pairwise frame. Does not affect the result.
+    blocking : Blocking, function or None, default=None
+        With a rule of :mod:`neer_match_utilities.blocking`, the selection sees
+        only the candidate pairs of the training data, as
+        ``BaselineTrainingPipe(blocking=...)`` fits on them.
 
     Attributes
     ----------
@@ -544,6 +549,7 @@ class FeatureSelector:
         preferred_separators: Tuple[str, ...] = ("__", "|", ":", "-", "_"),
         # pairs whose similarity features are computed at a time
         pairs_per_chunk: int = 250_000,
+        blocking=None,
     ):
         self.similarity_map: SimilarityMapDict = dict(similarity_map)
         self.left_train, self.right_train, self.matches_train = training_data
@@ -573,6 +579,7 @@ class FeatureSelector:
         self.always_keep = always_keep or {}
         self.preferred_separators = preferred_separators
         self.pairs_per_chunk = pairs_per_chunk
+        self.blocking = blocking
 
     def _make_Cs_grid(self, X: np.ndarray, y: np.ndarray) -> dict:
         """
@@ -839,6 +846,7 @@ class FeatureSelector:
             matches_id_left=self.matches_id_left,
             matches_id_right=self.matches_id_right,
             matches_are_indices=self.matches_are_indices,
+            candidates=candidate_pairs(self.left_train, self.right_train, self.blocking),
         )
 
         y_blocks, X_blocks = [], []

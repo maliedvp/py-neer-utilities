@@ -23,6 +23,7 @@ class SimilarityFeatures:
         matches_id_left: str = "left",
         matches_id_right: str = "right",
         matches_are_indices: bool = True,
+        candidates: pd.DataFrame | None = None,
     ) -> pd.DataFrame:
         """
         Build full cross-join of left × right, compute similarity features
@@ -50,6 +51,10 @@ class SimilarityFeatures:
         matches_are_indices :
             If True (default), treat `matches_id_left` / `matches_id_right` as
             row positions in `left` and `right`. If False, treat them as IDs.
+        candidates :
+            Optional. The pairs to build, as row positions in columns ``left``
+            and ``right`` (see :func:`~neer_match_utilities.blocking.candidate_pairs`),
+            in place of the full cross join.
 
         Notes
         -----
@@ -63,6 +68,7 @@ class SimilarityFeatures:
             matches_id_left=matches_id_left,
             matches_id_right=matches_id_right,
             matches_are_indices=matches_are_indices,
+            candidates=candidates,
         ).frame()
 
     def pairs(
@@ -76,6 +82,7 @@ class SimilarityFeatures:
         matches_id_left: str = "left",
         matches_id_right: str = "right",
         matches_are_indices: bool = True,
+        candidates: pd.DataFrame | None = None,
     ) -> "SimilarityPairs":
         """
         The rows of :meth:`pairwise_similarity_dataframe`, built on demand.
@@ -87,6 +94,7 @@ class SimilarityFeatures:
         return SimilarityPairs(
             self.similarity_map, left, right, matches, left_id_col, right_id_col,
             match_col, matches_id_left, matches_id_right, matches_are_indices,
+            candidates=candidates,
         )
 
 
@@ -95,7 +103,9 @@ class SimilarityPairs:
     The rows of a pairwise similarity frame, built on demand.
 
     Row ``k`` pairs left row ``k // len(right)`` with right row
-    ``k % len(right)``, as in the full cross join. Everything that does not
+    ``k % len(right)``, as in the full cross join. With ``candidates``, row
+    ``k`` is the ``k``-th candidate pair instead, and only the candidates are
+    built. Everything that does not
     depend on the pair -- the ID lookups, each compared column's values, the
     match keys -- is derived once here, so building the rows in several calls
     costs no more than building them in one, and gives the same values.
@@ -113,6 +123,7 @@ class SimilarityPairs:
         matches_id_left: str,
         matches_id_right: str,
         matches_are_indices: bool,
+        candidates: pd.DataFrame | None = None,
     ):
         # ------------------------------------------------------------------
         # 1. Extract ID arrays explicitly from left/right columns
@@ -126,6 +137,17 @@ class SimilarityPairs:
         self.left_ids = left[left_id_col].to_numpy()
         self.right_ids = right[right_id_col].to_numpy()
         self.n_left, self.n_right = len(self.left_ids), len(self.right_ids)
+        # All pairs of left x right, whether or not they are built
+        self.n_all = self.n_left * self.n_right
+
+        if candidates is None:
+            self.cand_left = self.cand_right = None
+        else:
+            self.cand_left = np.asarray(candidates["left"], dtype=np.intp)
+            self.cand_right = np.asarray(candidates["right"], dtype=np.intp)
+            for side, pos, n in (("left", self.cand_left, self.n_left), ("right", self.cand_right, self.n_right)):
+                if len(pos) and (pos.min() < 0 or pos.max() >= n):
+                    raise ValueError(f"candidates[{side!r}] must hold row positions 0..{n - 1}.")
 
         self.match_col = match_col
         self.matches_id_left = matches_id_left
@@ -140,7 +162,8 @@ class SimilarityPairs:
             self.out_left_id = left_id_col
             self.out_right_id = right_id_col
 
-        if len(self) == 0:
+        if self.n_all == 0:
+            self.n_matches = 0
             return
 
         # For lookup (ID → row)
@@ -225,11 +248,28 @@ class SimilarityPairs:
         matches_tmp[match_col] = 1
         self.matches_tmp = matches_tmp
 
+        # The matches among all pairs, built or not (with candidates, the ones
+        # outside them count as missed)
+        if matches_are_indices:
+            self.n_matches = len(matches_tmp)
+        else:
+            self.n_matches = int((
+                matches_tmp[matches_id_left].isin(set(self.left_ids))
+                & matches_tmp[matches_id_right].isin(set(self.right_ids))
+            ).sum())
+
+    @property
+    def blocked(self) -> bool:
+        """Whether only candidate pairs are built."""
+        return self.cand_left is not None
+
     def __len__(self) -> int:
-        return self.n_left * self.n_right
+        return len(self.cand_left) if self.blocked else self.n_all
 
     def frame(self) -> pd.DataFrame:
         """All rows, as :meth:`SimilarityFeatures.pairwise_similarity_dataframe` returns them."""
+        if self.blocked:
+            return self._candidate_block(0, len(self))
         return self._block(0, self.n_left)
 
     def chunks(self, pairs_per_chunk: int = 250_000) -> Iterator[pd.DataFrame]:
@@ -238,13 +278,24 @@ class SimilarityPairs:
 
         Each block holds as many left rows as fit in ``pairs_per_chunk`` pairs, and
         at least one. Its index continues the full frame's, so concatenated, the
-        blocks equal :meth:`frame`.
+        blocks equal :meth:`frame`. With candidates, each block holds up to
+        ``pairs_per_chunk`` consecutive candidates instead.
         """
+        if self.blocked:
+            for start, stop in self._candidate_blocks(pairs_per_chunk):
+                yield self._candidate_block(start, stop)
+            return
         for start, stop in self._row_blocks(pairs_per_chunk):
             yield self._block(start, stop)
 
     def match_flags(self, pairs_per_chunk: int = 250_000) -> np.ndarray:
         """The match column of :meth:`frame`, without computing any similarity."""
+        if self.blocked:
+            flags = [
+                self._candidate_block(start, stop, features=False)[self.match_col].to_numpy()
+                for start, stop in self._candidate_blocks(pairs_per_chunk)
+            ]
+            return np.concatenate(flags) if flags else np.empty(0, dtype=int)
         flags = [
             self._block(start, stop, features=False)[self.match_col].to_numpy()
             for start, stop in self._row_blocks(pairs_per_chunk)
@@ -256,6 +307,8 @@ class SimilarityPairs:
         positions = np.asarray(positions, dtype=np.intp)
         if len(self) == 0:
             return self.frame()
+        if self.blocked:
+            return self._build(self.cand_left[positions], self.cand_right[positions], pd.Index(positions))
         return self._build(
             positions // self.n_right, positions % self.n_right, pd.Index(positions)
         )
@@ -269,6 +322,23 @@ class SimilarityPairs:
         rows_per_block = max(1, pairs_per_chunk // self.n_right)
         for start in range(0, self.n_left, rows_per_block):
             yield start, min(start + rows_per_block, self.n_left)
+
+    def _candidate_blocks(self, pairs_per_chunk: int):
+        if pairs_per_chunk < 1:
+            raise ValueError(f"pairs_per_chunk must be at least 1, got {pairs_per_chunk}")
+        if len(self) == 0:
+            yield 0, 0
+            return
+        for start in range(0, len(self), pairs_per_chunk):
+            yield start, min(start + pairs_per_chunk, len(self))
+
+    def _candidate_block(self, start: int, stop: int, features: bool = True) -> pd.DataFrame:
+        if len(self) == 0 or self.n_all == 0:
+            return pd.DataFrame(columns=[self.out_left_id, self.out_right_id, self.match_col])
+        return self._build(
+            self.cand_left[start:stop], self.cand_right[start:stop], pd.RangeIndex(start, stop),
+            features=features,
+        )
 
     def _block(self, start: int, stop: int, features: bool = True) -> pd.DataFrame:
         if len(self) == 0:

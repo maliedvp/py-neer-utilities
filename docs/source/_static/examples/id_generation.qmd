@@ -70,6 +70,7 @@ Key parameters:
 - `panel_var`: Name of the variable that stores the common identifiers
 - `time_var`: Indicates the different cross sections (e.g., *year* for annual data)
 - `subgroups`: Implements a blocking strategy by restricting comparisons to observations within each subgroup, which can significantly reduce computation time
+- `blocking`: A rule of `neer_match_utilities.blocking`, e.g. `Blocking(exact=["city"], within={"found_year": 2})`: in each pair of consecutive periods, the model scores only the candidate pairs. It needs a baseline model (Logit, Probit or Gradient Boosting). Unlike `subgroups`, which compares the periods present in each subgroup, it compares the consecutive periods of the whole panel
 
 To generate an ID for the *left* and *right* DataFrames, we first create a column (*side*) to distinguish the two sources, then stack the DataFrames vertically.
 

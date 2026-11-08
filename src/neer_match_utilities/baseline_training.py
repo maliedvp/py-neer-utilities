@@ -21,6 +21,12 @@ from neer_match_utilities.baseline_models import (
     classification_metrics,
 )
 from neer_match_utilities.baseline_io import ModelBaseline
+from neer_match_utilities.blocking import (
+    BlockingLike,
+    blocked_metrics,
+    candidate_pairs,
+    tune_threshold_blocked,
+)
 from neer_match_utilities.training import Training  # for performance_statistics_export
 
 
@@ -54,6 +60,14 @@ class BaselineTrainingPipe:
     probit probabilities come from matrix products, whose rounding can differ in
     the last bits between block sizes, so a pair scored within about 1e-15 of
     the threshold could be classified differently.
+
+    With ``blocking`` (a :class:`~neer_match_utilities.blocking.Blocking` or a
+    function, see :mod:`neer_match_utilities.blocking`), each split keeps only
+    its candidate pairs: the non-matches for fitting come from them, and only
+    they are scored. A true match outside the candidates counts as a false
+    negative and the other pairs outside as true negatives, so the metrics, and
+    the tuned threshold, describe blocking and model together on all pairs. The
+    metrics then also report ``Pairs``, ``Candidates`` and ``BlockingRecall``.
     """
 
     model_name: str
@@ -94,6 +108,7 @@ class BaselineTrainingPipe:
     # last, so that existing positional arguments keep their meaning
     overwrite: bool = False  # replace a model already saved under model_name
     pairs_per_chunk: int = 250_000  # pairs whose features are held in memory at once
+    blocking: BlockingLike = None  # candidate pairs only (see neer_match_utilities.blocking)
 
     # internals (filled during execute)
     model_: Any = field(default=None, init=False)
@@ -170,12 +185,20 @@ class BaselineTrainingPipe:
             matches_are_indices=self.matches_are_indices,
         )
 
-        train_pairs = feats.pairs(left_train, right_train, matches_train, **pair_args)
-        test_pairs = feats.pairs(left_test, right_test, matches_test, **pair_args)
+        def split_pairs(left, right, matches):
+            return feats.pairs(
+                left, right, matches, candidates=candidate_pairs(left, right, self.blocking), **pair_args
+            )
+
+        train_pairs = split_pairs(left_train, right_train, matches_train)
+        test_pairs = split_pairs(left_test, right_test, matches_test)
 
         val_pairs = None
         if left_val is not None:
-            val_pairs = feats.pairs(left_val, right_val, matches_val, **pair_args)
+            val_pairs = split_pairs(left_val, right_val, matches_val)
+
+        if train_pairs.blocked and len(train_pairs) == 0:
+            raise ValueError("The blocking leaves no candidate pair in the training data.")
 
         # 2) Subsample for fitting. The pairs are chosen from the match column
         #    alone, exactly as subsample_non_matches would choose them from the
@@ -202,9 +225,14 @@ class BaselineTrainingPipe:
 
         if self.model_kind == "gb" and self.tune_threshold:
             y_val, proba_val = self._labels_and_probabilities(model, val_pairs)
-            best_t, val_stats = model._best_threshold_from_proba(
-                y_val, proba_val, metric=self.tune_metric
-            )
+            if val_pairs.blocked:
+                best_t, val_stats = tune_threshold_blocked(
+                    y_val, proba_val, val_pairs.n_all, val_pairs.n_matches, metric=self.tune_metric
+                )
+            else:
+                best_t, val_stats = model._best_threshold_from_proba(
+                    y_val, proba_val, metric=self.tune_metric
+                )
             # store in-model + in-pipe
             self.best_threshold_ = float(best_t)
             chosen_t = float(best_t)
@@ -281,8 +309,10 @@ class BaselineTrainingPipe:
 
     def _labels_and_probabilities(self, model, pairs: SimilarityPairs) -> tuple[np.ndarray, np.ndarray]:
         """Match labels and predicted probabilities of all pairs, scored block by block."""
-        labels, probabilities = [], []
+        labels, probabilities = [np.empty(0, dtype=int)], [np.empty(0)]
         for chunk in pairs.chunks(self.pairs_per_chunk):
+            if len(chunk) == 0:
+                continue
             labels.append(chunk["match"].to_numpy().astype(int))
             probabilities.append(model.predict_proba(chunk))
         return np.concatenate(labels), np.concatenate(probabilities)
@@ -291,14 +321,22 @@ class BaselineTrainingPipe:
         """
         `evaluate` of each model on all pairs, scored block by block.
 
-        Per pair, only the label and each model's 0/1 prediction are kept.
+        Per pair, only the label and each model's 0/1 prediction are kept. With
+        candidates, the pairs outside them count as predicted non-matches.
         """
-        labels = []
-        predictions = [[] for _ in models]
+        labels = [np.empty(0, dtype=np.int8)]
+        predictions = [[np.empty(0, dtype=np.int8)] for _ in models]
         for chunk in pairs.chunks(self.pairs_per_chunk):
+            if len(chunk) == 0:
+                continue
             labels.append(chunk["match"].to_numpy().astype(np.int8))
             for model, threshold, kept in zip(models, thresholds, predictions):
                 kept.append((model.predict_proba(chunk) >= threshold).astype(np.int8))
 
         y_true = np.concatenate(labels)
+        if pairs.blocked:
+            return [
+                blocked_metrics(y_true, np.concatenate(kept), pairs.n_all, pairs.n_matches)
+                for kept in predictions
+            ]
         return [classification_metrics(y_true, np.concatenate(kept)) for kept in predictions]

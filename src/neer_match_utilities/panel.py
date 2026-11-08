@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from itertools import combinations, permutations
+import inspect
 import uuid
 from typing import List, Dict, Tuple, Union
 from neer_match.matching_model import DLMatchingModel, NSMatchingModel
@@ -387,7 +388,8 @@ class GenerateID:
         similarity_map: Union[dict, "SimilarityMap", None] = None, 
         prediction_threshold: float | None | object = _TUNED_OR_0_9,
         subgroups: List[str] = None,
-        relation: str = 'm:m'
+        relation: str = 'm:m',
+        blocking=None,
     ):
         """
         Initialize the GenerateID class.
@@ -415,6 +417,16 @@ class GenerateID:
             SimilarityMap and 0.5 otherwise.
         relation : str, optional
             Relationship between observations in cross sectional data. Default is 'm:m'
+        blocking : Blocking, function or None, optional
+            A rule of :mod:`neer_match_utilities.blocking`: in each pair of
+            consecutive periods, the model scores only the candidate pairs. It
+            needs a model whose ``suggest`` takes ``blocking``, as the baseline
+            models (Logit, Probit, Gradient Boosting) do. ``subgroups`` works as
+            before: it splits the panel into groups first and compares the
+            consecutive periods present in each group, so a group that skips a
+            period compares the periods around the gap. ``Blocking(exact=...)``
+            on the same columns compares the panel's consecutive periods
+            instead. Both can be combined.
         """
 
         subgroups = subgroups or []
@@ -443,6 +455,12 @@ class GenerateID:
             self.prediction_threshold = float(prediction_threshold)
         
         self.relation = relation
+        self.blocking = blocking
+        if blocking is not None and "blocking" not in inspect.signature(model.suggest).parameters:
+            raise TypeError(
+                f"blocking needs a model whose suggest takes blocking; {type(model).__name__}.suggest "
+                "does not. The baseline models (Logit, Probit, Gradient Boosting) do."
+            )
 
         # Determine which columns to keep in df_panel
         if self.similarity_map is None:
@@ -455,6 +473,11 @@ class GenerateID:
             field_keys = []
 
         keep_cols = set(field_keys) | set(subgroups) | {time_var}
+        if blocking is not None:
+            from neer_match_utilities.blocking import blocking_columns
+            read = blocking_columns(blocking)
+            # A function may read any column
+            keep_cols |= set(df_panel.columns) if read is None else set(read[0]) | set(read[1])
         
         # Keep only those columns that actually exist (avoids KeyError)
         keep_cols = [c for c in df_panel.columns if c in keep_cols]
@@ -540,6 +563,8 @@ class GenerateID:
         return df
     
     def _call_suggest(self, left, right, count=1):
+        if self.blocking is not None:
+            return self.model.suggest(left, right, count=count, verbose=0, blocking=self.blocking)
         try:
             return self.model.suggest(left, right, count=count, verbose=0)
         except TypeError:

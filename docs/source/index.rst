@@ -40,6 +40,7 @@
    panel
    prepare
    split
+   blocking
    training
    thresholds
    feature_selection

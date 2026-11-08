@@ -11,6 +11,7 @@ from neer_match_utilities.custom_similarities import CustomSimilarities
 # remembering to call CustomSimilarities() first.
 CustomSimilarities()
 from neer_match_utilities.similarity_features import SimilarityFeatures
+from neer_match_utilities.blocking import candidate_pairs
 import statsmodels.api as sm
 from statsmodels.tools.sm_exceptions import ConvergenceWarning
 from scipy import stats
@@ -166,6 +167,7 @@ class SuggestMixin:
         left_id_col: str | None = None,
         right_id_col: str | None = None,
         pairs_per_chunk: int = 250_000,
+        blocking=None,
     ) -> pd.DataFrame:
         """
         Return top-k candidate matches per left record (like neer_match DL models).
@@ -179,6 +181,10 @@ class SuggestMixin:
         pairs (but at least one left row) at a time, so memory does not grow with
         ``len(left) * len(right)``. The result does not depend on the block size,
         up to floating-point rounding of the probabilities.
+
+        With ``blocking`` (see :mod:`neer_match_utilities.blocking`), only the
+        candidate pairs are scored, and the top-k come from them; a left record
+        without candidates gets no suggestion.
         """
         if self.similarity_map is None:
             raise ValueError(
@@ -220,6 +226,7 @@ class SuggestMixin:
             matches_id_left="left",
             matches_id_right="right",
             matches_are_indices=False,
+            candidates=candidate_pairs(left_tmp, right_tmp, blocking),
         )
 
         # Identify the output ID columns produced by SimilarityFeatures
@@ -240,6 +247,8 @@ class SuggestMixin:
         # repeating the selection over the kept rows finds it, ties included.
         kept = []
         for df_pairs in pairs.chunks(pairs_per_chunk):
+            if len(df_pairs) == 0:
+                continue
             df_pairs["prediction"] = self.predict_proba(df_pairs)
             kept.append(top_k(
                 df_pairs[[out_left, out_right, "prediction"]].rename(
@@ -247,6 +256,8 @@ class SuggestMixin:
                 )
             ))
 
+        if not kept:  # the blocking left no candidate pair
+            return pd.DataFrame({"left": [], "right": [], "prediction": []})
         out = top_k(pd.concat(kept)).reset_index(drop=True)
 
         if verbose:
