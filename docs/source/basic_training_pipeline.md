@@ -278,11 +278,12 @@ boosting and the neural network choose their classification threshold on
 it, and the neural network also its best epochs. The Logit model of this
 tutorial needs none, so we set $\text{validation_ratio} = 0$.
 
-The match pairs are drawn one by one. Where one entity has several pairs,
-for example an entity seen in three volumes whose links were completed by
-`SetupData`, pass `keep_components=True`: pairs that share a left or a right
-record then stay in the same subset. Otherwise a true match whose pair went
-to another subset counts as a non-match inside its subset.
+The match pairs are drawn one by one. Where one entity has several
+pairs, for example an entity seen in three volumes whose links were
+completed by `SetupData`, pass `keep_components=True`: pairs that share
+a left or a right record then stay in the same subset. Otherwise a true
+match whose pair went to another subset counts as a non-match inside its
+subset.
 
 ``` python
 from neer_match_utilities.split import split_test_train
@@ -330,4 +331,4 @@ training_pipeline.execute()
     Performance metrics saved to /Users/marli453/develop/py-neer-utilities/docs/source/_static/examples/demonstration_model/performance.csv
     Similarity map saved to /Users/marli453/develop/py-neer-utilities/docs/source/_static/examples/demonstration_model/similarity_map.dill
 
-    LogitMatchingModel(result=<statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x12ecc0a90>, feature_cols=['col_city_city_levenshtein', 'col_company_name_company_name_jaro_winkler', 'col_company_name_company_name_levenshtein', 'col_company_name_company_name_partial_token_sort_ratio', 'col_industry_industry_jaro_winkler', 'col_industry_industry_levenshtein'])
+    LogitMatchingModel(result=<statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x133a7f690>, feature_cols=['col_city_city_levenshtein', 'col_company_name_company_name_jaro_winkler', 'col_company_name_company_name_levenshtein', 'col_company_name_company_name_partial_token_sort_ratio', 'col_industry_industry_jaro_winkler', 'col_industry_industry_levenshtein'])
