@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; Neer Match Utilities 1.2.11 documentation</title>
+  <title>Index &mdash; Neer Match Utilities 1.2.12 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=b68a8a9d"></script>
+      <script src="_static/documentation_options.js?v=817200f7"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -65,7 +65,10 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="basic_training_pipeline.html#re-structuring-the-matches-dataframe">Re-Structuring the <code class="docutils literal notranslate"><span class="pre">Matches</span></code> dataframe</a></li>
 <li class="toctree-l2"><a class="reference internal" href="basic_training_pipeline.html#splitting-data">Splitting Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="basic_training_pipeline.html#training-and-exporting-the-model">Training and Exporting the Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_training_pipeline.html#training-and-exporting-the-model">Training and Exporting the Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="basic_training_pipeline.html#blocking">Blocking</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="id_generation.html">Creating a Common Identifier (ID)</a><ul>
@@ -221,6 +224,19 @@
 <li class="toctree-l2"><a class="reference internal" href="split.html#neer_match_utilities.split.split_test_train"><code class="docutils literal notranslate"><span class="pre">split_test_train()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="blocking.html">Blocking</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="blocking.html#neer_match_utilities.blocking.Blocking"><code class="docutils literal notranslate"><span class="pre">Blocking</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="blocking.html#neer_match_utilities.blocking.Blocking.__init__"><code class="docutils literal notranslate"><span class="pre">Blocking.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="blocking.html#neer_match_utilities.blocking.Blocking.candidates"><code class="docutils literal notranslate"><span class="pre">Blocking.candidates()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="blocking.html#neer_match_utilities.blocking.Blocking.columns"><code class="docutils literal notranslate"><span class="pre">Blocking.columns()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="blocking.html#neer_match_utilities.blocking.blocked_metrics"><code class="docutils literal notranslate"><span class="pre">blocked_metrics()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="blocking.html#neer_match_utilities.blocking.blocking_columns"><code class="docutils literal notranslate"><span class="pre">blocking_columns()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="blocking.html#neer_match_utilities.blocking.candidate_pairs"><code class="docutils literal notranslate"><span class="pre">candidate_pairs()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="blocking.html#neer_match_utilities.blocking.tune_threshold_blocked"><code class="docutils literal notranslate"><span class="pre">tune_threshold_blocked()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="training.html">Training</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="training.html#neer_match_utilities.training.Training"><code class="docutils literal notranslate"><span class="pre">Training</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="training.html#neer_match_utilities.training.Training.evaluate_dataframe"><code class="docutils literal notranslate"><span class="pre">Training.evaluate_dataframe()</span></code></a></li>
@@ -280,6 +296,7 @@
 <li class="toctree-l2"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__init__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__init__()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__len__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__len__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.blocked"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.blocked</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.chunks"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.chunks()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.frame"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.frame()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.match_flags"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.match_flags()</span></code></a></li>
@@ -367,6 +384,8 @@
 </li>
         <li><a href="baseline_training.html#neer_match_utilities.baseline_training.BaselineTrainingPipe.__init__">(neer_match_utilities.baseline_training.BaselineTrainingPipe method)</a>
 </li>
+        <li><a href="blocking.html#neer_match_utilities.blocking.Blocking.__init__">(neer_match_utilities.blocking.Blocking method)</a>
+</li>
         <li><a href="custom_similarities.html#neer_match_utilities.custom_similarities.CustomSimilarities.__init__">(neer_match_utilities.custom_similarities.CustomSimilarities method)</a>
 </li>
         <li><a href="feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult.__init__">(neer_match_utilities.feature_selection.FeatureSelectionResult method)</a>
@@ -420,9 +439,17 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="baseline_training.html#neer_match_utilities.baseline_training.BaselineTrainingPipe">BaselineTrainingPipe (class in neer_match_utilities.baseline_training)</a>
 </li>
+      <li><a href="baseline_models.html#neer_match_utilities.baseline_models.GradientBoostingModel.best_threshold">best_threshold() (neer_match_utilities.baseline_models.GradientBoostingModel method)</a>
+</li>
+      <li><a href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.blocked">blocked (neer_match_utilities.similarity_features.SimilarityPairs property)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="baseline_models.html#neer_match_utilities.baseline_models.GradientBoostingModel.best_threshold">best_threshold() (neer_match_utilities.baseline_models.GradientBoostingModel method)</a>
+      <li><a href="blocking.html#neer_match_utilities.blocking.blocked_metrics">blocked_metrics() (in module neer_match_utilities.blocking)</a>
+</li>
+      <li><a href="blocking.html#neer_match_utilities.blocking.Blocking">Blocking (class in neer_match_utilities.blocking)</a>
+</li>
+      <li><a href="blocking.html#neer_match_utilities.blocking.blocking_columns">blocking_columns() (in module neer_match_utilities.blocking)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -430,17 +457,23 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="blocking.html#neer_match_utilities.blocking.candidate_pairs">candidate_pairs() (in module neer_match_utilities.blocking)</a>
+</li>
+      <li><a href="blocking.html#neer_match_utilities.blocking.Blocking.candidates">candidates() (neer_match_utilities.blocking.Blocking method)</a>
+</li>
       <li><a href="baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.capture_inference">capture_inference() (neer_match_utilities.baseline_models.StatsmodelsInferenceMixin method)</a>
 </li>
       <li><a href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.chunks">chunks() (neer_match_utilities.similarity_features.SimilarityPairs method)</a>
 </li>
       <li><a href="baseline_models.html#neer_match_utilities.baseline_models.classification_metrics">classification_metrics() (in module neer_match_utilities.baseline_models)</a>
 </li>
-      <li><a href="feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult.coef_by_feature">coef_by_feature (neer_match_utilities.feature_selection.FeatureSelectionResult attribute)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult.coef_by_feature">coef_by_feature (neer_match_utilities.feature_selection.FeatureSelectionResult attribute)</a>
+</li>
       <li><a href="baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.coefficients">coefficients() (neer_match_utilities.baseline_models.StatsmodelsInferenceMixin method)</a>
+</li>
+      <li><a href="blocking.html#neer_match_utilities.blocking.Blocking.columns">columns() (neer_match_utilities.blocking.Blocking method)</a>
 </li>
       <li><a href="training.html#neer_match_utilities.training.combined_loss">combined_loss() (in module neer_match_utilities.training)</a>
 </li>
@@ -582,6 +615,8 @@
 </li>
         <li><a href="baseline_training.html#module-neer_match_utilities.baseline_training">neer_match_utilities.baseline_training</a>
 </li>
+        <li><a href="blocking.html#module-neer_match_utilities.blocking">neer_match_utilities.blocking</a>
+</li>
         <li><a href="custom_similarities.html#module-neer_match_utilities.custom_similarities">neer_match_utilities.custom_similarities</a>
 </li>
         <li><a href="feature_selection.html#module-neer_match_utilities.feature_selection">neer_match_utilities.feature_selection</a>
@@ -633,6 +668,13 @@
 
       <ul>
         <li><a href="baseline_training.html#module-neer_match_utilities.baseline_training">module</a>
+</li>
+      </ul></li>
+      <li>
+    neer_match_utilities.blocking
+
+      <ul>
+        <li><a href="blocking.html#module-neer_match_utilities.blocking">module</a>
 </li>
       </ul></li>
       <li>
@@ -833,6 +875,8 @@
       <li><a href="training.html#neer_match_utilities.training.TrainingPipe.WarmupCosine">TrainingPipe.WarmupCosine (class in neer_match_utilities.training)</a>
 </li>
       <li><a href="thresholds.html#neer_match_utilities.thresholds.tune_threshold">tune_threshold() (in module neer_match_utilities.thresholds)</a>
+</li>
+      <li><a href="blocking.html#neer_match_utilities.blocking.tune_threshold_blocked">tune_threshold_blocked() (in module neer_match_utilities.blocking)</a>
 </li>
   </ul></td>
 </tr></table>

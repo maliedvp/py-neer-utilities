@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.baseline_training &mdash; Neer Match Utilities 1.2.11 documentation</title>
+  <title>neer_match_utilities.baseline_training &mdash; Neer Match Utilities 1.2.12 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=b68a8a9d"></script>
+      <script src="../../_static/documentation_options.js?v=817200f7"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -65,7 +65,10 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../basic_training_pipeline.html#re-structuring-the-matches-dataframe">Re-Structuring the <code class="docutils literal notranslate"><span class="pre">Matches</span></code> dataframe</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../basic_training_pipeline.html#splitting-data">Splitting Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../basic_training_pipeline.html#training-and-exporting-the-model">Training and Exporting the Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../basic_training_pipeline.html#training-and-exporting-the-model">Training and Exporting the Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../basic_training_pipeline.html#blocking">Blocking</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../id_generation.html">Creating a Common Identifier (ID)</a><ul>
@@ -221,6 +224,19 @@
 <li class="toctree-l2"><a class="reference internal" href="../../split.html#neer_match_utilities.split.split_test_train"><code class="docutils literal notranslate"><span class="pre">split_test_train()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../blocking.html">Blocking</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../blocking.html#neer_match_utilities.blocking.Blocking"><code class="docutils literal notranslate"><span class="pre">Blocking</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../blocking.html#neer_match_utilities.blocking.Blocking.__init__"><code class="docutils literal notranslate"><span class="pre">Blocking.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../blocking.html#neer_match_utilities.blocking.Blocking.candidates"><code class="docutils literal notranslate"><span class="pre">Blocking.candidates()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../blocking.html#neer_match_utilities.blocking.Blocking.columns"><code class="docutils literal notranslate"><span class="pre">Blocking.columns()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../blocking.html#neer_match_utilities.blocking.blocked_metrics"><code class="docutils literal notranslate"><span class="pre">blocked_metrics()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../blocking.html#neer_match_utilities.blocking.blocking_columns"><code class="docutils literal notranslate"><span class="pre">blocking_columns()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../blocking.html#neer_match_utilities.blocking.candidate_pairs"><code class="docutils literal notranslate"><span class="pre">candidate_pairs()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../blocking.html#neer_match_utilities.blocking.tune_threshold_blocked"><code class="docutils literal notranslate"><span class="pre">tune_threshold_blocked()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../training.html">Training</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../training.html#neer_match_utilities.training.Training"><code class="docutils literal notranslate"><span class="pre">Training</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../training.html#neer_match_utilities.training.Training.evaluate_dataframe"><code class="docutils literal notranslate"><span class="pre">Training.evaluate_dataframe()</span></code></a></li>
@@ -280,6 +296,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__init__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__init__()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__len__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__len__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.blocked"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.blocked</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.chunks"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.chunks()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.frame"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.frame()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.match_flags"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.match_flags()</span></code></a></li>
@@ -355,6 +372,12 @@
     <span class="n">classification_metrics</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.baseline_io</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelBaseline</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.blocking</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BlockingLike</span><span class="p">,</span>
+    <span class="n">blocked_metrics</span><span class="p">,</span>
+    <span class="n">candidate_pairs</span><span class="p">,</span>
+    <span class="n">tune_threshold_blocked</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.training</span><span class="w"> </span><span class="kn">import</span> <span class="n">Training</span>  <span class="c1"># for performance_statistics_export</span>
 
 
@@ -390,6 +413,14 @@
 <span class="sd">    probit probabilities come from matrix products, whose rounding can differ in</span>
 <span class="sd">    the last bits between block sizes, so a pair scored within about 1e-15 of</span>
 <span class="sd">    the threshold could be classified differently.</span>
+
+<span class="sd">    With ``blocking`` (a :class:`~neer_match_utilities.blocking.Blocking` or a</span>
+<span class="sd">    function, see :mod:`neer_match_utilities.blocking`), each split keeps only</span>
+<span class="sd">    its candidate pairs: the non-matches for fitting come from them, and only</span>
+<span class="sd">    they are scored. A true match outside the candidates counts as a false</span>
+<span class="sd">    negative and the other pairs outside as true negatives, so the metrics, and</span>
+<span class="sd">    the tuned threshold, describe blocking and model together on all pairs. The</span>
+<span class="sd">    metrics then also report ``Pairs``, ``Candidates`` and ``BlockingRecall``.</span>
 <span class="sd">    """</span>
 
     <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span>
@@ -430,6 +461,7 @@
     <span class="c1"># last, so that existing positional arguments keep their meaning</span>
     <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># replace a model already saved under model_name</span>
     <span class="n">pairs_per_chunk</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">250_000</span>  <span class="c1"># pairs whose features are held in memory at once</span>
+    <span class="n">blocking</span><span class="p">:</span> <span class="n">BlockingLike</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># candidate pairs only (see neer_match_utilities.blocking)</span>
 
     <span class="c1"># internals (filled during execute)</span>
     <span class="n">model_</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -506,12 +538,20 @@
             <span class="n">matches_are_indices</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">matches_are_indices</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="n">train_pairs</span> <span class="o">=</span> <span class="n">feats</span><span class="o">.</span><span class="n">pairs</span><span class="p">(</span><span class="n">left_train</span><span class="p">,</span> <span class="n">right_train</span><span class="p">,</span> <span class="n">matches_train</span><span class="p">,</span> <span class="o">**</span><span class="n">pair_args</span><span class="p">)</span>
-        <span class="n">test_pairs</span> <span class="o">=</span> <span class="n">feats</span><span class="o">.</span><span class="n">pairs</span><span class="p">(</span><span class="n">left_test</span><span class="p">,</span> <span class="n">right_test</span><span class="p">,</span> <span class="n">matches_test</span><span class="p">,</span> <span class="o">**</span><span class="n">pair_args</span><span class="p">)</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">split_pairs</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">matches</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">feats</span><span class="o">.</span><span class="n">pairs</span><span class="p">(</span>
+                <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">matches</span><span class="p">,</span> <span class="n">candidates</span><span class="o">=</span><span class="n">candidate_pairs</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocking</span><span class="p">),</span> <span class="o">**</span><span class="n">pair_args</span>
+            <span class="p">)</span>
+
+        <span class="n">train_pairs</span> <span class="o">=</span> <span class="n">split_pairs</span><span class="p">(</span><span class="n">left_train</span><span class="p">,</span> <span class="n">right_train</span><span class="p">,</span> <span class="n">matches_train</span><span class="p">)</span>
+        <span class="n">test_pairs</span> <span class="o">=</span> <span class="n">split_pairs</span><span class="p">(</span><span class="n">left_test</span><span class="p">,</span> <span class="n">right_test</span><span class="p">,</span> <span class="n">matches_test</span><span class="p">)</span>
 
         <span class="n">val_pairs</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">left_val</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">val_pairs</span> <span class="o">=</span> <span class="n">feats</span><span class="o">.</span><span class="n">pairs</span><span class="p">(</span><span class="n">left_val</span><span class="p">,</span> <span class="n">right_val</span><span class="p">,</span> <span class="n">matches_val</span><span class="p">,</span> <span class="o">**</span><span class="n">pair_args</span><span class="p">)</span>
+            <span class="n">val_pairs</span> <span class="o">=</span> <span class="n">split_pairs</span><span class="p">(</span><span class="n">left_val</span><span class="p">,</span> <span class="n">right_val</span><span class="p">,</span> <span class="n">matches_val</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">train_pairs</span><span class="o">.</span><span class="n">blocked</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">train_pairs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The blocking leaves no candidate pair in the training data."</span><span class="p">)</span>
 
         <span class="c1"># 2) Subsample for fitting. The pairs are chosen from the match column</span>
         <span class="c1">#    alone, exactly as subsample_non_matches would choose them from the</span>
@@ -538,9 +578,14 @@
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_kind</span> <span class="o">==</span> <span class="s2">"gb"</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">tune_threshold</span><span class="p">:</span>
             <span class="n">y_val</span><span class="p">,</span> <span class="n">proba_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_labels_and_probabilities</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">val_pairs</span><span class="p">)</span>
-            <span class="n">best_t</span><span class="p">,</span> <span class="n">val_stats</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">_best_threshold_from_proba</span><span class="p">(</span>
-                <span class="n">y_val</span><span class="p">,</span> <span class="n">proba_val</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tune_metric</span>
-            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">val_pairs</span><span class="o">.</span><span class="n">blocked</span><span class="p">:</span>
+                <span class="n">best_t</span><span class="p">,</span> <span class="n">val_stats</span> <span class="o">=</span> <span class="n">tune_threshold_blocked</span><span class="p">(</span>
+                    <span class="n">y_val</span><span class="p">,</span> <span class="n">proba_val</span><span class="p">,</span> <span class="n">val_pairs</span><span class="o">.</span><span class="n">n_all</span><span class="p">,</span> <span class="n">val_pairs</span><span class="o">.</span><span class="n">n_matches</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tune_metric</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">best_t</span><span class="p">,</span> <span class="n">val_stats</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">_best_threshold_from_proba</span><span class="p">(</span>
+                    <span class="n">y_val</span><span class="p">,</span> <span class="n">proba_val</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tune_metric</span>
+                <span class="p">)</span>
             <span class="c1"># store in-model + in-pipe</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">best_threshold_</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">best_t</span><span class="p">)</span>
             <span class="n">chosen_t</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">best_t</span><span class="p">)</span>
@@ -617,8 +662,10 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_labels_and_probabilities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">pairs</span><span class="p">:</span> <span class="n">SimilarityPairs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""Match labels and predicted probabilities of all pairs, scored block by block."""</span>
-        <span class="n">labels</span><span class="p">,</span> <span class="n">probabilities</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+        <span class="n">labels</span><span class="p">,</span> <span class="n">probabilities</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)],</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">)]</span>
         <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">pairs</span><span class="o">.</span><span class="n">chunks</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pairs_per_chunk</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
             <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="p">[</span><span class="s2">"match"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
             <span class="n">probabilities</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">chunk</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">labels</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">probabilities</span><span class="p">)</span>
@@ -627,16 +674,24 @@
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        `evaluate` of each model on all pairs, scored block by block.</span>
 
-<span class="sd">        Per pair, only the label and each model's 0/1 prediction are kept.</span>
+<span class="sd">        Per pair, only the label and each model's 0/1 prediction are kept. With</span>
+<span class="sd">        candidates, the pairs outside them count as predicted non-matches.</span>
 <span class="sd">        """</span>
-        <span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">predictions</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">models</span><span class="p">]</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">)]</span>
+        <span class="n">predictions</span> <span class="o">=</span> <span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">)]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">models</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">pairs</span><span class="o">.</span><span class="n">chunks</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pairs_per_chunk</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
             <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="p">[</span><span class="s2">"match"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">))</span>
             <span class="k">for</span> <span class="n">model</span><span class="p">,</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">kept</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="n">thresholds</span><span class="p">,</span> <span class="n">predictions</span><span class="p">):</span>
                 <span class="n">kept</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">))</span>
 
         <span class="n">y_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">pairs</span><span class="o">.</span><span class="n">blocked</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span>
+                <span class="n">blocked_metrics</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">kept</span><span class="p">),</span> <span class="n">pairs</span><span class="o">.</span><span class="n">n_all</span><span class="p">,</span> <span class="n">pairs</span><span class="o">.</span><span class="n">n_matches</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">kept</span> <span class="ow">in</span> <span class="n">predictions</span>
+            <span class="p">]</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">classification_metrics</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">kept</span><span class="p">))</span> <span class="k">for</span> <span class="n">kept</span> <span class="ow">in</span> <span class="n">predictions</span><span class="p">]</span></div>
 
 </pre></div>

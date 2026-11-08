@@ -79,6 +79,12 @@ Key parameters:
 - `subgroups`: Implements a blocking strategy by restricting comparisons
   to observations within each subgroup, which can significantly reduce
   computation time
+- `blocking`: A rule of `neer_match_utilities.blocking`,
+  e.g. `Blocking(exact=["city"], within={"found_year": 2})`: in each
+  pair of consecutive periods, the model scores only the candidate
+  pairs. It needs a baseline model (Logit, Probit or Gradient Boosting).
+  Unlike `subgroups`, which compares the periods present in each
+  subgroup, it compares the consecutive periods of the whole panel
 
 To generate an ID for the *left* and *right* DataFrames, we first create
 a column (*side*) to distinguish the two sources, then stack the
@@ -117,7 +123,7 @@ result = id_generator.execute()
 result.head()
 ```
 
-    Processing periods left-right at 2026-11-08 12:58:05.677275
+    Processing periods left-right at 2026-11-08 13:32:49.858766
 
 <div>
 <style scoped>
@@ -134,11 +140,11 @@ result.head()
 
 |     | index | panel_id                             |
 |-----|-------|--------------------------------------|
-| 0   | 0     | ee9ce81e-d710-44b4-a601-bbe5ae3d586c |
-| 1   | 1     | 9baa0ab1-ae40-48b2-beea-ef8455c68dad |
-| 2   | 2     | b98161b6-d4e7-4dcb-84f5-c25c479ae72c |
-| 3   | 3     | b5afae68-5b2b-4ce6-b182-879d0aecf4ab |
-| 4   | 4     | 7d4e55e7-f443-4151-a6a2-ef8cda8467fe |
+| 0   | 0     | 4b88f242-ab3f-4e28-8f54-c7f424be9e05 |
+| 1   | 1     | 2fab2e44-3df6-4d25-9fb7-8ef07b61d4ce |
+| 2   | 2     | 634bfd37-7533-4bc4-b6c8-4497f8bf4203 |
+| 3   | 3     | 86fa4517-0491-406e-974f-11ac6a12e93c |
+| 4   | 4     | fda48e52-7f33-418e-9e18-1cdc94396605 |
 
 </div>
 
@@ -186,8 +192,8 @@ df_selection
 
 |  | panel_id | company_id | side | company_name | city |
 |----|----|----|----|----|----|
-| 726 | 7d4e55e7-f443-4151-a6a2-ef8cda8467fe | 22ac99ae20 | left | KAISERSTEINBRUCH-ACTIENGESELLSCHAFT IN LIQU. I... | KÖLN |
-| 727 | 7d4e55e7-f443-4151-a6a2-ef8cda8467fe | e9823a3073 | right | KAISERSTEINBRUCH-ACTIENGESELLSCHAFT IN KÖLN, | KÖLN |
+| 1366 | fda48e52-7f33-418e-9e18-1cdc94396605 | 22ac99ae20 | left | KAISERSTEINBRUCH-ACTIENGESELLSCHAFT IN LIQU. I... | KÖLN |
+| 1367 | fda48e52-7f33-418e-9e18-1cdc94396605 | e9823a3073 | right | KAISERSTEINBRUCH-ACTIENGESELLSCHAFT IN KÖLN, | KÖLN |
 
 </div>
 

@@ -331,4 +331,26 @@ training_pipeline.execute()
     Performance metrics saved to /Users/marli453/develop/py-neer-utilities/docs/source/_static/examples/demonstration_model/performance.csv
     Similarity map saved to /Users/marli453/develop/py-neer-utilities/docs/source/_static/examples/demonstration_model/similarity_map.dill
 
-    LogitMatchingModel(result=<statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x133a7f690>, feature_cols=['col_city_city_levenshtein', 'col_company_name_company_name_jaro_winkler', 'col_company_name_company_name_levenshtein', 'col_company_name_company_name_partial_token_sort_ratio', 'col_industry_industry_jaro_winkler', 'col_industry_industry_levenshtein'])
+    LogitMatchingModel(result=<statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x1313ba450>, feature_cols=['col_city_city_levenshtein', 'col_company_name_company_name_jaro_winkler', 'col_company_name_company_name_levenshtein', 'col_company_name_company_name_partial_token_sort_ratio', 'col_industry_industry_jaro_winkler', 'col_industry_industry_levenshtein'])
+
+### Blocking
+
+By default, the model is fitted and evaluated on all pairs of left x
+right. With `blocking`, it sees only candidate pairs, e.g. records of
+the same city:
+
+``` python
+from neer_match_utilities.blocking import Blocking
+
+BaselineTrainingPipe(..., blocking=Blocking(exact=["city"]))
+```
+
+A rule can also require numbers to lie close
+(`within={"birth_year": 2}`) or strings to be similar
+(`min_similarity={"last_name": 0.7}`). The non-matches for fitting then
+come from the candidates only. A true match that the rule excludes
+counts as missed, so the reported metrics describe blocking and model
+together; `performance.csv` adds the number of pairs, of candidates and
+the share of true matches among them (`BlockingRecall`). The same rule
+can be passed to `FeatureSelector`, to a model’s `suggest` and to
+`GenerateID`.

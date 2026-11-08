@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.baseline_models &mdash; Neer Match Utilities 1.2.11 documentation</title>
+  <title>neer_match_utilities.baseline_models &mdash; Neer Match Utilities 1.2.12 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=b68a8a9d"></script>
+      <script src="../../_static/documentation_options.js?v=817200f7"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -65,7 +65,10 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../basic_training_pipeline.html#re-structuring-the-matches-dataframe">Re-Structuring the <code class="docutils literal notranslate"><span class="pre">Matches</span></code> dataframe</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../basic_training_pipeline.html#splitting-data">Splitting Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../basic_training_pipeline.html#training-and-exporting-the-model">Training and Exporting the Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../basic_training_pipeline.html#training-and-exporting-the-model">Training and Exporting the Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../basic_training_pipeline.html#blocking">Blocking</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../id_generation.html">Creating a Common Identifier (ID)</a><ul>
@@ -221,6 +224,19 @@
 <li class="toctree-l2"><a class="reference internal" href="../../split.html#neer_match_utilities.split.split_test_train"><code class="docutils literal notranslate"><span class="pre">split_test_train()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../blocking.html">Blocking</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../blocking.html#neer_match_utilities.blocking.Blocking"><code class="docutils literal notranslate"><span class="pre">Blocking</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../blocking.html#neer_match_utilities.blocking.Blocking.__init__"><code class="docutils literal notranslate"><span class="pre">Blocking.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../blocking.html#neer_match_utilities.blocking.Blocking.candidates"><code class="docutils literal notranslate"><span class="pre">Blocking.candidates()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../blocking.html#neer_match_utilities.blocking.Blocking.columns"><code class="docutils literal notranslate"><span class="pre">Blocking.columns()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../blocking.html#neer_match_utilities.blocking.blocked_metrics"><code class="docutils literal notranslate"><span class="pre">blocked_metrics()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../blocking.html#neer_match_utilities.blocking.blocking_columns"><code class="docutils literal notranslate"><span class="pre">blocking_columns()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../blocking.html#neer_match_utilities.blocking.candidate_pairs"><code class="docutils literal notranslate"><span class="pre">candidate_pairs()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../blocking.html#neer_match_utilities.blocking.tune_threshold_blocked"><code class="docutils literal notranslate"><span class="pre">tune_threshold_blocked()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../training.html">Training</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../training.html#neer_match_utilities.training.Training"><code class="docutils literal notranslate"><span class="pre">Training</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../training.html#neer_match_utilities.training.Training.evaluate_dataframe"><code class="docutils literal notranslate"><span class="pre">Training.evaluate_dataframe()</span></code></a></li>
@@ -280,6 +296,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__init__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__init__()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__len__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__len__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.blocked"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.blocked</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.chunks"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.chunks()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.frame"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.frame()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.match_flags"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.match_flags()</span></code></a></li>
@@ -345,6 +362,7 @@
 <span class="c1"># remembering to call CustomSimilarities() first.</span>
 <span class="n">CustomSimilarities</span><span class="p">()</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.similarity_features</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimilarityFeatures</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.blocking</span><span class="w"> </span><span class="kn">import</span> <span class="n">candidate_pairs</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.tools.sm_exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConvergenceWarning</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
@@ -507,6 +525,7 @@
         <span class="n">left_id_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">right_id_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">pairs_per_chunk</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">250_000</span><span class="p">,</span>
+        <span class="n">blocking</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Return top-k candidate matches per left record (like neer_match DL models).</span>
@@ -520,6 +539,10 @@
 <span class="sd">        pairs (but at least one left row) at a time, so memory does not grow with</span>
 <span class="sd">        ``len(left) * len(right)``. The result does not depend on the block size,</span>
 <span class="sd">        up to floating-point rounding of the probabilities.</span>
+
+<span class="sd">        With ``blocking`` (see :mod:`neer_match_utilities.blocking`), only the</span>
+<span class="sd">        candidate pairs are scored, and the top-k come from them; a left record</span>
+<span class="sd">        without candidates gets no suggestion.</span>
 <span class="sd">        """</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">similarity_map</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
@@ -561,6 +584,7 @@
             <span class="n">matches_id_left</span><span class="o">=</span><span class="s2">"left"</span><span class="p">,</span>
             <span class="n">matches_id_right</span><span class="o">=</span><span class="s2">"right"</span><span class="p">,</span>
             <span class="n">matches_are_indices</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">candidates</span><span class="o">=</span><span class="n">candidate_pairs</span><span class="p">(</span><span class="n">left_tmp</span><span class="p">,</span> <span class="n">right_tmp</span><span class="p">,</span> <span class="n">blocking</span><span class="p">),</span>
         <span class="p">)</span>
 
         <span class="c1"># Identify the output ID columns produced by SimilarityFeatures</span>
@@ -581,6 +605,8 @@
         <span class="c1"># repeating the selection over the kept rows finds it, ties included.</span>
         <span class="n">kept</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">df_pairs</span> <span class="ow">in</span> <span class="n">pairs</span><span class="o">.</span><span class="n">chunks</span><span class="p">(</span><span class="n">pairs_per_chunk</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_pairs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
             <span class="n">df_pairs</span><span class="p">[</span><span class="s2">"prediction"</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">df_pairs</span><span class="p">)</span>
             <span class="n">kept</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">top_k</span><span class="p">(</span>
                 <span class="n">df_pairs</span><span class="p">[[</span><span class="n">out_left</span><span class="p">,</span> <span class="n">out_right</span><span class="p">,</span> <span class="s2">"prediction"</span><span class="p">]]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
@@ -588,6 +614,8 @@
                 <span class="p">)</span>
             <span class="p">))</span>
 
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">kept</span><span class="p">:</span>  <span class="c1"># the blocking left no candidate pair</span>
+            <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"left"</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">"right"</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">"prediction"</span><span class="p">:</span> <span class="p">[]})</span>
         <span class="n">out</span> <span class="o">=</span> <span class="n">top_k</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">kept</span><span class="p">))</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Training &mdash; Neer Match Utilities 1.2.11 documentation</title>
+  <title>Training &mdash; Neer Match Utilities 1.2.12 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -17,7 +17,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=b68a8a9d"></script>
+      <script src="_static/documentation_options.js?v=817200f7"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
@@ -28,7 +28,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Thresholds" href="thresholds.html" />
-    <link rel="prev" title="Split" href="split.html" /> 
+    <link rel="prev" title="Blocking" href="blocking.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -70,7 +70,10 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="basic_training_pipeline.html#re-structuring-the-matches-dataframe">Re-Structuring the <code class="docutils literal notranslate"><span class="pre">Matches</span></code> dataframe</a></li>
 <li class="toctree-l2"><a class="reference internal" href="basic_training_pipeline.html#splitting-data">Splitting Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="basic_training_pipeline.html#training-and-exporting-the-model">Training and Exporting the Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_training_pipeline.html#training-and-exporting-the-model">Training and Exporting the Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="basic_training_pipeline.html#blocking">Blocking</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="id_generation.html">Creating a Common Identifier (ID)</a><ul>
@@ -226,6 +229,19 @@
 <li class="toctree-l2"><a class="reference internal" href="split.html#neer_match_utilities.split.split_test_train"><code class="docutils literal notranslate"><span class="pre">split_test_train()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="blocking.html">Blocking</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="blocking.html#neer_match_utilities.blocking.Blocking"><code class="docutils literal notranslate"><span class="pre">Blocking</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="blocking.html#neer_match_utilities.blocking.Blocking.__init__"><code class="docutils literal notranslate"><span class="pre">Blocking.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="blocking.html#neer_match_utilities.blocking.Blocking.candidates"><code class="docutils literal notranslate"><span class="pre">Blocking.candidates()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="blocking.html#neer_match_utilities.blocking.Blocking.columns"><code class="docutils literal notranslate"><span class="pre">Blocking.columns()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="blocking.html#neer_match_utilities.blocking.blocked_metrics"><code class="docutils literal notranslate"><span class="pre">blocked_metrics()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="blocking.html#neer_match_utilities.blocking.blocking_columns"><code class="docutils literal notranslate"><span class="pre">blocking_columns()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="blocking.html#neer_match_utilities.blocking.candidate_pairs"><code class="docutils literal notranslate"><span class="pre">candidate_pairs()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="blocking.html#neer_match_utilities.blocking.tune_threshold_blocked"><code class="docutils literal notranslate"><span class="pre">tune_threshold_blocked()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Training</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.training.Training"><code class="docutils literal notranslate"><span class="pre">Training</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#neer_match_utilities.training.Training.evaluate_dataframe"><code class="docutils literal notranslate"><span class="pre">Training.evaluate_dataframe()</span></code></a></li>
@@ -285,6 +301,7 @@
 <li class="toctree-l2"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__init__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__init__()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__len__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__len__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.blocked"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.blocked</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.chunks"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.chunks()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.frame"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.frame()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.match_flags"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.match_flags()</span></code></a></li>
@@ -830,7 +847,7 @@ and FN are all zero.</p></li>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="split.html" class="btn btn-neutral float-left" title="Split" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="blocking.html" class="btn btn-neutral float-left" title="Blocking" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="thresholds.html" class="btn btn-neutral float-right" title="Thresholds" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

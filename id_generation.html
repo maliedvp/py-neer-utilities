@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Creating a Common Identifier (ID) &mdash; Neer Match Utilities 1.2.11 documentation</title>
+  <title>Creating a Common Identifier (ID) &mdash; Neer Match Utilities 1.2.12 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -17,7 +17,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=b68a8a9d"></script>
+      <script src="_static/documentation_options.js?v=817200f7"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -68,7 +68,10 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="basic_training_pipeline.html#re-structuring-the-matches-dataframe">Re-Structuring the <code class="docutils literal notranslate"><span class="pre">Matches</span></code> dataframe</a></li>
 <li class="toctree-l2"><a class="reference internal" href="basic_training_pipeline.html#splitting-data">Splitting Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="basic_training_pipeline.html#training-and-exporting-the-model">Training and Exporting the Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_training_pipeline.html#training-and-exporting-the-model">Training and Exporting the Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="basic_training_pipeline.html#blocking">Blocking</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Creating a Common Identifier (ID)</a><ul>
@@ -224,6 +227,19 @@
 <li class="toctree-l2"><a class="reference internal" href="split.html#neer_match_utilities.split.split_test_train"><code class="docutils literal notranslate"><span class="pre">split_test_train()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="blocking.html">Blocking</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="blocking.html#neer_match_utilities.blocking.Blocking"><code class="docutils literal notranslate"><span class="pre">Blocking</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="blocking.html#neer_match_utilities.blocking.Blocking.__init__"><code class="docutils literal notranslate"><span class="pre">Blocking.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="blocking.html#neer_match_utilities.blocking.Blocking.candidates"><code class="docutils literal notranslate"><span class="pre">Blocking.candidates()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="blocking.html#neer_match_utilities.blocking.Blocking.columns"><code class="docutils literal notranslate"><span class="pre">Blocking.columns()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="blocking.html#neer_match_utilities.blocking.blocked_metrics"><code class="docutils literal notranslate"><span class="pre">blocked_metrics()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="blocking.html#neer_match_utilities.blocking.blocking_columns"><code class="docutils literal notranslate"><span class="pre">blocking_columns()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="blocking.html#neer_match_utilities.blocking.candidate_pairs"><code class="docutils literal notranslate"><span class="pre">candidate_pairs()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="blocking.html#neer_match_utilities.blocking.tune_threshold_blocked"><code class="docutils literal notranslate"><span class="pre">tune_threshold_blocked()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="training.html">Training</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="training.html#neer_match_utilities.training.Training"><code class="docutils literal notranslate"><span class="pre">Training</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="training.html#neer_match_utilities.training.Training.evaluate_dataframe"><code class="docutils literal notranslate"><span class="pre">Training.evaluate_dataframe()</span></code></a></li>
@@ -283,6 +299,7 @@
 <li class="toctree-l2"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__init__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__init__()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__len__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__len__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.blocked"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.blocked</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.chunks"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.chunks()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.frame"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.frame()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.match_flags"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.match_flags()</span></code></a></li>
@@ -411,6 +428,12 @@ annual data)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">subgroups</span></code>: Implements a blocking strategy by restricting comparisons
 to observations within each subgroup, which can significantly reduce
 computation time</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">blocking</span></code>: A rule of <code class="docutils literal notranslate"><span class="pre">neer_match_utilities.blocking</span></code>,
+e.g. <code class="docutils literal notranslate"><span class="pre">Blocking(exact=[&quot;city&quot;],</span> <span class="pre">within={&quot;found_year&quot;:</span> <span class="pre">2})</span></code>: in each
+pair of consecutive periods, the model scores only the candidate
+pairs. It needs a baseline model (Logit, Probit or Gradient Boosting).
+Unlike <code class="docutils literal notranslate"><span class="pre">subgroups</span></code>, which compares the periods present in each
+subgroup, it compares the consecutive periods of the whole panel</p></li>
 </ul>
 <p>To generate an ID for the <em>left</em> and <em>right</em> DataFrames, we first create
 a column (<em>side</em>) to distinguish the two sources, then stack the
@@ -447,7 +470,7 @@ DataFrames vertically.</p>
 <span class="n">result</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Processing periods left-right at 2026-11-08 12:58:05.677275
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Processing periods left-right at 2026-11-08 13:32:49.858766
 </pre></div>
 </div>
 <div>
@@ -472,23 +495,23 @@ DataFrames vertically.</p>
 <tbody>
 <tr class="row-even"><td><p>0</p></td>
 <td><p>0</p></td>
-<td><p>ee9ce81e-d710-44b4-a601-bbe5ae3d586c</p></td>
+<td><p>4b88f242-ab3f-4e28-8f54-c7f424be9e05</p></td>
 </tr>
 <tr class="row-odd"><td><p>1</p></td>
 <td><p>1</p></td>
-<td><p>9baa0ab1-ae40-48b2-beea-ef8455c68dad</p></td>
+<td><p>2fab2e44-3df6-4d25-9fb7-8ef07b61d4ce</p></td>
 </tr>
 <tr class="row-even"><td><p>2</p></td>
 <td><p>2</p></td>
-<td><p>b98161b6-d4e7-4dcb-84f5-c25c479ae72c</p></td>
+<td><p>634bfd37-7533-4bc4-b6c8-4497f8bf4203</p></td>
 </tr>
 <tr class="row-odd"><td><p>3</p></td>
 <td><p>3</p></td>
-<td><p>b5afae68-5b2b-4ce6-b182-879d0aecf4ab</p></td>
+<td><p>86fa4517-0491-406e-974f-11ac6a12e93c</p></td>
 </tr>
 <tr class="row-even"><td><p>4</p></td>
 <td><p>4</p></td>
-<td><p>7d4e55e7-f443-4151-a6a2-ef8cda8467fe</p></td>
+<td><p>fda48e52-7f33-418e-9e18-1cdc94396605</p></td>
 </tr>
 </tbody>
 </table>
@@ -545,15 +568,15 @@ DataFrames vertically.</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>726</p></td>
-<td><p>7d4e55e7-f443-4151-a6a2-ef8cda8467fe</p></td>
+<tr class="row-even"><td><p>1366</p></td>
+<td><p>fda48e52-7f33-418e-9e18-1cdc94396605</p></td>
 <td><p>22ac99ae20</p></td>
 <td><p>left</p></td>
 <td><p>KAISERSTEINBRUCH-ACTIENGESELLSCHAFT IN LIQU. I…</p></td>
 <td><p>KÖLN</p></td>
 </tr>
-<tr class="row-odd"><td><p>727</p></td>
-<td><p>7d4e55e7-f443-4151-a6a2-ef8cda8467fe</p></td>
+<tr class="row-odd"><td><p>1367</p></td>
+<td><p>fda48e52-7f33-418e-9e18-1cdc94396605</p></td>
 <td><p>e9823a3073</p></td>
 <td><p>right</p></td>
 <td><p>KAISERSTEINBRUCH-ACTIENGESELLSCHAFT IN KÖLN,</p></td>

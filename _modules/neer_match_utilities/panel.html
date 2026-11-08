@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.panel &mdash; Neer Match Utilities 1.2.11 documentation</title>
+  <title>neer_match_utilities.panel &mdash; Neer Match Utilities 1.2.12 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=b68a8a9d"></script>
+      <script src="../../_static/documentation_options.js?v=817200f7"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -65,7 +65,10 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../basic_training_pipeline.html#re-structuring-the-matches-dataframe">Re-Structuring the <code class="docutils literal notranslate"><span class="pre">Matches</span></code> dataframe</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../basic_training_pipeline.html#splitting-data">Splitting Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../basic_training_pipeline.html#training-and-exporting-the-model">Training and Exporting the Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../basic_training_pipeline.html#training-and-exporting-the-model">Training and Exporting the Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../basic_training_pipeline.html#blocking">Blocking</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../id_generation.html">Creating a Common Identifier (ID)</a><ul>
@@ -221,6 +224,19 @@
 <li class="toctree-l2"><a class="reference internal" href="../../split.html#neer_match_utilities.split.split_test_train"><code class="docutils literal notranslate"><span class="pre">split_test_train()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../blocking.html">Blocking</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../blocking.html#neer_match_utilities.blocking.Blocking"><code class="docutils literal notranslate"><span class="pre">Blocking</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../blocking.html#neer_match_utilities.blocking.Blocking.__init__"><code class="docutils literal notranslate"><span class="pre">Blocking.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../blocking.html#neer_match_utilities.blocking.Blocking.candidates"><code class="docutils literal notranslate"><span class="pre">Blocking.candidates()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../blocking.html#neer_match_utilities.blocking.Blocking.columns"><code class="docutils literal notranslate"><span class="pre">Blocking.columns()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../blocking.html#neer_match_utilities.blocking.blocked_metrics"><code class="docutils literal notranslate"><span class="pre">blocked_metrics()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../blocking.html#neer_match_utilities.blocking.blocking_columns"><code class="docutils literal notranslate"><span class="pre">blocking_columns()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../blocking.html#neer_match_utilities.blocking.candidate_pairs"><code class="docutils literal notranslate"><span class="pre">candidate_pairs()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../blocking.html#neer_match_utilities.blocking.tune_threshold_blocked"><code class="docutils literal notranslate"><span class="pre">tune_threshold_blocked()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../training.html">Training</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../training.html#neer_match_utilities.training.Training"><code class="docutils literal notranslate"><span class="pre">Training</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../training.html#neer_match_utilities.training.Training.evaluate_dataframe"><code class="docutils literal notranslate"><span class="pre">Training.evaluate_dataframe()</span></code></a></li>
@@ -280,6 +296,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__init__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__init__()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__len__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__len__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.blocked"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.blocked</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.chunks"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.chunks()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.frame"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.frame()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.match_flags"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.match_flags()</span></code></a></li>
@@ -335,6 +352,7 @@
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">combinations</span><span class="p">,</span> <span class="n">permutations</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">neer_match.matching_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">DLMatchingModel</span><span class="p">,</span> <span class="n">NSMatchingModel</span>
@@ -746,7 +764,8 @@
         <span class="n">similarity_map</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="s2">"SimilarityMap"</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
         <span class="n">prediction_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">|</span> <span class="nb">object</span> <span class="o">=</span> <span class="n">_TUNED_OR_0_9</span><span class="p">,</span>
         <span class="n">subgroups</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">relation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'m:m'</span>
+        <span class="n">relation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'m:m'</span><span class="p">,</span>
+        <span class="n">blocking</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Initialize the GenerateID class.</span>
@@ -774,6 +793,16 @@
 <span class="sd">            SimilarityMap and 0.5 otherwise.</span>
 <span class="sd">        relation : str, optional</span>
 <span class="sd">            Relationship between observations in cross sectional data. Default is 'm:m'</span>
+<span class="sd">        blocking : Blocking, function or None, optional</span>
+<span class="sd">            A rule of :mod:`neer_match_utilities.blocking`: in each pair of</span>
+<span class="sd">            consecutive periods, the model scores only the candidate pairs. It</span>
+<span class="sd">            needs a model whose ``suggest`` takes ``blocking``, as the baseline</span>
+<span class="sd">            models (Logit, Probit, Gradient Boosting) do. ``subgroups`` works as</span>
+<span class="sd">            before: it splits the panel into groups first and compares the</span>
+<span class="sd">            consecutive periods present in each group, so a group that skips a</span>
+<span class="sd">            period compares the periods around the gap. ``Blocking(exact=...)``</span>
+<span class="sd">            on the same columns compares the panel's consecutive periods</span>
+<span class="sd">            instead. Both can be combined.</span>
 <span class="sd">        """</span>
 
         <span class="n">subgroups</span> <span class="o">=</span> <span class="n">subgroups</span> <span class="ow">or</span> <span class="p">[]</span>
@@ -802,6 +831,12 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">prediction_threshold</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">prediction_threshold</span><span class="p">)</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">relation</span> <span class="o">=</span> <span class="n">relation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">blocking</span> <span class="o">=</span> <span class="n">blocking</span>
+        <span class="k">if</span> <span class="n">blocking</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s2">"blocking"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">suggest</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"blocking needs a model whose suggest takes blocking; </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">model</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.suggest "</span>
+                <span class="s2">"does not. The baseline models (Logit, Probit, Gradient Boosting) do."</span>
+            <span class="p">)</span>
 
         <span class="c1"># Determine which columns to keep in df_panel</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">similarity_map</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -814,6 +849,11 @@
             <span class="n">field_keys</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="n">keep_cols</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">field_keys</span><span class="p">)</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">subgroups</span><span class="p">)</span> <span class="o">|</span> <span class="p">{</span><span class="n">time_var</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">blocking</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.blocking</span><span class="w"> </span><span class="kn">import</span> <span class="n">blocking_columns</span>
+            <span class="n">read</span> <span class="o">=</span> <span class="n">blocking_columns</span><span class="p">(</span><span class="n">blocking</span><span class="p">)</span>
+            <span class="c1"># A function may read any column</span>
+            <span class="n">keep_cols</span> <span class="o">|=</span> <span class="nb">set</span><span class="p">(</span><span class="n">df_panel</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="k">if</span> <span class="n">read</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">set</span><span class="p">(</span><span class="n">read</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">read</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
         
         <span class="c1"># Keep only those columns that actually exist (avoids KeyError)</span>
         <span class="n">keep_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df_panel</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">keep_cols</span><span class="p">]</span>
@@ -906,6 +946,8 @@
 
     
     <span class="k">def</span><span class="w"> </span><span class="nf">_call_suggest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocking</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">suggest</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">count</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">blocking</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">blocking</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">suggest</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">count</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
