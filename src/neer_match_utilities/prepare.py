@@ -6,6 +6,7 @@ import pandas as pd
 from collections import OrderedDict
 from .base import SuperClass
 from .custom_similarities import register_similarities
+from .split import ORIGINAL_INDEX
 import spacy
 import random
 import string
@@ -599,6 +600,10 @@ def synth_mismatches(
     empty_share: float = 0.0,
     sample_share: float = 1.0,
     id_right: Optional[str] = None,
+    random_state: Optional[int] = None,
+    candidate_weights: Literal["uniform", "frequency"] = "uniform",
+    variants: Optional[dict] = None,
+    fallback: Literal["random", "skip"] = "random",
 ) -> pd.DataFrame:
     """
     Generate synthetic mismatches for a subset of rows in ``right``.
@@ -606,6 +611,15 @@ def synth_mismatches(
     The output contains all original rows plus additional synthetic rows created by
     modifying selected columns. Synthetic rows are deduplicated against the original
     data and against each other.
+
+    A synthetic row is not in ``matches``, so it counts as a non-match of the left
+    record its source row is matched to: a hard non-match if the change is small.
+    Apply the function to the training subset after ``split_test_train`` (which
+    drops records without a match), and change only columns that identify the
+    entity: a synthetic row that differs from its source only in a recorded
+    variant of the same value (e.g. "Johann" for "Johannes") is the same entity,
+    and labelling it a non-match teaches the model the wrong thing. ``variants``
+    excludes such replacements.
 
     Parameters
     ----------
@@ -627,8 +641,9 @@ def synth_mismatches(
         If ``orig == 0``, any ``candidate != 0`` is treated as percentage difference 1.0.
     n_cols : int
         Number of columns from ``columns_change`` to modify per synthetic row.
-        If ``n_cols < len(columns_change)``, pick that many at random. If
-        ``n_cols > len(columns_change)``, all columns in ``columns_change`` are modified.
+        If ``n_cols < len(columns_change)``, pick that many at random, once per
+        synthetic row. If ``n_cols > len(columns_change)``, all columns in
+        ``columns_change`` are modified.
     n_mismatches : int, default=1
         Number of synthetic mismatches to generate per selected original row.
     keep_missing : bool, default=True
@@ -646,12 +661,30 @@ def synth_mismatches(
     id_right : str or None, default=None
         Name of a unique-ID column in ``right``. If provided, synthetic rows receive
         new UUID4 IDs in this column. If None, no ID column is created or modified.
+    random_state : int or None, default=None
+        Seed for all random draws of this call. If None, the global generators of
+        ``random`` and ``numpy.random`` are used, as before.
+    candidate_weights : {"uniform", "frequency"}, default="uniform"
+        How a replacement is drawn from the qualifying values of a column:
+        uniformly, or in proportion to how often each value occurs in ``right``,
+        so that common names are drawn as often as they occur.
+    variants : dict or None, default=None
+        Known variants of the same value, ``{column: {value: set_of_variants}}``,
+        e.g. from :func:`learn_variants`. A listed variant of the original value
+        is never used as its replacement.
+    fallback : {"random", "skip"}, default="random"
+        What happens if no value of a column qualifies: "random" perturbs the
+        original (random letters for strings), "skip" leaves the cell unchanged.
 
 
     Returns
     -------
     pandas.DataFrame
         Expanded DataFrame with the original rows plus the synthetic mismatch rows.
+        The original rows keep their row labels; with an integer index the
+        synthetic rows are numbered after the largest label, so that pairs that
+        refer to the row labels stay valid. The column ``index_original`` added
+        by ``split_test_train`` is missing in synthetic rows.
 
     Notes
     -----
@@ -678,6 +711,19 @@ def synth_mismatches(
         raise ValueError("nan_share + empty_share must be ≤ 1.0.")
     if not (0 <= sample_share <= 1):
         raise ValueError("sample_share must be between 0 and 1.")
+    if candidate_weights not in ("uniform", "frequency"):
+        raise ValueError("candidate_weights must be 'uniform' or 'frequency'.")
+    if fallback not in ("random", "skip"):
+        raise ValueError("fallback must be 'random' or 'skip'.")
+    variants = variants or {}
+
+    # Random generators: local ones if seeded, else the global ones (earlier behaviour)
+    if random_state is None:
+        rnd, np_rng, sample_state = random, np.random, None
+    else:
+        rnd = random.Random(random_state)
+        np_rng = np.random.default_rng(random_state)
+        sample_state = np_rng
 
     # Validate n_cols vs. columns_change length
     if n_cols > len(columns_change):
@@ -713,7 +759,7 @@ def synth_mismatches(
         n_to_sample = int(np.floor(sample_share * n_original))
         sampled_idx = (
             original_right
-            .sample(n=n_to_sample, random_state=None)
+            .sample(n=n_to_sample, random_state=sample_state)
             .index
             .tolist()
         )
@@ -727,11 +773,14 @@ def synth_mismatches(
 
     # Precompute candidate pools for columns_change from original right
     candidate_pools = {}
+    candidate_counts = {}
     for col in columns_change:
         if col in original_right.columns:
             candidate_pools[col] = original_right[col].dropna().unique().tolist()
+            candidate_counts[col] = original_right[col].value_counts().to_dict()
         else:
             candidate_pools[col] = []
+            candidate_counts[col] = {}
 
     # Helper: percentage‐based numeric filter
     def pct_diff(orig: float, candidate: float) -> float:
@@ -751,7 +800,7 @@ def synth_mismatches(
         length = len(orig) if (isinstance(orig, str) and len(orig) > 0) else 1
         attempts = 0
         while attempts < 50:
-            candidate = "".join(random.choices(__import__("string").ascii_letters, k=length))
+            candidate = "".join(rnd.choices(string.ascii_letters, k=length))
             try:
                 sim = str_sim(orig, candidate)
             except Exception:
@@ -770,7 +819,7 @@ def synth_mismatches(
         attempts = 0
         col_std = col_series.std() if (col_series.std() > 0) else 1.0
         while attempts < 50:
-            candidate = orig + np.random.normal(loc=0.0, scale=col_std)
+            candidate = orig + np_rng.normal(loc=0.0, scale=col_std)
             pdiff = pct_diff(orig, candidate)
             if min_pct_diff <= pdiff <= max_pct_diff:
                 return candidate
@@ -796,6 +845,8 @@ def synth_mismatches(
         orig_row = original_right.loc[idx]
         for _ in range(n_mismatches):
             new_row = {}
+            # The columns to modify in this synthetic row, drawn once per row
+            chosen = set(rnd.sample(columns_change, n_cols_effective))
             for col in final_columns:
                 if id_right and col == id_right:
                     new_row[col] = None  # assign later
@@ -805,12 +856,13 @@ def synth_mismatches(
 
                 if col in columns_change:
                     # Decide if we modify this column in this synthetic row
-                    if col in random.sample(columns_change, n_cols_effective):
+                    if col in chosen:
                         # If keep_missing=True and orig_val is NaN or "", preserve it
                         if keep_missing and (pd.isna(orig_val) or (isinstance(orig_val, str) and orig_val == "")):
                             new_row[col] = orig_val
                         else:
-                            pool = [v for v in candidate_pools[col] if v != orig_val]
+                            same = _known_variants(variants, col, orig_val)
+                            pool = [v for v in candidate_pools[col] if v != orig_val and v not in same]
 
                             # Filter pool by string or percentage‐difference range
                             filtered = []
@@ -831,7 +883,13 @@ def synth_mismatches(
                                         continue
 
                             if filtered:
-                                new_row[col] = random.choice(filtered)
+                                if candidate_weights == "frequency":
+                                    weights = [candidate_counts[col].get(v, 1) for v in filtered]
+                                    new_row[col] = rnd.choices(filtered, weights=weights, k=1)[0]
+                                else:
+                                    new_row[col] = rnd.choice(filtered)
+                            elif fallback == "skip":
+                                new_row[col] = orig_val
                             else:
                                 # Fallback: perturb orig_val
                                 if pd.isna(orig_val):
@@ -888,10 +946,9 @@ def synth_mismatches(
             elif pd.api.types.is_float_dtype(orig_dtype):
                 df_new[col] = df_new[col].astype(orig_dtype)
 
-    # Drop duplicates (by all columns except id_right, if specified)
-    data_columns = (
-        [c for c in final_columns if c != id_right] if id_right else final_columns.copy()
-    )
+    # Drop duplicates (by all columns except id_right, if specified, and the
+    # original row labels that split_test_train adds)
+    data_columns = [c for c in final_columns if c not in (id_right, ORIGINAL_INDEX)]
     original_data = original_right[data_columns].drop_duplicates().reset_index(drop=True)
 
     df_new_data = df_new[data_columns].reset_index()
@@ -923,7 +980,7 @@ def synth_mismatches(
     if nan_share > 0 or empty_share > 0:
         for col in columns_change:
             df_new_filtered[col] = df_new_filtered[col].astype(object)
-            rand_vals = np.random.rand(len(df_new_filtered))
+            rand_vals = np_rng.random(len(df_new_filtered))
             nan_mask = rand_vals < nan_share
             empty_mask = (rand_vals >= nan_share) & (rand_vals < nan_share + empty_share)
             df_new_filtered.loc[nan_mask, col] = np.nan
@@ -931,8 +988,331 @@ def synth_mismatches(
 
     # Concatenate the filtered synthetic rows onto original_right
     if not df_new_filtered.empty:
-        result = pd.concat([original_right, df_new_filtered], ignore_index=True)
+        result = _append_synthetic(original_right, df_new_filtered)
     else:
         result = original_right.copy()
 
     return result
+
+
+def _known_variants(variants: dict, column: str, value) -> set:
+    """The listed variants of `value` in `column` (empty if none or if `value` is missing)."""
+    if not variants or column not in variants:
+        return set()
+    try:
+        if pd.isna(value):
+            return set()
+    except (TypeError, ValueError):
+        pass
+    return set(variants[column].get(value, ()))
+
+
+def _append_synthetic(original: pd.DataFrame, new: pd.DataFrame) -> pd.DataFrame:
+    """
+    Appends synthetic rows to `original` without changing its row labels.
+
+    With an integer index, the new rows are numbered after the largest label;
+    otherwise all rows are renumbered from 0 (with a warning), as before. The
+    original row labels of `split_test_train` (``index_original``) are set to
+    missing in the new rows, so that they cannot be taken for original records.
+    """
+    new = new.copy()
+    if ORIGINAL_INDEX in new.columns:
+        new[ORIGINAL_INDEX] = np.nan
+    if len(original) == 0 or pd.api.types.is_integer_dtype(original.index):
+        start = int(original.index.max()) + 1 if len(original) else 0
+        new.index = pd.RangeIndex(start, start + len(new))
+        out = pd.concat([original, new])
+    else:
+        warnings.warn(
+            "right has a non-integer index: all rows are renumbered from 0, so pairs "
+            "that refer to its row labels no longer apply."
+        )
+        out = pd.concat([original, new], ignore_index=True)
+    if ORIGINAL_INDEX in original.columns and pd.api.types.is_integer_dtype(original[ORIGINAL_INDEX]):
+        out[ORIGINAL_INDEX] = out[ORIGINAL_INDEX].astype("Int64")
+    return out
+
+
+# Characters that OCR of printed (incl. Fraktur) sources confuses; each pair is
+# used in both directions and in lower and upper case (data are often
+# capitalized after OCR, so "Horn" read as "Hom" appears as "HOM").
+OCR_CONFUSIONS: Tuple[Tuple[str, str], ...] = (
+    ("rn", "m"), ("cl", "d"), ("li", "h"), ("vv", "w"), ("ii", "ü"),
+    ("u", "n"), ("c", "e"), ("o", "c"), ("h", "b"), ("s", "f"), ("ſ", "f"),
+    ("i", "l"), ("l", "1"), ("o", "0"), ("ü", "u"), ("ä", "a"), ("ö", "o"),
+    ("å", "a"), ("ß", "ss"),
+)
+
+
+def _directed_confusions(pairs) -> List[Tuple[str, str]]:
+    """Both directions of each pair, in lower and upper case, without no-op or repeated pairs."""
+    out = []
+    for a, b in pairs:
+        for x, y in ((a, b), (b, a), (a.upper(), b.upper()), (b.upper(), a.upper())):
+            if x != y and (x, y) not in out:
+                out.append((x, y))
+    return out
+
+
+def _corrupt_ocr(value: str, confusions, rnd) -> Optional[str]:
+    """Replaces one occurrence of a confusable character sequence, or None if none occurs."""
+    spots = [
+        (i, a, b)
+        for a, b in confusions
+        for i in range(len(value) - len(a) + 1)
+        if value.startswith(a, i)
+    ]
+    if not spots:
+        return None
+    i, a, b = rnd.choice(spots)
+    return value[:i] + b + value[i + len(a):]
+
+
+def _corrupt_typo(value: str, rnd) -> Optional[str]:
+    """One typing or transcription slip: a character dropped, doubled, or two neighbours swapped."""
+    if len(value) < 3:
+        return None
+    ops = ["drop", "double"] + (["swap"] if any(value[i] != value[i + 1] for i in range(len(value) - 1)) else [])
+    op = rnd.choice(ops)
+    if op == "swap":
+        i = rnd.choice([i for i in range(len(value) - 1) if value[i] != value[i + 1]])
+        return value[:i] + value[i + 1] + value[i] + value[i + 2:]
+    i = rnd.randrange(len(value))
+    return value[:i] + value[i + 1:] if op == "drop" else value[:i] + value[i] + value[i:]
+
+
+def learn_variants(
+    left: pd.DataFrame,
+    right: pd.DataFrame,
+    matches: pd.DataFrame,
+    columns,
+    min_count: int = 1,
+) -> dict:
+    """
+    Collect the variants of a value that occur in true matches.
+
+    For every match, the values of a column in the left and the right record are
+    compared; if they differ (e.g. "JOHANN" and "JOHANNES", or "CARL" and "KARL"),
+    each is recorded as a variant of the other. The result tells which
+    replacements keep the identity of a record: :func:`synth_matches` uses them
+    to build synthetic matches, :func:`synth_mismatches` excludes them when it
+    builds synthetic non-matches. Learn them from the training matches only, so
+    that nothing of the test subset enters the training data.
+
+    Parameters
+    ----------
+    left, right : pandas.DataFrame
+        The records; ``matches`` refers to their row labels.
+    matches : pandas.DataFrame
+        True pairs, with columns 'left' and 'right'.
+    columns : list of str or dict
+        Columns to compare: names present in both ``left`` and ``right``, or a
+        mapping ``{right_column: left_column}``.
+    min_count : int, default=1
+        Keep a pair of values only if it occurs in at least this many matches.
+
+    Returns
+    -------
+    dict
+        ``{right_column: {value: set_of_variants}}``, symmetric (if b is a variant
+        of a, a is a variant of b).
+    """
+    pairs = columns if isinstance(columns, dict) else {c: c for c in columns}
+    l_rows = left.loc[matches["left"]]
+    r_rows = right.loc[matches["right"]]
+    out = {}
+    for r_col, l_col in pairs.items():
+        counts = {}
+        for a, b in zip(l_rows[l_col].to_numpy(), r_rows[r_col].to_numpy()):
+            if pd.isna(a) or pd.isna(b) or a == b or a == "" or b == "":
+                continue
+            key = (a, b) if str(a) <= str(b) else (b, a)
+            counts[key] = counts.get(key, 0) + 1
+        table = {}
+        for (a, b), n in counts.items():
+            if n >= min_count:
+                table.setdefault(a, set()).add(b)
+                table.setdefault(b, set()).add(a)
+        out[r_col] = table
+    return out
+
+
+def synth_matches(
+    right: pd.DataFrame,
+    matches: pd.DataFrame,
+    columns_change: List[str],
+    n_cols: int = 1,
+    n_per_match: int = 1,
+    sample_share: float = 1.0,
+    corruptions: Tuple[str, ...] = ("ocr", "typo", "variant"),
+    variants: Optional[dict] = None,
+    ocr_confusions: Tuple[Tuple[str, str], ...] = OCR_CONFUSIONS,
+    max_shift: int = 1,
+    id_right: Optional[str] = None,
+    random_state: Optional[int] = None,
+) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    """
+    Generate synthetic matches: copies of matched right records with errors that
+    keep their identity.
+
+    For a share of the matches (left, right), a copy of the right record is made
+    in which ``n_cols`` columns of ``columns_change`` are corrupted, and the pair
+    (left, copy) is added to the matches. The corruptions imitate how one entity
+    is recorded differently in two sources:
+
+    - ``"ocr"``: one OCR confusion, e.g. "rn" read as "m" or "ü" as "u"
+      (``ocr_confusions``);
+    - ``"typo"``: one character dropped, doubled, or swapped with its neighbour;
+    - ``"variant"``: the value replaced by a variant recorded for it in
+      ``variants`` (e.g. from :func:`learn_variants`), e.g. "JOHANNES" for "JOHANN";
+    - ``"shift"``: a numeric value moved by up to ``max_shift`` (e.g. a birth
+      year misreported by one year);
+    - ``"missing"``: the value not recorded.
+
+    The label "match" is only right if the corruption keeps the identity, so
+    choose ``columns_change`` and ``corruptions`` accordingly (e.g. "shift" for a
+    birth year, not for a parish code). Apply the function to the training
+    subset after ``split_test_train``, never to the test subset.
+
+    Parameters
+    ----------
+    right : pandas.DataFrame
+        The right records; ``matches`` refers to their row labels.
+    matches : pandas.DataFrame
+        True pairs, with columns 'left' and 'right'.
+    columns_change : list of str
+        Columns that may be corrupted.
+    n_cols : int, default=1
+        Number of columns corrupted per synthetic record. Columns where no
+        selected corruption applies (e.g. a missing value) are not counted; if
+        fewer than ``n_cols`` qualify, all of them are corrupted.
+    n_per_match : int, default=1
+        Number of synthetic records per selected match.
+    sample_share : float, default=1.0
+        Share of the matches, drawn at random, for which synthetic records are made.
+    corruptions : tuple of str, default=("ocr", "typo", "variant")
+        Corruptions to draw from, among "ocr", "typo", "variant", "shift" and
+        "missing". For each corrupted cell, one of those that apply is drawn.
+    variants : dict or None, default=None
+        ``{column: {value: set_of_variants}}`` for the corruption "variant".
+    ocr_confusions : tuple of (str, str), default=OCR_CONFUSIONS
+        Confusable character sequences, used in both directions and in lower and
+        upper case.
+    max_shift : int, default=1
+        Largest change of a numeric value for the corruption "shift".
+    id_right : str or None, default=None
+        Name of a unique-ID column in ``right``; synthetic records get new UUID4 IDs.
+    random_state : int or None, default=None
+        Seed for all random draws of this call.
+
+    Returns
+    -------
+    (pandas.DataFrame, pandas.DataFrame)
+        ``right`` with the synthetic records appended, and ``matches`` with their
+        pairs appended. The original rows keep their row labels; with an integer
+        index the synthetic records are numbered after the largest label. A
+        synthetic record that equals an existing record, or another synthetic
+        one, is dropped. The column ``index_original`` added by
+        ``split_test_train`` is missing in synthetic records.
+    """
+    known = {"ocr", "typo", "variant", "shift", "missing"}
+    unknown = set(corruptions) - known
+    if unknown:
+        raise ValueError(f"Unknown corruptions {sorted(unknown)}; choose among {sorted(known)}.")
+    if not (0 <= sample_share <= 1):
+        raise ValueError("sample_share must be between 0 and 1.")
+    if n_cols < 1 or n_per_match < 1:
+        raise ValueError("n_cols and n_per_match must be at least 1.")
+    missing_cols = [c for c in columns_change if c not in right.columns]
+    if missing_cols:
+        raise ValueError(f"Columns not in right: {missing_cols}")
+    if "variant" in corruptions and not variants:
+        warnings.warn("corruption 'variant' needs variants (e.g. from learn_variants); it is skipped.")
+    variants = variants or {}
+    confusions = _directed_confusions(ocr_confusions)
+    rnd = random.Random(random_state)
+    np_rng = np.random.default_rng(random_state)
+
+    def options(col, value) -> List[str]:
+        """The corruptions that apply to this value."""
+        if pd.isna(value) or (isinstance(value, str) and value == ""):
+            return []
+        out = []
+        if isinstance(value, str):
+            if "ocr" in corruptions and any(a in value for a, _ in confusions):
+                out.append("ocr")
+            if "typo" in corruptions and len(value) >= 3:
+                out.append("typo")
+        elif isinstance(value, (int, float, np.integer, np.floating)) and not isinstance(value, bool):
+            if "shift" in corruptions and max_shift >= 1:
+                out.append("shift")
+        if "variant" in corruptions and _known_variants(variants, col, value):
+            out.append("variant")
+        if "missing" in corruptions:
+            out.append("missing")
+        return out
+
+    def corrupt(col, value, how):
+        if how == "ocr":
+            return _corrupt_ocr(value, confusions, rnd)
+        if how == "typo":
+            return _corrupt_typo(value, rnd)
+        if how == "variant":
+            return rnd.choice(sorted(_known_variants(variants, col, value), key=str))
+        if how == "shift":
+            step = rnd.choice([s for s in range(-max_shift, max_shift + 1) if s != 0])
+            return value + step
+        return np.nan  # "missing"
+
+    n_sample = int(np.floor(sample_share * len(matches)))
+    chosen_matches = matches.sample(n=n_sample, random_state=np_rng) if n_sample < len(matches) else matches
+
+    def key(row) -> tuple:
+        return tuple(None if (not isinstance(v, str) and pd.isna(v)) else v for v in row)
+
+    data_columns = [c for c in right.columns if c not in (id_right, ORIGINAL_INDEX)]
+    seen = {key(r) for r in right[data_columns].itertuples(index=False, name=None)}
+    existing_ids = set(right[id_right].astype(str)) if id_right else set()
+
+    new_rows, new_left = [], []
+    for l_id, r_id in zip(chosen_matches["left"], chosen_matches["right"]):
+        source = right.loc[r_id]
+        for _ in range(n_per_match):
+            usable = {c: options(c, source[c]) for c in columns_change}
+            usable = {c: o for c, o in usable.items() if o}
+            if not usable:
+                continue
+            cols = rnd.sample(sorted(usable), min(n_cols, len(usable)))
+            row = source.copy()
+            for c in cols:
+                new = corrupt(c, source[c], rnd.choice(usable[c]))
+                if new is not None:
+                    row[c] = new
+            k = key(row[data_columns].tolist())
+            if k in seen:
+                continue
+            seen.add(k)
+            if id_right:
+                new_id = str(uuid.uuid4())
+                while new_id in existing_ids:
+                    new_id = str(uuid.uuid4())
+                existing_ids.add(new_id)
+                row[id_right] = new_id
+            new_rows.append(row)
+            new_left.append(l_id)
+
+    if not new_rows:
+        return right.copy(), matches.copy()
+    new = pd.DataFrame(new_rows, columns=right.columns)
+    for c in right.columns:
+        if c != ORIGINAL_INDEX and new[c].dtype != right[c].dtype:
+            try:
+                new[c] = new[c].astype(right[c].dtype)
+            except (TypeError, ValueError):
+                pass  # e.g. a missing value in an integer column: keep the wider type
+    right_out = _append_synthetic(right, new)
+    added = right_out.index[len(right):]
+    pairs = pd.DataFrame({"left": new_left, "right": added})
+    matches_out = pd.concat([matches, pairs], ignore_index=True)
+    return right_out, matches_out
