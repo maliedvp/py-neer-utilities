@@ -167,8 +167,10 @@ right_train, matches_train = synth_matches(
 
 right_train = synth_mismatches(
     right_train,
-    columns_fix=["last_name", "birth_year", "birth_parish"],
-    columns_change=["first_name"],
+    columns_fix=["sex", "last_name", "birth_year", "birth_parish"],
+    columns_change=["first_name_std"],
+    linked_columns={"first_name_std": ["first_name"]},  # the name as written comes with the donor's standard form
+    within=["sex"],                     # a woman's name is replaced by another woman's name
     str_metric="jaro_winkler",
     str_similarity_range=(0.8, 0.95),   # similar, but not the same name
     pct_diff_range=(0.0, 0.0),
@@ -176,10 +178,13 @@ right_train = synth_mismatches(
     sample_share=0.5,
     candidate_weights="frequency",      # draw common names as often as they occur
     variants=variants,                  # never a recorded variant of the same name
+    fallback="skip",                    # no qualifying name: no synthetic record
     id_right="id_unique",
     random_state=42,
 )
 ```
+
+Fields that belong together, such as a standardized name and the name as written, or a name and its commonness, are kept consistent with `linked_columns`: they are copied from the record that supplies the new value.
 
 A synthetic pair is only as good as its label: change only fields that identify the entity, and only in ways that keep (for `synth_matches`) or change (for `synth_mismatches`) the identity.
 

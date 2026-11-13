@@ -95,6 +95,57 @@ def test_fallback_skip_leaves_the_cell(right):
     assert len(out) > len(right)
 
 
+@pytest.fixture
+def persons():
+    """Standardized and written names that belong together, with sex and commonness."""
+    std = ["JOHAN", "JOHANNES", "KARL", "KARIN", "MARIA", "MARTA", "ANNA", "ANNIKA", "ERIK", "ERIKA"] * 4
+    sex = [1, 1, 1, 2, 2, 2, 2, 2, 1, 2] * 4
+    return pd.DataFrame({
+        "key": [f"k{i}" for i in range(40)],
+        "sex": sex,
+        "first_name_std": std,
+        "first_name": [s.capitalize() + "." for s in std],   # as written, derived from the standard form
+        "commonness": [len(s) / 10 for s in std],
+    })
+
+
+def test_linked_columns_come_from_the_donor(persons):
+    out = synth_mismatches(persons, ["key", "sex"], ["first_name_std"], n_cols=1, random_state=0,
+                           linked_columns={"first_name_std": ["first_name", "commonness"]}, **ARGS)
+    new = out.iloc[len(persons):]
+    assert len(new) > 0
+    # every synthetic row is internally consistent: written name and commonness fit the new standard name
+    assert (new["first_name"] == new["first_name_std"].str.capitalize() + ".").all()
+    assert np.allclose(new["commonness"], new["first_name_std"].str.len() / 10)
+
+
+def test_without_linked_columns_rows_can_be_inconsistent(persons):
+    out = synth_mismatches(persons, ["key", "sex"], ["first_name_std"], n_cols=1, random_state=0, **ARGS)
+    new = out.iloc[len(persons):]
+    assert (new["first_name"] != new["first_name_std"].str.capitalize() + ".").all()
+
+
+def test_within_draws_from_the_same_group(persons):
+    by_name_sex = dict(zip(persons["first_name_std"], persons["sex"]))
+    for seed in range(5):
+        out = synth_mismatches(persons, ["key", "sex"], ["first_name_std"], n_cols=1, random_state=seed,
+                               within=["sex"], linked_columns={"first_name_std": ["first_name"]}, **ARGS)
+        new = out.iloc[len(persons):]
+        assert len(new) > 0
+        assert (new["first_name_std"].map(by_name_sex) == new["sex"]).all()
+
+
+def test_linked_and_within_are_checked(persons):
+    with pytest.raises(ValueError, match="keys of linked_columns"):
+        synth_mismatches(persons, ["key"], ["first_name_std"], n_cols=1,
+                         linked_columns={"first_name": ["commonness"]}, **ARGS)
+    with pytest.raises(ValueError, match="fixed"):
+        synth_mismatches(persons, ["key", "first_name"], ["first_name_std"], n_cols=1,
+                         linked_columns={"first_name_std": ["first_name"]}, **ARGS)
+    with pytest.raises(ValueError, match="not in right"):
+        synth_mismatches(persons, ["key"], ["first_name_std"], n_cols=1, within=["parish"], **ARGS)
+
+
 def test_invalid_options(right):
     with pytest.raises(ValueError, match="candidate_weights"):
         synth_mismatches(right, ["key"], ["city"], n_cols=1, candidate_weights="zipf", **ARGS)

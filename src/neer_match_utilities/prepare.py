@@ -604,6 +604,8 @@ def synth_mismatches(
     candidate_weights: Literal["uniform", "frequency"] = "uniform",
     variants: Optional[dict] = None,
     fallback: Literal["random", "skip"] = "random",
+    linked_columns: Optional[dict] = None,
+    within: Optional[List[str]] = None,
 ) -> pd.DataFrame:
     """
     Generate synthetic mismatches for a subset of rows in ``right``.
@@ -675,6 +677,18 @@ def synth_mismatches(
     fallback : {"random", "skip"}, default="random"
         What happens if no value of a column qualifies: "random" perturbs the
         original (random letters for strings), "skip" leaves the cell unchanged.
+    linked_columns : dict or None, default=None
+        ``{column: [columns]}``: when a column of ``columns_change`` gets the value
+        of another row of ``right`` (the donor), the listed columns are copied
+        from that donor too, so that fields that belong together stay consistent:
+        a standardized name and the name as written, a name and its commonness,
+        a birth year and the age. Keys must be in ``columns_change``; the listed
+        columns must not be in ``columns_fix``.
+    within : list of str or None, default=None
+        Draw replacements only from rows that agree with the source row on these
+        columns, e.g. ``["sex"]``, so that a woman's first name is replaced by
+        another woman's name. ``candidate_weights="frequency"`` then counts
+        within that group.
 
 
     Returns
@@ -716,6 +730,16 @@ def synth_mismatches(
     if fallback not in ("random", "skip"):
         raise ValueError("fallback must be 'random' or 'skip'.")
     variants = variants or {}
+    linked_columns = {k: list(v) for k, v in (linked_columns or {}).items()}
+    within = list(within or [])
+    if set(linked_columns) - set(columns_change):
+        raise ValueError("The keys of linked_columns must be in columns_change.")
+    clash = [c for cols in linked_columns.values() for c in cols if c in columns_fix or c == id_right]
+    if clash:
+        raise ValueError(f"Columns in linked_columns must not be fixed or the ID: {clash}")
+    absent = [c for c in within + [c for cols in linked_columns.values() for c in cols] if c not in right.columns]
+    if absent:
+        raise ValueError(f"Columns not in right: {absent}")
 
     # Random generators: local ones if seeded, else the global ones (earlier behaviour)
     if random_state is None:
@@ -782,6 +806,29 @@ def synth_mismatches(
             candidate_pools[col] = []
             candidate_counts[col] = {}
 
+    # With `within` or `linked_columns`: pools per group of rows, and the rows
+    # (donors) that hold each value
+    def _key(row) -> tuple:
+        return tuple(None if (not isinstance(row[w], str) and pd.isna(row[w])) else row[w] for w in within)
+
+    group_rows = {}
+    if within:
+        for label, row in original_right[within].iterrows():
+            group_rows.setdefault(_key(row), []).append(label)
+    pool_cache = {}
+
+    def pool_for(col, row):
+        """Values, their counts and their donor rows for `col`, within the group of `row`."""
+        if not within and col not in linked_columns:
+            return candidate_pools[col], candidate_counts[col], None
+        key = (col, _key(row) if within else ())
+        if key not in pool_cache:
+            members = group_rows[key[1]] if within else original_right.index
+            values = original_right.loc[members, col].dropna()
+            donors = values.groupby(values, sort=False).groups if col in linked_columns else None
+            pool_cache[key] = (values.unique().tolist(), values.value_counts().to_dict(), donors)
+        return pool_cache[key]
+
     # Helper: percentage‐based numeric filter
     def pct_diff(orig: float, candidate: float) -> float:
         """
@@ -845,6 +892,7 @@ def synth_mismatches(
         orig_row = original_right.loc[idx]
         for _ in range(n_mismatches):
             new_row = {}
+            linked_values = {}  # columns copied from donors, applied after the loop
             # The columns to modify in this synthetic row, drawn once per row
             chosen = set(rnd.sample(columns_change, n_cols_effective))
             for col in final_columns:
@@ -862,7 +910,8 @@ def synth_mismatches(
                             new_row[col] = orig_val
                         else:
                             same = _known_variants(variants, col, orig_val)
-                            pool = [v for v in candidate_pools[col] if v != orig_val and v not in same]
+                            values, counts, donors = pool_for(col, orig_row)
+                            pool = [v for v in values if v != orig_val and v not in same]
 
                             # Filter pool by string or percentage‐difference range
                             filtered = []
@@ -884,10 +933,14 @@ def synth_mismatches(
 
                             if filtered:
                                 if candidate_weights == "frequency":
-                                    weights = [candidate_counts[col].get(v, 1) for v in filtered]
+                                    weights = [counts.get(v, 1) for v in filtered]
                                     new_row[col] = rnd.choices(filtered, weights=weights, k=1)[0]
                                 else:
                                     new_row[col] = rnd.choice(filtered)
+                                if donors is not None:
+                                    donor = rnd.choice(list(donors[new_row[col]]))
+                                    for c in linked_columns[col]:
+                                        linked_values[c] = original_right.at[donor, c]
                             elif fallback == "skip":
                                 new_row[col] = orig_val
                             else:
@@ -916,6 +969,8 @@ def synth_mismatches(
                 else:
                     # Neither fix nor change: copy original if present, else NaN
                     new_row[col] = orig_val
+
+            new_row.update(linked_values)
 
             # Assign a new UUID4 for id_right, if specified
             if id_right:
