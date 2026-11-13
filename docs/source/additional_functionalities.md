@@ -170,6 +170,97 @@ print(fs_result.coef_by_feature)
 print(f"Features: {fs_result.meta['n_features_in']} → {fs_result.meta['n_features_selected']}")
 ```
 
+## Hard Non-Matches, Records Without a Match, and Synthetic Pairs
+
+By default, `split_test_train` keeps only records that appear in
+`matches`. Every record then has its partner in its subset, and the test
+never contains a record for which “no match” is the correct answer,
+although such records are common in practice (persons who died or
+emigrated between two censuses, firms that closed). Three opt-in tools
+address this; without them, results are unchanged.
+
+**Labelled non-matches.** Pairs checked by hand and known not to match,
+often confusable records, are passed as `non_matches` (row labels of
+`left` and `right`, as in `matches`). Their records are kept, also those
+without any match, and both records of a pair end up in the same subset,
+where the pair is a non-match like every pair not in `matches`.
+`pairs_in_subset` finds the pairs of a subset, e.g. to evaluate on them.
+
+**Records without a partner in the test subset.** `drop_partner_share`
+removes the right record of a share of the test matches. Their left
+records stay, so the test shows how often a model links a record that
+has no counterpart.
+
+``` python
+from neer_match_utilities.split import split_test_train, pairs_in_subset
+
+(left_train, right_train, matches_train,
+ left_validation, right_validation, matches_validation,
+ left_test, right_test, matches_test) = split_test_train(
+    left, right, matches,
+    test_ratio=0.3, validation_ratio=0.2, random_state=42,
+    non_matches=hard_non_matches,   # columns 'left' and 'right'
+    drop_partner_share=0.2,         # 20% of the test matches lose their partner
+)
+
+hard_in_test = pairs_in_subset(hard_non_matches, left_test, right_test)
+```
+
+**Synthetic pairs for training.** `synth_matches` adds copies of matched
+right records with errors that keep the identity (OCR confusions, typing
+slips, recorded name variants, a birth year off by one) and pairs them
+with the left record. `synth_mismatches` adds copies in which
+identifying fields are replaced by other, similar values: hard
+non-matches. Which replacement keeps the identity is learned from the
+training matches with `learn_variants`: “JOHANN” and “JOHANNES” recorded
+for the same person are variants, so `synth_matches` may use one for the
+other, and `synth_mismatches` never does. Apply both to the training
+subset only, after the split; new rows are numbered after the existing
+ones, so `matches` stays valid.
+
+``` python
+from neer_match_utilities.prepare import learn_variants, synth_matches, synth_mismatches
+
+variants = learn_variants(left_train, right_train, matches_train, ["first_name", "last_name"])
+
+right_train, matches_train = synth_matches(
+    right_train, matches_train,
+    columns_change=["first_name", "last_name", "birth_year"],
+    corruptions=("ocr", "typo", "variant", "shift"),
+    variants=variants,
+    max_shift=1,                    # birth year off by at most one
+    id_right="id_unique",           # new IDs for the copies
+    random_state=42,
+)
+
+right_train = synth_mismatches(
+    right_train,
+    columns_fix=["sex", "last_name", "birth_year", "birth_parish"],
+    columns_change=["first_name_std"],
+    linked_columns={"first_name_std": ["first_name"]},  # the name as written comes with the donor's standard form
+    within=["sex"],                     # a woman's name is replaced by another woman's name
+    str_metric="jaro_winkler",
+    str_similarity_range=(0.8, 0.95),   # similar, but not the same name
+    pct_diff_range=(0.0, 0.0),
+    n_cols=1,
+    sample_share=0.5,
+    candidate_weights="frequency",      # draw common names as often as they occur
+    variants=variants,                  # never a recorded variant of the same name
+    fallback="skip",                    # no qualifying name: no synthetic record
+    id_right="id_unique",
+    random_state=42,
+)
+```
+
+Fields that belong together, such as a standardized name and the name as
+written, or a name and its commonness, are kept consistent with
+`linked_columns`: they are copied from the record that supplies the new
+value.
+
+A synthetic pair is only as good as its label: change only fields that
+identify the entity, and only in ways that keep (for `synth_matches`) or
+change (for `synth_mismatches`) the identity.
+
 ## Handling Many-to-Many Matches
 
 ### Loading the Data
