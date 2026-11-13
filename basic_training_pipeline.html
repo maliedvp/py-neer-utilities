@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>A Minimal Training Pipeline &mdash; Neer Match Utilities 1.2.12 documentation</title>
+  <title>A Minimal Training Pipeline &mdash; Neer Match Utilities 1.2.13 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -17,7 +17,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=817200f7"></script>
+      <script src="_static/documentation_options.js?v=250a84ee"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
@@ -106,6 +106,7 @@
 <li class="toctree-l2"><a class="reference internal" href="additional_functionalities.html#name-commonness">Name Commonness</a></li>
 <li class="toctree-l2"><a class="reference internal" href="additional_functionalities.html#stop-word-removal-with-spacy">Stop Word Removal with spaCy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="additional_functionalities.html#feature-selection">Feature Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="additional_functionalities.html#hard-non-matches-records-without-a-match-and-synthetic-pairs">Hard Non-Matches, Records Without a Match, and Synthetic Pairs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="additional_functionalities.html#handling-many-to-many-matches">Handling Many-to-Many Matches</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="additional_functionalities.html#loading-the-data">Loading the Data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="additional_functionalities.html#inspecting-the-data">Inspecting the Data</a></li>
@@ -220,12 +221,15 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.available_similarities"><code class="docutils literal notranslate"><span class="pre">available_similarities()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.learn_variants"><code class="docutils literal notranslate"><span class="pre">learn_variants()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.similarity_map_to_dict"><code class="docutils literal notranslate"><span class="pre">similarity_map_to_dict()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.synth_matches"><code class="docutils literal notranslate"><span class="pre">synth_matches()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.synth_mismatches"><code class="docutils literal notranslate"><span class="pre">synth_mismatches()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="split.html">Split</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="split.html#neer_match_utilities.split.SplitError"><code class="docutils literal notranslate"><span class="pre">SplitError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="split.html#neer_match_utilities.split.pairs_in_subset"><code class="docutils literal notranslate"><span class="pre">pairs_in_subset()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="split.html#neer_match_utilities.split.split_test_train"><code class="docutils literal notranslate"><span class="pre">split_test_train()</span></code></a></li>
 </ul>
 </li>
@@ -1011,7 +1015,7 @@ Probit, or GradientBoost) follow a similar syntax and are covered in
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Performance metrics saved to /Users/marli453/develop/py-neer-utilities/docs/source/_static/examples/demonstration_model/performance.csv
 Similarity map saved to /Users/marli453/develop/py-neer-utilities/docs/source/_static/examples/demonstration_model/similarity_map.dill
 
-LogitMatchingModel(result=&lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x1313ba450&gt;, feature_cols=['col_city_city_levenshtein', 'col_company_name_company_name_jaro_winkler', 'col_company_name_company_name_levenshtein', 'col_company_name_company_name_partial_token_sort_ratio', 'col_industry_industry_jaro_winkler', 'col_industry_industry_levenshtein'])
+LogitMatchingModel(result=&lt;statsmodels.discrete.discrete_model.BinaryResultsWrapper object at 0x134f58350&gt;, feature_cols=['col_city_city_levenshtein', 'col_company_name_company_name_jaro_winkler', 'col_company_name_company_name_levenshtein', 'col_company_name_company_name_partial_token_sort_ratio', 'col_industry_industry_jaro_winkler', 'col_industry_industry_levenshtein'])
 </pre></div>
 </div>
 <section id="blocking">

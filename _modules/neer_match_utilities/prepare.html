@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.prepare &mdash; Neer Match Utilities 1.2.12 documentation</title>
+  <title>neer_match_utilities.prepare &mdash; Neer Match Utilities 1.2.13 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=817200f7"></script>
+      <script src="../../_static/documentation_options.js?v=250a84ee"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -101,6 +101,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../additional_functionalities.html#name-commonness">Name Commonness</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../additional_functionalities.html#stop-word-removal-with-spacy">Stop Word Removal with spaCy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../additional_functionalities.html#feature-selection">Feature Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../additional_functionalities.html#hard-non-matches-records-without-a-match-and-synthetic-pairs">Hard Non-Matches, Records Without a Match, and Synthetic Pairs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../additional_functionalities.html#handling-many-to-many-matches">Handling Many-to-Many Matches</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../additional_functionalities.html#loading-the-data">Loading the Data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../additional_functionalities.html#inspecting-the-data">Inspecting the Data</a></li>
@@ -215,12 +216,15 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../prepare.html#neer_match_utilities.prepare.available_similarities"><code class="docutils literal notranslate"><span class="pre">available_similarities()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../prepare.html#neer_match_utilities.prepare.learn_variants"><code class="docutils literal notranslate"><span class="pre">learn_variants()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../prepare.html#neer_match_utilities.prepare.similarity_map_to_dict"><code class="docutils literal notranslate"><span class="pre">similarity_map_to_dict()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../prepare.html#neer_match_utilities.prepare.synth_matches"><code class="docutils literal notranslate"><span class="pre">synth_matches()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../prepare.html#neer_match_utilities.prepare.synth_mismatches"><code class="docutils literal notranslate"><span class="pre">synth_mismatches()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../split.html">Split</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../split.html#neer_match_utilities.split.SplitError"><code class="docutils literal notranslate"><span class="pre">SplitError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../split.html#neer_match_utilities.split.pairs_in_subset"><code class="docutils literal notranslate"><span class="pre">pairs_in_subset()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../split.html#neer_match_utilities.split.split_test_train"><code class="docutils literal notranslate"><span class="pre">split_test_train()</span></code></a></li>
 </ul>
 </li>
@@ -357,6 +361,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderedDict</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">SuperClass</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.custom_similarities</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_similarities</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.split</span><span class="w"> </span><span class="kn">import</span> <span class="n">ORIGINAL_INDEX</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">spacy</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">string</span>
@@ -970,6 +975,12 @@
     <span class="n">empty_share</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="n">sample_share</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
     <span class="n">id_right</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">candidate_weights</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"uniform"</span><span class="p">,</span> <span class="s2">"frequency"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"uniform"</span><span class="p">,</span>
+    <span class="n">variants</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">fallback</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"random"</span><span class="p">,</span> <span class="s2">"skip"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"random"</span><span class="p">,</span>
+    <span class="n">linked_columns</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">within</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Generate synthetic mismatches for a subset of rows in ``right``.</span>
@@ -977,6 +988,15 @@
 <span class="sd">    The output contains all original rows plus additional synthetic rows created by</span>
 <span class="sd">    modifying selected columns. Synthetic rows are deduplicated against the original</span>
 <span class="sd">    data and against each other.</span>
+
+<span class="sd">    A synthetic row is not in ``matches``, so it counts as a non-match of the left</span>
+<span class="sd">    record its source row is matched to: a hard non-match if the change is small.</span>
+<span class="sd">    Apply the function to the training subset after ``split_test_train`` (which</span>
+<span class="sd">    drops records without a match), and change only columns that identify the</span>
+<span class="sd">    entity: a synthetic row that differs from its source only in a recorded</span>
+<span class="sd">    variant of the same value (e.g. "Johann" for "Johannes") is the same entity,</span>
+<span class="sd">    and labelling it a non-match teaches the model the wrong thing. ``variants``</span>
+<span class="sd">    excludes such replacements.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -998,8 +1018,9 @@
 <span class="sd">        If ``orig == 0``, any ``candidate != 0`` is treated as percentage difference 1.0.</span>
 <span class="sd">    n_cols : int</span>
 <span class="sd">        Number of columns from ``columns_change`` to modify per synthetic row.</span>
-<span class="sd">        If ``n_cols &lt; len(columns_change)``, pick that many at random. If</span>
-<span class="sd">        ``n_cols &gt; len(columns_change)``, all columns in ``columns_change`` are modified.</span>
+<span class="sd">        If ``n_cols &lt; len(columns_change)``, pick that many at random, once per</span>
+<span class="sd">        synthetic row. If ``n_cols &gt; len(columns_change)``, all columns in</span>
+<span class="sd">        ``columns_change`` are modified.</span>
 <span class="sd">    n_mismatches : int, default=1</span>
 <span class="sd">        Number of synthetic mismatches to generate per selected original row.</span>
 <span class="sd">    keep_missing : bool, default=True</span>
@@ -1017,12 +1038,42 @@
 <span class="sd">    id_right : str or None, default=None</span>
 <span class="sd">        Name of a unique-ID column in ``right``. If provided, synthetic rows receive</span>
 <span class="sd">        new UUID4 IDs in this column. If None, no ID column is created or modified.</span>
+<span class="sd">    random_state : int or None, default=None</span>
+<span class="sd">        Seed for all random draws of this call. If None, the global generators of</span>
+<span class="sd">        ``random`` and ``numpy.random`` are used, as before.</span>
+<span class="sd">    candidate_weights : {"uniform", "frequency"}, default="uniform"</span>
+<span class="sd">        How a replacement is drawn from the qualifying values of a column:</span>
+<span class="sd">        uniformly, or in proportion to how often each value occurs in ``right``,</span>
+<span class="sd">        so that common names are drawn as often as they occur.</span>
+<span class="sd">    variants : dict or None, default=None</span>
+<span class="sd">        Known variants of the same value, ``{column: {value: set_of_variants}}``,</span>
+<span class="sd">        e.g. from :func:`learn_variants`. A listed variant of the original value</span>
+<span class="sd">        is never used as its replacement.</span>
+<span class="sd">    fallback : {"random", "skip"}, default="random"</span>
+<span class="sd">        What happens if no value of a column qualifies: "random" perturbs the</span>
+<span class="sd">        original (random letters for strings), "skip" leaves the cell unchanged.</span>
+<span class="sd">    linked_columns : dict or None, default=None</span>
+<span class="sd">        ``{column: [columns]}``: when a column of ``columns_change`` gets the value</span>
+<span class="sd">        of another row of ``right`` (the donor), the listed columns are copied</span>
+<span class="sd">        from that donor too, so that fields that belong together stay consistent:</span>
+<span class="sd">        a standardized name and the name as written, a name and its commonness,</span>
+<span class="sd">        a birth year and the age. Keys must be in ``columns_change``; the listed</span>
+<span class="sd">        columns must not be in ``columns_fix``.</span>
+<span class="sd">    within : list of str or None, default=None</span>
+<span class="sd">        Draw replacements only from rows that agree with the source row on these</span>
+<span class="sd">        columns, e.g. ``["sex"]``, so that a woman's first name is replaced by</span>
+<span class="sd">        another woman's name. ``candidate_weights="frequency"`` then counts</span>
+<span class="sd">        within that group.</span>
 
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    pandas.DataFrame</span>
 <span class="sd">        Expanded DataFrame with the original rows plus the synthetic mismatch rows.</span>
+<span class="sd">        The original rows keep their row labels; with an integer index the</span>
+<span class="sd">        synthetic rows are numbered after the largest label, so that pairs that</span>
+<span class="sd">        refer to the row labels stay valid. The column ``index_original`` added</span>
+<span class="sd">        by ``split_test_train`` is missing in synthetic rows.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -1049,6 +1100,29 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"nan_share + empty_share must be ≤ 1.0."</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">sample_share</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"sample_share must be between 0 and 1."</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">candidate_weights</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"uniform"</span><span class="p">,</span> <span class="s2">"frequency"</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"candidate_weights must be 'uniform' or 'frequency'."</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">fallback</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"random"</span><span class="p">,</span> <span class="s2">"skip"</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"fallback must be 'random' or 'skip'."</span><span class="p">)</span>
+    <span class="n">variants</span> <span class="o">=</span> <span class="n">variants</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">linked_columns</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">(</span><span class="n">linked_columns</span> <span class="ow">or</span> <span class="p">{})</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="n">within</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">within</span> <span class="ow">or</span> <span class="p">[])</span>
+    <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">linked_columns</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">columns_change</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The keys of linked_columns must be in columns_change."</span><span class="p">)</span>
+    <span class="n">clash</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">cols</span> <span class="ow">in</span> <span class="n">linked_columns</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cols</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">columns_fix</span> <span class="ow">or</span> <span class="n">c</span> <span class="o">==</span> <span class="n">id_right</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">clash</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Columns in linked_columns must not be fixed or the ID: </span><span class="si">{</span><span class="n">clash</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">absent</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">within</span> <span class="o">+</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">cols</span> <span class="ow">in</span> <span class="n">linked_columns</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">]</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">right</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">absent</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Columns not in right: </span><span class="si">{</span><span class="n">absent</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="c1"># Random generators: local ones if seeded, else the global ones (earlier behaviour)</span>
+    <span class="k">if</span> <span class="n">random_state</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">rnd</span><span class="p">,</span> <span class="n">np_rng</span><span class="p">,</span> <span class="n">sample_state</span> <span class="o">=</span> <span class="n">random</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="p">,</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">rnd</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
+        <span class="n">np_rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
+        <span class="n">sample_state</span> <span class="o">=</span> <span class="n">np_rng</span>
 
     <span class="c1"># Validate n_cols vs. columns_change length</span>
     <span class="k">if</span> <span class="n">n_cols</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">columns_change</span><span class="p">):</span>
@@ -1084,7 +1158,7 @@
         <span class="n">n_to_sample</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">sample_share</span> <span class="o">*</span> <span class="n">n_original</span><span class="p">))</span>
         <span class="n">sampled_idx</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">original_right</span>
-            <span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">n_to_sample</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">n_to_sample</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">sample_state</span><span class="p">)</span>
             <span class="o">.</span><span class="n">index</span>
             <span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
         <span class="p">)</span>
@@ -1098,11 +1172,37 @@
 
     <span class="c1"># Precompute candidate pools for columns_change from original right</span>
     <span class="n">candidate_pools</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">candidate_counts</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">columns_change</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">original_right</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
             <span class="n">candidate_pools</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">original_right</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="n">candidate_counts</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">original_right</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">candidate_pools</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">candidate_counts</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># With `within` or `linked_columns`: pools per group of rows, and the rows</span>
+    <span class="c1"># (donors) that hold each value</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_key</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="kc">None</span> <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">w</span><span class="p">],</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">w</span><span class="p">]))</span> <span class="k">else</span> <span class="n">row</span><span class="p">[</span><span class="n">w</span><span class="p">]</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">within</span><span class="p">)</span>
+
+    <span class="n">group_rows</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">within</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">original_right</span><span class="p">[</span><span class="n">within</span><span class="p">]</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="n">group_rows</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">_key</span><span class="p">(</span><span class="n">row</span><span class="p">),</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+    <span class="n">pool_cache</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">pool_for</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">row</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Values, their counts and their donor rows for `col`, within the group of `row`."""</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">within</span> <span class="ow">and</span> <span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">linked_columns</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">candidate_pools</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">candidate_counts</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="kc">None</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">_key</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="k">if</span> <span class="n">within</span> <span class="k">else</span> <span class="p">())</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pool_cache</span><span class="p">:</span>
+            <span class="n">members</span> <span class="o">=</span> <span class="n">group_rows</span><span class="p">[</span><span class="n">key</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="k">if</span> <span class="n">within</span> <span class="k">else</span> <span class="n">original_right</span><span class="o">.</span><span class="n">index</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">original_right</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">members</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+            <span class="n">donors</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">groups</span> <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">linked_columns</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="n">pool_cache</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">values</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">values</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="n">donors</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pool_cache</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
 
     <span class="c1"># Helper: percentage‐based numeric filter</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">pct_diff</span><span class="p">(</span><span class="n">orig</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">candidate</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
@@ -1122,7 +1222,7 @@
         <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">orig</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">orig</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">orig</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">else</span> <span class="mi">1</span>
         <span class="n">attempts</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">while</span> <span class="n">attempts</span> <span class="o">&lt;</span> <span class="mi">50</span><span class="p">:</span>
-            <span class="n">candidate</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">choices</span><span class="p">(</span><span class="nb">__import__</span><span class="p">(</span><span class="s2">"string"</span><span class="p">)</span><span class="o">.</span><span class="n">ascii_letters</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">length</span><span class="p">))</span>
+            <span class="n">candidate</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rnd</span><span class="o">.</span><span class="n">choices</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_letters</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">length</span><span class="p">))</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">sim</span> <span class="o">=</span> <span class="n">str_sim</span><span class="p">(</span><span class="n">orig</span><span class="p">,</span> <span class="n">candidate</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
@@ -1141,7 +1241,7 @@
         <span class="n">attempts</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">col_std</span> <span class="o">=</span> <span class="n">col_series</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="k">if</span> <span class="p">(</span><span class="n">col_series</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">else</span> <span class="mf">1.0</span>
         <span class="k">while</span> <span class="n">attempts</span> <span class="o">&lt;</span> <span class="mi">50</span><span class="p">:</span>
-            <span class="n">candidate</span> <span class="o">=</span> <span class="n">orig</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">col_std</span><span class="p">)</span>
+            <span class="n">candidate</span> <span class="o">=</span> <span class="n">orig</span> <span class="o">+</span> <span class="n">np_rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">col_std</span><span class="p">)</span>
             <span class="n">pdiff</span> <span class="o">=</span> <span class="n">pct_diff</span><span class="p">(</span><span class="n">orig</span><span class="p">,</span> <span class="n">candidate</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">min_pct_diff</span> <span class="o">&lt;=</span> <span class="n">pdiff</span> <span class="o">&lt;=</span> <span class="n">max_pct_diff</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">candidate</span>
@@ -1167,6 +1267,9 @@
         <span class="n">orig_row</span> <span class="o">=</span> <span class="n">original_right</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_mismatches</span><span class="p">):</span>
             <span class="n">new_row</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">linked_values</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># columns copied from donors, applied after the loop</span>
+            <span class="c1"># The columns to modify in this synthetic row, drawn once per row</span>
+            <span class="n">chosen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">rnd</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">columns_change</span><span class="p">,</span> <span class="n">n_cols_effective</span><span class="p">))</span>
             <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">final_columns</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">id_right</span> <span class="ow">and</span> <span class="n">col</span> <span class="o">==</span> <span class="n">id_right</span><span class="p">:</span>
                     <span class="n">new_row</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># assign later</span>
@@ -1176,12 +1279,14 @@
 
                 <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">columns_change</span><span class="p">:</span>
                     <span class="c1"># Decide if we modify this column in this synthetic row</span>
-                    <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">columns_change</span><span class="p">,</span> <span class="n">n_cols_effective</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">chosen</span><span class="p">:</span>
                         <span class="c1"># If keep_missing=True and orig_val is NaN or "", preserve it</span>
                         <span class="k">if</span> <span class="n">keep_missing</span> <span class="ow">and</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">orig_val</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">orig_val</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">orig_val</span> <span class="o">==</span> <span class="s2">""</span><span class="p">)):</span>
                             <span class="n">new_row</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">orig_val</span>
                         <span class="k">else</span><span class="p">:</span>
-                            <span class="n">pool</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">candidate_pools</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="k">if</span> <span class="n">v</span> <span class="o">!=</span> <span class="n">orig_val</span><span class="p">]</span>
+                            <span class="n">same</span> <span class="o">=</span> <span class="n">_known_variants</span><span class="p">(</span><span class="n">variants</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">orig_val</span><span class="p">)</span>
+                            <span class="n">values</span><span class="p">,</span> <span class="n">counts</span><span class="p">,</span> <span class="n">donors</span> <span class="o">=</span> <span class="n">pool_for</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">orig_row</span><span class="p">)</span>
+                            <span class="n">pool</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span> <span class="k">if</span> <span class="n">v</span> <span class="o">!=</span> <span class="n">orig_val</span> <span class="ow">and</span> <span class="n">v</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">same</span><span class="p">]</span>
 
                             <span class="c1"># Filter pool by string or percentage‐difference range</span>
                             <span class="n">filtered</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1202,7 +1307,17 @@
                                         <span class="k">continue</span>
 
                             <span class="k">if</span> <span class="n">filtered</span><span class="p">:</span>
-                                <span class="n">new_row</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">filtered</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="n">candidate_weights</span> <span class="o">==</span> <span class="s2">"frequency"</span><span class="p">:</span>
+                                    <span class="n">weights</span> <span class="o">=</span> <span class="p">[</span><span class="n">counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">filtered</span><span class="p">]</span>
+                                    <span class="n">new_row</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">rnd</span><span class="o">.</span><span class="n">choices</span><span class="p">(</span><span class="n">filtered</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                                <span class="k">else</span><span class="p">:</span>
+                                    <span class="n">new_row</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">rnd</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">filtered</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="n">donors</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                                    <span class="n">donor</span> <span class="o">=</span> <span class="n">rnd</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">donors</span><span class="p">[</span><span class="n">new_row</span><span class="p">[</span><span class="n">col</span><span class="p">]]))</span>
+                                    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">linked_columns</span><span class="p">[</span><span class="n">col</span><span class="p">]:</span>
+                                        <span class="n">linked_values</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">original_right</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">donor</span><span class="p">,</span> <span class="n">c</span><span class="p">]</span>
+                            <span class="k">elif</span> <span class="n">fallback</span> <span class="o">==</span> <span class="s2">"skip"</span><span class="p">:</span>
+                                <span class="n">new_row</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">orig_val</span>
                             <span class="k">else</span><span class="p">:</span>
                                 <span class="c1"># Fallback: perturb orig_val</span>
                                 <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">orig_val</span><span class="p">):</span>
@@ -1229,6 +1344,8 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="c1"># Neither fix nor change: copy original if present, else NaN</span>
                     <span class="n">new_row</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">orig_val</span>
+
+            <span class="n">new_row</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">linked_values</span><span class="p">)</span>
 
             <span class="c1"># Assign a new UUID4 for id_right, if specified</span>
             <span class="k">if</span> <span class="n">id_right</span><span class="p">:</span>
@@ -1259,10 +1376,9 @@
             <span class="k">elif</span> <span class="n">pd</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">is_float_dtype</span><span class="p">(</span><span class="n">orig_dtype</span><span class="p">):</span>
                 <span class="n">df_new</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_new</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">orig_dtype</span><span class="p">)</span>
 
-    <span class="c1"># Drop duplicates (by all columns except id_right, if specified)</span>
-    <span class="n">data_columns</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">final_columns</span> <span class="k">if</span> <span class="n">c</span> <span class="o">!=</span> <span class="n">id_right</span><span class="p">]</span> <span class="k">if</span> <span class="n">id_right</span> <span class="k">else</span> <span class="n">final_columns</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="p">)</span>
+    <span class="c1"># Drop duplicates (by all columns except id_right, if specified, and the</span>
+    <span class="c1"># original row labels that split_test_train adds)</span>
+    <span class="n">data_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">final_columns</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">id_right</span><span class="p">,</span> <span class="n">ORIGINAL_INDEX</span><span class="p">)]</span>
     <span class="n">original_data</span> <span class="o">=</span> <span class="n">original_right</span><span class="p">[</span><span class="n">data_columns</span><span class="p">]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="n">df_new_data</span> <span class="o">=</span> <span class="n">df_new</span><span class="p">[</span><span class="n">data_columns</span><span class="p">]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
@@ -1294,7 +1410,7 @@
     <span class="k">if</span> <span class="n">nan_share</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">empty_share</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">columns_change</span><span class="p">:</span>
             <span class="n">df_new_filtered</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_new_filtered</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
-            <span class="n">rand_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df_new_filtered</span><span class="p">))</span>
+            <span class="n">rand_vals</span> <span class="o">=</span> <span class="n">np_rng</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df_new_filtered</span><span class="p">))</span>
             <span class="n">nan_mask</span> <span class="o">=</span> <span class="n">rand_vals</span> <span class="o">&lt;</span> <span class="n">nan_share</span>
             <span class="n">empty_mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">rand_vals</span> <span class="o">&gt;=</span> <span class="n">nan_share</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">rand_vals</span> <span class="o">&lt;</span> <span class="n">nan_share</span> <span class="o">+</span> <span class="n">empty_share</span><span class="p">)</span>
             <span class="n">df_new_filtered</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nan_mask</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
@@ -1302,11 +1418,340 @@
 
     <span class="c1"># Concatenate the filtered synthetic rows onto original_right</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">df_new_filtered</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">original_right</span><span class="p">,</span> <span class="n">df_new_filtered</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">_append_synthetic</span><span class="p">(</span><span class="n">original_right</span><span class="p">,</span> <span class="n">df_new_filtered</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">original_right</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
     <span class="k">return</span> <span class="n">result</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_known_variants</span><span class="p">(</span><span class="n">variants</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">column</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""The listed variants of `value` in `column` (empty if none or if `value` is missing)."""</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">variants</span> <span class="ow">or</span> <span class="n">column</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">variants</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+        <span class="k">pass</span>
+    <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="n">variants</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">()))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_append_synthetic</span><span class="p">(</span><span class="n">original</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">new</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Appends synthetic rows to `original` without changing its row labels.</span>
+
+<span class="sd">    With an integer index, the new rows are numbered after the largest label;</span>
+<span class="sd">    otherwise all rows are renumbered from 0 (with a warning), as before. The</span>
+<span class="sd">    original row labels of `split_test_train` (``index_original``) are set to</span>
+<span class="sd">    missing in the new rows, so that they cannot be taken for original records.</span>
+<span class="sd">    """</span>
+    <span class="n">new</span> <span class="o">=</span> <span class="n">new</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">ORIGINAL_INDEX</span> <span class="ow">in</span> <span class="n">new</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">new</span><span class="p">[</span><span class="n">ORIGINAL_INDEX</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">original</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">pd</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">is_integer_dtype</span><span class="p">(</span><span class="n">original</span><span class="o">.</span><span class="n">index</span><span class="p">):</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">original</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">original</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="n">new</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">RangeIndex</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">start</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">new</span><span class="p">))</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">original</span><span class="p">,</span> <span class="n">new</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">"right has a non-integer index: all rows are renumbered from 0, so pairs "</span>
+            <span class="s2">"that refer to its row labels no longer apply."</span>
+        <span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">original</span><span class="p">,</span> <span class="n">new</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ORIGINAL_INDEX</span> <span class="ow">in</span> <span class="n">original</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="n">pd</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">is_integer_dtype</span><span class="p">(</span><span class="n">original</span><span class="p">[</span><span class="n">ORIGINAL_INDEX</span><span class="p">]):</span>
+        <span class="n">out</span><span class="p">[</span><span class="n">ORIGINAL_INDEX</span><span class="p">]</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="n">ORIGINAL_INDEX</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">"Int64"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span>
+
+
+<span class="c1"># Characters that OCR of printed (incl. Fraktur) sources confuses; each pair is</span>
+<span class="c1"># used in both directions and in lower and upper case (data are often</span>
+<span class="c1"># capitalized after OCR, so "Horn" read as "Hom" appears as "HOM").</span>
+<span class="n">OCR_CONFUSIONS</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">(</span><span class="s2">"rn"</span><span class="p">,</span> <span class="s2">"m"</span><span class="p">),</span> <span class="p">(</span><span class="s2">"cl"</span><span class="p">,</span> <span class="s2">"d"</span><span class="p">),</span> <span class="p">(</span><span class="s2">"li"</span><span class="p">,</span> <span class="s2">"h"</span><span class="p">),</span> <span class="p">(</span><span class="s2">"vv"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">),</span> <span class="p">(</span><span class="s2">"ii"</span><span class="p">,</span> <span class="s2">"ü"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"u"</span><span class="p">,</span> <span class="s2">"n"</span><span class="p">),</span> <span class="p">(</span><span class="s2">"c"</span><span class="p">,</span> <span class="s2">"e"</span><span class="p">),</span> <span class="p">(</span><span class="s2">"o"</span><span class="p">,</span> <span class="s2">"c"</span><span class="p">),</span> <span class="p">(</span><span class="s2">"h"</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">),</span> <span class="p">(</span><span class="s2">"s"</span><span class="p">,</span> <span class="s2">"f"</span><span class="p">),</span> <span class="p">(</span><span class="s2">"ſ"</span><span class="p">,</span> <span class="s2">"f"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"i"</span><span class="p">,</span> <span class="s2">"l"</span><span class="p">),</span> <span class="p">(</span><span class="s2">"l"</span><span class="p">,</span> <span class="s2">"1"</span><span class="p">),</span> <span class="p">(</span><span class="s2">"o"</span><span class="p">,</span> <span class="s2">"0"</span><span class="p">),</span> <span class="p">(</span><span class="s2">"ü"</span><span class="p">,</span> <span class="s2">"u"</span><span class="p">),</span> <span class="p">(</span><span class="s2">"ä"</span><span class="p">,</span> <span class="s2">"a"</span><span class="p">),</span> <span class="p">(</span><span class="s2">"ö"</span><span class="p">,</span> <span class="s2">"o"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"å"</span><span class="p">,</span> <span class="s2">"a"</span><span class="p">),</span> <span class="p">(</span><span class="s2">"ß"</span><span class="p">,</span> <span class="s2">"ss"</span><span class="p">),</span>
+<span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_directed_confusions</span><span class="p">(</span><span class="n">pairs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">"""Both directions of each pair, in lower and upper case, without no-op or repeated pairs."""</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="p">((</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">),</span> <span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">b</span><span class="o">.</span><span class="n">upper</span><span class="p">()),</span> <span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">a</span><span class="o">.</span><span class="n">upper</span><span class="p">())):</span>
+            <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="n">y</span> <span class="ow">and</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">out</span><span class="p">:</span>
+                <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">out</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_corrupt_ocr</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">confusions</span><span class="p">,</span> <span class="n">rnd</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Replaces one occurrence of a confusable character sequence, or None if none occurs."""</span>
+    <span class="n">spots</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">confusions</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">spots</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">i</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">rnd</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">spots</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">value</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="n">value</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">):]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_corrupt_typo</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">rnd</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""One typing or transcription slip: a character dropped, doubled, or two neighbours swapped."""</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">ops</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"drop"</span><span class="p">,</span> <span class="s2">"double"</span><span class="p">]</span> <span class="o">+</span> <span class="p">([</span><span class="s2">"swap"</span><span class="p">]</span> <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">value</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="k">else</span> <span class="p">[])</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">rnd</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">ops</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">op</span> <span class="o">==</span> <span class="s2">"swap"</span><span class="p">:</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">rnd</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">value</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]])</span>
+        <span class="k">return</span> <span class="n">value</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">value</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">value</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">:]</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">rnd</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">value</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">value</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span> <span class="k">if</span> <span class="n">op</span> <span class="o">==</span> <span class="s2">"drop"</span> <span class="k">else</span> <span class="n">value</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">:]</span>
+
+
+<div class="viewcode-block" id="learn_variants">
+<a class="viewcode-back" href="../../prepare.html#neer_match_utilities.prepare.learn_variants">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">learn_variants</span><span class="p">(</span>
+    <span class="n">left</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">right</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">matches</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">columns</span><span class="p">,</span>
+    <span class="n">min_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Collect the variants of a value that occur in true matches.</span>
+
+<span class="sd">    For every match, the values of a column in the left and the right record are</span>
+<span class="sd">    compared; if they differ (e.g. "JOHANN" and "JOHANNES", or "CARL" and "KARL"),</span>
+<span class="sd">    each is recorded as a variant of the other. The result tells which</span>
+<span class="sd">    replacements keep the identity of a record: :func:`synth_matches` uses them</span>
+<span class="sd">    to build synthetic matches, :func:`synth_mismatches` excludes them when it</span>
+<span class="sd">    builds synthetic non-matches. Learn them from the training matches only, so</span>
+<span class="sd">    that nothing of the test subset enters the training data.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    left, right : pandas.DataFrame</span>
+<span class="sd">        The records; ``matches`` refers to their row labels.</span>
+<span class="sd">    matches : pandas.DataFrame</span>
+<span class="sd">        True pairs, with columns 'left' and 'right'.</span>
+<span class="sd">    columns : list of str or dict</span>
+<span class="sd">        Columns to compare: names present in both ``left`` and ``right``, or a</span>
+<span class="sd">        mapping ``{right_column: left_column}``.</span>
+<span class="sd">    min_count : int, default=1</span>
+<span class="sd">        Keep a pair of values only if it occurs in at least this many matches.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        ``{right_column: {value: set_of_variants}}``, symmetric (if b is a variant</span>
+<span class="sd">        of a, a is a variant of b).</span>
+<span class="sd">    """</span>
+    <span class="n">pairs</span> <span class="o">=</span> <span class="n">columns</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">columns</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="p">{</span><span class="n">c</span><span class="p">:</span> <span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">}</span>
+    <span class="n">l_rows</span> <span class="o">=</span> <span class="n">left</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">matches</span><span class="p">[</span><span class="s2">"left"</span><span class="p">]]</span>
+    <span class="n">r_rows</span> <span class="o">=</span> <span class="n">right</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">matches</span><span class="p">[</span><span class="s2">"right"</span><span class="p">]]</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">r_col</span><span class="p">,</span> <span class="n">l_col</span> <span class="ow">in</span> <span class="n">pairs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">counts</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">l_rows</span><span class="p">[</span><span class="n">l_col</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span> <span class="n">r_rows</span><span class="p">[</span><span class="n">r_col</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="ow">or</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="ow">or</span> <span class="n">a</span> <span class="o">==</span> <span class="n">b</span> <span class="ow">or</span> <span class="n">a</span> <span class="o">==</span> <span class="s2">""</span> <span class="ow">or</span> <span class="n">b</span> <span class="o">==</span> <span class="s2">""</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="nb">str</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="k">else</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+            <span class="n">counts</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">counts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;=</span> <span class="n">min_count</span><span class="p">:</span>
+                <span class="n">table</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="nb">set</span><span class="p">())</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+                <span class="n">table</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="nb">set</span><span class="p">())</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="n">out</span><span class="p">[</span><span class="n">r_col</span><span class="p">]</span> <span class="o">=</span> <span class="n">table</span>
+    <span class="k">return</span> <span class="n">out</span></div>
+
+
+
+<div class="viewcode-block" id="synth_matches">
+<a class="viewcode-back" href="../../prepare.html#neer_match_utilities.prepare.synth_matches">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">synth_matches</span><span class="p">(</span>
+    <span class="n">right</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">matches</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">columns_change</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">n_cols</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">n_per_match</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">sample_share</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">corruptions</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"ocr"</span><span class="p">,</span> <span class="s2">"typo"</span><span class="p">,</span> <span class="s2">"variant"</span><span class="p">),</span>
+    <span class="n">variants</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">ocr_confusions</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">OCR_CONFUSIONS</span><span class="p">,</span>
+    <span class="n">max_shift</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">id_right</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Generate synthetic matches: copies of matched right records with errors that</span>
+<span class="sd">    keep their identity.</span>
+
+<span class="sd">    For a share of the matches (left, right), a copy of the right record is made</span>
+<span class="sd">    in which ``n_cols`` columns of ``columns_change`` are corrupted, and the pair</span>
+<span class="sd">    (left, copy) is added to the matches. The corruptions imitate how one entity</span>
+<span class="sd">    is recorded differently in two sources:</span>
+
+<span class="sd">    - ``"ocr"``: one OCR confusion, e.g. "rn" read as "m" or "ü" as "u"</span>
+<span class="sd">      (``ocr_confusions``);</span>
+<span class="sd">    - ``"typo"``: one character dropped, doubled, or swapped with its neighbour;</span>
+<span class="sd">    - ``"variant"``: the value replaced by a variant recorded for it in</span>
+<span class="sd">      ``variants`` (e.g. from :func:`learn_variants`), e.g. "JOHANNES" for "JOHANN";</span>
+<span class="sd">    - ``"shift"``: a numeric value moved by up to ``max_shift`` (e.g. a birth</span>
+<span class="sd">      year misreported by one year);</span>
+<span class="sd">    - ``"missing"``: the value not recorded.</span>
+
+<span class="sd">    The label "match" is only right if the corruption keeps the identity, so</span>
+<span class="sd">    choose ``columns_change`` and ``corruptions`` accordingly (e.g. "shift" for a</span>
+<span class="sd">    birth year, not for a parish code). Apply the function to the training</span>
+<span class="sd">    subset after ``split_test_train``, never to the test subset.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    right : pandas.DataFrame</span>
+<span class="sd">        The right records; ``matches`` refers to their row labels.</span>
+<span class="sd">    matches : pandas.DataFrame</span>
+<span class="sd">        True pairs, with columns 'left' and 'right'.</span>
+<span class="sd">    columns_change : list of str</span>
+<span class="sd">        Columns that may be corrupted.</span>
+<span class="sd">    n_cols : int, default=1</span>
+<span class="sd">        Number of columns corrupted per synthetic record. Columns where no</span>
+<span class="sd">        selected corruption applies (e.g. a missing value) are not counted; if</span>
+<span class="sd">        fewer than ``n_cols`` qualify, all of them are corrupted.</span>
+<span class="sd">    n_per_match : int, default=1</span>
+<span class="sd">        Number of synthetic records per selected match.</span>
+<span class="sd">    sample_share : float, default=1.0</span>
+<span class="sd">        Share of the matches, drawn at random, for which synthetic records are made.</span>
+<span class="sd">    corruptions : tuple of str, default=("ocr", "typo", "variant")</span>
+<span class="sd">        Corruptions to draw from, among "ocr", "typo", "variant", "shift" and</span>
+<span class="sd">        "missing". For each corrupted cell, one of those that apply is drawn.</span>
+<span class="sd">    variants : dict or None, default=None</span>
+<span class="sd">        ``{column: {value: set_of_variants}}`` for the corruption "variant".</span>
+<span class="sd">    ocr_confusions : tuple of (str, str), default=OCR_CONFUSIONS</span>
+<span class="sd">        Confusable character sequences, used in both directions and in lower and</span>
+<span class="sd">        upper case.</span>
+<span class="sd">    max_shift : int, default=1</span>
+<span class="sd">        Largest change of a numeric value for the corruption "shift".</span>
+<span class="sd">    id_right : str or None, default=None</span>
+<span class="sd">        Name of a unique-ID column in ``right``; synthetic records get new UUID4 IDs.</span>
+<span class="sd">    random_state : int or None, default=None</span>
+<span class="sd">        Seed for all random draws of this call.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    (pandas.DataFrame, pandas.DataFrame)</span>
+<span class="sd">        ``right`` with the synthetic records appended, and ``matches`` with their</span>
+<span class="sd">        pairs appended. The original rows keep their row labels; with an integer</span>
+<span class="sd">        index the synthetic records are numbered after the largest label. A</span>
+<span class="sd">        synthetic record that equals an existing record, or another synthetic</span>
+<span class="sd">        one, is dropped. The column ``index_original`` added by</span>
+<span class="sd">        ``split_test_train`` is missing in synthetic records.</span>
+<span class="sd">    """</span>
+    <span class="n">known</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"ocr"</span><span class="p">,</span> <span class="s2">"typo"</span><span class="p">,</span> <span class="s2">"variant"</span><span class="p">,</span> <span class="s2">"shift"</span><span class="p">,</span> <span class="s2">"missing"</span><span class="p">}</span>
+    <span class="n">unknown</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">corruptions</span><span class="p">)</span> <span class="o">-</span> <span class="n">known</span>
+    <span class="k">if</span> <span class="n">unknown</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown corruptions </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">unknown</span><span class="p">)</span><span class="si">}</span><span class="s2">; choose among </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">known</span><span class="p">)</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">sample_share</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"sample_share must be between 0 and 1."</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n_cols</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">n_per_match</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"n_cols and n_per_match must be at least 1."</span><span class="p">)</span>
+    <span class="n">missing_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">columns_change</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">right</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">missing_cols</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Columns not in right: </span><span class="si">{</span><span class="n">missing_cols</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">"variant"</span> <span class="ow">in</span> <span class="n">corruptions</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">variants</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">"corruption 'variant' needs variants (e.g. from learn_variants); it is skipped."</span><span class="p">)</span>
+    <span class="n">variants</span> <span class="o">=</span> <span class="n">variants</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">confusions</span> <span class="o">=</span> <span class="n">_directed_confusions</span><span class="p">(</span><span class="n">ocr_confusions</span><span class="p">)</span>
+    <span class="n">rnd</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
+    <span class="n">np_rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">options</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""The corruptions that apply to this value."""</span>
+        <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">""</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">if</span> <span class="s2">"ocr"</span> <span class="ow">in</span> <span class="n">corruptions</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="n">a</span> <span class="ow">in</span> <span class="n">value</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">confusions</span><span class="p">):</span>
+                <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"ocr"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">"typo"</span> <span class="ow">in</span> <span class="n">corruptions</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"typo"</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">))</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="k">if</span> <span class="s2">"shift"</span> <span class="ow">in</span> <span class="n">corruptions</span> <span class="ow">and</span> <span class="n">max_shift</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"shift"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">"variant"</span> <span class="ow">in</span> <span class="n">corruptions</span> <span class="ow">and</span> <span class="n">_known_variants</span><span class="p">(</span><span class="n">variants</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"variant"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">"missing"</span> <span class="ow">in</span> <span class="n">corruptions</span><span class="p">:</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"missing"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">corrupt</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">how</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">how</span> <span class="o">==</span> <span class="s2">"ocr"</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_corrupt_ocr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">confusions</span><span class="p">,</span> <span class="n">rnd</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">how</span> <span class="o">==</span> <span class="s2">"typo"</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_corrupt_typo</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">rnd</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">how</span> <span class="o">==</span> <span class="s2">"variant"</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">rnd</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">_known_variants</span><span class="p">(</span><span class="n">variants</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">value</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="nb">str</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">how</span> <span class="o">==</span> <span class="s2">"shift"</span><span class="p">:</span>
+            <span class="n">step</span> <span class="o">=</span> <span class="n">rnd</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">max_shift</span><span class="p">,</span> <span class="n">max_shift</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">s</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">value</span> <span class="o">+</span> <span class="n">step</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>  <span class="c1"># "missing"</span>
+
+    <span class="n">n_sample</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">sample_share</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">)))</span>
+    <span class="n">chosen_matches</span> <span class="o">=</span> <span class="n">matches</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">n_sample</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">np_rng</span><span class="p">)</span> <span class="k">if</span> <span class="n">n_sample</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span> <span class="k">else</span> <span class="n">matches</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">key</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="kc">None</span> <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">v</span><span class="p">))</span> <span class="k">else</span> <span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">row</span><span class="p">)</span>
+
+    <span class="n">data_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">right</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">id_right</span><span class="p">,</span> <span class="n">ORIGINAL_INDEX</span><span class="p">)]</span>
+    <span class="n">seen</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">right</span><span class="p">[</span><span class="n">data_columns</span><span class="p">]</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">)}</span>
+    <span class="n">existing_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">right</span><span class="p">[</span><span class="n">id_right</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">))</span> <span class="k">if</span> <span class="n">id_right</span> <span class="k">else</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="n">new_rows</span><span class="p">,</span> <span class="n">new_left</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">l_id</span><span class="p">,</span> <span class="n">r_id</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">chosen_matches</span><span class="p">[</span><span class="s2">"left"</span><span class="p">],</span> <span class="n">chosen_matches</span><span class="p">[</span><span class="s2">"right"</span><span class="p">]):</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="n">right</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">r_id</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_per_match</span><span class="p">):</span>
+            <span class="n">usable</span> <span class="o">=</span> <span class="p">{</span><span class="n">c</span><span class="p">:</span> <span class="n">options</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">source</span><span class="p">[</span><span class="n">c</span><span class="p">])</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">columns_change</span><span class="p">}</span>
+            <span class="n">usable</span> <span class="o">=</span> <span class="p">{</span><span class="n">c</span><span class="p">:</span> <span class="n">o</span> <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">usable</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">o</span><span class="p">}</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">usable</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">cols</span> <span class="o">=</span> <span class="n">rnd</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">usable</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="n">n_cols</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">usable</span><span class="p">)))</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">:</span>
+                <span class="n">new</span> <span class="o">=</span> <span class="n">corrupt</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">source</span><span class="p">[</span><span class="n">c</span><span class="p">],</span> <span class="n">rnd</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">usable</span><span class="p">[</span><span class="n">c</span><span class="p">]))</span>
+                <span class="k">if</span> <span class="n">new</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">row</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">new</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="n">key</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">data_columns</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">id_right</span><span class="p">:</span>
+                <span class="n">new_id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
+                <span class="k">while</span> <span class="n">new_id</span> <span class="ow">in</span> <span class="n">existing_ids</span><span class="p">:</span>
+                    <span class="n">new_id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
+                <span class="n">existing_ids</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_id</span><span class="p">)</span>
+                <span class="n">row</span><span class="p">[</span><span class="n">id_right</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_id</span>
+            <span class="n">new_rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+            <span class="n">new_left</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">l_id</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">new_rows</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">right</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">matches</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">new</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">new_rows</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">right</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">right</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">c</span> <span class="o">!=</span> <span class="n">ORIGINAL_INDEX</span> <span class="ow">and</span> <span class="n">new</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="n">right</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">new</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">new</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">right</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+                <span class="k">pass</span>  <span class="c1"># e.g. a missing value in an integer column: keep the wider type</span>
+    <span class="n">right_out</span> <span class="o">=</span> <span class="n">_append_synthetic</span><span class="p">(</span><span class="n">right</span><span class="p">,</span> <span class="n">new</span><span class="p">)</span>
+    <span class="n">added</span> <span class="o">=</span> <span class="n">right_out</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">right</span><span class="p">):]</span>
+    <span class="n">pairs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"left"</span><span class="p">:</span> <span class="n">new_left</span><span class="p">,</span> <span class="s2">"right"</span><span class="p">:</span> <span class="n">added</span><span class="p">})</span>
+    <span class="n">matches_out</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">matches</span><span class="p">,</span> <span class="n">pairs</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">right_out</span><span class="p">,</span> <span class="n">matches_out</span></div>
 
 </pre></div>
 

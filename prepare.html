@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prepare &mdash; Neer Match Utilities 1.2.12 documentation</title>
+  <title>Prepare &mdash; Neer Match Utilities 1.2.13 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -17,7 +17,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=817200f7"></script>
+      <script src="_static/documentation_options.js?v=250a84ee"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -104,6 +104,7 @@
 <li class="toctree-l2"><a class="reference internal" href="additional_functionalities.html#name-commonness">Name Commonness</a></li>
 <li class="toctree-l2"><a class="reference internal" href="additional_functionalities.html#stop-word-removal-with-spacy">Stop Word Removal with spaCy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="additional_functionalities.html#feature-selection">Feature Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="additional_functionalities.html#hard-non-matches-records-without-a-match-and-synthetic-pairs">Hard Non-Matches, Records Without a Match, and Synthetic Pairs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="additional_functionalities.html#handling-many-to-many-matches">Handling Many-to-Many Matches</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="additional_functionalities.html#loading-the-data">Loading the Data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="additional_functionalities.html#inspecting-the-data">Inspecting the Data</a></li>
@@ -218,12 +219,15 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.prepare.available_similarities"><code class="docutils literal notranslate"><span class="pre">available_similarities()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.prepare.learn_variants"><code class="docutils literal notranslate"><span class="pre">learn_variants()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.prepare.similarity_map_to_dict"><code class="docutils literal notranslate"><span class="pre">similarity_map_to_dict()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.prepare.synth_matches"><code class="docutils literal notranslate"><span class="pre">synth_matches()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.prepare.synth_mismatches"><code class="docutils literal notranslate"><span class="pre">synth_mismatches()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="split.html">Split</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="split.html#neer_match_utilities.split.SplitError"><code class="docutils literal notranslate"><span class="pre">SplitError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="split.html#neer_match_utilities.split.pairs_in_subset"><code class="docutils literal notranslate"><span class="pre">pairs_in_subset()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="split.html#neer_match_utilities.split.split_test_train"><code class="docutils literal notranslate"><span class="pre">split_test_train()</span></code></a></li>
 </ul>
 </li>
@@ -475,6 +479,38 @@ metrics from <code class="docutils literal notranslate"><span class="pre">[0,</s
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="neer_match_utilities.prepare.learn_variants">
+<span class="sig-prename descclassname"><span class="pre">neer_match_utilities.prepare.</span></span><span class="sig-name descname"><span class="pre">learn_variants</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/prepare.html#learn_variants"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.prepare.learn_variants" title="Link to this definition"></a></dt>
+<dd><p>Collect the variants of a value that occur in true matches.</p>
+<p>For every match, the values of a column in the left and the right record are
+compared; if they differ (e.g. “JOHANN” and “JOHANNES”, or “CARL” and “KARL”),
+each is recorded as a variant of the other. The result tells which
+replacements keep the identity of a record: <a class="reference internal" href="#neer_match_utilities.prepare.synth_matches" title="neer_match_utilities.prepare.synth_matches"><code class="xref py py-func docutils literal notranslate"><span class="pre">synth_matches()</span></code></a> uses them
+to build synthetic matches, <a class="reference internal" href="#neer_match_utilities.prepare.synth_mismatches" title="neer_match_utilities.prepare.synth_mismatches"><code class="xref py py-func docutils literal notranslate"><span class="pre">synth_mismatches()</span></code></a> excludes them when it
+builds synthetic non-matches. Learn them from the training matches only, so
+that nothing of the test subset enters the training data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>left</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – The records; <code class="docutils literal notranslate"><span class="pre">matches</span></code> refers to their row labels.</p></li>
+<li><p><strong>right</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – The records; <code class="docutils literal notranslate"><span class="pre">matches</span></code> refers to their row labels.</p></li>
+<li><p><strong>matches</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – True pairs, with columns ‘left’ and ‘right’.</p></li>
+<li><p><strong>columns</strong> (<em>list</em><em> of </em><em>str</em><em> or </em><em>dict</em>) – Columns to compare: names present in both <code class="docutils literal notranslate"><span class="pre">left</span></code> and <code class="docutils literal notranslate"><span class="pre">right</span></code>, or a
+mapping <code class="docutils literal notranslate"><span class="pre">{right_column:</span> <span class="pre">left_column}</span></code>.</p></li>
+<li><p><strong>min_count</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Keep a pair of values only if it occurs in at least this many matches.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">{right_column:</span> <span class="pre">{value:</span> <span class="pre">set_of_variants}}</span></code>, symmetric (if b is a variant
+of a, a is a variant of b).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="neer_match_utilities.prepare.similarity_map_to_dict">
 <span class="sig-prename descclassname"><span class="pre">neer_match_utilities.prepare.</span></span><span class="sig-name descname"><span class="pre">similarity_map_to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">items</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/prepare.html#similarity_map_to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.prepare.similarity_map_to_dict" title="Link to this definition"></a></dt>
 <dd><p>Convert a list of similarity mappings into a dictionary representation.</p>
@@ -494,12 +530,78 @@ and values are lists of similarity functions associated with those columns.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="neer_match_utilities.prepare.synth_matches">
+<span class="sig-prename descclassname"><span class="pre">neer_match_utilities.prepare.</span></span><span class="sig-name descname"><span class="pre">synth_matches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns_change</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_per_match</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_share</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">corruptions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('ocr',</span> <span class="pre">'typo',</span> <span class="pre">'variant')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variants</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ocr_confusions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(('rn',</span> <span class="pre">'m'),</span> <span class="pre">('cl',</span> <span class="pre">'d'),</span> <span class="pre">('li',</span> <span class="pre">'h'),</span> <span class="pre">('vv',</span> <span class="pre">'w'),</span> <span class="pre">('ii',</span> <span class="pre">'ü'),</span> <span class="pre">('u',</span> <span class="pre">'n'),</span> <span class="pre">('c',</span> <span class="pre">'e'),</span> <span class="pre">('o',</span> <span class="pre">'c'),</span> <span class="pre">('h',</span> <span class="pre">'b'),</span> <span class="pre">('s',</span> <span class="pre">'f'),</span> <span class="pre">('ſ',</span> <span class="pre">'f'),</span> <span class="pre">('i',</span> <span class="pre">'l'),</span> <span class="pre">('l',</span> <span class="pre">'1'),</span> <span class="pre">('o',</span> <span class="pre">'0'),</span> <span class="pre">('ü',</span> <span class="pre">'u'),</span> <span class="pre">('ä',</span> <span class="pre">'a'),</span> <span class="pre">('ö',</span> <span class="pre">'o'),</span> <span class="pre">('å',</span> <span class="pre">'a'),</span> <span class="pre">('ß',</span> <span class="pre">'ss'))</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_shift</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_right</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/prepare.html#synth_matches"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.prepare.synth_matches" title="Link to this definition"></a></dt>
+<dd><p>Generate synthetic matches: copies of matched right records with errors that
+keep their identity.</p>
+<p>For a share of the matches (left, right), a copy of the right record is made
+in which <code class="docutils literal notranslate"><span class="pre">n_cols</span></code> columns of <code class="docutils literal notranslate"><span class="pre">columns_change</span></code> are corrupted, and the pair
+(left, copy) is added to the matches. The corruptions imitate how one entity
+is recorded differently in two sources:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;ocr&quot;</span></code>: one OCR confusion, e.g. “rn” read as “m” or “ü” as “u”
+(<code class="docutils literal notranslate"><span class="pre">ocr_confusions</span></code>);</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;typo&quot;</span></code>: one character dropped, doubled, or swapped with its neighbour;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;variant&quot;</span></code>: the value replaced by a variant recorded for it in
+<code class="docutils literal notranslate"><span class="pre">variants</span></code> (e.g. from <a class="reference internal" href="#neer_match_utilities.prepare.learn_variants" title="neer_match_utilities.prepare.learn_variants"><code class="xref py py-func docutils literal notranslate"><span class="pre">learn_variants()</span></code></a>), e.g. “JOHANNES” for “JOHANN”;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;shift&quot;</span></code>: a numeric value moved by up to <code class="docutils literal notranslate"><span class="pre">max_shift</span></code> (e.g. a birth
+year misreported by one year);</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;missing&quot;</span></code>: the value not recorded.</p></li>
+</ul>
+<p>The label “match” is only right if the corruption keeps the identity, so
+choose <code class="docutils literal notranslate"><span class="pre">columns_change</span></code> and <code class="docutils literal notranslate"><span class="pre">corruptions</span></code> accordingly (e.g. “shift” for a
+birth year, not for a parish code). Apply the function to the training
+subset after <code class="docutils literal notranslate"><span class="pre">split_test_train</span></code>, never to the test subset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>right</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – The right records; <code class="docutils literal notranslate"><span class="pre">matches</span></code> refers to their row labels.</p></li>
+<li><p><strong>matches</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – True pairs, with columns ‘left’ and ‘right’.</p></li>
+<li><p><strong>columns_change</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Columns that may be corrupted.</p></li>
+<li><p><strong>n_cols</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of columns corrupted per synthetic record. Columns where no
+selected corruption applies (e.g. a missing value) are not counted; if
+fewer than <code class="docutils literal notranslate"><span class="pre">n_cols</span></code> qualify, all of them are corrupted.</p></li>
+<li><p><strong>n_per_match</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of synthetic records per selected match.</p></li>
+<li><p><strong>sample_share</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Share of the matches, drawn at random, for which synthetic records are made.</p></li>
+<li><p><strong>corruptions</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code>]</span>) – Corruptions to draw from, among “ocr”, “typo”, “variant”, “shift” and
+“missing”. For each corrupted cell, one of those that apply is drawn.</p></li>
+<li><p><strong>variants</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]</span>) – <code class="docutils literal notranslate"><span class="pre">{column:</span> <span class="pre">{value:</span> <span class="pre">set_of_variants}}</span></code> for the corruption “variant”.</p></li>
+<li><p><strong>ocr_confusions</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>], <code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code>]</span>) – Confusable character sequences, used in both directions and in lower and
+upper case.</p></li>
+<li><p><strong>max_shift</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Largest change of a numeric value for the corruption “shift”.</p></li>
+<li><p><strong>id_right</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Name of a unique-ID column in <code class="docutils literal notranslate"><span class="pre">right</span></code>; synthetic records get new UUID4 IDs.</p></li>
+<li><p><strong>random_state</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>) – Seed for all random draws of this call.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">right</span></code> with the synthetic records appended, and <code class="docutils literal notranslate"><span class="pre">matches</span></code> with their
+pairs appended. The original rows keep their row labels; with an integer
+index the synthetic records are numbered after the largest label. A
+synthetic record that equals an existing record, or another synthetic
+one, is dropped. The column <code class="docutils literal notranslate"><span class="pre">index_original</span></code> added by
+<code class="docutils literal notranslate"><span class="pre">split_test_train</span></code> is missing in synthetic records.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="neer_match_utilities.prepare.synth_mismatches">
-<span class="sig-prename descclassname"><span class="pre">neer_match_utilities.prepare.</span></span><span class="sig-name descname"><span class="pre">synth_mismatches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns_fix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns_change</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str_metric</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str_similarity_range</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pct_diff_range</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_cols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_mismatches</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_missing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nan_share</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">empty_share</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_share</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_right</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/prepare.html#synth_mismatches"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.prepare.synth_mismatches" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">neer_match_utilities.prepare.</span></span><span class="sig-name descname"><span class="pre">synth_mismatches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns_fix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns_change</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str_metric</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str_similarity_range</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pct_diff_range</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_cols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_mismatches</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_missing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nan_share</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">empty_share</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_share</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_right</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">candidate_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'uniform'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variants</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fallback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'random'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linked_columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">within</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/prepare.html#synth_mismatches"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.prepare.synth_mismatches" title="Link to this definition"></a></dt>
 <dd><p>Generate synthetic mismatches for a subset of rows in <code class="docutils literal notranslate"><span class="pre">right</span></code>.</p>
 <p>The output contains all original rows plus additional synthetic rows created by
 modifying selected columns. Synthetic rows are deduplicated against the original
 data and against each other.</p>
+<p>A synthetic row is not in <code class="docutils literal notranslate"><span class="pre">matches</span></code>, so it counts as a non-match of the left
+record its source row is matched to: a hard non-match if the change is small.
+Apply the function to the training subset after <code class="docutils literal notranslate"><span class="pre">split_test_train</span></code> (which
+drops records without a match), and change only columns that identify the
+entity: a synthetic row that differs from its source only in a recorded
+variant of the same value (e.g. “Johann” for “Johannes”) is the same entity,
+and labelling it a non-match teaches the model the wrong thing. <code class="docutils literal notranslate"><span class="pre">variants</span></code>
+excludes such replacements.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -514,8 +616,9 @@ of STRING columns in <code class="docutils literal notranslate"><span class="pre
 NUMERIC columns in <code class="docutils literal notranslate"><span class="pre">columns_change</span></code>: <code class="docutils literal notranslate"><span class="pre">abs(orig</span> <span class="pre">-</span> <span class="pre">candidate)</span> <span class="pre">/</span> <span class="pre">abs(orig)</span></code>.
 If <code class="docutils literal notranslate"><span class="pre">orig</span> <span class="pre">==</span> <span class="pre">0</span></code>, any <code class="docutils literal notranslate"><span class="pre">candidate</span> <span class="pre">!=</span> <span class="pre">0</span></code> is treated as percentage difference 1.0.</p></li>
 <li><p><strong>n_cols</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of columns from <code class="docutils literal notranslate"><span class="pre">columns_change</span></code> to modify per synthetic row.
-If <code class="docutils literal notranslate"><span class="pre">n_cols</span> <span class="pre">&lt;</span> <span class="pre">len(columns_change)</span></code>, pick that many at random. If
-<code class="docutils literal notranslate"><span class="pre">n_cols</span> <span class="pre">&gt;</span> <span class="pre">len(columns_change)</span></code>, all columns in <code class="docutils literal notranslate"><span class="pre">columns_change</span></code> are modified.</p></li>
+If <code class="docutils literal notranslate"><span class="pre">n_cols</span> <span class="pre">&lt;</span> <span class="pre">len(columns_change)</span></code>, pick that many at random, once per
+synthetic row. If <code class="docutils literal notranslate"><span class="pre">n_cols</span> <span class="pre">&gt;</span> <span class="pre">len(columns_change)</span></code>, all columns in
+<code class="docutils literal notranslate"><span class="pre">columns_change</span></code> are modified.</p></li>
 <li><p><strong>n_mismatches</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of synthetic mismatches to generate per selected original row.</p></li>
 <li><p><strong>keep_missing</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – If True, preserve <code class="docutils literal notranslate"><span class="pre">NaN</span></code> or empty-string values in <code class="docutils literal notranslate"><span class="pre">columns_change</span></code> of the
 original row (no change applied to those cells).</p></li>
@@ -527,10 +630,34 @@ original row (no change applied to those cells).</p></li>
 for synthetic generation. For example, <code class="docutils literal notranslate"><span class="pre">0.5</span></code> selects <code class="docutils literal notranslate"><span class="pre">floor(0.5</span> <span class="pre">*</span> <span class="pre">n_rows)</span></code>.</p></li>
 <li><p><strong>id_right</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Name of a unique-ID column in <code class="docutils literal notranslate"><span class="pre">right</span></code>. If provided, synthetic rows receive
 new UUID4 IDs in this column. If None, no ID column is created or modified.</p></li>
+<li><p><strong>random_state</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>) – Seed for all random draws of this call. If None, the global generators of
+<code class="docutils literal notranslate"><span class="pre">random</span></code> and <code class="docutils literal notranslate"><span class="pre">numpy.random</span></code> are used, as before.</p></li>
+<li><p><strong>candidate_weights</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code>[<span class="highlight sphinx_autodoc_typehints-value"><code class="docutils literal notranslate"><span class="s1"><span class="pre">'uniform'</span></span></code></span>, <span class="highlight sphinx_autodoc_typehints-value"><code class="docutils literal notranslate"><span class="s1"><span class="pre">'frequency'</span></span></code></span>]</span>) – How a replacement is drawn from the qualifying values of a column:
+uniformly, or in proportion to how often each value occurs in <code class="docutils literal notranslate"><span class="pre">right</span></code>,
+so that common names are drawn as often as they occur.</p></li>
+<li><p><strong>variants</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]</span>) – Known variants of the same value, <code class="docutils literal notranslate"><span class="pre">{column:</span> <span class="pre">{value:</span> <span class="pre">set_of_variants}}</span></code>,
+e.g. from <a class="reference internal" href="#neer_match_utilities.prepare.learn_variants" title="neer_match_utilities.prepare.learn_variants"><code class="xref py py-func docutils literal notranslate"><span class="pre">learn_variants()</span></code></a>. A listed variant of the original value
+is never used as its replacement.</p></li>
+<li><p><strong>fallback</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code>[<span class="highlight sphinx_autodoc_typehints-value"><code class="docutils literal notranslate"><span class="s1"><span class="pre">'random'</span></span></code></span>, <span class="highlight sphinx_autodoc_typehints-value"><code class="docutils literal notranslate"><span class="s1"><span class="pre">'skip'</span></span></code></span>]</span>) – What happens if no value of a column qualifies: “random” perturbs the
+original (random letters for strings), “skip” leaves the cell unchanged.</p></li>
+<li><p><strong>linked_columns</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]</span>) – <code class="docutils literal notranslate"><span class="pre">{column:</span> <span class="pre">[columns]}</span></code>: when a column of <code class="docutils literal notranslate"><span class="pre">columns_change</span></code> gets the value
+of another row of <code class="docutils literal notranslate"><span class="pre">right</span></code> (the donor), the listed columns are copied
+from that donor too, so that fields that belong together stay consistent:
+a standardized name and the name as written, a name and its commonness,
+a birth year and the age. Keys must be in <code class="docutils literal notranslate"><span class="pre">columns_change</span></code>; the listed
+columns must not be in <code class="docutils literal notranslate"><span class="pre">columns_fix</span></code>.</p></li>
+<li><p><strong>within</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]</span>) – Draw replacements only from rows that agree with the source row on these
+columns, e.g. <code class="docutils literal notranslate"><span class="pre">[&quot;sex&quot;]</span></code>, so that a woman’s first name is replaced by
+another woman’s name. <code class="docutils literal notranslate"><span class="pre">candidate_weights=&quot;frequency&quot;</span></code> then counts
+within that group.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Expanded DataFrame with the original rows plus the synthetic mismatch rows.</p>
+<dd class="field-even"><p>Expanded DataFrame with the original rows plus the synthetic mismatch rows.
+The original rows keep their row labels; with an integer index the
+synthetic rows are numbered after the largest label, so that pairs that
+refer to the row labels stay valid. The column <code class="docutils literal notranslate"><span class="pre">index_original</span></code> added
+by <code class="docutils literal notranslate"><span class="pre">split_test_train</span></code> is missing in synthetic rows.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Split &mdash; Neer Match Utilities 1.2.12 documentation</title>
+  <title>Split &mdash; Neer Match Utilities 1.2.13 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -17,7 +17,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=817200f7"></script>
+      <script src="_static/documentation_options.js?v=250a84ee"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -104,6 +104,7 @@
 <li class="toctree-l2"><a class="reference internal" href="additional_functionalities.html#name-commonness">Name Commonness</a></li>
 <li class="toctree-l2"><a class="reference internal" href="additional_functionalities.html#stop-word-removal-with-spacy">Stop Word Removal with spaCy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="additional_functionalities.html#feature-selection">Feature Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="additional_functionalities.html#hard-non-matches-records-without-a-match-and-synthetic-pairs">Hard Non-Matches, Records Without a Match, and Synthetic Pairs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="additional_functionalities.html#handling-many-to-many-matches">Handling Many-to-Many Matches</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="additional_functionalities.html#loading-the-data">Loading the Data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="additional_functionalities.html#inspecting-the-data">Inspecting the Data</a></li>
@@ -218,12 +219,15 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.available_similarities"><code class="docutils literal notranslate"><span class="pre">available_similarities()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.learn_variants"><code class="docutils literal notranslate"><span class="pre">learn_variants()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.similarity_map_to_dict"><code class="docutils literal notranslate"><span class="pre">similarity_map_to_dict()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.synth_matches"><code class="docutils literal notranslate"><span class="pre">synth_matches()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.synth_mismatches"><code class="docutils literal notranslate"><span class="pre">synth_mismatches()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Split</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.split.SplitError"><code class="docutils literal notranslate"><span class="pre">SplitError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.split.pairs_in_subset"><code class="docutils literal notranslate"><span class="pre">pairs_in_subset()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#neer_match_utilities.split.split_test_train"><code class="docutils literal notranslate"><span class="pre">split_test_train()</span></code></a></li>
 </ul>
 </li>
@@ -360,11 +364,40 @@
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="neer_match_utilities.split.pairs_in_subset">
+<span class="sig-prename descclassname"><span class="pre">neer_match_utilities.split.</span></span><span class="sig-name descname"><span class="pre">pairs_in_subset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pairs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/split.html#pairs_in_subset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.split.pairs_in_subset" title="Link to this definition"></a></dt>
+<dd><p>Maps pairs given in the original row labels to the rows of one subset.</p>
+<p><cite>split_test_train</cite> re-indexes every subset and keeps the original row labels
+in the column <code class="docutils literal notranslate"><span class="pre">index_original</span></code>. This function translates pairs that refer
+to the original labels, e.g. the labelled non-matches passed as
+<cite>non_matches</cite>, to the row labels of one subset, and keeps only the pairs
+whose two records are both in that subset. Rows without an original label
+(synthetic rows added by <cite>synth_matches</cite> or <cite>synth_mismatches</cite>) never match.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pairs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Pairs with columns ‘left’ and ‘right’ in the original row labels; other
+columns are kept.</p></li>
+<li><p><strong>left</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – One subset returned by <cite>split_test_train</cite>, e.g. <cite>left_test</cite> and <cite>right_test</cite>.</p></li>
+<li><p><strong>right</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – One subset returned by <cite>split_test_train</cite>, e.g. <cite>left_test</cite> and <cite>right_test</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The pairs inside the subset, with ‘left’ and ‘right’ as row labels of
+<cite>left</cite> and <cite>right</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="neer_match_utilities.split.split_test_train">
-<span class="sig-prename descclassname"><span class="pre">neer_match_utilities.split.</span></span><span class="sig-name descname"><span class="pre">split_test_train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validation_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/split.html#split_test_train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.split.split_test_train" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">neer_match_utilities.split.</span></span><span class="sig-name descname"><span class="pre">split_test_train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matches</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validation_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_matches</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drop_partner_share</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neer_match_utilities/split.html#split_test_train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neer_match_utilities.split.split_test_train" title="Link to this definition"></a></dt>
 <dd><p>Splits datasets into training, validation, and testing subsets.</p>
 <p>This function ensures that only observations from <cite>left</cite> and <cite>right</cite> that are referenced
-in the <cite>matches</cite> DataFrame are included in the split process.</p>
+in the <cite>matches</cite> DataFrame (or in <cite>non_matches</cite>, if given) are included in the split process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -389,6 +422,28 @@ fill the test subset, then the validation subset, in random order, so
 these two can exceed their requested size by less than one group; the
 training subset takes the rest. No left or right record then appears
 in two subsets.</p></li>
+<li><p><strong>non_matches</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code> | <span class="highlight sphinx_autodoc_typehints-value"><code class="xref py py-obj docutils literal notranslate"><span class="kc"><span class="pre">None</span></span></code></span></span>) – Pairs with columns ‘left’ and ‘right’ (row labels of <cite>left</cite> and <cite>right</cite>,
+as in <cite>matches</cite>) that were checked by hand and are known not to match,
+e.g. confusable records. Default None: records without a match are
+dropped, as before. If given, the records of these pairs are kept, and
+the subsets are drawn as with <cite>keep_components=True</cite> over matches and
+non-matches together, so that both records of a non-match pair, and the
+matches of these records, end up in the same subset; inside it the pair
+is a non-match like every pair not in <cite>matches</cite>. A record that appears
+only in <cite>non_matches</cite> has no partner in its subset, so the subsets then
+contain records for which “no match” is the correct answer. Groups
+without any match fall into the subset that is being filled when they
+are drawn, which spreads them over the subsets roughly in proportion.
+To find the pairs in a subset, use <cite>pairs_in_subset</cite>.</p></li>
+<li><p><strong>drop_partner_share</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Share of the test matches (default 0.0) whose right record is removed
+from <cite>right_test</cite>, with the pair from <cite>matches_test</cite>. Their left records
+stay in <cite>left_test</cite> without a partner, like persons who died, emigrated
+or were not recorded, so the test shows how often a model links a record
+that has no true counterpart. Only pairs whose left and right records
+have no other match in the test subset are eligible (and no right record
+of <cite>non_matches</cite>); if fewer are eligible, all of them are removed, with
+a warning. The removal is drawn after the split from the same generator,
+so the subsets are otherwise identical to those for 0.0.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -407,7 +462,11 @@ in two subsets.</p></li>
 <dd class="field-odd"><p>tuple</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#neer_match_utilities.split.SplitError" title="neer_match_utilities.split.SplitError"><strong>SplitError</strong></a> – If the total counts of split subsets do not match the original dataset size.</p>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#neer_match_utilities.split.SplitError" title="neer_match_utilities.split.SplitError"><strong>SplitError</strong></a> – If the total counts of split subsets do not match the original dataset size.</p></li>
+<li><p><strong>ValueError</strong> – If <cite>non_matches</cite> refers to rows that are not in <cite>left</cite> or <cite>right</cite>, or
+    shares a pair with <cite>matches</cite>, or if <cite>drop_partner_share</cite> is not in [0, 1].</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>

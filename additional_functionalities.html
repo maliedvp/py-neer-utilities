@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Additional Functionalities &mdash; Neer Match Utilities 1.2.12 documentation</title>
+  <title>Additional Functionalities &mdash; Neer Match Utilities 1.2.13 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -17,7 +17,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=817200f7"></script>
+      <script src="_static/documentation_options.js?v=250a84ee"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -104,6 +104,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#name-commonness">Name Commonness</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#stop-word-removal-with-spacy">Stop Word Removal with spaCy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#feature-selection">Feature Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hard-non-matches-records-without-a-match-and-synthetic-pairs">Hard Non-Matches, Records Without a Match, and Synthetic Pairs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#handling-many-to-many-matches">Handling Many-to-Many Matches</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#loading-the-data">Loading the Data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#inspecting-the-data">Inspecting the Data</a></li>
@@ -218,12 +219,15 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.available_similarities"><code class="docutils literal notranslate"><span class="pre">available_similarities()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.learn_variants"><code class="docutils literal notranslate"><span class="pre">learn_variants()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.similarity_map_to_dict"><code class="docutils literal notranslate"><span class="pre">similarity_map_to_dict()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.synth_matches"><code class="docutils literal notranslate"><span class="pre">synth_matches()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="prepare.html#neer_match_utilities.prepare.synth_mismatches"><code class="docutils literal notranslate"><span class="pre">synth_mismatches()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="split.html">Split</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="split.html#neer_match_utilities.split.SplitError"><code class="docutils literal notranslate"><span class="pre">SplitError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="split.html#neer_match_utilities.split.pairs_in_subset"><code class="docutils literal notranslate"><span class="pre">pairs_in_subset()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="split.html#neer_match_utilities.split.split_test_train"><code class="docutils literal notranslate"><span class="pre">split_test_train()</span></code></a></li>
 </ul>
 </li>
@@ -510,6 +514,90 @@ directly in subsequent training:</p>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Features: </span><span class="si">{</span><span class="n">fs_result</span><span class="o">.</span><span class="n">meta</span><span class="p">[</span><span class="s1">'n_features_in'</span><span class="p">]</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">fs_result</span><span class="o">.</span><span class="n">meta</span><span class="p">[</span><span class="s1">'n_features_selected'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
+</section>
+<section id="hard-non-matches-records-without-a-match-and-synthetic-pairs">
+<h2>Hard Non-Matches, Records Without a Match, and Synthetic Pairs<a class="headerlink" href="#hard-non-matches-records-without-a-match-and-synthetic-pairs" title="Link to this heading"></a></h2>
+<p>By default, <code class="docutils literal notranslate"><span class="pre">split_test_train</span></code> keeps only records that appear in
+<code class="docutils literal notranslate"><span class="pre">matches</span></code>. Every record then has its partner in its subset, and the test
+never contains a record for which “no match” is the correct answer,
+although such records are common in practice (persons who died or
+emigrated between two censuses, firms that closed). Three opt-in tools
+address this; without them, results are unchanged.</p>
+<p><strong>Labelled non-matches.</strong> Pairs checked by hand and known not to match,
+often confusable records, are passed as <code class="docutils literal notranslate"><span class="pre">non_matches</span></code> (row labels of
+<code class="docutils literal notranslate"><span class="pre">left</span></code> and <code class="docutils literal notranslate"><span class="pre">right</span></code>, as in <code class="docutils literal notranslate"><span class="pre">matches</span></code>). Their records are kept, also those
+without any match, and both records of a pair end up in the same subset,
+where the pair is a non-match like every pair not in <code class="docutils literal notranslate"><span class="pre">matches</span></code>.
+<code class="docutils literal notranslate"><span class="pre">pairs_in_subset</span></code> finds the pairs of a subset, e.g. to evaluate on them.</p>
+<p><strong>Records without a partner in the test subset.</strong> <code class="docutils literal notranslate"><span class="pre">drop_partner_share</span></code>
+removes the right record of a share of the test matches. Their left
+records stay, so the test shows how often a model links a record that
+has no counterpart.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.split</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_test_train</span><span class="p">,</span> <span class="n">pairs_in_subset</span>
+
+<span class="p">(</span><span class="n">left_train</span><span class="p">,</span> <span class="n">right_train</span><span class="p">,</span> <span class="n">matches_train</span><span class="p">,</span>
+ <span class="n">left_validation</span><span class="p">,</span> <span class="n">right_validation</span><span class="p">,</span> <span class="n">matches_validation</span><span class="p">,</span>
+ <span class="n">left_test</span><span class="p">,</span> <span class="n">right_test</span><span class="p">,</span> <span class="n">matches_test</span><span class="p">)</span> <span class="o">=</span> <span class="n">split_test_train</span><span class="p">(</span>
+    <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">matches</span><span class="p">,</span>
+    <span class="n">test_ratio</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">validation_ratio</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+    <span class="n">non_matches</span><span class="o">=</span><span class="n">hard_non_matches</span><span class="p">,</span>   <span class="c1"># columns 'left' and 'right'</span>
+    <span class="n">drop_partner_share</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>         <span class="c1"># 20% of the test matches lose their partner</span>
+<span class="p">)</span>
+
+<span class="n">hard_in_test</span> <span class="o">=</span> <span class="n">pairs_in_subset</span><span class="p">(</span><span class="n">hard_non_matches</span><span class="p">,</span> <span class="n">left_test</span><span class="p">,</span> <span class="n">right_test</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Synthetic pairs for training.</strong> <code class="docutils literal notranslate"><span class="pre">synth_matches</span></code> adds copies of matched
+right records with errors that keep the identity (OCR confusions, typing
+slips, recorded name variants, a birth year off by one) and pairs them
+with the left record. <code class="docutils literal notranslate"><span class="pre">synth_mismatches</span></code> adds copies in which
+identifying fields are replaced by other, similar values: hard
+non-matches. Which replacement keeps the identity is learned from the
+training matches with <code class="docutils literal notranslate"><span class="pre">learn_variants</span></code>: “JOHANN” and “JOHANNES” recorded
+for the same person are variants, so <code class="docutils literal notranslate"><span class="pre">synth_matches</span></code> may use one for the
+other, and <code class="docutils literal notranslate"><span class="pre">synth_mismatches</span></code> never does. Apply both to the training
+subset only, after the split; new rows are numbered after the existing
+ones, so <code class="docutils literal notranslate"><span class="pre">matches</span></code> stays valid.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">neer_match_utilities.prepare</span><span class="w"> </span><span class="kn">import</span> <span class="n">learn_variants</span><span class="p">,</span> <span class="n">synth_matches</span><span class="p">,</span> <span class="n">synth_mismatches</span>
+
+<span class="n">variants</span> <span class="o">=</span> <span class="n">learn_variants</span><span class="p">(</span><span class="n">left_train</span><span class="p">,</span> <span class="n">right_train</span><span class="p">,</span> <span class="n">matches_train</span><span class="p">,</span> <span class="p">[</span><span class="s2">"first_name"</span><span class="p">,</span> <span class="s2">"last_name"</span><span class="p">])</span>
+
+<span class="n">right_train</span><span class="p">,</span> <span class="n">matches_train</span> <span class="o">=</span> <span class="n">synth_matches</span><span class="p">(</span>
+    <span class="n">right_train</span><span class="p">,</span> <span class="n">matches_train</span><span class="p">,</span>
+    <span class="n">columns_change</span><span class="o">=</span><span class="p">[</span><span class="s2">"first_name"</span><span class="p">,</span> <span class="s2">"last_name"</span><span class="p">,</span> <span class="s2">"birth_year"</span><span class="p">],</span>
+    <span class="n">corruptions</span><span class="o">=</span><span class="p">(</span><span class="s2">"ocr"</span><span class="p">,</span> <span class="s2">"typo"</span><span class="p">,</span> <span class="s2">"variant"</span><span class="p">,</span> <span class="s2">"shift"</span><span class="p">),</span>
+    <span class="n">variants</span><span class="o">=</span><span class="n">variants</span><span class="p">,</span>
+    <span class="n">max_shift</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>                    <span class="c1"># birth year off by at most one</span>
+    <span class="n">id_right</span><span class="o">=</span><span class="s2">"id_unique"</span><span class="p">,</span>           <span class="c1"># new IDs for the copies</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">right_train</span> <span class="o">=</span> <span class="n">synth_mismatches</span><span class="p">(</span>
+    <span class="n">right_train</span><span class="p">,</span>
+    <span class="n">columns_fix</span><span class="o">=</span><span class="p">[</span><span class="s2">"sex"</span><span class="p">,</span> <span class="s2">"last_name"</span><span class="p">,</span> <span class="s2">"birth_year"</span><span class="p">,</span> <span class="s2">"birth_parish"</span><span class="p">],</span>
+    <span class="n">columns_change</span><span class="o">=</span><span class="p">[</span><span class="s2">"first_name_std"</span><span class="p">],</span>
+    <span class="n">linked_columns</span><span class="o">=</span><span class="p">{</span><span class="s2">"first_name_std"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"first_name"</span><span class="p">]},</span>  <span class="c1"># the name as written comes with the donor's standard form</span>
+    <span class="n">within</span><span class="o">=</span><span class="p">[</span><span class="s2">"sex"</span><span class="p">],</span>                     <span class="c1"># a woman's name is replaced by another woman's name</span>
+    <span class="n">str_metric</span><span class="o">=</span><span class="s2">"jaro_winkler"</span><span class="p">,</span>
+    <span class="n">str_similarity_range</span><span class="o">=</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">),</span>   <span class="c1"># similar, but not the same name</span>
+    <span class="n">pct_diff_range</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
+    <span class="n">n_cols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">sample_share</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">candidate_weights</span><span class="o">=</span><span class="s2">"frequency"</span><span class="p">,</span>      <span class="c1"># draw common names as often as they occur</span>
+    <span class="n">variants</span><span class="o">=</span><span class="n">variants</span><span class="p">,</span>                  <span class="c1"># never a recorded variant of the same name</span>
+    <span class="n">fallback</span><span class="o">=</span><span class="s2">"skip"</span><span class="p">,</span>                    <span class="c1"># no qualifying name: no synthetic record</span>
+    <span class="n">id_right</span><span class="o">=</span><span class="s2">"id_unique"</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Fields that belong together, such as a standardized name and the name as
+written, or a name and its commonness, are kept consistent with
+<code class="docutils literal notranslate"><span class="pre">linked_columns</span></code>: they are copied from the record that supplies the new
+value.</p>
+<p>A synthetic pair is only as good as its label: change only fields that
+identify the entity, and only in ways that keep (for <code class="docutils literal notranslate"><span class="pre">synth_matches</span></code>) or
+change (for <code class="docutils literal notranslate"><span class="pre">synth_mismatches</span></code>) the identity.</p>
 </section>
 <section id="handling-many-to-many-matches">
 <h2>Handling Many-to-Many Matches<a class="headerlink" href="#handling-many-to-many-matches" title="Link to this heading"></a></h2>
