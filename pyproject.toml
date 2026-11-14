@@ -55,6 +55,8 @@ dependencies = [
 
 [project.optional-dependencies]
 tests = ['pytest']
+# Encoding values for EmbeddingSimilarity; reading its cache needs only numpy.
+embeddings = ["sentence-transformers>=3.0"]
 
 [tool.setuptools.dynamic]
 version = {attr = "neer_match_utilities.__version__"}

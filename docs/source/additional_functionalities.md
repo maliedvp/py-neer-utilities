@@ -53,6 +53,58 @@ After calling `calculate()`, the DataFrames contain new columns (e.g.,
 `name_commonness`, `surname_commonness`) that can be included in the
 `similarity_map` using the `commonness_score` similarity concept.
 
+## Embedding Similarity
+
+String similarity measures compare characters: they see that “Gustaf”
+and “Gustav” are close, but not that “Act.-Ges.” and
+“Aktiengesellschaft” mean the same. `EmbeddingSimilarity` adds a
+similarity that compares meaning. Each distinct value of the chosen
+columns is encoded once by a pretrained multilingual text encoder, by
+default [BAAI/bge-m3](https://huggingface.co/BAAI/bge-m3), and the
+similarity of two values is the cosine of their vectors, cut to \[0,
+1\]. It is registered like the other similarities, so it is named in
+the similarity map and used by the logit, probit and gradient-boosting
+models, by the neural network and by the feature selection. The encoder
+is not trained on the matches, so the similarity does not depend on the
+split.
+
+Encoding needs `sentence-transformers` and `torch`
+(`pip install "neer-match-utilities[embeddings]"`). The vectors are kept
+in a cache folder, together with the encoded values and the model and
+commit they come from. A value in the cache is not encoded again, and
+reading the cache needs neither package, so models can be trained in an
+environment without torch. bge-m3 has 0.5 billion parameters: use a GPU
+for many distinct values.
+
+``` python
+from neer_match_utilities.embeddings import EmbeddingSimilarity
+
+emb = EmbeddingSimilarity(
+    cache_dir='embeddings/bge-m3',   # vectors, encoded values, model and commit
+    model_name='BAAI/bge-m3',        # the default
+)
+emb.encode(left, right, columns=['company_name', 'purpose'])
+
+similarity_map = {
+    'company_name': ['jaro_winkler', 'token_set_ratio', 'embedding_cosine'],
+    'purpose': ['embedding_cosine'],
+}
+```
+
+- Values are looked up as they appear in the data. Encode them in the
+  form they have when the similarities are computed (after
+  `Prepare.format()`), and again after adding rows, e.g. with
+  `synth_matches` or `synth_mismatches`: only the new values are
+  encoded, and a value that was never encoded raises an error.
+- Missing and empty values have similarity 0, as for the other
+  similarities.
+- A cache made with another model raises an error. To compare models,
+  give each its own `cache_dir` and `similarity_name`.
+- The cache holds the values themselves; keep it under the same terms as
+  the data.
+- To predict with a saved model, create `EmbeddingSimilarity` from the
+  cache first, so that the similarity is registered.
+
 ## Stop Word Removal with spaCy
 
 The `Prepare` class supports removing stop words from string variables

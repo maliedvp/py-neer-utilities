@@ -11,6 +11,7 @@ from .split import split_test_train, SplitError
 from .blocking import Blocking, candidate_pairs
 from .model import Model
 from .custom_similarities import CustomSimilarities
+from .embeddings import EmbeddingSimilarity
 from .baseline_io import ModelBaseline
 from .baseline_models import LogitMatchingModel, ProbitMatchingModel, GradientBoostingModel
 from .similarity_features import SimilarityFeatures
