@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.split &mdash; Neer Match Utilities 1.2.13 documentation</title>
+  <title>neer_match_utilities.split &mdash; Neer Match Utilities 1.2.14 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=250a84ee"></script>
+      <script src="../../_static/documentation_options.js?v=ee831423"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -408,7 +408,8 @@
     <span class="k">if</span> <span class="n">unknown</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">unknown</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">}</span><span class="s2"> pairs of non_matches refer to rows that are not in "</span>
-            <span class="s2">"left or right (they must use the row labels of left and right, as matches does)."</span>
+            <span class="s2">"left or right (they must use the row labels of left and right, as matches does; "</span>
+            <span class="s2">"convert IDs with Training.matches_reorder)."</span>
         <span class="p">)</span>
     <span class="n">both</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">matches</span><span class="p">[</span><span class="s1">'left'</span><span class="p">],</span> <span class="n">matches</span><span class="p">[</span><span class="s1">'right'</span><span class="p">]))</span> <span class="o">&amp;</span> <span class="nb">set</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">non_matches</span><span class="p">[</span><span class="s1">'left'</span><span class="p">],</span> <span class="n">non_matches</span><span class="p">[</span><span class="s1">'right'</span><span class="p">]))</span>
     <span class="k">if</span> <span class="n">both</span><span class="p">:</span>
@@ -526,8 +527,11 @@
 <span class="sd">    non_matches : pd.DataFrame or None, optional</span>
 <span class="sd">        Pairs with columns 'left' and 'right' (row labels of `left` and `right`,</span>
 <span class="sd">        as in `matches`) that were checked by hand and are known not to match,</span>
-<span class="sd">        e.g. confusable records. Default None: records without a match are</span>
-<span class="sd">        dropped, as before. If given, the records of these pairs are kept, and</span>
+<span class="sd">        e.g. confusable records. Keep them in a file like `matches.csv`</span>
+<span class="sd">        (e.g. `non_matches.csv`, with the IDs of both records) and convert the</span>
+<span class="sd">        IDs with `Training.matches_reorder`, as for `matches`. Default None:</span>
+<span class="sd">        records without a match are dropped, as before. If given, the records</span>
+<span class="sd">        of these pairs are kept, and</span>
 <span class="sd">        the subsets are drawn as with `keep_components=True` over matches and</span>
 <span class="sd">        non-matches together, so that both records of a non-match pair, and the</span>
 <span class="sd">        matches of these records, end up in the same subset; inside it the pair</span>

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Split &mdash; Neer Match Utilities 1.2.13 documentation</title>
+  <title>Split &mdash; Neer Match Utilities 1.2.14 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -17,7 +17,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=250a84ee"></script>
+      <script src="_static/documentation_options.js?v=ee831423"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -424,8 +424,11 @@ training subset takes the rest. No left or right record then appears
 in two subsets.</p></li>
 <li><p><strong>non_matches</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code> | <span class="highlight sphinx_autodoc_typehints-value"><code class="xref py py-obj docutils literal notranslate"><span class="kc"><span class="pre">None</span></span></code></span></span>) – Pairs with columns ‘left’ and ‘right’ (row labels of <cite>left</cite> and <cite>right</cite>,
 as in <cite>matches</cite>) that were checked by hand and are known not to match,
-e.g. confusable records. Default None: records without a match are
-dropped, as before. If given, the records of these pairs are kept, and
+e.g. confusable records. Keep them in a file like <cite>matches.csv</cite>
+(e.g. <cite>non_matches.csv</cite>, with the IDs of both records) and convert the
+IDs with <cite>Training.matches_reorder</cite>, as for <cite>matches</cite>. Default None:
+records without a match are dropped, as before. If given, the records
+of these pairs are kept, and
 the subsets are drawn as with <cite>keep_components=True</cite> over matches and
 non-matches together, so that both records of a non-match pair, and the
 matches of these records, end up in the same subset; inside it the pair
