@@ -104,6 +104,13 @@ similarity_map = {
   the data.
 - To predict with a saved model, create `EmbeddingSimilarity` from the
   cache first, so that the similarity is registered.
+- Encoding runs in a Python process of its own, which loads neither this
+  package nor TensorFlow (on Linux, TensorFlow and triton, which
+  sentence-transformers loads, cannot share a process). On a GPU
+  machine, hide the GPUs from TensorFlow, which may otherwise take a
+  GPU’s memory when the package is imported, and give one to the
+  encoder: start Python with `CUDA_VISIBLE_DEVICES=` and pass
+  `device='cuda', cuda_visible_devices='0'`.
 
 ## Stop Word Removal with spaCy
 

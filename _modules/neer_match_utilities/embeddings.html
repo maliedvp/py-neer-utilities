@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>neer_match_utilities.embeddings &mdash; Neer Match Utilities 1.2.15 documentation</title>
+  <title>neer_match_utilities.embeddings &mdash; Neer Match Utilities 1.2.16 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=4afb903a"></script>
+      <script src="../../_static/documentation_options.js?v=7d031a50"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -383,11 +383,19 @@
 <span class="sd">"neer-match-utilities[embeddings]"``); reading a cache needs only numpy, so the</span>
 <span class="sd">models can be trained in an environment without torch, and the cache is what a</span>
 <span class="sd">replication package stores.</span>
+
+<span class="sd">Encoding runs in a Python process of its own (``_encode_worker.py``), which</span>
+<span class="sd">loads neither this package nor TensorFlow: on Linux with a GPU, TensorFlow and</span>
+<span class="sd">triton (loaded by sentence-transformers) cannot be loaded into one process in</span>
+<span class="sd">this order.</span>
 <span class="sd">"""</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">importlib.util</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
@@ -401,6 +409,11 @@
 
 <span class="n">DEFAULT_MODEL</span> <span class="o">=</span> <span class="s2">"BAAI/bge-m3"</span>
 <span class="n">_VALUES</span><span class="p">,</span> <span class="n">_VECTORS</span><span class="p">,</span> <span class="n">_META</span> <span class="o">=</span> <span class="s2">"values.json"</span><span class="p">,</span> <span class="s2">"vectors.npy"</span><span class="p">,</span> <span class="s2">"meta.json"</span>
+<span class="n">_WORKER</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="s2">"_encode_worker.py"</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_sentence_transformers_available</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">find_spec</span><span class="p">(</span><span class="s2">"sentence_transformers"</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_is_missing</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -479,6 +492,12 @@
 <span class="sd">        GPU if one is available.</span>
 <span class="sd">    fp16 : bool, optional</span>
 <span class="sd">        Encode in half precision (GPU only). Default False.</span>
+<span class="sd">    cuda_visible_devices : str or None, optional</span>
+<span class="sd">        GPUs the encoding process may use, as in the environment variable</span>
+<span class="sd">        ``CUDA_VISIBLE_DEVICES`` (e.g. ``"1"``). Default None: the same GPUs as</span>
+<span class="sd">        this process. Lets this process hide the GPUs from TensorFlow</span>
+<span class="sd">        (``CUDA_VISIBLE_DEVICES=``), which otherwise may take a GPU's memory</span>
+<span class="sd">        when the package is imported, while the model encodes on one.</span>
 <span class="sd">    encoder : callable or None, optional</span>
 <span class="sd">        Instead of the model: a function that takes a list of strings and returns</span>
 <span class="sd">        one vector per string (e.g. for tests or another library). Default None.</span>
@@ -497,6 +516,9 @@
 <span class="sd">      dimension (1024 for bge-m3) per distinct value.</span>
 <span class="sd">    - To use a saved model later, create the object again from the cache before</span>
 <span class="sd">      predicting, so that the similarity is registered.</span>
+<span class="sd">    - Each call of :meth:`encode` that finds new values starts a Python process</span>
+<span class="sd">      that loads the model, encodes them and ends (see the module notes);</span>
+<span class="sd">      encode all frames in one call where possible.</span>
 <span class="sd">    """</span>
 
 <div class="viewcode-block" id="EmbeddingSimilarity.__init__">
@@ -512,6 +534,7 @@
         <span class="n">max_seq_length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">512</span><span class="p">,</span>
         <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">fp16</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">cuda_visible_devices</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">encoder</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">list</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cache_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">)</span>
@@ -522,8 +545,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">max_seq_length</span> <span class="o">=</span> <span class="n">max_seq_length</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fp16</span> <span class="o">=</span> <span class="n">fp16</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cuda_visible_devices</span> <span class="o">=</span> <span class="n">cuda_visible_devices</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_encoder</span> <span class="o">=</span> <span class="n">encoder</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_index</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
@@ -620,13 +643,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_encoder</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">vectors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_encoder</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">vectors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_model</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
-                <span class="n">texts</span><span class="p">,</span>
-                <span class="n">batch_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span>
-                <span class="n">normalize_embeddings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">convert_to_numpy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">show_progress_bar</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">10_000</span><span class="p">,</span>
-            <span class="p">)</span>
+            <span class="n">vectors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_encode_in_subprocess</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span>
         <span class="n">vectors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">vectors</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">vectors</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">vectors</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">texts</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
@@ -638,26 +655,40 @@
         <span class="n">norms</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">vectors</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">vectors</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">norms</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">norms</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_load_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="kn">from</span><span class="w"> </span><span class="nn">sentence_transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">SentenceTransformer</span>
-            <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
-                    <span class="s2">"Encoding needs sentence-transformers and torch: "</span>
-                    <span class="s1">'pip install "neer-match-utilities[embeddings]". '</span>
-                    <span class="s2">"Reading an existing cache does not."</span>
-                <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">revision</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">revision</span> <span class="o">=</span> <span class="n">_resolve_revision</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">)</span>
-            <span class="n">model</span> <span class="o">=</span> <span class="n">SentenceTransformer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span> <span class="n">revision</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">revision</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
-            <span class="n">model</span><span class="o">.</span><span class="n">max_seq_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_seq_length</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fp16</span> <span class="ow">and</span> <span class="n">model</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">"cuda"</span><span class="p">:</span>
-                <span class="n">model</span><span class="o">.</span><span class="n">half</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">fp16</span><span class="p">:</span>
-                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">"fp16 is used on a GPU only; encoding in float32."</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="n">model</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_encode_in_subprocess</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Encode `texts` with the model in a Python process of its own (see the module notes)."""</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">_sentence_transformers_available</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+                <span class="s2">"Encoding needs sentence-transformers and torch: "</span>
+                <span class="s1">'pip install "neer-match-utilities[embeddings]". '</span>
+                <span class="s2">"Reading an existing cache does not."</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">revision</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">revision</span> <span class="o">=</span> <span class="n">_resolve_revision</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cache_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cache_dir</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">".encode-"</span><span class="p">)</span> <span class="k">as</span> <span class="n">tmp</span><span class="p">:</span>
+            <span class="n">job</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span> <span class="o">/</span> <span class="s2">"job.json"</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span> <span class="o">/</span> <span class="s2">"vectors.npy"</span>
+            <span class="n">job</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
+                <span class="s2">"model_name"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span>
+                <span class="s2">"revision"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">revision</span><span class="p">,</span>
+                <span class="s2">"device"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+                <span class="s2">"fp16"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">fp16</span><span class="p">,</span>
+                <span class="s2">"max_seq_length"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_seq_length</span><span class="p">,</span>
+                <span class="s2">"batch_size"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span>
+                <span class="s2">"texts"</span><span class="p">:</span> <span class="n">texts</span><span class="p">,</span>
+                <span class="s2">"out"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">out</span><span class="p">),</span>
+            <span class="p">},</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span>
+            <span class="c1"># -I: the worker's folder (this package) is not put on sys.path</span>
+            <span class="n">env</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cuda_visible_devices</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">env</span><span class="p">[</span><span class="s2">"CUDA_VISIBLE_DEVICES"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cuda_visible_devices</span><span class="p">)</span>
+            <span class="n">done</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span> <span class="s2">"-I"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">_WORKER</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">job</span><span class="p">)],</span> <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">done</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">out</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"Encoding </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span><span class="si">}</span><span class="s2"> values with </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="si">!r}</span><span class="s2"> failed "</span>
+                    <span class="sa">f</span><span class="s2">"(exit code </span><span class="si">{</span><span class="n">done</span><span class="o">.</span><span class="n">returncode</span><span class="si">}</span><span class="s2">); see the output above."</span>
+                <span class="p">)</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">vectors</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">start</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">)</span>
@@ -724,7 +755,6 @@
     <span class="c1"># --------------------------------------------------------------- pickling</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">state</span><span class="p">[</span><span class="s2">"_model"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>   <span class="c1"># the model is loaded again when needed</span>
         <span class="n">state</span><span class="p">[</span><span class="s2">"_rows"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="n">state</span>
 
