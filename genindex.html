@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; Neer Match Utilities 1.2.14 documentation</title>
+  <title>Index &mdash; Neer Match Utilities 1.2.15 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=ee831423"></script>
+      <script src="_static/documentation_options.js?v=4afb903a"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -99,6 +99,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="additional_functionalities.html">Additional Functionalities</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="additional_functionalities.html#name-commonness">Name Commonness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="additional_functionalities.html#embedding-similarity">Embedding Similarity</a></li>
 <li class="toctree-l2"><a class="reference internal" href="additional_functionalities.html#stop-word-removal-with-spacy">Stop Word Removal with spaCy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="additional_functionalities.html#feature-selection">Feature Selection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="additional_functionalities.html#hard-non-matches-records-without-a-match-and-synthetic-pairs">Hard Non-Matches, Records Without a Match, and Synthetic Pairs</a></li>
@@ -322,6 +323,19 @@
 <li class="toctree-l2"><a class="reference internal" href="custom_similarities.html#neer_match_utilities.custom_similarities.register_similarities"><code class="docutils literal notranslate"><span class="pre">register_similarities()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="embeddings.html">Embedding Similarity</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="embeddings.html#neer_match_utilities.embeddings.EmbeddingSimilarity"><code class="docutils literal notranslate"><span class="pre">EmbeddingSimilarity</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="embeddings.html#neer_match_utilities.embeddings.EmbeddingSimilarity.__init__"><code class="docutils literal notranslate"><span class="pre">EmbeddingSimilarity.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="embeddings.html#neer_match_utilities.embeddings.EmbeddingSimilarity.__len__"><code class="docutils literal notranslate"><span class="pre">EmbeddingSimilarity.__len__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="embeddings.html#neer_match_utilities.embeddings.EmbeddingSimilarity.dim"><code class="docutils literal notranslate"><span class="pre">EmbeddingSimilarity.dim</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="embeddings.html#neer_match_utilities.embeddings.EmbeddingSimilarity.encode"><code class="docutils literal notranslate"><span class="pre">EmbeddingSimilarity.encode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="embeddings.html#neer_match_utilities.embeddings.EmbeddingSimilarity.similarity"><code class="docutils literal notranslate"><span class="pre">EmbeddingSimilarity.similarity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="embeddings.html#neer_match_utilities.embeddings.EmbeddingSimilarity.values"><code class="docutils literal notranslate"><span class="pre">EmbeddingSimilarity.values</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="embeddings.html#neer_match_utilities.embeddings.EmbeddingSimilarity.vectors"><code class="docutils literal notranslate"><span class="pre">EmbeddingSimilarity.vectors</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">License</span></p>
 <ul>
@@ -392,6 +406,8 @@
 </li>
         <li><a href="custom_similarities.html#neer_match_utilities.custom_similarities.CustomSimilarities.__init__">(neer_match_utilities.custom_similarities.CustomSimilarities method)</a>
 </li>
+        <li><a href="embeddings.html#neer_match_utilities.embeddings.EmbeddingSimilarity.__init__">(neer_match_utilities.embeddings.EmbeddingSimilarity method)</a>
+</li>
         <li><a href="feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult.__init__">(neer_match_utilities.feature_selection.FeatureSelectionResult method)</a>
 </li>
         <li><a href="feature_selection.html#neer_match_utilities.feature_selection.FeatureSelector.__init__">(neer_match_utilities.feature_selection.FeatureSelector method)</a>
@@ -417,8 +433,12 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__len__">__len__() (neer_match_utilities.similarity_features.SimilarityPairs method)</a>
+      <li><a href="embeddings.html#neer_match_utilities.embeddings.EmbeddingSimilarity.__len__">__len__() (neer_match_utilities.embeddings.EmbeddingSimilarity method)</a>
+
+      <ul>
+        <li><a href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__len__">(neer_match_utilities.similarity_features.SimilarityPairs method)</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -493,6 +513,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="panel.html#neer_match_utilities.panel.SetupData.data_preparation_panel">data_preparation_panel() (neer_match_utilities.panel.SetupData method)</a>
 </li>
+      <li><a href="embeddings.html#neer_match_utilities.embeddings.EmbeddingSimilarity.dim">dim (neer_match_utilities.embeddings.EmbeddingSimilarity property)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="prepare.html#neer_match_utilities.prepare.Prepare.do_remove_stop_words">do_remove_stop_words() (neer_match_utilities.prepare.Prepare method)</a>
@@ -505,12 +527,16 @@
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="model.html#neer_match_utilities.model.EpochEndSaver">EpochEndSaver (class in neer_match_utilities.model)</a>
+      <li><a href="embeddings.html#neer_match_utilities.embeddings.EmbeddingSimilarity">EmbeddingSimilarity (class in neer_match_utilities.embeddings)</a>
 </li>
-      <li><a href="baseline_models.html#neer_match_utilities.baseline_models.GradientBoostingModel.evaluate">evaluate() (neer_match_utilities.baseline_models.GradientBoostingModel method)</a>
+      <li><a href="embeddings.html#neer_match_utilities.embeddings.EmbeddingSimilarity.encode">encode() (neer_match_utilities.embeddings.EmbeddingSimilarity method)</a>
+</li>
+      <li><a href="model.html#neer_match_utilities.model.EpochEndSaver">EpochEndSaver (class in neer_match_utilities.model)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="baseline_models.html#neer_match_utilities.baseline_models.GradientBoostingModel.evaluate">evaluate() (neer_match_utilities.baseline_models.GradientBoostingModel method)</a>
+</li>
       <li><a href="training.html#neer_match_utilities.training.Training.evaluate_dataframe">evaluate_dataframe() (neer_match_utilities.training.Training method)</a>
 </li>
       <li><a href="feature_selection.html#neer_match_utilities.feature_selection.FeatureSelector.execute">execute() (neer_match_utilities.feature_selection.FeatureSelector method)</a>
@@ -625,6 +651,8 @@
 </li>
         <li><a href="custom_similarities.html#module-neer_match_utilities.custom_similarities">neer_match_utilities.custom_similarities</a>
 </li>
+        <li><a href="embeddings.html#module-neer_match_utilities.embeddings">neer_match_utilities.embeddings</a>
+</li>
         <li><a href="feature_selection.html#module-neer_match_utilities.feature_selection">neer_match_utilities.feature_selection</a>
 </li>
         <li><a href="model.html#module-neer_match_utilities.model">neer_match_utilities.model</a>
@@ -691,12 +719,21 @@
 </li>
       </ul></li>
       <li>
+    neer_match_utilities.embeddings
+
+      <ul>
+        <li><a href="embeddings.html#module-neer_match_utilities.embeddings">module</a>
+</li>
+      </ul></li>
+      <li>
     neer_match_utilities.feature_selection
 
       <ul>
         <li><a href="feature_selection.html#module-neer_match_utilities.feature_selection">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     neer_match_utilities.model
 
@@ -704,8 +741,6 @@
         <li><a href="model.html#module-neer_match_utilities.model">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     neer_match_utilities.panel
 
@@ -830,6 +865,8 @@
 </li>
       <li><a href="panel.html#neer_match_utilities.panel.SetupData">SetupData (class in neer_match_utilities.panel)</a>
 </li>
+      <li><a href="embeddings.html#neer_match_utilities.embeddings.EmbeddingSimilarity.similarity">similarity() (neer_match_utilities.embeddings.EmbeddingSimilarity method)</a>
+</li>
       <li><a href="feature_selection.html#neer_match_utilities.feature_selection.FeatureSelector.similarity_map">similarity_map (neer_match_utilities.feature_selection.FeatureSelector attribute)</a>
 </li>
       <li><a href="prepare.html#neer_match_utilities.prepare.similarity_map_to_dict">similarity_map_to_dict() (in module neer_match_utilities.prepare)</a>
@@ -838,10 +875,10 @@
 </li>
       <li><a href="similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs">SimilarityPairs (class in neer_match_utilities.similarity_features)</a>
 </li>
-      <li><a href="training.html#neer_match_utilities.training.soft_f1_loss">soft_f1_loss() (in module neer_match_utilities.training)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="training.html#neer_match_utilities.training.soft_f1_loss">soft_f1_loss() (in module neer_match_utilities.training)</a>
+</li>
       <li><a href="split.html#neer_match_utilities.split.split_test_train">split_test_train() (in module neer_match_utilities.split)</a>
 </li>
       <li><a href="split.html#neer_match_utilities.split.SplitError">SplitError</a>
@@ -904,9 +941,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="model.html#neer_match_utilities.model.validation_scores">validation_scores() (in module neer_match_utilities.model)</a>
 </li>
+      <li><a href="model.html#neer_match_utilities.model.ValidationMetrics">ValidationMetrics (class in neer_match_utilities.model)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="model.html#neer_match_utilities.model.ValidationMetrics">ValidationMetrics (class in neer_match_utilities.model)</a>
+      <li><a href="embeddings.html#neer_match_utilities.embeddings.EmbeddingSimilarity.values">values (neer_match_utilities.embeddings.EmbeddingSimilarity property)</a>
+</li>
+      <li><a href="embeddings.html#neer_match_utilities.embeddings.EmbeddingSimilarity.vectors">vectors (neer_match_utilities.embeddings.EmbeddingSimilarity property)</a>
 </li>
   </ul></td>
 </tr></table>

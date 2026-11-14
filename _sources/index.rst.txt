@@ -46,6 +46,7 @@
    feature_selection
    similarity_features
    custom_similarities
+   embeddings
 
 .. License
 .. =======

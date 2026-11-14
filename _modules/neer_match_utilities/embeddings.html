@@ -1,0 +1,764 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>neer_match_utilities.embeddings &mdash; Neer Match Utilities 1.2.15 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx_autodoc_typehints.css?v=057ac668" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/extra.css?v=503a7970" />
+      <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=4afb903a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+      <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Neer Match Utilities
+              <img src="../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../install.html#pipy">PiPy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../install.html#from-source">From Source</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../basic_training_pipeline.html">A Minimal Training Pipeline</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../basic_training_pipeline.html#loading-the-data">Loading the Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../basic_training_pipeline.html#defining-features-and-similarity-concepts">Defining Features and Similarity Concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../basic_training_pipeline.html#harmonizing-the-data">Harmonizing the data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../basic_training_pipeline.html#left-and-right">Left and Right</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../basic_training_pipeline.html#re-structuring-the-matches-dataframe">Re-Structuring the <code class="docutils literal notranslate"><span class="pre">Matches</span></code> dataframe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../basic_training_pipeline.html#splitting-data">Splitting Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../basic_training_pipeline.html#training-and-exporting-the-model">Training and Exporting the Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../basic_training_pipeline.html#blocking">Blocking</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../id_generation.html">Creating a Common Identifier (ID)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../id_generation.html#between-two-sources">Between Two Sources</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../id_generation.html#load-data-model">1. Load Data &amp; Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../id_generation.html#harmonize-format">2. Harmonize Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../id_generation.html#generate-a-common-id">3. Generate a Common ID</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../id_generation.html#merge-results">4. Merge Results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../id_generation.html#repeated-cross-sections-panel-id">Repeated Cross-Sections (Panel ID)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../alternative_models.html">Alternative Classification Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../alternative_models.html#baseline-models">Baseline Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../alternative_models.html#logit-model">Logit Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../alternative_models.html#probit-model">Probit Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../alternative_models.html#gradient-boosting-model">Gradient Boosting Model</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../alternative_models.html#deep-learning-model-ann">Deep Learning Model (ANN)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../alternative_models.html#key-parameters-explained">Key Parameters Explained</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../alternative_models.html#single-stage-training">Single-Stage Training</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../alternative_models.html#model-comparison">Model Comparison</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../additional_functionalities.html">Additional Functionalities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../additional_functionalities.html#name-commonness">Name Commonness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../additional_functionalities.html#embedding-similarity">Embedding Similarity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../additional_functionalities.html#stop-word-removal-with-spacy">Stop Word Removal with spaCy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../additional_functionalities.html#feature-selection">Feature Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../additional_functionalities.html#hard-non-matches-records-without-a-match-and-synthetic-pairs">Hard Non-Matches, Records Without a Match, and Synthetic Pairs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../additional_functionalities.html#handling-many-to-many-matches">Handling Many-to-Many Matches</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../additional_functionalities.html#loading-the-data">Loading the Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../additional_functionalities.html#inspecting-the-data">Inspecting the Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../additional_functionalities.html#simulating-a-many-to-many-relationship">Simulating a Many-to-Many Relationship</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../additional_functionalities.html#understanding-the-matching-issue">Understanding the Matching Issue</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../additional_functionalities.html#correcting-the-relationships">Correcting the Relationships</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../additional_functionalities.html#verifying-the-adjustments">6. Verifying the Adjustments</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../base.html">Base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../model.html">Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../model.html#neer_match_utilities.model.EpochEndSaver"><code class="docutils literal notranslate"><span class="pre">EpochEndSaver</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../model.html#neer_match_utilities.model.EpochEndSaver.__init__"><code class="docutils literal notranslate"><span class="pre">EpochEndSaver.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../model.html#neer_match_utilities.model.EpochEndSaver.on_epoch_end"><code class="docutils literal notranslate"><span class="pre">EpochEndSaver.on_epoch_end()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../model.html#neer_match_utilities.model.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../model.html#neer_match_utilities.model.Model.load"><code class="docutils literal notranslate"><span class="pre">Model.load()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../model.html#neer_match_utilities.model.Model.save"><code class="docutils literal notranslate"><span class="pre">Model.save()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../model.html#neer_match_utilities.model.ValidationMetrics"><code class="docutils literal notranslate"><span class="pre">ValidationMetrics</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../model.html#neer_match_utilities.model.ValidationMetrics.__init__"><code class="docutils literal notranslate"><span class="pre">ValidationMetrics.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../model.html#neer_match_utilities.model.ValidationMetrics.on_epoch_end"><code class="docutils literal notranslate"><span class="pre">ValidationMetrics.on_epoch_end()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../model.html#neer_match_utilities.model.validation_scores"><code class="docutils literal notranslate"><span class="pre">validation_scores()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../baseline_models.html">Baseline Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.GradientBoostingModel"><code class="docutils literal notranslate"><span class="pre">GradientBoostingModel</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.GradientBoostingModel.__init__"><code class="docutils literal notranslate"><span class="pre">GradientBoostingModel.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.GradientBoostingModel.best_threshold"><code class="docutils literal notranslate"><span class="pre">GradientBoostingModel.best_threshold()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.GradientBoostingModel.evaluate"><code class="docutils literal notranslate"><span class="pre">GradientBoostingModel.evaluate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.GradientBoostingModel.fit"><code class="docutils literal notranslate"><span class="pre">GradientBoostingModel.fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.GradientBoostingModel.predict_proba"><code class="docutils literal notranslate"><span class="pre">GradientBoostingModel.predict_proba()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.GradientBoostingModel.summary"><code class="docutils literal notranslate"><span class="pre">GradientBoostingModel.summary()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.LogitMatchingModel"><code class="docutils literal notranslate"><span class="pre">LogitMatchingModel</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.LogitMatchingModel.__init__"><code class="docutils literal notranslate"><span class="pre">LogitMatchingModel.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.LogitMatchingModel.fit"><code class="docutils literal notranslate"><span class="pre">LogitMatchingModel.fit()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.ProbitMatchingModel"><code class="docutils literal notranslate"><span class="pre">ProbitMatchingModel</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.ProbitMatchingModel.__init__"><code class="docutils literal notranslate"><span class="pre">ProbitMatchingModel.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.ProbitMatchingModel.fit"><code class="docutils literal notranslate"><span class="pre">ProbitMatchingModel.fit()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin"><code class="docutils literal notranslate"><span class="pre">StatsmodelsInferenceMixin</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.capture_inference"><code class="docutils literal notranslate"><span class="pre">StatsmodelsInferenceMixin.capture_inference()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.coefficients"><code class="docutils literal notranslate"><span class="pre">StatsmodelsInferenceMixin.coefficients()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.predict_proba"><code class="docutils literal notranslate"><span class="pre">StatsmodelsInferenceMixin.predict_proba()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.StatsmodelsInferenceMixin.summary"><code class="docutils literal notranslate"><span class="pre">StatsmodelsInferenceMixin.summary()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.SuggestMixin"><code class="docutils literal notranslate"><span class="pre">SuggestMixin</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.SuggestMixin.suggest"><code class="docutils literal notranslate"><span class="pre">SuggestMixin.suggest()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../baseline_models.html#neer_match_utilities.baseline_models.classification_metrics"><code class="docutils literal notranslate"><span class="pre">classification_metrics()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../baseline_training.html">Baseline Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../baseline_training.html#neer_match_utilities.baseline_training.BaselineTrainingPipe"><code class="docutils literal notranslate"><span class="pre">BaselineTrainingPipe</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../baseline_training.html#neer_match_utilities.baseline_training.BaselineTrainingPipe.__init__"><code class="docutils literal notranslate"><span class="pre">BaselineTrainingPipe.__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../baseline_io.html">Baseline IO</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../baseline_io.html#neer_match_utilities.baseline_io.ModelBaseline"><code class="docutils literal notranslate"><span class="pre">ModelBaseline</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../baseline_io.html#neer_match_utilities.baseline_io.ModelBaseline.load"><code class="docutils literal notranslate"><span class="pre">ModelBaseline.load()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../baseline_io.html#neer_match_utilities.baseline_io.ModelBaseline.save"><code class="docutils literal notranslate"><span class="pre">ModelBaseline.save()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../panel.html">Panel</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../panel.html#neer_match_utilities.panel.GenerateID"><code class="docutils literal notranslate"><span class="pre">GenerateID</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../panel.html#neer_match_utilities.panel.GenerateID.__init__"><code class="docutils literal notranslate"><span class="pre">GenerateID.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../panel.html#neer_match_utilities.panel.GenerateID.assign_ids"><code class="docutils literal notranslate"><span class="pre">GenerateID.assign_ids()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../panel.html#neer_match_utilities.panel.GenerateID.execute"><code class="docutils literal notranslate"><span class="pre">GenerateID.execute()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../panel.html#neer_match_utilities.panel.GenerateID.generate_suggestions"><code class="docutils literal notranslate"><span class="pre">GenerateID.generate_suggestions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../panel.html#neer_match_utilities.panel.GenerateID.group_by_subgroups"><code class="docutils literal notranslate"><span class="pre">GenerateID.group_by_subgroups()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../panel.html#neer_match_utilities.panel.GenerateID.harmonize_ids"><code class="docutils literal notranslate"><span class="pre">GenerateID.harmonize_ids()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../panel.html#neer_match_utilities.panel.GenerateID.relations_left_right"><code class="docutils literal notranslate"><span class="pre">GenerateID.relations_left_right()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../panel.html#neer_match_utilities.panel.SetupData"><code class="docutils literal notranslate"><span class="pre">SetupData</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../panel.html#neer_match_utilities.panel.SetupData.matches"><code class="docutils literal notranslate"><span class="pre">SetupData.matches</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../panel.html#neer_match_utilities.panel.SetupData.__init__"><code class="docutils literal notranslate"><span class="pre">SetupData.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../panel.html#neer_match_utilities.panel.SetupData.adjust_overlap"><code class="docutils literal notranslate"><span class="pre">SetupData.adjust_overlap()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../panel.html#neer_match_utilities.panel.SetupData.create_connected_groups"><code class="docutils literal notranslate"><span class="pre">SetupData.create_connected_groups()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../panel.html#neer_match_utilities.panel.SetupData.data_preparation_panel"><code class="docutils literal notranslate"><span class="pre">SetupData.data_preparation_panel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../panel.html#neer_match_utilities.panel.SetupData.drop_repetitions"><code class="docutils literal notranslate"><span class="pre">SetupData.drop_repetitions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../panel.html#neer_match_utilities.panel.SetupData.panel_preparation"><code class="docutils literal notranslate"><span class="pre">SetupData.panel_preparation()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../prepare.html">Prepare</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../prepare.html#neer_match_utilities.prepare.Prepare"><code class="docutils literal notranslate"><span class="pre">Prepare</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../prepare.html#neer_match_utilities.prepare.Prepare.__init__"><code class="docutils literal notranslate"><span class="pre">Prepare.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../prepare.html#neer_match_utilities.prepare.Prepare.do_remove_stop_words"><code class="docutils literal notranslate"><span class="pre">Prepare.do_remove_stop_words()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../prepare.html#neer_match_utilities.prepare.Prepare.format"><code class="docutils literal notranslate"><span class="pre">Prepare.format()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../prepare.html#neer_match_utilities.prepare.available_similarities"><code class="docutils literal notranslate"><span class="pre">available_similarities()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../prepare.html#neer_match_utilities.prepare.learn_variants"><code class="docutils literal notranslate"><span class="pre">learn_variants()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../prepare.html#neer_match_utilities.prepare.similarity_map_to_dict"><code class="docutils literal notranslate"><span class="pre">similarity_map_to_dict()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../prepare.html#neer_match_utilities.prepare.synth_matches"><code class="docutils literal notranslate"><span class="pre">synth_matches()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../prepare.html#neer_match_utilities.prepare.synth_mismatches"><code class="docutils literal notranslate"><span class="pre">synth_mismatches()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../split.html">Split</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../split.html#neer_match_utilities.split.SplitError"><code class="docutils literal notranslate"><span class="pre">SplitError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../split.html#neer_match_utilities.split.pairs_in_subset"><code class="docutils literal notranslate"><span class="pre">pairs_in_subset()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../split.html#neer_match_utilities.split.split_test_train"><code class="docutils literal notranslate"><span class="pre">split_test_train()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../blocking.html">Blocking</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../blocking.html#neer_match_utilities.blocking.Blocking"><code class="docutils literal notranslate"><span class="pre">Blocking</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../blocking.html#neer_match_utilities.blocking.Blocking.__init__"><code class="docutils literal notranslate"><span class="pre">Blocking.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../blocking.html#neer_match_utilities.blocking.Blocking.candidates"><code class="docutils literal notranslate"><span class="pre">Blocking.candidates()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../blocking.html#neer_match_utilities.blocking.Blocking.columns"><code class="docutils literal notranslate"><span class="pre">Blocking.columns()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../blocking.html#neer_match_utilities.blocking.blocked_metrics"><code class="docutils literal notranslate"><span class="pre">blocked_metrics()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../blocking.html#neer_match_utilities.blocking.blocking_columns"><code class="docutils literal notranslate"><span class="pre">blocking_columns()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../blocking.html#neer_match_utilities.blocking.candidate_pairs"><code class="docutils literal notranslate"><span class="pre">candidate_pairs()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../blocking.html#neer_match_utilities.blocking.tune_threshold_blocked"><code class="docutils literal notranslate"><span class="pre">tune_threshold_blocked()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../training.html">Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../training.html#neer_match_utilities.training.Training"><code class="docutils literal notranslate"><span class="pre">Training</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../training.html#neer_match_utilities.training.Training.evaluate_dataframe"><code class="docutils literal notranslate"><span class="pre">Training.evaluate_dataframe()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../training.html#neer_match_utilities.training.Training.matches_reorder"><code class="docutils literal notranslate"><span class="pre">Training.matches_reorder()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../training.html#neer_match_utilities.training.Training.performance_statistics_export"><code class="docutils literal notranslate"><span class="pre">Training.performance_statistics_export()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../training.html#neer_match_utilities.training.TrainingPipe"><code class="docutils literal notranslate"><span class="pre">TrainingPipe</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../training.html#neer_match_utilities.training.TrainingPipe.WarmupCosine"><code class="docutils literal notranslate"><span class="pre">TrainingPipe.WarmupCosine</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../training.html#neer_match_utilities.training.TrainingPipe.WarmupCosine.__init__"><code class="docutils literal notranslate"><span class="pre">TrainingPipe.WarmupCosine.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../training.html#neer_match_utilities.training.TrainingPipe.WarmupCosine.from_config"><code class="docutils literal notranslate"><span class="pre">TrainingPipe.WarmupCosine.from_config()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../training.html#neer_match_utilities.training.TrainingPipe.__init__"><code class="docutils literal notranslate"><span class="pre">TrainingPipe.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../training.html#neer_match_utilities.training.alpha_balanced"><code class="docutils literal notranslate"><span class="pre">alpha_balanced()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../training.html#neer_match_utilities.training.combined_loss"><code class="docutils literal notranslate"><span class="pre">combined_loss()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../training.html#neer_match_utilities.training.focal_loss"><code class="docutils literal notranslate"><span class="pre">focal_loss()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../training.html#neer_match_utilities.training.soft_f1_loss"><code class="docutils literal notranslate"><span class="pre">soft_f1_loss()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../thresholds.html">Thresholds</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../thresholds.html#neer_match_utilities.thresholds.non_match_weight"><code class="docutils literal notranslate"><span class="pre">non_match_weight()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../thresholds.html#neer_match_utilities.thresholds.pair_labels"><code class="docutils literal notranslate"><span class="pre">pair_labels()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../thresholds.html#neer_match_utilities.thresholds.scores_at"><code class="docutils literal notranslate"><span class="pre">scores_at()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../thresholds.html#neer_match_utilities.thresholds.tune_threshold"><code class="docutils literal notranslate"><span class="pre">tune_threshold()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../feature_selection.html">Feature Selection</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult"><code class="docutils literal notranslate"><span class="pre">FeatureSelectionResult</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult.updated_similarity_map"><code class="docutils literal notranslate"><span class="pre">FeatureSelectionResult.updated_similarity_map</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult.selected_feature_columns"><code class="docutils literal notranslate"><span class="pre">FeatureSelectionResult.selected_feature_columns</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult.selected_pairs"><code class="docutils literal notranslate"><span class="pre">FeatureSelectionResult.selected_pairs</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult.coef_by_feature"><code class="docutils literal notranslate"><span class="pre">FeatureSelectionResult.coef_by_feature</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult.meta"><code class="docutils literal notranslate"><span class="pre">FeatureSelectionResult.meta</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../feature_selection.html#neer_match_utilities.feature_selection.FeatureSelectionResult.__init__"><code class="docutils literal notranslate"><span class="pre">FeatureSelectionResult.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../feature_selection.html#neer_match_utilities.feature_selection.FeatureSelector"><code class="docutils literal notranslate"><span class="pre">FeatureSelector</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../feature_selection.html#neer_match_utilities.feature_selection.FeatureSelector.similarity_map"><code class="docutils literal notranslate"><span class="pre">FeatureSelector.similarity_map</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../feature_selection.html#neer_match_utilities.feature_selection.FeatureSelector.__init__"><code class="docutils literal notranslate"><span class="pre">FeatureSelector.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../feature_selection.html#neer_match_utilities.feature_selection.FeatureSelector.execute"><code class="docutils literal notranslate"><span class="pre">FeatureSelector.execute()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../feature_selection.html#neer_match_utilities.feature_selection.fit_elastic_net_logistic"><code class="docutils literal notranslate"><span class="pre">fit_elastic_net_logistic()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../feature_selection.html#neer_match_utilities.feature_selection.tqdm_joblib"><code class="docutils literal notranslate"><span class="pre">tqdm_joblib()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../similarity_features.html">Similarity Features</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.__init__"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.pairs"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.pairs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityFeatures.pairwise_similarity_dataframe"><code class="docutils literal notranslate"><span class="pre">SimilarityFeatures.pairwise_similarity_dataframe()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__init__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.__len__"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.__len__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.blocked"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.blocked</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.chunks"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.chunks()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.frame"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.frame()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.match_flags"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.match_flags()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.SimilarityPairs.rows"><code class="docutils literal notranslate"><span class="pre">SimilarityPairs.rows()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.subsample_non_match_positions"><code class="docutils literal notranslate"><span class="pre">subsample_non_match_positions()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.subsample_non_matches"><code class="docutils literal notranslate"><span class="pre">subsample_non_matches()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../similarity_features.html#neer_match_utilities.similarity_features.to_X_y"><code class="docutils literal notranslate"><span class="pre">to_X_y()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../custom_similarities.html">Custom Similarities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../custom_similarities.html#neer_match_utilities.custom_similarities.CustomSimilarities"><code class="docutils literal notranslate"><span class="pre">CustomSimilarities</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../custom_similarities.html#neer_match_utilities.custom_similarities.CustomSimilarities.__init__"><code class="docutils literal notranslate"><span class="pre">CustomSimilarities.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../custom_similarities.html#neer_match_utilities.custom_similarities.CustomSimilarities.notmissing"><code class="docutils literal notranslate"><span class="pre">CustomSimilarities.notmissing()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../custom_similarities.html#neer_match_utilities.custom_similarities.CustomSimilarities.notzero"><code class="docutils literal notranslate"><span class="pre">CustomSimilarities.notzero()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../custom_similarities.html#neer_match_utilities.custom_similarities.register_similarities"><code class="docutils literal notranslate"><span class="pre">register_similarities()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../embeddings.html">Embedding Similarity</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../embeddings.html#neer_match_utilities.embeddings.EmbeddingSimilarity"><code class="docutils literal notranslate"><span class="pre">EmbeddingSimilarity</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../embeddings.html#neer_match_utilities.embeddings.EmbeddingSimilarity.__init__"><code class="docutils literal notranslate"><span class="pre">EmbeddingSimilarity.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../embeddings.html#neer_match_utilities.embeddings.EmbeddingSimilarity.__len__"><code class="docutils literal notranslate"><span class="pre">EmbeddingSimilarity.__len__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../embeddings.html#neer_match_utilities.embeddings.EmbeddingSimilarity.dim"><code class="docutils literal notranslate"><span class="pre">EmbeddingSimilarity.dim</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../embeddings.html#neer_match_utilities.embeddings.EmbeddingSimilarity.encode"><code class="docutils literal notranslate"><span class="pre">EmbeddingSimilarity.encode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../embeddings.html#neer_match_utilities.embeddings.EmbeddingSimilarity.similarity"><code class="docutils literal notranslate"><span class="pre">EmbeddingSimilarity.similarity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../embeddings.html#neer_match_utilities.embeddings.EmbeddingSimilarity.values"><code class="docutils literal notranslate"><span class="pre">EmbeddingSimilarity.values</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../embeddings.html#neer_match_utilities.embeddings.EmbeddingSimilarity.vectors"><code class="docutils literal notranslate"><span class="pre">EmbeddingSimilarity.vectors</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">License</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../LICENSE.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Neer Match Utilities</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">neer_match_utilities.embeddings</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for neer_match_utilities.embeddings</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""</span>
+<span class="sd">Similarity of field values from a pretrained text encoder (sentence embeddings).</span>
+
+<span class="sd">Each distinct value of the chosen columns is encoded once by a pretrained model</span>
+<span class="sd">(by default ``BAAI/bge-m3``, multilingual); the similarity of two values is the</span>
+<span class="sd">cosine of their vectors. It is registered like any other similarity, so it can</span>
+<span class="sd">be named in the similarity map, and then the logit, probit and gradient-boosting</span>
+<span class="sd">models (through :class:`~neer_match_utilities.similarity_features.SimilarityFeatures`),</span>
+<span class="sd">the neural network of neer_match (through its ``SimilarityEncoder``) and the</span>
+<span class="sd">feature selection all use it.</span>
+
+<span class="sd">The vectors are kept in a cache folder. Encoding needs the optional packages</span>
+<span class="sd">``sentence-transformers`` and ``torch`` (``pip install</span>
+<span class="sd">"neer-match-utilities[embeddings]"``); reading a cache needs only numpy, so the</span>
+<span class="sd">models can be trained in an environment without torch, and the cache is what a</span>
+<span class="sd">replication package stores.</span>
+<span class="sd">"""</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Sequence</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.custom_similarities</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_similarities</span>
+
+<span class="n">DEFAULT_MODEL</span> <span class="o">=</span> <span class="s2">"BAAI/bge-m3"</span>
+<span class="n">_VALUES</span><span class="p">,</span> <span class="n">_VECTORS</span><span class="p">,</span> <span class="n">_META</span> <span class="o">=</span> <span class="s2">"values.json"</span><span class="p">,</span> <span class="s2">"vectors.npy"</span><span class="p">,</span> <span class="s2">"meta.json"</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_is_missing</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""None, NaN, pandas.NA, or a string that is empty after stripping."""</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_atomic_write</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">write</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Write to a temporary file in the same folder, then replace `path`."""</span>
+    <span class="n">fd</span><span class="p">,</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkstemp</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">path</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="sa">f</span><span class="s2">".</span><span class="si">{</span><span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">os</span><span class="o">.</span><span class="n">fdopen</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="s2">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">tmp</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+        <span class="k">raise</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_resolve_revision</span><span class="p">(</span><span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Commit of the model on the Hugging Face Hub, or None if it cannot be found."""</span>
+    <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">huggingface_hub</span><span class="w"> </span><span class="kn">import</span> <span class="n">HfApi</span>
+        <span class="k">return</span> <span class="n">HfApi</span><span class="p">()</span><span class="o">.</span><span class="n">model_info</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span><span class="o">.</span><span class="n">sha</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"Could not look up the current commit of </span><span class="si">{</span><span class="n">model_name</span><span class="si">!r}</span><span class="s2">; the cache records "</span>
+            <span class="s2">"no revision. Pass revision= to pin the model."</span><span class="p">,</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="EmbeddingSimilarity">
+<a class="viewcode-back" href="../../embeddings.html#neer_match_utilities.embeddings.EmbeddingSimilarity">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">EmbeddingSimilarity</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Cosine similarity of sentence embeddings, available to neer_match by name.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cache_dir : str or Path</span>
+<span class="sd">        Folder for the vectors (``vectors.npy``), the encoded values</span>
+<span class="sd">        (``values.json``) and the model they come from (``meta.json``). If it</span>
+<span class="sd">        holds a cache already, that cache is read, and only values not in it are</span>
+<span class="sd">        encoded later. The values are the data themselves: store the folder</span>
+<span class="sd">        under the same terms as the data.</span>
+<span class="sd">    model_name : str, optional</span>
+<span class="sd">        Model on the Hugging Face Hub, or a local path, loaded with</span>
+<span class="sd">        ``sentence_transformers.SentenceTransformer``. Default ``"BAAI/bge-m3"``.</span>
+<span class="sd">        A cache made with another model raises ValueError.</span>
+<span class="sd">    revision : str or None, optional</span>
+<span class="sd">        Commit of the model to use. Default None: the commit recorded in the</span>
+<span class="sd">        cache, or else the current one on the Hub, which is then recorded.</span>
+<span class="sd">    similarity_name : str, optional</span>
+<span class="sd">        Name under which the similarity is registered and used in the similarity</span>
+<span class="sd">        map. Default ``"embedding_cosine"``. Use one name per model if several</span>
+<span class="sd">        are compared.</span>
+<span class="sd">    batch_size : int, optional</span>
+<span class="sd">        Values encoded at once. Default 64.</span>
+<span class="sd">    max_seq_length : int, optional</span>
+<span class="sd">        Tokens per value; longer values are cut. Default 512 (bge-m3 accepts</span>
+<span class="sd">        up to 8192, which field values rarely need).</span>
+<span class="sd">    device : str or None, optional</span>
+<span class="sd">        Device for encoding, e.g. ``"cuda"`` or ``"cpu"``. Default None: the</span>
+<span class="sd">        GPU if one is available.</span>
+<span class="sd">    fp16 : bool, optional</span>
+<span class="sd">        Encode in half precision (GPU only). Default False.</span>
+<span class="sd">    encoder : callable or None, optional</span>
+<span class="sd">        Instead of the model: a function that takes a list of strings and returns</span>
+<span class="sd">        one vector per string (e.g. for tests or another library). Default None.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - A value is looked up exactly as it appears in the data (as ``str(value)``),</span>
+<span class="sd">      so encode the columns in the form they have when the similarities are</span>
+<span class="sd">      computed, i.e. after ``Prepare.format``, and encode again after adding</span>
+<span class="sd">      rows, e.g. with ``synth_matches`` or ``synth_mismatches``: only the new</span>
+<span class="sd">      values are encoded. A value that was not encoded raises KeyError.</span>
+<span class="sd">    - Missing values, and strings that are empty, have similarity 0, as in</span>
+<span class="sd">      :class:`~neer_match_utilities.similarity_features.SimilarityFeatures`.</span>
+<span class="sd">    - The cosine is cut to [0, 1], the range of the other similarities.</span>
+<span class="sd">    - The vectors are normalized and kept as float32: 4 bytes times the</span>
+<span class="sd">      dimension (1024 for bge-m3) per distinct value.</span>
+<span class="sd">    - To use a saved model later, create the object again from the cache before</span>
+<span class="sd">      predicting, so that the similarity is registered.</span>
+<span class="sd">    """</span>
+
+<div class="viewcode-block" id="EmbeddingSimilarity.__init__">
+<a class="viewcode-back" href="../../embeddings.html#neer_match_utilities.embeddings.EmbeddingSimilarity.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">cache_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
+        <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_MODEL</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">revision</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">similarity_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"embedding_cosine"</span><span class="p">,</span>
+        <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
+        <span class="n">max_seq_length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">512</span><span class="p">,</span>
+        <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">fp16</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">encoder</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">list</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cache_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">=</span> <span class="n">model_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">revision</span> <span class="o">=</span> <span class="n">revision</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">similarity_name</span> <span class="o">=</span> <span class="n">similarity_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="n">batch_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_seq_length</span> <span class="o">=</span> <span class="n">max_seq_length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fp16</span> <span class="o">=</span> <span class="n">fp16</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_encoder</span> <span class="o">=</span> <span class="n">encoder</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_index</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_vectors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rows</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cache_dir</span> <span class="o">/</span> <span class="n">_META</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read_cache</span><span class="p">()</span>
+
+        <span class="n">register_similarities</span><span class="p">({</span><span class="n">similarity_name</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">similarity</span><span class="p">})</span></div>
+
+
+    <span class="c1"># ------------------------------------------------------------------ data</span>
+<div class="viewcode-block" id="EmbeddingSimilarity.__len__">
+<a class="viewcode-back" href="../../embeddings.html#neer_match_utilities.embeddings.EmbeddingSimilarity.__len__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">)</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dim</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Length of the vectors (0 before anything is encoded)."""</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_vectors</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""The encoded values, in the order of the rows of :attr:`vectors`."""</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">vectors</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""The normalized vectors, one row per encoded value."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vectors</span>
+
+    <span class="c1"># ------------------------------------------------------------ similarity</span>
+<div class="viewcode-block" id="EmbeddingSimilarity.similarity">
+<a class="viewcode-back" href="../../embeddings.html#neer_match_utilities.embeddings.EmbeddingSimilarity.similarity">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">similarity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Cosine of the vectors of `x` and `y`, cut to [0, 1]; 0 if either is missing."""</span>
+        <span class="k">if</span> <span class="n">_is_missing</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">or</span> <span class="n">_is_missing</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
+            <span class="k">return</span> <span class="mf">0.0</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">y</span><span class="p">)]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">!r}</span><span class="s2"> has no embedding in </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cache_dir</span><span class="si">}</span><span class="s2">: encode the data "</span>
+                <span class="s2">"that contain it first (also after rows were added, e.g. by "</span>
+                <span class="s2">"synth_matches or synth_mismatches)."</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
+        <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rows</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rows</span><span class="p">[</span><span class="n">j</span><span class="p">])),</span> <span class="mf">0.0</span><span class="p">),</span> <span class="mf">1.0</span><span class="p">)</span></div>
+
+
+    <span class="c1"># -------------------------------------------------------------- encoding</span>
+<div class="viewcode-block" id="EmbeddingSimilarity.encode">
+<a class="viewcode-back" href="../../embeddings.html#neer_match_utilities.embeddings.EmbeddingSimilarity.encode">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">frames</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">columns</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">"EmbeddingSimilarity"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Encode the values of `columns` in `frames` that are not in the cache yet.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        *frames : pandas.DataFrame</span>
+<span class="sd">            Data whose values are encoded, e.g. ``left, right``. Each must have</span>
+<span class="sd">            all `columns`; if the left and right names differ, call once per</span>
+<span class="sd">            frame.</span>
+<span class="sd">        columns : sequence of str</span>
+<span class="sd">            Columns to encode.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        EmbeddingSimilarity</span>
+<span class="sd">            The object itself; the cache folder is updated if anything was new.</span>
+<span class="sd">        """</span>
+        <span class="n">new</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_index</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">frames</span><span class="p">:</span>
+            <span class="n">missing</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">columns</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">frame</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Columns not in the data: </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">pd</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">frame</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)):</span>
+                    <span class="k">if</span> <span class="n">_is_missing</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+                        <span class="k">continue</span>
+                    <span class="n">key</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+                        <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                        <span class="n">new</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">new</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_append</span><span class="p">(</span><span class="n">new</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_encode_texts</span><span class="p">(</span><span class="n">new</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_write_cache</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_encode_texts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_encoder</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">vectors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_encoder</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">vectors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_model</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+                <span class="n">texts</span><span class="p">,</span>
+                <span class="n">batch_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span>
+                <span class="n">normalize_embeddings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">convert_to_numpy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">show_progress_bar</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">10_000</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="n">vectors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">vectors</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">vectors</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">vectors</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">texts</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"The encoder returned shape </span><span class="si">{</span><span class="n">vectors</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> for </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span><span class="si">}</span><span class="s2"> values; "</span>
+                <span class="s2">"expected one vector per value."</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="ow">and</span> <span class="n">vectors</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"The encoder returned vectors of length </span><span class="si">{</span><span class="n">vectors</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">, the cache has </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
+        <span class="n">norms</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">vectors</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">vectors</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">norms</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">norms</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_load_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="kn">from</span><span class="w"> </span><span class="nn">sentence_transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">SentenceTransformer</span>
+            <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+                    <span class="s2">"Encoding needs sentence-transformers and torch: "</span>
+                    <span class="s1">'pip install "neer-match-utilities[embeddings]". '</span>
+                    <span class="s2">"Reading an existing cache does not."</span>
+                <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">revision</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">revision</span> <span class="o">=</span> <span class="n">_resolve_revision</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">)</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">SentenceTransformer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span> <span class="n">revision</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">revision</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">max_seq_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_seq_length</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fp16</span> <span class="ow">and</span> <span class="n">model</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">"cuda"</span><span class="p">:</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">half</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">fp16</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">"fp16 is used on a GPU only; encoding in float32."</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">vectors</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_index</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">t</span><span class="p">:</span> <span class="n">start</span> <span class="o">+</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">texts</span><span class="p">)})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_vectors</span> <span class="o">=</span> <span class="n">vectors</span> <span class="k">if</span> <span class="n">start</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_vectors</span><span class="p">,</span> <span class="n">vectors</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rows</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_vectors</span><span class="p">)</span>
+
+    <span class="c1"># ----------------------------------------------------------------- cache</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">importlib.metadata</span><span class="w"> </span><span class="kn">import</span> <span class="n">version</span>
+            <span class="n">st_version</span> <span class="o">=</span> <span class="n">version</span><span class="p">(</span><span class="s2">"sentence-transformers"</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">st_version</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">"model_name"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span>
+            <span class="s2">"revision"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">revision</span><span class="p">,</span>
+            <span class="s2">"encoder"</span><span class="p">:</span> <span class="s2">"sentence-transformers"</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_encoder</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">"custom"</span><span class="p">,</span>
+            <span class="s2">"sentence_transformers"</span><span class="p">:</span> <span class="n">st_version</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_encoder</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">"dim"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span>
+            <span class="s2">"max_seq_length"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_seq_length</span><span class="p">,</span>
+            <span class="s2">"normalized"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">"n_values"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span>
+            <span class="s2">"updated"</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(</span><span class="n">timespec</span><span class="o">=</span><span class="s2">"seconds"</span><span class="p">),</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_write_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cache_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">_atomic_write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cache_dir</span> <span class="o">/</span> <span class="n">_VECTORS</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vectors</span><span class="p">))</span>
+        <span class="n">_atomic_write</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cache_dir</span> <span class="o">/</span> <span class="n">_VALUES</span><span class="p">,</span>
+            <span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">)),</span>
+        <span class="p">)</span>
+        <span class="n">_atomic_write</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cache_dir</span> <span class="o">/</span> <span class="n">_META</span><span class="p">,</span>
+            <span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_meta</span><span class="p">(),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">)),</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_read_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">meta</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">cache_dir</span> <span class="o">/</span> <span class="n">_META</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"model_name"</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"The cache in </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cache_dir</span><span class="si">}</span><span class="s2"> was made with </span><span class="si">{</span><span class="n">meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'model_name'</span><span class="p">)</span><span class="si">!r}</span><span class="s2">, "</span>
+                <span class="sa">f</span><span class="s2">"not </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="si">!r}</span><span class="s2">. Use another cache_dir per model."</span>
+            <span class="p">)</span>
+        <span class="n">cached_revision</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"revision"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">revision</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">cached_revision</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">revision</span> <span class="o">!=</span> <span class="n">cached_revision</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"The cache in </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cache_dir</span><span class="si">}</span><span class="s2"> was made with revision </span><span class="si">{</span><span class="n">cached_revision</span><span class="si">!r}</span><span class="s2"> "</span>
+                <span class="sa">f</span><span class="s2">"of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="si">!r}</span><span class="s2">, not </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">revision</span><span class="si">!r}</span><span class="s2">."</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">revision</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">revision</span> <span class="ow">or</span> <span class="n">cached_revision</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">cache_dir</span> <span class="o">/</span> <span class="n">_VALUES</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">))</span>
+        <span class="n">vectors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cache_dir</span> <span class="o">/</span> <span class="n">_VECTORS</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">vectors</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">!=</span> <span class="n">vectors</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"The cache in </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cache_dir</span><span class="si">}</span><span class="s2"> is inconsistent: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="si">}</span><span class="s2"> values, "</span>
+                <span class="sa">f</span><span class="s2">"vectors of shape </span><span class="si">{</span><span class="n">vectors</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">."</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_append</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">vectors</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+
+    <span class="c1"># --------------------------------------------------------------- pickling</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">state</span><span class="p">[</span><span class="s2">"_model"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>   <span class="c1"># the model is loaded again when needed</span>
+        <span class="n">state</span><span class="p">[</span><span class="s2">"_rows"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">state</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rows</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_vectors</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Pantelis Karapanagiotis, Marius Liebald.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
