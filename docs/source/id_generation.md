@@ -123,7 +123,7 @@ result = id_generator.execute()
 result.head()
 ```
 
-    Processing periods left-right at 2026-11-14 13:06:02.254458
+    Processing periods left-right at 2026-11-14 14:32:44.321932
 
 <div>
 <style scoped>
@@ -140,11 +140,11 @@ result.head()
 
 |     | index | panel_id                             |
 |-----|-------|--------------------------------------|
-| 0   | 0     | 76c04f7c-2da9-477e-bddc-b26ea83f0d0f |
-| 1   | 1     | d9f0b064-e822-4496-853b-c37dadb0ae5b |
-| 2   | 2     | 346c537f-2939-48a8-acbc-d7181a047c09 |
-| 3   | 3     | 5ec6ba61-dcb2-4ae9-8331-2fca71305291 |
-| 4   | 4     | 24379d29-1faf-48b0-8cf9-1822942c6bb8 |
+| 0   | 0     | 88f007d0-de1d-4223-9861-cf5908f4db52 |
+| 1   | 1     | d1a20028-2027-4fff-8c1e-71969263c57f |
+| 2   | 2     | 706eaccb-996f-45e8-b981-4b81b883a4ba |
+| 3   | 3     | ad4800d6-7e9f-4f36-84f4-e2ae53be4b44 |
+| 4   | 4     | 8bab9331-8f77-478c-a46a-6a32af3a7a68 |
 
 </div>
 
@@ -192,8 +192,8 @@ df_selection
 
 |  | panel_id | company_id | side | company_name | city |
 |----|----|----|----|----|----|
-| 200 | 24379d29-1faf-48b0-8cf9-1822942c6bb8 | 22ac99ae20 | left | KAISERSTEINBRUCH-ACTIENGESELLSCHAFT IN LIQU. I... | KÖLN |
-| 201 | 24379d29-1faf-48b0-8cf9-1822942c6bb8 | e9823a3073 | right | KAISERSTEINBRUCH-ACTIENGESELLSCHAFT IN KÖLN, | KÖLN |
+| 745 | 8bab9331-8f77-478c-a46a-6a32af3a7a68 | 22ac99ae20 | left | KAISERSTEINBRUCH-ACTIENGESELLSCHAFT IN LIQU. I... | KÖLN |
+| 746 | 8bab9331-8f77-478c-a46a-6a32af3a7a68 | e9823a3073 | right | KAISERSTEINBRUCH-ACTIENGESELLSCHAFT IN KÖLN, | KÖLN |
 
 </div>
 

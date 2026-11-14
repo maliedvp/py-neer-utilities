@@ -62,8 +62,8 @@ similarity that compares meaning. Each distinct value of the chosen
 columns is encoded once by a pretrained multilingual text encoder, by
 default [BAAI/bge-m3](https://huggingface.co/BAAI/bge-m3), and the
 similarity of two values is the cosine of their vectors, cut to \[0,
-1\]. It is registered like the other similarities, so it is named in
-the similarity map and used by the logit, probit and gradient-boosting
+1\]. It is registered like the other similarities, so it is named in the
+similarity map and used by the logit, probit and gradient-boosting
 models, by the neural network and by the feature selection. The encoder
 is not trained on the matches, so the similarity does not depend on the
 split.
@@ -93,7 +93,7 @@ similarity_map = {
 
 - Values are looked up as they appear in the data. Encode them in the
   form they have when the similarities are computed (after
-  `Prepare.format()`), and again after adding rows, e.g. with
+  `Prepare.format()`), and again after adding rows, e.g. with
   `synth_matches` or `synth_mismatches`: only the new values are
   encoded, and a value that was never encoded raises an error.
 - Missing and empty values have similarity 0, as for the other
