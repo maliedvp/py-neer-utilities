@@ -14,11 +14,19 @@ The vectors are kept in a cache folder. Encoding needs the optional packages
 "neer-match-utilities[embeddings]"``); reading a cache needs only numpy, so the
 models can be trained in an environment without torch, and the cache is what a
 replication package stores.
+
+Encoding runs in a Python process of its own (``_encode_worker.py``), which
+loads neither this package nor TensorFlow: on Linux with a GPU, TensorFlow and
+triton (loaded by sentence-transformers) cannot be loaded into one process in
+this order.
 """
 from __future__ import annotations
 
+import importlib.util
 import json
 import os
+import subprocess
+import sys
 import tempfile
 import warnings
 from datetime import datetime, timezone
@@ -32,6 +40,11 @@ from .custom_similarities import register_similarities
 
 DEFAULT_MODEL = "BAAI/bge-m3"
 _VALUES, _VECTORS, _META = "values.json", "vectors.npy", "meta.json"
+_WORKER = Path(__file__).with_name("_encode_worker.py")
+
+
+def _sentence_transformers_available() -> bool:
+    return importlib.util.find_spec("sentence_transformers") is not None
 
 
 def _is_missing(value) -> bool:
@@ -108,6 +121,12 @@ class EmbeddingSimilarity:
         GPU if one is available.
     fp16 : bool, optional
         Encode in half precision (GPU only). Default False.
+    cuda_visible_devices : str or None, optional
+        GPUs the encoding process may use, as in the environment variable
+        ``CUDA_VISIBLE_DEVICES`` (e.g. ``"1"``). Default None: the same GPUs as
+        this process. Lets this process hide the GPUs from TensorFlow
+        (``CUDA_VISIBLE_DEVICES=``), which otherwise may take a GPU's memory
+        when the package is imported, while the model encodes on one.
     encoder : callable or None, optional
         Instead of the model: a function that takes a list of strings and returns
         one vector per string (e.g. for tests or another library). Default None.
@@ -126,6 +145,9 @@ class EmbeddingSimilarity:
       dimension (1024 for bge-m3) per distinct value.
     - To use a saved model later, create the object again from the cache before
       predicting, so that the similarity is registered.
+    - Each call of :meth:`encode` that finds new values starts a Python process
+      that loads the model, encodes them and ends (see the module notes);
+      encode all frames in one call where possible.
     """
 
     def __init__(
@@ -139,6 +161,7 @@ class EmbeddingSimilarity:
         max_seq_length: int = 512,
         device: str | None = None,
         fp16: bool = False,
+        cuda_visible_devices: str | None = None,
         encoder: Callable[[list], np.ndarray] | None = None,
     ):
         self.cache_dir = Path(cache_dir)
@@ -149,8 +172,8 @@ class EmbeddingSimilarity:
         self.max_seq_length = max_seq_length
         self.device = device
         self.fp16 = fp16
+        self.cuda_visible_devices = cuda_visible_devices
         self._encoder = encoder
-        self._model = None
 
         self._values: list[str] = []
         self._index: dict[str, int] = {}
@@ -237,13 +260,7 @@ class EmbeddingSimilarity:
         if self._encoder is not None:
             vectors = self._encoder(texts)
         else:
-            vectors = self._load_model().encode(
-                texts,
-                batch_size=self.batch_size,
-                normalize_embeddings=True,
-                convert_to_numpy=True,
-                show_progress_bar=len(texts) >= 10_000,
-            )
+            vectors = self._encode_in_subprocess(texts)
         vectors = np.asarray(vectors, dtype=np.float32)
         if vectors.ndim != 2 or vectors.shape[0] != len(texts):
             raise ValueError(
@@ -255,26 +272,40 @@ class EmbeddingSimilarity:
         norms = np.linalg.norm(vectors, axis=1, keepdims=True)
         return vectors / np.where(norms > 0, norms, 1.0)
 
-    def _load_model(self):
-        if self._model is None:
-            try:
-                from sentence_transformers import SentenceTransformer
-            except ImportError as e:
-                raise ImportError(
-                    "Encoding needs sentence-transformers and torch: "
-                    'pip install "neer-match-utilities[embeddings]". '
-                    "Reading an existing cache does not."
-                ) from e
-            if self.revision is None:
-                self.revision = _resolve_revision(self.model_name)
-            model = SentenceTransformer(self.model_name, revision=self.revision, device=self.device)
-            model.max_seq_length = self.max_seq_length
-            if self.fp16 and model.device.type == "cuda":
-                model.half()
-            elif self.fp16:
-                warnings.warn("fp16 is used on a GPU only; encoding in float32.", stacklevel=3)
-            self._model = model
-        return self._model
+    def _encode_in_subprocess(self, texts: list[str]) -> np.ndarray:
+        """Encode `texts` with the model in a Python process of its own (see the module notes)."""
+        if not _sentence_transformers_available():
+            raise ImportError(
+                "Encoding needs sentence-transformers and torch: "
+                'pip install "neer-match-utilities[embeddings]". '
+                "Reading an existing cache does not."
+            )
+        if self.revision is None:
+            self.revision = _resolve_revision(self.model_name)
+        self.cache_dir.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=self.cache_dir, prefix=".encode-") as tmp:
+            job, out = Path(tmp) / "job.json", Path(tmp) / "vectors.npy"
+            job.write_text(json.dumps({
+                "model_name": self.model_name,
+                "revision": self.revision,
+                "device": self.device,
+                "fp16": self.fp16,
+                "max_seq_length": self.max_seq_length,
+                "batch_size": self.batch_size,
+                "texts": texts,
+                "out": str(out),
+            }, ensure_ascii=False), encoding="utf-8")
+            # -I: the worker's folder (this package) is not put on sys.path
+            env = os.environ.copy()
+            if self.cuda_visible_devices is not None:
+                env["CUDA_VISIBLE_DEVICES"] = str(self.cuda_visible_devices)
+            done = subprocess.run([sys.executable, "-I", str(_WORKER), str(job)], env=env)
+            if done.returncode != 0 or not out.exists():
+                raise RuntimeError(
+                    f"Encoding {len(texts)} values with {self.model_name!r} failed "
+                    f"(exit code {done.returncode}); see the output above."
+                )
+            return np.load(out)
 
     def _append(self, texts: list[str], vectors: np.ndarray) -> None:
         start = len(self._values)
@@ -341,7 +372,6 @@ class EmbeddingSimilarity:
     # --------------------------------------------------------------- pickling
     def __getstate__(self):
         state = self.__dict__.copy()
-        state["_model"] = None   # the model is loaded again when needed
         state["_rows"] = None
         return state
 

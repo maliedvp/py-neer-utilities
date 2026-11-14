@@ -141,16 +141,9 @@ def test_missing_column_and_wrong_encoder_output_raise(tmp_path, data):
 
 
 def test_encoding_without_sentence_transformers_says_what_to_install(tmp_path, data, monkeypatch):
-    import builtins
+    from neer_match_utilities import embeddings
 
-    real_import = builtins.__import__
-
-    def no_st(name, *args, **kwargs):
-        if name.startswith("sentence_transformers"):
-            raise ImportError(name)
-        return real_import(name, *args, **kwargs)
-
-    monkeypatch.setattr(builtins, "__import__", no_st)
+    monkeypatch.setattr(embeddings, "_sentence_transformers_available", lambda: False)
     left, _, _ = data
     with pytest.raises(ImportError, match=r"neer-match-utilities\[embeddings\]"):
         EmbeddingSimilarity(tmp_path).encode(left, columns=["name"])
@@ -212,10 +205,14 @@ def test_pickled_object_gives_the_same_similarities(tmp_path, data):
     reason="downloads BAAI/bge-m3 (2.3 GB); set NEER_TEST_EMBEDDINGS=1 to run",
 )
 def test_bge_m3(tmp_path):
+    """The real model, encoded in a process of its own after TensorFlow is loaded."""
     pytest.importorskip("sentence_transformers")
-    emb = EmbeddingSimilarity(tmp_path, device="cpu")
+    import tensorflow  # noqa: F401  (loaded first, as by the package)
+
+    emb = EmbeddingSimilarity(tmp_path, device=os.environ.get("NEER_TEST_DEVICE", "cpu"))
     emb.encode(pd.DataFrame({"v": ["Aktiengesellschaft", "Act.-Ges.", "Braunkohle", "Gustaf", "Gustav"]}), columns=["v"])
 
     assert emb.dim == 1024 and emb.revision
     assert emb.similarity("Gustaf", "Gustav") > emb.similarity("Gustaf", "Braunkohle")
     assert EmbeddingSimilarity(tmp_path, encoder=refuse).similarity("Gustaf", "Gustaf") == pytest.approx(1.0)
+    assert not [p for p in tmp_path.iterdir() if p.name.startswith(".encode-")]   # temporary job removed
