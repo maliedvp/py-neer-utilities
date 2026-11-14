@@ -3,20 +3,20 @@
 Dep. Variable:                      y   No. Observations:               119716
 Model:                          Logit   Df Residuals:                   119709
 Method:                           MLE   Df Model:                            6
-Date:                Sat, 14 Nov 2026   Pseudo R-squ.:                  0.9038
-Time:                        14:32:34   Log-Likelihood:                -227.85
+Date:                Sat, 14 Nov 2026   Pseudo R-squ.:                  0.9061
+Time:                        15:41:35   Log-Likelihood:                -222.43
 converged:                       True   LL-Null:                       -2368.4
 Covariance Type:            nonrobust   LLR p-value:                     0.000
 ==========================================================================================================================
                                                              coef    std err          z      P>|z|      [0.025      0.975]
 --------------------------------------------------------------------------------------------------------------------------
-const                                                    -28.0903      2.023    -13.886      0.000     -32.055     -24.125
-col_city_city_levenshtein                                  3.5689      0.373      9.575      0.000       2.838       4.299
-col_company_name_company_name_jaro_winkler                12.5906      2.025      6.219      0.000       8.622      16.559
-col_company_name_company_name_levenshtein                  3.1123      1.406      2.213      0.027       0.356       5.869
-col_company_name_company_name_partial_token_sort_ratio    11.0985      1.580      7.023      0.000       8.001      14.196
-col_industry_industry_jaro_winkler                         5.9038      2.697      2.189      0.029       0.618      11.190
-col_industry_industry_levenshtein                         -0.3134      1.556     -0.201      0.840      -3.363       2.736
+const                                                    -25.4584      1.898    -13.416      0.000     -29.178     -21.739
+col_city_city_levenshtein                                  3.0984      0.377      8.226      0.000       2.360       3.837
+col_company_name_company_name_jaro_winkler                 9.8273      2.029      4.842      0.000       5.850      13.805
+col_company_name_company_name_levenshtein                  3.4501      1.298      2.657      0.008       0.905       5.995
+col_company_name_company_name_partial_token_sort_ratio    13.7048      1.637      8.370      0.000      10.496      16.914
+col_industry_industry_jaro_winkler                         1.0595      2.843      0.373      0.709      -4.512       6.631
+col_industry_industry_levenshtein                          2.2074      1.663      1.328      0.184      -1.051       5.466
 ==========================================================================================================================
 
 Possibly complete quasi-separation: A fraction 0.87 of observations can be
