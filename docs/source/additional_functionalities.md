@@ -180,8 +180,11 @@ emigrated between two censuses, firms that closed). Three opt-in tools
 address this; without them, results are unchanged.
 
 **Labelled non-matches.** Pairs checked by hand and known not to match,
-often confusable records, are passed as `non_matches` (row labels of
-`left` and `right`, as in `matches`). Their records are kept, also those
+often confusable records, are kept in a file `non_matches.csv` with the
+same layout as `matches.csv`: one row per pair, with the IDs of the left
+and the right record. Load it and turn the IDs into row labels with
+`matches_reorder`, as for the matches, then pass it to
+`split_test_train` as `non_matches`. Their records are kept, also those
 without any match, and both records of a pair end up in the same subset,
 where the pair is a non-match like every pair not in `matches`.
 `pairs_in_subset` finds the pairs of a subset, e.g. to evaluate on them.
@@ -192,18 +195,38 @@ records stay, so the test shows how often a model links a record that
 has no counterpart.
 
 ``` python
+import pandas as pd
+from neer_match_utilities.training import Training
 from neer_match_utilities.split import split_test_train, pairs_in_subset
+
+matches = pd.read_csv('matches.csv')
+non_matches = pd.read_csv('non_matches.csv')    # same layout as matches.csv
+
+# IDs -> row labels of left and right, the same for both files
+training = Training(
+    similarity_map=similarity_map,
+    df_left=left,
+    df_right=right,
+    id_left='company_id',
+    id_right='company_id',
+)
+matches = training.matches_reorder(
+    matches, matches_id_left='company_id_left', matches_id_right='company_id_right'
+)
+non_matches = training.matches_reorder(
+    non_matches, matches_id_left='company_id_left', matches_id_right='company_id_right'
+)
 
 (left_train, right_train, matches_train,
  left_validation, right_validation, matches_validation,
  left_test, right_test, matches_test) = split_test_train(
     left, right, matches,
     test_ratio=0.3, validation_ratio=0.2, random_state=42,
-    non_matches=hard_non_matches,   # columns 'left' and 'right'
+    non_matches=non_matches,
     drop_partner_share=0.2,         # 20% of the test matches lose their partner
 )
 
-hard_in_test = pairs_in_subset(hard_non_matches, left_test, right_test)
+non_matches_test = pairs_in_subset(non_matches, left_test, right_test)
 ```
 
 **Synthetic pairs for training.** `synth_matches` adds copies of matched

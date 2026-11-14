@@ -50,7 +50,8 @@ def _check_non_matches(non_matches: pd.DataFrame, matches: pd.DataFrame,
     if unknown.any():
         raise ValueError(
             f"{int(unknown.sum())} pairs of non_matches refer to rows that are not in "
-            "left or right (they must use the row labels of left and right, as matches does)."
+            "left or right (they must use the row labels of left and right, as matches does; "
+            "convert IDs with Training.matches_reorder)."
         )
     both = set(zip(matches['left'], matches['right'])) & set(zip(non_matches['left'], non_matches['right']))
     if both:
@@ -163,8 +164,11 @@ def split_test_train(left: pd.DataFrame, right: pd.DataFrame, matches: pd.DataFr
     non_matches : pd.DataFrame or None, optional
         Pairs with columns 'left' and 'right' (row labels of `left` and `right`,
         as in `matches`) that were checked by hand and are known not to match,
-        e.g. confusable records. Default None: records without a match are
-        dropped, as before. If given, the records of these pairs are kept, and
+        e.g. confusable records. Keep them in a file like `matches.csv`
+        (e.g. `non_matches.csv`, with the IDs of both records) and convert the
+        IDs with `Training.matches_reorder`, as for `matches`. Default None:
+        records without a match are dropped, as before. If given, the records
+        of these pairs are kept, and
         the subsets are drawn as with `keep_components=True` over matches and
         non-matches together, so that both records of a non-match pair, and the
         matches of these records, end up in the same subset; inside it the pair
